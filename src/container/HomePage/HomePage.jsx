@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import './HomePage.scss'
 
+import Histogram from './Histogram/Histogram'
+import Graph from './Graph/Graph'
 
 class Homepage extends Component {
   constructor(props) {
@@ -36,11 +38,19 @@ class Homepage extends Component {
             </div>
             <div className="asideItem">
               <div className="title">运行效率</div>
-              <div className="itemContent">123</div>
+              <div className="itemContent">
+                <div className="runRate">
+                  <Graph />
+                </div>
+              </div>
             </div>
             <div className="asideItem">
               <div className="title">云资源占用率</div>
-              <div className="itemContent">123</div>
+              <div className="itemContent">
+                <div className="holdRate">
+                  <Histogram />
+                </div>
+              </div>
             </div>
           </div>
           <div className="asideRight">
@@ -89,7 +99,11 @@ class Homepage extends Component {
             </div>
             <div className="asideItem">
               <div className="title">故障统计曲线图</div>
-              <div className="itemContent">123</div>
+              <div className="itemContent">
+                <div className="runRate">
+                  <Graph />
+                </div>
+              </div>
             </div>
             <div className="asideItem">
               <div className="title">信号机实时状态统计</div>
@@ -133,7 +147,69 @@ class Homepage extends Component {
           </div>
           <div className="contentCenter">
             <div className="title">实时监控</div>
-            <div className="centerMain">123</div>
+            <div className="centerMain">
+              <div className="centerBox">
+                <div className="ceterLeft">
+                  <div className="areaDetails">
+                    <div className="areaName">朝阳区</div>
+                    <div className="details">
+                      <div className="msg">
+                        <span className="online">接入：<span className="nomalVal">300</span></span>
+                        <span className="online">在线：<span className="nomalVal">280</span></span>
+                      </div>
+                      <div className="msg">
+                        <span className="outline">离线：<span className="outlineVal">10</span></span>
+                        <span className="outline">故障：<span className="faultVal">3</span></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="areaDetails">
+                    <div className="areaName">西城区</div>
+                    <div className="details">
+                      <div className="msg">
+                        <span className="online">接入：<span className="nomalVal">300</span></span>
+                        <span className="online">在线：<span className="nomalVal">280</span></span>
+                      </div>
+                      <div className="msg">
+                        <span className="outline">离线：<span className="outlineVal">10</span></span>
+                        <span className="outline">故障：<span className="faultVal">3</span></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="center">
+
+                </div>
+                <div className="centerRight">
+                  <div className="areaDetails">
+                      <div className="areaName">朝阳区</div>
+                      <div className="details">
+                        <div className="msg">
+                          <span className="online">接入：<span className="nomalVal">300</span></span>
+                          <span className="online">在线：<span className="nomalVal">280</span></span>
+                        </div>
+                        <div className="msg">
+                          <span className="outline">离线：<span className="outlineVal">10</span></span>
+                          <span className="outline">故障：<span className="faultVal">3</span></span>
+                        </div>   
+                      </div>
+                    </div>
+                    <div className="areaDetails">
+                      <div className="areaName">西城区</div>
+                      <div className="details">
+                        <div className="msg">
+                          <span className="online">接入：<span className="nomalVal">300</span></span>
+                          <span className="online">在线：<span className="nomalVal">280</span></span>
+                        </div>
+                        <div className="msg">
+                          <span className="outline">离线：<span className="outlineVal">10</span></span>
+                          <span className="outline">故障：<span className="faultVal">3</span></span>
+                        </div>   
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

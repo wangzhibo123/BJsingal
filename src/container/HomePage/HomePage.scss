@@ -195,6 +195,12 @@
                             }
                         }
                     }
+                    .holdRate, .runRate {
+                        height: 100%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
                 }
             }
         }
@@ -221,6 +227,60 @@
             }
             .centerMain {
                 flex: 1;
+                .centerBox {
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    .ceterLeft, .centerRight {
+                        width: 200px;
+                        height: 100%;
+                        padding-top: 10px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        overflow-y: auto;
+                        .areaDetails {
+                            width: 160px;
+                            margin-bottom: 20px;
+                            .areaName {
+                                margin-bottom: 6px;
+                                font-size: 22px;
+                                color: #FFA200;
+                            }
+                            .details {
+                                height: 42px;
+                                padding-left: 7px;
+                                background: url(../imgs/singalmsg.png) center center no-repeat;
+                                background-size: 100% 100%;
+                                font-size: 13px;
+                                .msg {
+                                    display: flex;
+                                    justify-content: space-between;
+                                    .online, .outline {
+                                        min-width: 70px;
+                                        height: 20px;
+                                        display: flex;
+                                        align-items: center;
+                                        .nomalVal {
+                                            color: #2AFAFE;
+                                        }
+                                        .outlineVal {
+                                            color: #818181;
+                                        }
+                                        .faultVal {
+                                            color: #FF0001;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .center {
+                        flex: 1;
+                        background-color: #031334;
+                        // opacity: .5;
+                    }
+                }
             }
         }
     }
