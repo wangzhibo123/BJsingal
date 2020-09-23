@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Spin } from 'antd'
 import './HomePage.scss'
 
 import Histogram from './Histogram/Histogram'
@@ -213,6 +214,7 @@ class Homepage extends Component {
                       </div>
                     </div>
                   </div>
+                  <div style={{ height: '100px', marginTop: '200px', textAlign: 'center' }}><Spin /></div>
                 </div>
                 <div className="centerRight">
                   <div className="areaDetails">

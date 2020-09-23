@@ -4,9 +4,18 @@ import {
   Switch,
   Route,
 } from 'react-router-dom'
+import Loadable from 'react-loadable'
 
-import HomePage from './container/HomePage/HomePage'
-import Header from './container/Header/Header'
+import LoadingPage from './container/LoadingPage/LoadingPage'
+
+const HomePage = Loadable({
+  loader: () => import('./container/HomePage/HomePage'),
+  loading: LoadingPage,
+})
+const Header = Loadable({
+  loader: () => import('./container/Header/Header'),
+  loading: LoadingPage,
+})
 
 const Parent = () => (
   <React.Fragment>
