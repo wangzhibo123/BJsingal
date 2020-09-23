@@ -1,3 +1,11 @@
+@font-face {
+    font-family: num;
+    src: url(../../290.7218c42.woff) format("woff");
+    font-weight: 400;
+    color: #ffee00;
+    font-style: normal;
+    text-align: center;
+}
 .homepageWrapper {
     position: relative;
     width: 100%;
@@ -89,9 +97,11 @@
                                 white-space: nowrap;
                                 text-overflow: ellipsis;
                                 overflow: hidden;
+                                color: #CAF2F5;
                             }
                             .present {
                                 margin-right: 5px;
+                                color: #CAF2F5;
                             }
                             .faultValue {
                                 position: relative;
@@ -278,7 +288,51 @@
                     .center {
                         flex: 1;
                         background-color: #031334;
-                        // opacity: .5;
+                        position: relative;
+                        .topInfo {
+                            position: absolute;
+                            top: 10px;
+                            left: 0;
+                            width: 100%;
+                            display: flex;
+                            flex-wrap: wrap;
+                            justify-content: space-between;
+                            .info {
+                                width: 220px;
+                                height: 75px;
+                                background: url(../imgs/numbg.png) center center no-repeat;
+                                background-size: 100% 100%;
+                                display: flex;
+                                .infoName {
+                                    display: flex;
+                                    justify-content: center;
+                                    flex-direction: column;
+                                    padding-left: 10px;
+                                    font-size: 16px;
+                                    color: #0FF2FD;
+                                    .infoText {
+                                        padding-bottom: 5px;
+                                    }
+                                }
+                                .infoValue {
+                                    flex: 1;
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    padding-right: 10px;
+                                    .infoNum {
+                                        width: 32px;
+                                        height: 50px;
+                                        background: url(../imgs/22.png) center center no-repeat;
+                                        background-size: 100% 100%;
+                                        font: 50px num;
+                                        text-indent: 3px;
+                                        line-height: 50px;
+                                        color: #FEF500;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

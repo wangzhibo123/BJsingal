@@ -178,7 +178,41 @@ class Homepage extends Component {
                   </div>
                 </div>
                 <div className="center">
-
+                  <div className="topInfo">
+                    <div className="info">
+                      <div className="infoName">
+                        <span className="infoText">全市</span>
+                        <span>信号点位</span>
+                      </div>
+                      <div className="infoValue">
+                        <span className="infoNum">3</span>
+                        <span className="infoNum">3</span>
+                        <span className="infoNum">3</span>
+                      </div>
+                    </div>
+                    <div className="info">
+                      <div className="infoName">
+                        <span className="infoText">联网</span>
+                        <span>接入点位</span>
+                      </div>
+                      <div className="infoValue">
+                        <span className="infoNum">5</span>
+                        <span className="infoNum">3</span>
+                        <span className="infoNum">3</span>
+                      </div>
+                    </div>
+                    <div className="info">
+                      <div className="infoName">
+                        <span className="infoText">离线</span>
+                        <span>运行点位</span>
+                      </div>
+                      <div className="infoValue">
+                        <span className="infoNum">2</span>
+                        <span className="infoNum">3</span>
+                        <span className="infoNum">3</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div className="centerRight">
                   <div className="areaDetails">
