@@ -4,12 +4,28 @@ import './HomePage.scss'
 
 import Histogram from './Histogram/Histogram'
 import Graph from './Graph/Graph'
+import mapConfiger from '../utils/minemapConf'
 
 class Homepage extends Component {
   constructor(props) {
     super(props)
     this.state = {}
     this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
+  }
+  componentDidMount = () => {
+    this.renderMap()
+  }
+  renderMap = () => {
+    const map = new window.mapabcgl.Map(mapConfiger)
+    map.addControl(new window.mapabcgl.NavigationControl());
+    const options = {
+      minzoom: 1, // 路况显示的最小级别(1-24)
+      maxzoom: 24, // 路况显示的最大级别(1-24)
+      type: 'vector', // 路况图层类型:vector(矢量),raster(栅格)
+      refresh: 30*1000, // 路况图层刷新时间，毫秒
+      // before:'roads-symbol-49'
+    };
+    map.trafficLayer(true, options);
   }
   render() {
     return (
@@ -214,7 +230,7 @@ class Homepage extends Component {
                       </div>
                     </div>
                   </div>
-                  <div style={{ height: '100px', marginTop: '200px', textAlign: 'center' }}><Spin /></div>
+                  <div id="mapContainer" className="map-container" style={{ height: 'calc(100% - 80px)', marginTop: '90px' }}></div>
                 </div>
                 <div className="centerRight">
                   <div className="areaDetails">
