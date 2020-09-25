@@ -25,7 +25,10 @@ class Homepage extends Component {
       refresh: 30*1000, // 路况图层刷新时间，毫秒
       // before:'roads-symbol-49'
     };
-    map.trafficLayer(true, options);
+    map.on('load', () => {
+      map.trafficLayer(true, options);
+    })
+    this.map = map
   }
   render() {
     return (
