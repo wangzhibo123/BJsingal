@@ -235,6 +235,9 @@
                 background: url(../imgs/titbg.png) center 5px no-repeat;
                 background-size: 100% 100%;
             }
+            .mapabcgl-ctrl-top-right {
+                display: none;
+            }
             .centerMain {
                 flex: 1;
                 .centerBox {
@@ -289,9 +292,6 @@
                         flex: 1;
                         background-color: #031334;
                         position: relative;
-                        .mapabcgl-ctrl-top-right {
-                            display: none;
-                        }
                         .topInfo {
                             position: absolute;
                             top: 10px;

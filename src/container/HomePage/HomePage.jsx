@@ -9,13 +9,28 @@ import mapConfiger from '../utils/minemapConf'
 class Homepage extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      mainHomePage: false
+    }
     this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
   }
   componentDidMount = () => {
     this.renderMap()
   }
+  addMarker = () => {
+    if (this.map) {
+      const el = document.createElement('div')
+      el.style.width = '20px'
+      el.style.height = '20px'
+      el.style.borderRadius = '50%'
+      el.style.backgroundColor = 'green'
+      const marker = new window.mapabcgl.Marker(el)
+              .setLngLat([116.391,  39.911])
+              .addTo(this.map);
+    }
+  }
   renderMap = () => {
+    mapConfiger.zoom = 11
     const map = new window.mapabcgl.Map(mapConfiger)
     map.addControl(new window.mapabcgl.NavigationControl());
     const options = {
@@ -27,10 +42,12 @@ class Homepage extends Component {
     };
     map.on('load', () => {
       map.trafficLayer(true, options);
+      this.addMarker()
     })
     this.map = map
   }
   render() {
+    const { mainHomePage } = this.state
     return (
       <div className="homepageWrapper">
         <div className="container">
@@ -165,78 +182,14 @@ class Homepage extends Component {
               </div>
             </div>
           </div>
-          <div className="contentCenter">
-            <div className="title">实时监控</div>
-            <div className="centerMain">
-              <div className="centerBox">
-                <div className="ceterLeft">
-                  <div className="areaDetails">
-                    <div className="areaName">朝阳区</div>
-                    <div className="details">
-                      <div className="msg">
-                        <span className="online">接入：<span className="nomalVal">300</span></span>
-                        <span className="online">在线：<span className="nomalVal">280</span></span>
-                      </div>
-                      <div className="msg">
-                        <span className="outline">离线：<span className="outlineVal">10</span></span>
-                        <span className="outline">故障：<span className="faultVal">3</span></span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="areaDetails">
-                    <div className="areaName">西城区</div>
-                    <div className="details">
-                      <div className="msg">
-                        <span className="online">接入：<span className="nomalVal">300</span></span>
-                        <span className="online">在线：<span className="nomalVal">280</span></span>
-                      </div>
-                      <div className="msg">
-                        <span className="outline">离线：<span className="outlineVal">10</span></span>
-                        <span className="outline">故障：<span className="faultVal">3</span></span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="center">
-                  <div className="topInfo">
-                    <div className="info">
-                      <div className="infoName">
-                        <span className="infoText">全市</span>
-                        <span>信号点位</span>
-                      </div>
-                      <div className="infoValue">
-                        <span className="infoNum">3</span>
-                        <span className="infoNum">3</span>
-                        <span className="infoNum">3</span>
-                      </div>
-                    </div>
-                    <div className="info">
-                      <div className="infoName">
-                        <span className="infoText">联网</span>
-                        <span>接入点位</span>
-                      </div>
-                      <div className="infoValue">
-                        <span className="infoNum">5</span>
-                        <span className="infoNum">3</span>
-                        <span className="infoNum">3</span>
-                      </div>
-                    </div>
-                    <div className="info">
-                      <div className="infoName">
-                        <span className="infoText">离线</span>
-                        <span>运行点位</span>
-                      </div>
-                      <div className="infoValue">
-                        <span className="infoNum">2</span>
-                        <span className="infoNum">3</span>
-                        <span className="infoNum">3</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div id="mapContainer" className="map-container" style={{ height: 'calc(100% - 80px)', marginTop: '90px' }}></div>
-                </div>
-                <div className="centerRight">
-                  <div className="areaDetails">
+          {
+            mainHomePage &&
+            <div className="contentCenter">
+              <div className="title">实时监控</div>
+              <div className="centerMain">
+                <div className="centerBox">
+                  <div className="ceterLeft">
+                    <div className="areaDetails">
                       <div className="areaName">朝阳区</div>
                       <div className="details">
                         <div className="msg">
@@ -246,7 +199,7 @@ class Homepage extends Component {
                         <div className="msg">
                           <span className="outline">离线：<span className="outlineVal">10</span></span>
                           <span className="outline">故障：<span className="faultVal">3</span></span>
-                        </div>   
+                        </div>
                       </div>
                     </div>
                     <div className="areaDetails">
@@ -259,13 +212,85 @@ class Homepage extends Component {
                         <div className="msg">
                           <span className="outline">离线：<span className="outlineVal">10</span></span>
                           <span className="outline">故障：<span className="faultVal">3</span></span>
-                        </div>   
+                        </div>
                       </div>
                     </div>
+                  </div>
+                  <div className="center">
+                    <div className="topInfo">
+                      <div className="info">
+                        <div className="infoName">
+                          <span className="infoText">全市</span>
+                          <span>信号点位</span>
+                        </div>
+                        <div className="infoValue">
+                          <span className="infoNum">3</span>
+                          <span className="infoNum">3</span>
+                          <span className="infoNum">3</span>
+                        </div>
+                      </div>
+                      <div className="info">
+                        <div className="infoName">
+                          <span className="infoText">联网</span>
+                          <span>接入点位</span>
+                        </div>
+                        <div className="infoValue">
+                          <span className="infoNum">5</span>
+                          <span className="infoNum">3</span>
+                          <span className="infoNum">3</span>
+                        </div>
+                      </div>
+                      <div className="info">
+                        <div className="infoName">
+                          <span className="infoText">离线</span>
+                          <span>运行点位</span>
+                        </div>
+                        <div className="infoValue">
+                          <span className="infoNum">2</span>
+                          <span className="infoNum">3</span>
+                          <span className="infoNum">3</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="centerRight">
+                    <div className="areaDetails">
+                        <div className="areaName">朝阳区</div>
+                        <div className="details">
+                          <div className="msg">
+                            <span className="online">接入：<span className="nomalVal">300</span></span>
+                            <span className="online">在线：<span className="nomalVal">280</span></span>
+                          </div>
+                          <div className="msg">
+                            <span className="outline">离线：<span className="outlineVal">10</span></span>
+                            <span className="outline">故障：<span className="faultVal">3</span></span>
+                          </div>   
+                        </div>
+                      </div>
+                      <div className="areaDetails">
+                        <div className="areaName">西城区</div>
+                        <div className="details">
+                          <div className="msg">
+                            <span className="online">接入：<span className="nomalVal">300</span></span>
+                            <span className="online">在线：<span className="nomalVal">280</span></span>
+                          </div>
+                          <div className="msg">
+                            <span className="outline">离线：<span className="outlineVal">10</span></span>
+                            <span className="outline">故障：<span className="faultVal">3</span></span>
+                          </div>   
+                        </div>
+                      </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          }
+          {
+            !mainHomePage &&
+            <div className="contentCenter">
+              <div id="mapContainer" className="map-container" style={{ height: 'calc(100% - 5px)' }}></div>
+            </div>
+          }
         </div>
       </div>
     )
