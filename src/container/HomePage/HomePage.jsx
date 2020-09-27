@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Spin } from 'antd'
 import './HomePage.scss'
 
 import Histogram from './Histogram/Histogram'
@@ -27,6 +26,7 @@ class Homepage extends Component {
       const marker = new window.mapabcgl.Marker(el)
               .setLngLat([116.391,  39.911])
               .addTo(this.map);
+      console.log(marker)
     }
   }
   renderMap = () => {
