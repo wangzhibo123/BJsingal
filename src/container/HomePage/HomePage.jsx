@@ -9,12 +9,14 @@ class Homepage extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      mainHomePage: false
+      mainHomePage: true
     }
     this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
   }
   componentDidMount = () => {
-    this.renderMap()
+    fetch('http://192.168.1.53:21004/signal-decision/alert/getNearSevenCount', { method: 'GET', mode: 'cors' })
+    .then(response => response.json())
+      .then(data => console.log(data))
   }
   addMarker = () => {
     if (this.map) {
@@ -45,6 +47,11 @@ class Homepage extends Component {
       this.addMarker()
     })
     this.map = map
+  }
+  handleCutMap = () => {
+    this.setState({ mainHomePage: false }, () => {
+      this.renderMap()
+    })
   }
   render() {
     const { mainHomePage } = this.state
@@ -252,6 +259,7 @@ class Homepage extends Component {
                         </div>
                       </div>
                     </div>
+                    <div className="centerMap" onClick={this.handleCutMap}></div>
                   </div>
                   <div className="centerRight">
                     <div className="areaDetails">

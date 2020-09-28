@@ -336,6 +336,14 @@
                                 }
                             }
                         }
+                        .centerMap {
+                            position: absolute;
+                            bottom: 0;
+                            width: 100%;
+                            height: calc(100% - 100px);
+                            background: url(../imgs/mapbg.png) center center no-repeat;
+                            background-size: contain;
+                        }
                     }
                 }
             }
