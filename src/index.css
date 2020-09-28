@@ -1,3 +1,4 @@
+@import '~antd/dist/antd.css';
 html {
   height: 100%;
 }
@@ -26,4 +27,7 @@ code {
   height: 100%;
   font-size: 14px;
   color: #fff;
+}
+.mapabcgl-ctrl-top-right {
+  display: none;
 }
