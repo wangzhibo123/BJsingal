@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { NavLink } from 'react-router-dom'
 import './Header.scss'
 
 class Header extends Component {
@@ -9,12 +10,12 @@ class Header extends Component {
       navKey: null,
     }
     this.navItems = [
-      { name: '实时监视', id: '0-1', children: [] },
+      { name: '实时监视', id: '0-1', path: '/home', children: [] },
       {
-        name: '中心控制', id: '0-2',
-        children: [{ name: '路口监控', id: '1-2', path: '' }, { name: '干线监控', id: '2-2', path: '' }, { name: '子区监控', id: '3-2', path: '' }, { name: '时间表控制', id: '4-2', path: '' }]
+        name: '中心控制', id: '0-2', path: '',
+        children: [{ name: '路口监控', id: '1-2', path: '/intermonitor' }, { name: '干线监控', id: '2-2', path: '' }, { name: '子区监控', id: '3-2', path: '' }, { name: '时间表控制', id: '4-2', path: '' }]
       },
-      { name: '预案控制', id: '0-3', children: [] },
+      { name: '预案控制', id: '0-3', path: '/plancontrolpage', children: [] },
       {
         name: '信号优化', id: '0-4',
         children: [{ name: '局信号优化', id: '1-4', path: '' }, { name: '区信号优化', id: '2-4', path: '' }, { name: '路口优化', id: '3-4', path: '' }, { name: '区域优化', id: '4-4', path: '' }]
@@ -34,6 +35,11 @@ class Header extends Component {
   handleLeaveNav = () => {
     this.setState({ innerHeight: 0, navIndex: null, })
   }
+  handleNavClick = (currentNav) => {
+    if (currentNav.path) {
+      this.props.history.push(currentNav.path)
+    }
+  }
   render() {
     const { innerHeight, navKey } = this.state
     return (
@@ -45,13 +51,20 @@ class Header extends Component {
               this.navItems.map((item, index) => {
                 if (index < 4) {
                   return (
-                    <div className="nav" key={item.id} onMouseEnter={() => this.handleEnterNav(item)} onMouseLeave={this.handleLeaveNav}>
+                    <div className="nav" key={item.id} onMouseEnter={() => {this.handleEnterNav(item)}} onMouseLeave={this.handleLeaveNav} onClick={() => {this.handleNavClick(item)}}>
                       {item.name}
                       {
                         item.children.length ?
                         <div className="innerNav" style={{ height: navKey === item.id ? innerHeight + 'px' : 0 }}>
                           {
-                            item.children.map(items => (<div className="innerItem" key={items.id}>{items.name}</div>))
+                            item.children.map(items => (
+                              <div className="innerItem" key={items.id}>
+                                {
+                                  items.path ?
+                                  <NavLink to={items.path}>{items.name}</NavLink> : items.name
+                                }
+                              </div>
+                            ))
                           }
                         </div> : null
                       }
