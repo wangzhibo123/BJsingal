@@ -8,7 +8,7 @@ class InterMonitor extends Component {
   constructor(props) {
     super(props)
     this.state = {}
-    this.confItems = ['信号灯组参数', '检测器参数', '车道参数', '相位参数', '配时方案', '方案相序表', '方案配时表', '日计划表', '调度表' ]
+    this.confItems = ['信号灯组参数', '检测器参数', '车道参数', '相位参数', '阶段参数', '配时方案', '方案相序表', '方案配时表', '日计划表', '调度表' ]
   }
   render() {
     return (
@@ -27,8 +27,13 @@ class InterMonitor extends Component {
                 </span>
               </div>
               <ul className="confUl">
-                <li className="confLi">信号灯组参数</li>
+                {
+                  this.confItems.map(item => (<li className="confLi" key={item}>{item}</li>))
+                }
               </ul>
+            </div>
+            <div className="controlExecute">
+              
             </div>
           </div>
         </div>
