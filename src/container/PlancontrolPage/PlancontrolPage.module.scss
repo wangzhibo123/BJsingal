@@ -44,6 +44,17 @@ $bor-color: #a5fcff;
         right: 70px;
         background: linear-gradient(to right, rgba(0, 59, 129, 0.65), rgba(0, 38, 120, 0.65), rgba(0, 59, 129, 0.65));
         padding: 0 30px;
+        .close {
+            float: right;
+            height: 35px;
+            line-height: 35px;
+            cursor: pointer;
+            svg:hover {
+              transition: all 0.5s;
+              transform: rotate(180deg);
+              color: #07fff0;
+            }
+         }
         .syetem_top {
             color: #a5fcff;
             width: 100%;
@@ -145,6 +156,9 @@ $bor-color: #a5fcff;
                             justify-content: space-between;
                             align-items: center;
                             padding: 0 15px;
+                            .closeHeaderTitle{
+                                cursor: pointer;
+                            }
                         }
                         .headercenter {
                             flex: 1;
@@ -269,6 +283,47 @@ $bor-color: #a5fcff;
             }
             .mapabcgl-ctrl-top-right {
                 display: none;
+            }
+            .driveInfo {
+                width: auto;
+                height: auto;
+                background: #fff;
+                color: #333;
+                font-size: 12px;
+                padding: 15px 20px 7px 7px;
+            }
+
+            .driveInfo li {
+                margin-bottom: 8px;
+            }
+
+            .driveInfo li span {
+                width: 160px;
+                display: inline-block;
+                text-align: right;
+                font-weight: 500;
+                vertical-align: middle;
+            }
+
+            .driveInfo li input,
+            .driveInfo li textarea {
+                width: 180px;
+                font-size: 12px;
+                padding-left: 5px;
+                color: #333;
+            }
+
+            .driveInfo li textarea {
+                vertical-align: top;
+                font-family: Arial;
+            }
+
+            .context_menu li {
+                cursor: pointer;
+            }
+
+            .context_menu li:hover {
+                color: #22a9ff;
             }
             .centerMain {
                 flex: 1;
