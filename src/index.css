@@ -28,3 +28,7 @@ code {
   font-size: 14px;
   color: #fff;
 }
+.mapabcgl-ctrl-top-right {
+  display: none;
+}
+
