@@ -16,6 +16,9 @@ const PlancontrolPage = loadable(() => import('./container/PlancontrolPage/Planc
 const InterMonitor = loadable(() => import('./container/InterMonitor/InterMonitor'), { LoadingComponent: LoadingPage })
 const LineMon = loadable(() => import("./container/CenterControl/MainMonitoring/MainMonitoring"), { LoadingComponent: LoadingPage })
 const AreaMon = loadable(() => import("./container/CenterControl/AreaMonitoring/AreaMonitoring"), { LoadingComponent: LoadingPage })
+const Intersection = loadable(() => import("./container/IntegratedManagement/Intersection/Intersection"), { LoadingComponent: LoadingPage })
+const Region = loadable(() => import("./container/IntegratedManagement/Region/Region"), { LoadingComponent: LoadingPage })
+const SignalParameters = loadable(() => import("./container/IntegratedManagement/SignalParameters/SignalParameters"), { LoadingComponent: LoadingPage })
 const Parent = () => (
   <React.Fragment>
     <Route path="*" component={Header} />
@@ -24,6 +27,9 @@ const Parent = () => (
     <Route path="/areaMon" component={AreaMon} />
     <Route exact path="/plancontrolpage" component={PlancontrolPage} />
     <Route exact path="/intermonitor" component={InterMonitor} />
+    <Route exact path="/intersection" component={Intersection} />
+    <Route exact path="/region" component={Region} />
+    <Route exact path="/signalParameters" component={SignalParameters} />
   </React.Fragment>
 )
 export default function BasicRouter() {

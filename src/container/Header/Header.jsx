@@ -21,7 +21,10 @@ class Header extends Component {
         children: [{ name: '局信号优化', id: '1-4', path: '' }, { name: '区信号优化', id: '2-4', path: '' }, { name: '路口优化', id: '3-4', path: '' }, { name: '区域优化', id: '4-4', path: '' }]
       },
       { name: '效果评价', id: '0-5', children: [] },
-      { name: '运维管理', id: '0-6', children: [] },
+      {
+        name: '运维管理', id: '0-6',
+        children: [{ name: '路口管理', id: '1-6', path: '/intersection' }, { name: '区域管理', id: '2-6', path: '/region' }, { name: '信号参数管理', id: '3-6', path: '/signalParameters' }]
+      },
       { name: '综合管理', id: '0-7', children: [] },
       { name: '系统管理', id: '0-8', children: [] },
     ]
@@ -51,22 +54,22 @@ class Header extends Component {
               this.navItems.map((item, index) => {
                 if (index < 4) {
                   return (
-                    <div className="nav" key={item.id} onMouseEnter={() => {this.handleEnterNav(item)}} onMouseLeave={this.handleLeaveNav} onClick={() => {this.handleNavClick(item)}}>
+                    <div className="nav" key={item.id} onMouseEnter={() => { this.handleEnterNav(item) }} onMouseLeave={this.handleLeaveNav} onClick={() => { this.handleNavClick(item) }}>
                       {item.name}
                       {
                         item.children.length ?
-                        <div className="innerNav" style={{ height: navKey === item.id ? innerHeight + 'px' : 0 }}>
-                          {
-                            item.children.map(items => (
-                              <div className="innerItem" key={items.id}>
-                                {
-                                  items.path ?
-                                  <NavLink to={items.path}>{items.name}</NavLink> : items.name
-                                }
-                              </div>
-                            ))
-                          }
-                        </div> : null
+                          <div className="innerNav" style={{ height: navKey === item.id ? innerHeight + 'px' : 0 }}>
+                            {
+                              item.children.map(items => (
+                                <div className="innerItem" key={items.id}>
+                                  {
+                                    items.path ?
+                                      <NavLink to={items.path}>{items.name}</NavLink> : items.name
+                                  }
+                                </div>
+                              ))
+                            }
+                          </div> : null
                       }
                     </div>
                   )
@@ -83,11 +86,11 @@ class Header extends Component {
                       {item.name}
                       {
                         item.children.length ?
-                        <div className="innerNav">
-                          {
-                            item.children.map(items => (<div className="innerItem" key={items.id}>{items.name}</div>))
-                          }
-                        </div> : null
+                          <div className="innerNav">
+                            {
+                              item.children.map(items => (<div className="innerItem" key={items.id}>{items.name}</div>))
+                            }
+                          </div> : null
                       }
                     </div>
                   )

@@ -3,6 +3,9 @@ import { Menu, Input, DatePicker, Button, Select } from 'antd'
 import { EditOutlined, CloseOutlined } from '@ant-design/icons';
 import styles from './PlancontrolPage.module.scss'
 import mapConfiger from '../utils/minemapConf'
+import startPng from '../imgs/start.png'
+import endPng from '../imgs/end.png'
+import carPng from '../imgs/car.png'
 const { SubMenu } = Menu;
 class Homepage extends Component {
   constructor(props) {
@@ -10,21 +13,24 @@ class Homepage extends Component {
     this.state = {
       mainHomePage: false,
       Istitletops: true,
-      IsddMessge: true,
+      IsddMessge: false,
     }
   }
   componentDidMount = () => {
     this.renderMap()
   }
-  addMarker = () => {
+  addMarkers = (arr) => {
     if (this.map) {
       const el = document.createElement('div')
       el.style.width = '20px'
       el.style.height = '20px'
       el.style.borderRadius = '50%'
-      el.style.backgroundColor = 'green'
+      el.style.backgroundColor = '#02FB09'
+      el.addEventListener('click', () => {
+        this.handleClckMessge(true)
+      })
       const marker = new window.mapabcgl.Marker(el)
-        .setLngLat([116.391, 39.911])
+        .setLngLat(arr)
         .addTo(this.map);
     }
   }
@@ -36,6 +42,7 @@ class Homepage extends Component {
   renderMap = () => {
     mapConfiger.zoom = 11
     const map = new window.mapabcgl.Map(mapConfiger)
+    this.map = map
     map.addControl(new window.mapabcgl.NavigationControl());
     const options = {
       minzoom: 1, // 路况显示的最小级别(1-24)
@@ -45,8 +52,33 @@ class Homepage extends Component {
       // before:'roads-symbol-49'
     };
     map.on('load', () => {
+      map.loadImage(carPng, function (error, image) {
+        if (error) throw error;
+        map.addImage('icon', image);
+        map.addLayer({
+          "id": "addIconID",
+          "type": "symbol",
+          "source": {
+            "type": "geojson",
+            "data": {
+              "type": "FeatureCollection",
+              "features": [{
+                "type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [116.3917480249126, 39.91052905151085]
+                }
+              }]
+            }
+          },
+          "layout": {
+            "icon-image": "icon",
+            "icon-size": 0.26
+          }
+        });
+      });
       map.trafficLayer(true, options);
-      this.addMarker()
+      this.addMarkers([116.39159349169165, 39.91203316087379])
       map.addControl(new window.mapabcgl.NavControl({ showCompass: true, position: 'bottom-right' }));
       map.loadImage('http://map.mapabc.com:35001/mapdemo/apidemos/sourceLinks/img/dir.png', function (error, image) {
         map.addImage('arrowImg', image);
@@ -89,31 +121,34 @@ class Homepage extends Component {
           clearMap();
         })
       })
+      getstartpoint({ lng: 116.3914995897319, lat: 39.91082015896538 })
+      getendpoint({ lng: 116.3909904231216, lat: 39.9223781190357 })
     }
     function getstartpoint(lnglat) {
+      console.log(lnglat, '开始')
       if (marker) {
         marker.remove();
       }
       if (startmarker) {
         startmarker.remove();
       }
-      startmarker = addMarker('http://map.mapabc.com:35001/mapdemo/apidemos/sourceLinks/img/point_1.png', [lnglat.lng, lnglat.lat], -373);
+      startmarker = addMarker(startPng, [lnglat.lng, lnglat.lat], 0);
       plan()
       startmarker.on('dragend', plan);
     }
 
     function getendpoint(lnglat) {
+      console.log(lnglat, '结束')
       if (marker) {
         marker.remove();
       }
       if (endmarker) {
         endmarker.remove();
       }
-      endmarker = addMarker('http://map.mapabc.com:35001/mapdemo/apidemos/sourceLinks/img/point_1.png', [lnglat.lng, lnglat.lat], -407);
+      endmarker = addMarker(endPng, [lnglat.lng, lnglat.lat], 0);
       plan();
       endmarker.on('dragend', plan);
     }
-
     function getChannelpoint(lnglat) {
       if (marker) {
         marker.remove();
@@ -244,32 +279,32 @@ class Homepage extends Component {
 
       map.removeLayerAndSource('plan');
       map.removeLayerAndSource('plan1');
-      document.getElementById('startInp').value = '';
-      document.getElementById('endInp').value = '';
-      document.getElementById('channelInp').value = '';
+      // document.getElementById('startInp').value = '';
+      // document.getElementById('endInp').value = '';
+      // document.getElementById('channelInp').value = '';
     }
 
     function rgeocode(type, location) {
-      var start = document.getElementById('startInp');
-      var end = document.getElementById('endInp');
-      var channel = document.getElementById('channelInp');
-      map.Geocoder({ location: location }, function (data) {
-        if (data.status != '0') {
-          alert(data.message);
-          return
-        };
-        if (data.result.length > 0) {
-          if (type == 1) {
-            start.value = data.result[0].formatted_address;
-          } else if (type == 2) {
-            end.value = data.result[0].formatted_address;
-          } else {
-            var str = channel.value ? channel.value + ';' : channel.value;
-            channel.value = trim(channel.value) + data.result[0].formatted_address + ';';
-            channel.value = trim(channel.value)
-          }
-        };
-      });
+      // var start = document.getElementById('startInp');
+      // var end = document.getElementById('endInp');
+      // var channel = document.getElementById('channelInp');
+      // map.Geocoder({ location: location }, function (data) {
+      //   if (data.status != '0') {
+      //     alert(data.message);
+      //     return
+      //   };
+      //   if (data.result.length > 0) {
+      //     if (type == 1) {
+      //       start.value = data.result[0].formatted_address;
+      //     } else if (type == 2) {
+      //       end.value = data.result[0].formatted_address;
+      //     } else {
+      //       var str = channel.value ? channel.value + ';' : channel.value;
+      //       channel.value = trim(channel.value) + data.result[0].formatted_address + ';';
+      //       channel.value = trim(channel.value)
+      //     }
+      //   };
+      // });
 
     }
 
@@ -279,7 +314,7 @@ class Homepage extends Component {
 
     function addMarker(img, point, position) {
       var html = document.createElement('div');
-      html.style.cssText = 'background:url(' + img + ')' + position + 'px 0px no-repeat;width:35px;height:26px;'
+      html.style.cssText = 'background:url(' + img + ')' + position + 'px 0px no-repeat;width:80px;height:50px;'
       var marker = new window.mapabcgl.Marker(html)
         .setLngLat(point)
         .setDraggable(true)
@@ -294,9 +329,9 @@ class Homepage extends Component {
   handleChange = (value) => {
     console.log(`selected ${value}`);
   }
-  handleClckMessge = () => {
+  handleClckMessge = (isShow) => {
     this.setState({
-
+      IsddMessge: isShow,
     })
   }
   render() {
@@ -304,6 +339,22 @@ class Homepage extends Component {
     const { mainHomePage, Istitletops, IsddMessge } = this.state
     return (
       <div className={styles.PlancontrolPageWrapper}>
+        {/* <div class="control_panel position_lb driveInfo">
+          <ul>
+            <li>
+              <span>起点（右键地图设置）：</span>
+              <input id="startInp" type="text" placeholder="起点" autocomplete="off" />
+            </li>
+            <li>
+              <span>终点（右键地图设置）：</span>
+              <input id="endInp" type="text" placeholder="终点" autocomplete="off" />
+            </li>
+            <li>
+              <span>途径点（右键地图设置）：</span>
+              <textarea id="channelInp" rows="4" placeholder="途径点最多支持16个"></textarea>
+            </li>
+          </ul>
+        </div> */}
         <div className={styles.reserveplan}>
           <div />
           <span>添加预案</span>
@@ -315,7 +366,7 @@ class Homepage extends Component {
         {
           IsddMessge &&
           <div className={styles.addMessge}>
-            <div className={styles.close} onClick={this.handleClckMessge}>
+            <div className={styles.close} onClick={()=>this.handleClckMessge(false)}>
               <CloseOutlined />
             </div>
             <div className={styles.syetem_top}>
@@ -325,7 +376,7 @@ class Homepage extends Component {
               </div>
               <div className={styles.syetem_item}>
                 <span className={styles.item}>备注描述:</span>
-                <div className={styles.inSle}><Input onChange={this.handleKeyWordChange} /></div>
+                <div className={`${styles.inSle} ${styles.inSles}`}><Input onChange={this.handleKeyWordChange} /></div>
               </div>
               <div className={styles.syetem_item}>
                 <span className={styles.item}>计划时间:</span>
@@ -574,7 +625,56 @@ class Homepage extends Component {
                   </div>
                 </div>
               </div>
-              <div className={styles.addroadname}></div>
+              <div className={styles.addroadname}>
+                <div className={`${styles.headerTop} ${styles.headerTops}`}>
+                  勤务路线
+                <Button size='small' type="primary">保存路线</Button>
+                </div>
+                <div className={styles.headerTop}>
+                  勤务路线路口列表
+                <Button size='small' type="primary">一键勤务</Button>
+                </div>
+                <div className={styles.wrapperList}>
+                  <div className={styles.mountingTable}>
+                    <div className={styles.mountingThead}>
+                      <div className={styles.mountingTh} />
+                      <div className={styles.mountingTh}>路口名称</div>
+                      <div className={styles.mountingTh}>勤务阶段</div>
+                      <div className={styles.mountingTh}>勤务状态</div>
+                      <div className={styles.mountingTh}>操作</div>
+                    </div>
+                    <div className={styles.mountingTbody}>
+                      <div className={styles.mountingTr}>
+                        <div className={styles.mountingTd}>1</div>
+                        <div className={styles.mountingTd}>路口1</div>
+                        <div className={styles.mountingTd}><span className={styles.phase}></span>紧急序号2</div>
+                        <div className={styles.mountingTd}>中新勤务控制</div>
+                        <div className={styles.mountingTd}>
+                          <span className={styles.deviceMsg}>锁定</span>
+                        </div>
+                      </div>
+                      <div className={styles.mountingTr}>
+                        <div className={styles.mountingTd}>2</div>
+                        <div className={styles.mountingTd}>路口2</div>
+                        <div className={styles.mountingTd}><span className={styles.phase}></span>紧急序号2</div>
+                        <div className={styles.mountingTd}>中新勤务控制</div>
+                        <div className={styles.mountingTd}>
+                          <span className={styles.deviceMsg}>锁定</span>
+                        </div>
+                      </div>
+                      <div className={styles.mountingTr}>
+                        <div className={styles.mountingTd}>3</div>
+                        <div className={styles.mountingTd}>路口3</div>
+                        <div className={styles.mountingTd}><span className={styles.phase}></span>紧急序号2</div>
+                        <div className={styles.mountingTd}>中新勤务控制</div>
+                        <div className={styles.mountingTd}>
+                          <span className={styles.deviceMsg}>锁定</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         }
