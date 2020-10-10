@@ -176,7 +176,7 @@ class Homepage extends Component {
       }
       if (channelmarker.length > 0) {
         for (var i = 0; i < channelmarker.length; i++) {
-          str += i == 0 ? channelmarker[i].getLngLat().lng + ',' + channelmarker[i].getLngLat().lat : ';' + channelmarker[i].getLngLat().lng + ',' + channelmarker[i].getLngLat().lat
+          str += i === 0 ? channelmarker[i].getLngLat().lng + ',' + channelmarker[i].getLngLat().lat : ';' + channelmarker[i].getLngLat().lng + ',' + channelmarker[i].getLngLat().lat
         }
       }
       if (startmarker && endmarker) {
@@ -188,7 +188,7 @@ class Homepage extends Component {
           destination: destination,
           waypoints: str//途经点
         }, function (data) {
-          if (data.status == 0) {
+          if (data.status === 0) {
             var data = data.result.routes[0].steps, xys = '';
             map.removeLayerAndSource('plan');
             map.removeLayerAndSource('plan1');

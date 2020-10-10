@@ -17,6 +17,7 @@ class InterMonitor extends Component {
     this.state = {
       isModify: false,
       controlContent: '',
+      confListLeft: 0,
     }
     this.confItems = ['信号灯组参数', '检测器参数', '车道参数', '相位参数', '阶段参数', '配时方案', '方案相序表', '方案配时表', '日计划表', '调度表' ]
     this.controlItems = [
@@ -34,17 +35,26 @@ class InterMonitor extends Component {
   handleCancelModify = () => {
     this.setState({ isModify: false })
   }
+  handleshowConfList = () => {
+    const { confListLeft } = this.state
+    this.setState({ confListLeft: confListLeft === 0 ? '-260px' : 0 })
+  }
   render() {
-    const { isModify, controlContent } = this.state
+    const { isModify, controlContent, confListLeft } = this.state
     return (
       <div className="interMonitorBox">
         <div className="interMessage">
           <div className="title">路口监视</div>
           <div className="monitorDetails">
-            <div className="confList">
-              <div className="showConf">
-                <DoubleLeftOutlined className="showIcon" />
-                <DoubleRightOutlined className="showIcon" />
+            <div className="timeList">
+              
+            </div>
+            <div className="confList" style={{ left: confListLeft }}>
+              <div className="showConf" onClick={this.handleshowConfList}>
+                {
+                  confListLeft === 0 ?
+                  <DoubleLeftOutlined className="showIcon" /> : <DoubleRightOutlined className="showIcon" />
+                }
               </div>
               <div className="interSearch">
                 <Select defaultValue="1">

@@ -82,13 +82,20 @@ class Header extends Component {
               this.navItems.map((item, index) => {
                 if (index > 3) {
                   return (
-                    <div className="nav" key={item.id}>
+                    <div className="nav" key={item.id} onMouseEnter={() => { this.handleEnterNav(item) }} onMouseLeave={this.handleLeaveNav} onClick={() => { this.handleNavClick(item) }}>
                       {item.name}
                       {
                         item.children.length ?
-                          <div className="innerNav">
+                          <div className="innerNav" style={{ height: navKey === item.id ? innerHeight + 'px' : 0 }}>
                             {
-                              item.children.map(items => (<div className="innerItem" key={items.id}>{items.name}</div>))
+                              item.children.map(items => (
+                                <div className="innerItem" key={items.id}>
+                                  {
+                                    items.path ?
+                                      <NavLink to={items.path}>{items.name}</NavLink> : items.name
+                                  }
+                                </div>
+                              ))
                             }
                           </div> : null
                       }

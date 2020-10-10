@@ -20,6 +20,15 @@
             position: absolute;
             height: calc(100% - 40px);
             width: 100%;
+            .timeList {
+                position: absolute;
+                top: 0;
+                left: 300px;
+                width: 332px;
+                height: 243px;
+                background-color: RGBA(2, 26, 74, 1);
+                box-shadow: inset 0 0 3px #072A5C;
+            }
             .confList {
                 position: absolute;
                 top: 0;
@@ -28,15 +37,19 @@
                 // height: calc(100% - 340px);
                 padding: 10px;
                 background-color:RGBA(3, 22, 53, .7);
+                transition: all .2s;
                 .showConf {
                     position: absolute;
                     right: -20px;
                     top: 0;
                     width: 20px;
-                    height: 20px;
+                    height: 30px;
                     text-align: center;
-                    line-height: 20px;
-                    background-color: RGBA(3, 22, 53, 0.7)
+                    line-height: 30px;
+                    background-color:RGBA(3, 22, 53, .7);
+                    font-size: 15px;
+                    color: #30466E;
+                    cursor: pointer;
                 }
                 .interSearch {
                     display: flex;
@@ -104,7 +117,7 @@
                 bottom: 0;
                 width: 850px;
                 height: 280px;
-                padding-left: 20px;
+                padding: 10px 0 0 20px;
                 background: linear-gradient(0deg, rgba(0, 59, 129, 0), rgba(0, 38, 120, 0.99), rgba(0, 46, 146, 0.02));
                 font-family: 'MicrosoftYaHei';
                 .modifyBox {
