@@ -1,0 +1,227 @@
+$ft_color: #dcdde2;
+$bor-color: #a5fcff;
+.PlancontrolPageWrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #021027;
+    .sidebarLeft {
+        position: fixed;
+        top: 100px;
+        left: 10px;
+        width: 300px;
+        height: 100%;
+        z-index: 9;
+        padding: 15px;
+        background: linear-gradient(to bottom, rgba(1, 17, 50, 0.8), rgba(5, 38, 89, 0.6));
+    }
+    .container {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: calc(100% - 70px);
+        .contentCenter {
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            .title {
+                height: 20px;
+                text-align: center;
+                line-height: 19px;
+                background: url("../../imgs/titbg.png") center 5px no-repeat;
+                background-size: 100% 100%;
+            }
+            .mapabcgl-ctrl-top-right {
+                display: none;
+            }
+            .driveInfo {
+                width: auto;
+                height: auto;
+                background: #fff;
+                color: #333;
+                font-size: 12px;
+                padding: 15px 20px 7px 7px;
+            }
+
+            .driveInfo li {
+                margin-bottom: 8px;
+            }
+
+            .driveInfo li span {
+                width: 160px;
+                display: inline-block;
+                text-align: right;
+                font-weight: 500;
+                vertical-align: middle;
+            }
+
+            .driveInfo li input,
+            .driveInfo li textarea {
+                width: 180px;
+                font-size: 12px;
+                padding-left: 5px;
+                color: #333;
+            }
+
+            .driveInfo li textarea {
+                vertical-align: top;
+                font-family: Arial;
+            }
+
+            .context_menu li {
+                cursor: pointer;
+            }
+
+            .context_menu li:hover {
+                color: #22a9ff;
+            }
+            .centerMain {
+                flex: 1;
+                .centerBox {
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    .ceterLeft,
+                    .centerRight {
+                        width: 200px;
+                        height: 100%;
+                        padding-top: 10px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        overflow-y: auto;
+                        .areaDetails {
+                            width: 160px;
+                            margin-bottom: 20px;
+                            .areaName {
+                                margin-bottom: 6px;
+                                font-size: 22px;
+                                color: #ffa200;
+                            }
+                            .details {
+                                height: 42px;
+                                padding-left: 7px;
+                                background: url("../../imgs/singalmsg.png") center center no-repeat;
+                                background-size: 100% 100%;
+                                font-size: 13px;
+                                .msg {
+                                    display: flex;
+                                    justify-content: space-between;
+                                    .online,
+                                    .outline {
+                                        min-width: 70px;
+                                        height: 20px;
+                                        display: flex;
+                                        align-items: center;
+                                        .nomalVal {
+                                            color: #2afafe;
+                                        }
+                                        .outlineVal {
+                                            color: #818181;
+                                        }
+                                        .faultVal {
+                                            color: #ff0001;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .center {
+                        flex: 1;
+                        background-color: #031334;
+                        position: relative;
+                        .topInfo {
+                            position: absolute;
+                            top: 10px;
+                            left: 0;
+                            width: 100%;
+                            display: flex;
+                            flex-wrap: wrap;
+                            justify-content: space-between;
+                            .info {
+                                width: 220px;
+                                height: 75px;
+                                background: url("../../imgs/numbg.png") center center no-repeat;
+                                background-size: 100% 100%;
+                                display: flex;
+                                .infoName {
+                                    display: flex;
+                                    justify-content: center;
+                                    flex-direction: column;
+                                    padding-left: 10px;
+                                    font-size: 16px;
+                                    color: #0ff2fd;
+                                    .infoText {
+                                        padding-bottom: 5px;
+                                    }
+                                }
+                                .infoValue {
+                                    flex: 1;
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    padding-right: 10px;
+                                    .infoNum {
+                                        width: 32px;
+                                        height: 50px;
+                                        background: url("../../imgs/22.png") center center no-repeat;
+                                        background-size: 100% 100%;
+                                        font: 50px num;
+                                        text-indent: 3px;
+                                        line-height: 50px;
+                                        color: #fef500;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.sidebarLeft {
+    :global(.ant-menu) {
+        font-size: 16px;
+        color: #86b7fa;
+        border-right: none;
+        background-color: transparent;
+    }
+    :global(.ant-menu-submenu-inline > .ant-menu-submenu-title .ant-menu-submenu-arrow::after) {
+        background-image: -webkit-gradient(
+            linear,
+            left top,
+            right top,
+            from(rgba(134, 183, 250, 0.85)),
+            to(rgba(134, 183, 250, 0.85))
+        );
+    }
+    :global(.ant-menu-submenu-inline > .ant-menu-submenu-title .ant-menu-submenu-arrow::before) {
+        background-image: -webkit-gradient(
+            linear,
+            left top,
+            right top,
+            from(rgba(134, 183, 250, 0.85)),
+            to(rgba(134, 183, 250, 0.85))
+        );
+    }
+    :global(.ant-menu-item-selected) {
+        background: linear-gradient(to right, rgba(1, 17, 50, 0.8), rgba(21, 63, 149, 0.8), rgba(5, 38, 89, 0.6));
+    }
+    :global(.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected) {
+        background: linear-gradient(to right, rgba(1, 17, 50, 0.8), rgba(21, 63, 149, 0.8), rgba(5, 38, 89, 0.6));
+    }
+    :global(.ant-menu-item) {
+        position: relative;
+        width: 240px;
+        padding-right: 20px;
+        padding-left: 65px !important;
+    }
+    :global(.anticon) {
+        position: absolute;
+        top: 15px;
+        right: -6px;
+    }
+}
