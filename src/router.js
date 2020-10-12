@@ -5,10 +5,11 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom'
+import { ConfigProvider } from 'antd';
 import loadable from 'loadable-components'
+import zhCN from 'antd/es/locale/zh_CN';
 
 import LoadingPage from './container/LoadingPage/LoadingPage'
-
 const Login = loadable(() => import('./container/Login/Login'), { LoadingComponent: LoadingPage })
 const Header = loadable(() => import('./container/Header/Header'), { LoadingComponent: LoadingPage })
 const HomePage = loadable(() => import('./container/HomePage/HomePage'), { LoadingComponent: LoadingPage })
@@ -34,12 +35,14 @@ const Parent = () => (
 )
 export default function BasicRouter() {
   return (
-    <Router>
-      <Switch>
-        <Redirect exact from="/" to="login" />
-        <Route exact path="/login" component={Login} />
-        <Route path="/" component={Parent} />
-      </Switch>
-    </Router>
+    <ConfigProvider locale={zhCN}>
+      <Router>
+        <Switch>
+          <Redirect exact from="/" to="login" />
+          <Route exact path="/login" component={Login} />
+          <Route path="/" component={Parent} />
+        </Switch>
+      </Router>
+    </ConfigProvider >
   )
 }

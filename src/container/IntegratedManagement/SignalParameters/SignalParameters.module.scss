@@ -1,0 +1,134 @@
+.timingWrapper {
+  height: 100%;
+  width: 100%;
+  background-color: #021035;
+  display: flex;
+  flex-direction: column;
+}
+.timingcontainer {
+  height: calc(100% - 70px);
+  position: absolute;
+  width: 100%;
+  top: 70px;
+  padding: 25px;
+  .title {
+    font-size: 16px;
+    color: whitesmoke;
+    height: 40px;
+  }
+  .searchBox {
+    height: 35px;
+    display: flex;
+    div {
+      flex: 1;
+      display: flex;
+      margin-right: 20px;
+      align-items: center;
+      > span {
+        padding-right: 20px;
+        color: #92d1db;
+      }
+      input {
+        flex: 1;
+      }
+      &:last-child {
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+  }
+  .goExcal {
+    height: 35px;
+    margin-top: 10px;
+    > span {
+      padding-right: 6px;
+      color: #92d1db;
+    }
+  }
+  .mountingManage {
+    height: calc(100% - 150px);
+    .mountingTable {
+      height: 100%;
+      .mountingThead {
+        font-size: 12px;
+        height: 30px;
+        color: #95edf4;
+        display: flex;
+      }
+      .mountingTr {
+        height: 30px;
+        position: relative;
+        display: flex;
+      }
+      .mountingTrbox {
+        height: 175px;
+      }
+      .mountingThead {
+        background-color: rgba(14, 28, 63, 0.7);
+      }
+      .mountingTh,
+      .mountingTd {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        span {
+          cursor: pointer;
+        }
+      }
+      .deviceMsg {
+        margin: 0 10px;
+        color: #07a8ff;
+      }
+      .mountingTr:nth-child(odd) {
+        background-color: rgba(14, 50, 98, 0.7);
+      }
+      .mountingTr:nth-child(even) {
+        background-color: rgba(14, 28, 63, 0.7);
+      }
+      .mountingTbody {
+        // height: calc(100% - 50px);
+        // overflow-y: auto;
+        // position: relative;
+      }
+    }
+  }
+  .paginationBox {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    span {
+      margin-left: 15px;
+    }
+  }
+}
+.timingcontainer {
+  :global(.ant-btn) {
+    width: 90px;
+    // border-radius: 4px;
+    padding: 0;
+    text-align: center;
+  }
+}
+.searchBox {
+  :global(.ant-input) {
+    background-color: #06385b;
+    color: white;
+    outline: none;
+    border: none;
+  }
+}
+.paginationBox {
+  :global(.ant-pagination-item a) {
+    color: white;
+  }
+  :global(.ant-pagination-options) {
+    color: white;
+  }
+  :global(.ant-pagination-item-active) {
+    background-color: #1890ff;
+  }
+  :global(path) {
+    color: white;
+  }
+}
