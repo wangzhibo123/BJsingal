@@ -25,6 +25,7 @@ const UserManagement = loadable(() => import("./container/SystemManagement/UserM
 const AuthManagement = loadable(() => import("./container/SystemManagement/AuthManagement/AuthManagement"), { LoadingComponent: LoadingPage })
 const OperationMonitoring = loadable(() => import("./container/SystemManagement/OperationMonitoring/OperationMonitoring"), { LoadingComponent: LoadingPage })
 const OperationLog = loadable(() => import("./container/SystemManagement/OperationLog/OperationLog"), { LoadingComponent: LoadingPage })
+const TimeControl = loadable(() => import("./container/CenterControl/ScheduleControl/ScheduleControl"), { LoadingComponent: LoadingPage })
 const Parent = () => (
   <React.Fragment>
     <Route path="*" component={Header} />
@@ -40,6 +41,7 @@ const Parent = () => (
     <Route exact path="/AuthManagement" component={AuthManagement} />
     <Route exact path="/OperationMonitoring" component={OperationMonitoring} />
     <Route exact path="/OperationLog" component={OperationLog} />
+    <Route path="/timeControl" component={TimeControl} />
   </React.Fragment>
 )
 export default function BasicRouter() {
