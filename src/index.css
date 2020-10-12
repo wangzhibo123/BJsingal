@@ -31,4 +31,7 @@ code {
 .mapabcgl-ctrl-top-right {
   display: none;
 }
+.mapabcgl-control-container {
+  display: none;
+}
 
