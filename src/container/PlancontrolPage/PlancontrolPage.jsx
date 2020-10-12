@@ -86,7 +86,10 @@ class Homepage extends Component {
       addMenu()
     })
     var marker = '', startmarker = '', endmarker = '', channelmarker = [];
-
+    function allfun() {
+      getstartpoint({ lng: 116.3914995897319, lat: 39.91082015896538 })
+      getendpoint({ lng: 116.3909904231216, lat: 39.9223781190357 })
+    }
     //添加右键菜单
     function addMenu() {
       map.flyTo({ center: [116.391, 39.911], zoom: 14, pitch: 60 })
@@ -121,8 +124,7 @@ class Homepage extends Component {
           clearMap();
         })
       })
-      getstartpoint({ lng: 116.3914995897319, lat: 39.91082015896538 })
-      getendpoint({ lng: 116.3909904231216, lat: 39.9223781190357 })
+      allfun()
     }
     function getstartpoint(lnglat) {
       console.log(lnglat, '开始')
@@ -366,7 +368,7 @@ class Homepage extends Component {
         {
           IsddMessge &&
           <div className={styles.addMessge}>
-            <div className={styles.close} onClick={()=>this.handleClckMessge(false)}>
+            <div className={styles.close} onClick={() => this.handleClckMessge(false)}>
               <CloseOutlined />
             </div>
             <div className={styles.syetem_top}>
