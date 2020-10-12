@@ -86,10 +86,7 @@ class Homepage extends Component {
       addMenu()
     })
     var marker = '', startmarker = '', endmarker = '', channelmarker = [];
-    function allfun() {
-      getstartpoint({ lng: 116.3914995897319, lat: 39.91082015896538 })
-      getendpoint({ lng: 116.3909904231216, lat: 39.9223781190357 })
-    }
+
     //添加右键菜单
     function addMenu() {
       map.flyTo({ center: [116.391, 39.911], zoom: 14, pitch: 60 })
@@ -124,7 +121,8 @@ class Homepage extends Component {
           clearMap();
         })
       })
-      allfun()
+      getstartpoint({ lng: 116.3914995897319, lat: 39.91082015896538 })
+      getendpoint({ lng: 116.3909904231216, lat: 39.9223781190357 })
     }
     function getstartpoint(lnglat) {
       console.log(lnglat, '开始')
@@ -178,7 +176,7 @@ class Homepage extends Component {
       }
       if (channelmarker.length > 0) {
         for (var i = 0; i < channelmarker.length; i++) {
-          str += i === 0 ? channelmarker[i].getLngLat().lng + ',' + channelmarker[i].getLngLat().lat : ';' + channelmarker[i].getLngLat().lng + ',' + channelmarker[i].getLngLat().lat
+          str += i == 0 ? channelmarker[i].getLngLat().lng + ',' + channelmarker[i].getLngLat().lat : ';' + channelmarker[i].getLngLat().lng + ',' + channelmarker[i].getLngLat().lat
         }
       }
       if (startmarker && endmarker) {
@@ -190,7 +188,7 @@ class Homepage extends Component {
           destination: destination,
           waypoints: str//途经点
         }, function (data) {
-          if (data.status === 0) {
+          if (data.status == 0) {
             var data = data.result.routes[0].steps, xys = '';
             map.removeLayerAndSource('plan');
             map.removeLayerAndSource('plan1');
@@ -323,8 +321,8 @@ class Homepage extends Component {
         .addTo(map);
       return marker;
     };
-    this.map = map
   }
+  
   handleClick = e => {
     console.log('click ', e);
   }
