@@ -1,0 +1,102 @@
+.calenderHome {
+    width: 100%;
+    height: 100%;
+
+    .calenderHeader {
+        width: 100%;
+        height: 30px;
+        background: url(../../../imgs/smalltit.png) center 10px no-repeat;
+        background-size: 100% 100%;
+        text-align: center;
+        line-height: 30px;
+        font-size: 17px;
+    }
+    .calenderNav{
+        width: 100%;
+        height: 40px;
+        float: left;
+        line-height:    px;
+        .calenderTab{
+            float: left;
+            .week{
+                width: 75px;
+                height: 26px;
+                float: left;
+                background: url(../../../imgs/jiaoK.png) center no-repeat;
+                background-size: 100% 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                .ant-radio-checked .ant-radio-inner{
+                    border:1px solid #4BC9DC;
+                }
+                .ant-radio-inner{
+                    background-color: #031C31;
+                }
+                .ant-radio-checked .ant-radio-inner:after{
+                    background: #4BC9DC;
+                }
+            }
+            .gregorianCalendar{
+                width: 75px;
+                height: 26px;
+                float: left;
+                background: url(../../../imgs/jiaoK.png) center no-repeat;
+                background-size: 100% 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 0 10px;
+                .ant-radio-checked .ant-radio-inner{
+                    border:1px solid #4BC9DC;
+                }
+                .ant-radio-inner{
+                    background-color: #031C31;
+                }
+                .ant-radio-checked .ant-radio-inner:after{
+                    background: #4BC9DC;
+                }
+            }
+            .lunarCalendar{
+                width: 75px;
+                height: 26px;
+                float: left;
+                background: url(../../../imgs/jiaoK.png) center no-repeat;
+                background-size: 100% 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                .ant-radio-checked .ant-radio-inner{
+                    border:1px solid #4BC9DC;
+                }
+                .ant-radio-inner{
+                    background-color: #031C31;
+                }
+                .ant-radio-checked .ant-radio-inner:after{
+                    background: #4BC9DC;
+                }
+            }
+        }
+        .calenderSelect{
+            float: right;
+            .ant-select {
+                    width: 85px;
+                    color: #fff;
+                    border: 1px solid #3B89A2;
+                }
+
+                .ant-select-selector {
+                    border: none;
+                    background-color: #0A2967;
+                }
+
+                .ant-select-arrow {
+                    color: #fff;
+                }
+        }
+    }
+    .calenderContent{
+        width: 100%;
+        height: calc(100% - 70px);
+    }
+}

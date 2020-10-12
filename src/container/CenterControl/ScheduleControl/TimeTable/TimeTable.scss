@@ -1,0 +1,110 @@
+.timeTablePage {
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    .timeTableHeader {
+        width: 100%;
+        height: 30px;
+        background: url(../../../imgs/smalltit.png) center 10px no-repeat;
+        background-size: 100% 100%;
+        text-align: center;
+        line-height: 30px;
+        font-size: 17px;
+    }
+
+    .timeTableContent {
+        width: 100%;
+
+        .timeTableSelect {
+            width: 100%;
+            height: 40px;
+            display: flex;
+
+            .selectTimeType {
+                flex: 2;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                .ant-select {
+                    width: 80%;
+                    color: #fff;
+                    border: 1px solid #2E6F8C;
+                    font-size: 13px;
+                }
+
+                .ant-select-selector {
+                    border: none;
+                    background-color: #0A2967;
+                }
+
+                .ant-select-arrow {
+                    color: #fff;
+                }
+            }
+
+            .selectTime {
+                flex: 2;
+                display: flex;
+                justify-content: left;
+                align-items: center;
+
+                .ant-select {
+                    width: 70%;
+                    color: #fff;
+                    border: 1px solid #2E6F8C;
+                    font-size: 13px;
+                }
+
+                .ant-select-selector {
+                    border: none;
+                    background-color: #0A2967;
+                }
+
+                .ant-select-arrow {
+                    color: #fff;
+                }
+            }
+
+            .timeTableButton {
+                flex: 6;
+                position: relative;
+
+                .timeTableBtn {
+                    display: flex;
+                    position: absolute;
+                    right: 23px;
+                    top: 10px;
+
+                    .addTable {
+                        margin-left: 23px;
+                        text-decoration: underline;
+                        cursor: pointer;
+                    }
+
+                    .updateTable {
+                        margin-left: 23px;
+                        text-decoration: underline;
+                        cursor: pointer;
+                    }
+
+                    .saveTable {
+                        margin-left: 23px;
+                        text-decoration: underline;
+                        cursor: pointer;
+                    }
+                }
+
+            }
+
+            .timeTableList {
+                width: 1173px;
+                height: 200px;
+                .tableList{
+                    width: 1173px;
+                    height: 200px;
+                }
+            }
+        }
+    }
+}
