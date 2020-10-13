@@ -65,15 +65,21 @@ export default class TimePlan extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="timePlanExecute">
+                    <div className="timePlanExecuteHome">
                         <div className="timePlanAllShow">
-                            <div>方案:4</div>
-                            <div>周期:200</div>
+                            <div className="scheme">方案: <div className="schemeNum">4</div></div>
+                            <div className="period">周期: <div className="periodNum">200</div> </div>
                         </div>
                         <div className="timePlanExecute">
                             <div className="timePlanExecuteNext">
-                                <div className="timePlanExecuteTextFirst">立即</div>
-                                <div className="timePlanExecuteTextNext">执行</div>
+                                <div className="timePlanExecuteBox">
+                                    <div>
+                                        立即
+                                    </div>
+                                    <div>
+                                        执行
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

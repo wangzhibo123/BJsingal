@@ -9,6 +9,7 @@ import feel from '../imgs/iconS.png'
 import hand from '../imgs/iconH.png'
 import allred from '../imgs/iconR.png'
 import yellow from '../imgs/IconY.png'
+import InterTimeList from './InterTimeList/InterTimeList'
 
 const { Option } = Select
 class InterMonitor extends Component {
@@ -16,8 +17,9 @@ class InterMonitor extends Component {
     super(props)
     this.state = {
       isModify: false,
-      controlContent: '',
+      controlContent: 'default',
       confListLeft: 0,
+      modifyStage: false,
     }
     this.confItems = ['信号灯组参数', '检测器参数', '车道参数', '相位参数', '阶段参数', '配时方案', '方案相序表', '方案配时表', '日计划表', '调度表' ]
     this.controlItems = [
@@ -40,14 +42,52 @@ class InterMonitor extends Component {
     this.setState({ confListLeft: confListLeft === 0 ? '-260px' : 0 })
   }
   render() {
-    const { isModify, controlContent, confListLeft } = this.state
+    const { isModify, controlContent, confListLeft, modifyStage } = this.state
     return (
       <div className="interMonitorBox">
         <div className="interMessage">
           <div className="title">路口监视</div>
           <div className="monitorDetails">
-            <div className="timeList">
-              
+            <InterTimeList />
+            <div className="conditionList">
+              <div className="titles">各路口实时路况</div>
+                <div className="listBox">
+                  <div className="listTh">
+                    <span className="innterBorder" />
+                    <div className="listTd" />
+                    <div className="listTd">拥堵状态</div>
+                    <div className="listTd">平均车速</div>
+                    <div className="listTd">饱和度</div>
+                  </div>
+                  <div className="listTr">
+                    <span className="innterBorder" />
+                    <div className="listTd">北路</div>
+                    <div className="listTd">40</div>
+                    <div className="listTd">37km/h</div>
+                    <div className="listTd">2.0</div>
+                  </div>
+                  <div className="listTr">
+                    <span className="innterBorder" />
+                    <div className="listTd">南路</div>
+                    <div className="listTd">32</div>
+                    <div className="listTd">35km/h</div>
+                    <div className="listTd">1.8</div>
+                  </div>
+                  <div className="listTr">
+                    <span className="innterBorder" />
+                    <div className="listTd">东路</div>
+                    <div className="listTd">38</div>
+                    <div className="listTd">34km/h</div>
+                    <div className="listTd">1.7</div>
+                  </div>
+                  <div className="listTr">
+                    <span className="innterBorder" />
+                    <div className="listTd">西路</div>
+                    <div className="listTd">27</div>
+                    <div className="listTd">40km/h</div>
+                    <div className="listTd">1.1</div>
+                  </div>
+                </div>
             </div>
             <div className="confList" style={{ left: confListLeft }}>
               <div className="showConf" onClick={this.handleshowConfList}>
@@ -100,7 +140,14 @@ class InterMonitor extends Component {
               {
                 controlContent === 'default' &&
                 <div className="excutePlan">
-                  <span>执行方案</span><span className="planName">日常方案(周期120)</span>
+                  <span>执行方案</span>
+                  {
+                    modifyStage ?
+                    <span className="planName">
+
+                    </span> :
+                    <span className="planName">日常方案(周期120)</span>
+                  }
                 </div>
               }
               <div className="controlContent">

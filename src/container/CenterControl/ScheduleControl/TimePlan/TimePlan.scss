@@ -1,7 +1,10 @@
 .timePlan {
     width: 100%;
     height: 100%;
-
+    .timePlanHome{
+        width: 100%;
+        height: 100%;
+    }
     .timePlanHeader {
         width: 100%;
         height: 30px;
@@ -16,7 +19,7 @@
         width: 100%;
         height: 100%;
         display: flex;
-
+        background: #031B37;
         .timePlanDirection {
             flex: 7.5;
             display: flex;
@@ -28,8 +31,8 @@
                 height: 90px;
                 background: url(../../../imgs/jiaoK.png) center no-repeat;
                 background-size: 100% 100%;
-                margin-left: 12px;
-                margin-top: 20px;
+                margin-left: 16px;
+                margin-top: 10px;
                 display: flex;
 
                 .timePlanIcon {
@@ -44,6 +47,10 @@
                     display: flex;
                     justify-content: center;
                     align-items: center;
+                    font-size: 40px;
+                    color: #13D4EF;
+                    text-decoration: underline;
+                    font-weight: 800;
                 }
 
                 .timePlanChange {
@@ -55,18 +62,37 @@
             }
         }
 
-        .timePlanExecute {
+        .timePlanExecuteHome {
             flex: 2.5;
             display: flex;
-
             .timePlanAllShow {
                 flex: 1;
                 display: flex;
                 justify-content: center;
                 align-items: left;
                 flex-direction: column;
-                font-size: 28px;
+                font-size: 30px;
                 color: #13D4EF;
+                .scheme{
+                    padding: 9px 0;
+                    display: flex;
+                    .schemeNum{
+                        margin-left: 15px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                }
+                .period{
+                    padding: 9px 0;
+                    display: flex;
+                    .periodNum{
+                        margin-left: 15px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                }
             }
 
             .timePlanExecute {
@@ -79,30 +105,30 @@
                     width: 123px;
                     height: 133px;
                     border: 1px solid #13D4EF;
-                    font-size: 40px;
+                    font-size: 35px;
                     background: #112A4C;
-                    color: #13D4EF;
                     display: flex;
                     flex-direction: column;
                     cursor: pointer;
                     position: absolute;
-                    bottom: 50px;
+                    top: 50px;
                     right: 20px;
-                    .timePlanExecuteTextFirst{
+                    .timePlanExecuteBox{
                         width: 100%;
-                        height: 50%;
+                        height:50%;
                         display: flex;
-                        justify-content: center;
+                        flex-direction: column;
+                        color: #13D4EF;
                         align-items: center;
-                        text-decoration: underline;
-                    }
-                    .timePlanExecuteTextNext{
-                        width: 100%;
-                        height: 50%;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        text-decoration: underline;
+                        div{
+                            width: 60%;
+                            height: 50px;
+                            text-align: center;
+                            border-bottom: 3px solid #008EC7;
+                        }
+                        div:nth-child(2){
+                            color:#008EC7
+                        }
                     }
                 }
             }
