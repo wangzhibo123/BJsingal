@@ -25,7 +25,7 @@ class Header extends Component {
         name: '运维管理', id: '0-6',children: []},
       {
         name: '综合管理', id: '0-7',
-        children: [{ name: '路口管理', id: '1-6', path: '/intersection' }, { name: '区域管理', id: '2-6', path: '/region' }, { name: '信号参数管理', id: '3-6', path: '' }]
+        children: [{ name: '路口管理', id: '1-6', path: '/intersection' }, { name: '区域管理', id: '2-6', path: '/region' }, { name: '信号参数管理', id: '3-6', path: '/signalParameters' }]
       },
       { name: '系统管理', id: '0-8', 
         children: [{ name: '用户管理', id: '1-8', path: '/UserManagement' },{ name: '授权管理', id: '2-8', path: '/AuthManagement' },{ name: '运行监控', id: '3-8', path: '/OperationMonitoring' },{ name: '操作日志', id: '4-8', path: 'OperationLog' }] 

@@ -40,7 +40,10 @@ class Homepage extends Component {
     })
     if (!isShow) {
       this.getstartpoint({ lng: 116.38261247568647, lat: 39.92257376086323 })
-      this.getendpoint({ lng: 116.38480970917607, lat: 39.92242670868208})
+      this.getendpoint({ lng: 116.38480970917607, lat: 39.92242670868208 })
+    } else {
+      this.getstartpoint({ lng: 116.39171507191793, lat: 39.910732551600205 })
+      this.getendpoint({ lng: 116.3909904231216, lat: 39.9223781190357 })
     }
   }
   addMenu = () => {
