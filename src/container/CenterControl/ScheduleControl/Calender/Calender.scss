@@ -1,7 +1,6 @@
 .calenderHome {
     width: 100%;
     height: 100%;
-
     .calenderHeader {
         width: 100%;
         height: 30px;
@@ -18,6 +17,7 @@
         line-height:    px;
         .calenderTab{
             float: left;
+            margin-top: 5px;
             .week{
                 width: 75px;
                 height: 26px;
@@ -79,6 +79,7 @@
         }
         .calenderSelect{
             float: right;
+            margin-top: 5px;
             .ant-select {
                     width: 85px;
                     color: #fff;

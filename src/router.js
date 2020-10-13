@@ -18,6 +18,7 @@ const PlancontrolPage = loadable(() => import('./container/PlancontrolPage/Planc
 const InterMonitor = loadable(() => import('./container/InterMonitor/InterMonitor'), { LoadingComponent: LoadingPage })
 const LineMon = loadable(() => import("./container/CenterControl/MainMonitoring/MainMonitoring"), { LoadingComponent: LoadingPage })
 const AreaMon = loadable(() => import("./container/CenterControl/AreaMonitoring/AreaMonitoring"), { LoadingComponent: LoadingPage })
+const TimeControl = loadable(() => import("./container/CenterControl/ScheduleControl/ScheduleControl"), { LoadingComponent: LoadingPage })
 const Intersection = loadable(() => import("./container/IntegratedManagement/Intersection/Intersection"), { LoadingComponent: LoadingPage })
 const Region = loadable(() => import("./container/IntegratedManagement/Region/Region"), { LoadingComponent: LoadingPage })
 const SignalParameters = loadable(() => import("./container/IntegratedManagement/SignalParameters/SignalParameters"), { LoadingComponent: LoadingPage })
@@ -25,13 +26,13 @@ const UserManagement = loadable(() => import("./container/SystemManagement/UserM
 const AuthManagement = loadable(() => import("./container/SystemManagement/AuthManagement/AuthManagement"), { LoadingComponent: LoadingPage })
 const OperationMonitoring = loadable(() => import("./container/SystemManagement/OperationMonitoring/OperationMonitoring"), { LoadingComponent: LoadingPage })
 const OperationLog = loadable(() => import("./container/SystemManagement/OperationLog/OperationLog"), { LoadingComponent: LoadingPage })
-const TimeControl = loadable(() => import("./container/CenterControl/ScheduleControl/ScheduleControl"), { LoadingComponent: LoadingPage })
 const Parent = () => (
   <React.Fragment>
     <Route path="*" component={Header} />
     <Route exact path="/home" component={HomePage} />
     <Route path="/lineMon" component={LineMon} />
     <Route path="/areaMon" component={AreaMon} />
+    <Route path="/timeControl" component={TimeControl} />
     <Route exact path="/plancontrolpage" component={PlancontrolPage} />
     <Route exact path="/intermonitor" component={InterMonitor} />
     <Route exact path="/intersection" component={Intersection} />
@@ -41,7 +42,6 @@ const Parent = () => (
     <Route exact path="/AuthManagement" component={AuthManagement} />
     <Route exact path="/OperationMonitoring" component={OperationMonitoring} />
     <Route exact path="/OperationLog" component={OperationLog} />
-    <Route path="/timeControl" component={TimeControl} />
   </React.Fragment>
 )
 export default function BasicRouter() {
