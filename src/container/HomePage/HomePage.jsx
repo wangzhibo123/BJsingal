@@ -14,9 +14,7 @@ class Homepage extends Component {
     this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
   }
   componentDidMount = () => {
-    fetch('http://192.168.1.53:21004/signal-decision/alert/getNearSevenCount', { method: 'GET', mode: 'cors' })
-    .then(response => response.json())
-      .then(data => console.log(data))
+    
   }
   addMarker = () => {
     if (this.map) {
