@@ -10,7 +10,6 @@ import zhCN from 'antd/es/locale/zh_CN'
 import loadable from 'loadable-components'
 
 import LoadingPage from './container/LoadingPage/LoadingPage'
-
 const Login = loadable(() => import('./container/Login/Login'), { LoadingComponent: LoadingPage })
 const Header = loadable(() => import('./container/Header/Header'), { LoadingComponent: LoadingPage })
 const HomePage = loadable(() => import('./container/HomePage/HomePage'), { LoadingComponent: LoadingPage })
