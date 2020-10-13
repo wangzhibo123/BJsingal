@@ -1,0 +1,113 @@
+.timePlan {
+    width: 100%;
+    height: 100%;
+
+    .timePlanHeader {
+        width: 100%;
+        height: 30px;
+        background: url(../../../imgs/smalltit.png) center 10px no-repeat;
+        background-size: 100% 100%;
+        text-align: center;
+        line-height: 30px;
+        font-size: 17px;
+    }
+
+    .timePlanContent {
+        width: 100%;
+        height: 100%;
+        display: flex;
+
+        .timePlanDirection {
+            flex: 7.5;
+            display: flex;
+            flex-wrap: wrap;
+
+
+            .timePlanItem {
+                width: 200px;
+                height: 90px;
+                background: url(../../../imgs/jiaoK.png) center no-repeat;
+                background-size: 100% 100%;
+                margin-left: 12px;
+                margin-top: 20px;
+                display: flex;
+
+                .timePlanIcon {
+                    flex: 1;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .timePlanNum {
+                    flex: 1;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .timePlanChange {
+                    flex: 1;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+            }
+        }
+
+        .timePlanExecute {
+            flex: 2.5;
+            display: flex;
+
+            .timePlanAllShow {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: left;
+                flex-direction: column;
+                font-size: 28px;
+                color: #13D4EF;
+            }
+
+            .timePlanExecute {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                .timePlanExecuteNext {
+                    width: 123px;
+                    height: 133px;
+                    border: 1px solid #13D4EF;
+                    font-size: 40px;
+                    background: #112A4C;
+                    color: #13D4EF;
+                    display: flex;
+                    flex-direction: column;
+                    cursor: pointer;
+                    position: absolute;
+                    bottom: 50px;
+                    right: 20px;
+                    .timePlanExecuteTextFirst{
+                        width: 100%;
+                        height: 50%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        text-decoration: underline;
+                    }
+                    .timePlanExecuteTextNext{
+                        width: 100%;
+                        height: 50%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
+    }
+
+
+}

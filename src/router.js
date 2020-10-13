@@ -5,10 +5,11 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom'
+import { ConfigProvider } from 'antd'
+import zhCN from 'antd/es/locale/zh_CN'
 import loadable from 'loadable-components'
 
 import LoadingPage from './container/LoadingPage/LoadingPage'
-
 const Login = loadable(() => import('./container/Login/Login'), { LoadingComponent: LoadingPage })
 const Header = loadable(() => import('./container/Header/Header'), { LoadingComponent: LoadingPage })
 const HomePage = loadable(() => import('./container/HomePage/HomePage'), { LoadingComponent: LoadingPage })
@@ -19,6 +20,11 @@ const AreaMon = loadable(() => import("./container/CenterControl/AreaMonitoring/
 const Intersection = loadable(() => import("./container/IntegratedManagement/Intersection/Intersection"), { LoadingComponent: LoadingPage })
 const Region = loadable(() => import("./container/IntegratedManagement/Region/Region"), { LoadingComponent: LoadingPage })
 const SignalParameters = loadable(() => import("./container/IntegratedManagement/SignalParameters/SignalParameters"), { LoadingComponent: LoadingPage })
+const UserManagement = loadable(() => import("./container/SystemManagement/UserManagement/UserManagement"), { LoadingComponent: LoadingPage })
+const AuthManagement = loadable(() => import("./container/SystemManagement/AuthManagement/AuthManagement"), { LoadingComponent: LoadingPage })
+const OperationMonitoring = loadable(() => import("./container/SystemManagement/OperationMonitoring/OperationMonitoring"), { LoadingComponent: LoadingPage })
+const OperationLog = loadable(() => import("./container/SystemManagement/OperationLog/OperationLog"), { LoadingComponent: LoadingPage })
+const TimeControl = loadable(() => import("./container/CenterControl/ScheduleControl/ScheduleControl"), { LoadingComponent: LoadingPage })
 const Parent = () => (
   <React.Fragment>
     <Route path="*" component={Header} />
@@ -30,6 +36,11 @@ const Parent = () => (
     <Route exact path="/intersection" component={Intersection} />
     <Route exact path="/region" component={Region} />
     <Route exact path="/signalParameters" component={SignalParameters} />
+    <Route exact path="/UserManagement" component={UserManagement} />
+    <Route exact path="/AuthManagement" component={AuthManagement} />
+    <Route exact path="/OperationMonitoring" component={OperationMonitoring} />
+    <Route exact path="/OperationLog" component={OperationLog} />
+    <Route path="/timeControl" component={TimeControl} />
   </React.Fragment>
 )
 export default function BasicRouter() {
@@ -38,7 +49,9 @@ export default function BasicRouter() {
       <Switch>
         <Redirect exact from="/" to="login" />
         <Route exact path="/login" component={Login} />
-        <Route path="/" component={Parent} />
+        <ConfigProvider locale={zhCN}>
+          <Route path="/" component={Parent} />
+        </ConfigProvider>
       </Switch>
     </Router>
   )

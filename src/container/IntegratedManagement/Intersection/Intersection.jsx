@@ -138,6 +138,7 @@ class Intersection extends Component {
           {
             !mainHomePage &&
             <div className={styles.contentCenter}>
+              <div className={styles.title}>路口管理</div>
               <div id="mapContainer" className="map-container" style={{ height: 'calc(100% - 5px)' }}></div>
             </div>
           }

@@ -1,0 +1,46 @@
+.scheduleHome {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: url(../../imgs/sysbg.png) center center no-repeat;
+    background-size: cover;
+    font-family: 'PingFang-SC-Regular';
+    
+    .scheduleHomePage {
+        width: 100%;
+        height: 90%;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        position: absolute;
+        top: 80px;
+
+        .timeTable {
+            width: 1173px;
+            height: 600px;
+            margin-left: 30px;
+        }
+
+        .timePlan {
+            width: 1173px;
+            height: 191px;
+            margin-left: 30px;
+        }
+
+        .mapCalender {
+            width: 584px;
+            height: 100%;
+
+            .calender {
+                width: 584px;
+                height: 483px;
+            }
+
+            .minMap {
+                width: 584px;
+                height: 355px;
+                border: 2px solid #093B52;
+            }
+        }
+    }
+}
