@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Select } from 'antd'
-import { SearchOutlined, DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons'
+import { SearchOutlined, DoubleLeftOutlined, DoubleRightOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons'
 import './InterMonitor.scss'
 
 import Time from '../imgs/iconT.png'
@@ -20,6 +20,7 @@ class InterMonitor extends Component {
       controlContent: 'default',
       confListLeft: 0,
       modifyStage: false,
+      modeIndex: null,
     }
     this.confItems = ['信号灯组参数', '检测器参数', '车道参数', '相位参数', '阶段参数', '配时方案', '方案相序表', '方案配时表', '日计划表', '调度表' ]
     this.controlItems = [
@@ -32,10 +33,16 @@ class InterMonitor extends Component {
     ]
   }
   handleModifyConf = () => {
-    this.setState({ isModify: true })
+    this.setState({
+      isModify: true,
+      modifyStage: true,
+    })
   }
   handleCancelModify = () => {
-    this.setState({ isModify: false })
+    this.setState({
+      isModify: false,
+      modifyStage: false,
+    })
   }
   handleshowConfList = () => {
     const { confListLeft } = this.state
@@ -128,7 +135,7 @@ class InterMonitor extends Component {
                   {
                     this.controlItems.map((item) => {
                       return (
-                        <div className="controlItem" key={item.text}>
+                        <div className="controlItem" key={item.text} onClick={this.handleControlMode}>
                           <div className="icon"><img src={item.img} alt="" /></div>
                           <div className="text">{item.text}</div>
                         </div>
@@ -144,7 +151,9 @@ class InterMonitor extends Component {
                   {
                     modifyStage ?
                     <span className="planName">
-
+                      <Select defaultValue="1">
+                        <Option key="1" value="1">日常方案(周期120)</Option>
+                      </Select>
                     </span> :
                     <span className="planName">日常方案(周期120)</span>
                   }
@@ -152,13 +161,7 @@ class InterMonitor extends Component {
               }
               <div className="controlContent">
                 {
-                  controlContent === 'default' ?
-                    <div className="phaseMsg">
-                      <div className="phaseTime">
-                        <div className="phaseinner">1</div>
-                        <div className="phaseinner times">40</div>
-                      </div>
-                    </div> : controlContent === 'handCenter' ?
+                  controlContent === 'lockPhase' ?
                     <div className="lockPhase">
                       <div className="lockText">锁定相位</div>
                       <div className="phaseList">
@@ -167,14 +170,22 @@ class InterMonitor extends Component {
                         </div>
                       </div>
                     </div> :
-                    <div className="lockPhase">
-                      <div className="lockText">全红控制</div>
-                      <div className="phaseList">
-                        <div className="itemPic">
-                          {/* 放相位图片 */}
+                    <div className="phaseMsg">
+                    {
+                      modifyStage ?
+                        <div className="phaseTime">
+                          <div className="phaseinner">1</div>
+                          <div className="phaseinner times">
+                            <span>40</span>
+                            <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
+                          </div>
+                        </div> :
+                        <div className="phaseTime">
+                          <div className="phaseinner">1</div>
+                          <div className="phaseinner times">40</div>
                         </div>
-                      </div>
-                    </div>
+                    }
+                  </div>
                 }
                 
               </div>
