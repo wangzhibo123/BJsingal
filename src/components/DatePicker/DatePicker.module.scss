@@ -1,0 +1,25 @@
+.DatePicker {
+    display: inline-block;
+    .PickerItem {
+        width: 165px;
+        display: inline-block;
+    }
+    // 时间框
+    :global(.ant-picker) {
+        height: 28px;
+        background-color: #19415a;
+        color: #ccc;
+        border: none;
+        border-radius: 0;
+    }
+    :global(.ant-calendar-picker-clear) {
+        background-color: #19415a;
+        color: #fff;
+    }
+    :global(.ant-picker-input > input) {
+        color: #fff;
+    }
+    :global(.ant-picker-suffix) {
+        color: #ccc;
+    }
+}

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Pagination } from 'antd';
+import AntdDatePicker from './../../../components/DatePicker/DatePicker'
 import styles from '../SystemManagement.module.scss'
 
 class OperationLog extends Component {
@@ -10,6 +11,11 @@ class OperationLog extends Component {
   }
   componentDidMount = () => {
     
+  }
+  onChange = (field, value) => {
+    this.setState({
+      [field]: value,
+    })
   }
   onPageChange = (pageNumber) => {
     console.log('Page: ', pageNumber);
@@ -30,7 +36,8 @@ class OperationLog extends Component {
                   功能模块：<input type="text" className={styles.inputBox} placeholder="请输入" />
                 </div>
                 <div className={styles.searchInput}>
-                  操作时间：<input type="text" className={styles.inputBox} placeholder="请输入" /> 至 <input type="text" className={styles.inputBox} placeholder="请输入" />
+                  {/* 操作时间：<input type="text" className={styles.inputBox} placeholder="请输入" /> 至 <input type="text" className={styles.inputBox} placeholder="请输入" /> */}
+                  操作时间：<AntdDatePicker onChange={(field, value) => { this.onChange(field, value) }} />
                 </div>
               </div>
               <div className={styles.searchItem}>
