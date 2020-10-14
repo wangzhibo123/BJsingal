@@ -34,16 +34,46 @@ class Homepage extends Component {
         .addTo(this.map);
     }
   }
+  addMarkersTwo = (arr) => {
+    if (this.map) {
+      const el = document.createElement('div')
+      el.style.width = '20px'
+      el.style.height = '20px'
+      el.style.borderRadius = '50%'
+      el.style.backgroundColor = '#02FB09'
+      el.addEventListener('click', () => {
+        // this.handleClckMessge(true)
+      })
+      const marker = new window.mapabcgl.Marker(el)
+        .setLngLat(arr)
+        .addTo(this.map);
+      this.addWin()
+    }
+  }
+  addWin = () => {
+    var popupOption = {
+      closeOnClick: false,
+      closeButton: true,
+      anchor: "bottom-left",
+      offset: [20, 30]
+    }
+    // <img width="36px" height="36px" src="${}" />
+    const popup = new window.mapabcgl.Popup(popupOption)
+      .setLngLat(new window.mapabcgl.LngLat(116.38384768997417, 39.92253455638905))
+      .setHTML(`<div></div>`)
+      .addTo(this.map);
+  }
   gettitletops = (isShow) => {
     this.setState({
       Istitletops: isShow,
     })
     if (!isShow) {
       this.getstartpoint({ lng: 116.38261247568647, lat: 39.92257376086323 })
-      this.getendpoint({ lng: 116.38480970917607, lat: 39.92242670868208 })
+      this.getendpoint({ lng: 116.38901649293234, lat: 39.922274831783085 })
+      this.addMarkersTwo([116.38384768997417, 39.92253455638905])
     } else {
       this.getstartpoint({ lng: 116.39171507191793, lat: 39.910732551600205 })
-      this.getendpoint({ lng: 116.3909904231216, lat: 39.9223781190357 })
+      this.getendpoint({ lng: 116.3909904231216, lat: 39.9223143411036 })
     }
   }
   addMenu = () => {
@@ -107,7 +137,7 @@ class Homepage extends Component {
       endmarker.on('dragend', plan);
     }
     this.getstartpoint({ lng: 116.39171507191793, lat: 39.910732551600205 })
-    this.getendpoint({ lng: 116.3909904231216, lat: 39.9223781190357 })
+    this.getendpoint({ lng: 116.3909904231216, lat: 39.9223143411036 })
     function getChannelpoint(lnglat) {
       if (marker) {
         marker.remove();
