@@ -13,7 +13,7 @@ class Header extends Component {
       { name: '实时监视', id: '0-1', path: '/home', children: [] },
       {
         name: '中心控制', id: '0-2', path: '',
-        children: [{ name: '路口监控', id: '1-2', path: '/intermonitor' }, { name: '干线监控', id: '2-2', path: '' }, { name: '子区监控', id: '3-2', path: '' }, { name: '时间表控制', id: '4-2', path: '' }]
+        children: [{ name: '路口监控', id: '1-2', path: '/intermonitor' }, { name: '干线监控', id: '2-2', path: '/lineMon' }, { name: '子区监控', id: '3-2', path: '/areaMon' }, { name: '时间表控制', id: '4-2', path: '/timeControl' }]
       },
       { name: '预案控制', id: '0-3', path: '/plancontrolpage', children: [] },
       {
@@ -25,10 +25,11 @@ class Header extends Component {
         name: '运维管理', id: '0-6',children: [], path: '/MochaItom'},
       {
         name: '综合管理', id: '0-7',
-        children: [{ name: '路口管理', id: '1-6', path: '/intersection' }, { name: '区域管理', id: '2-6', path: '/region' }, { name: '信号参数管理', id: '3-6', path: '' }]
+        children: [{ name: '路口管理', id: '1-6', path: '/intersection' }, { name: '区域管理', id: '2-6', path: '/region' }, { name: '信号参数管理', id: '3-6', path: '/signalParameters' }]
       },
-      { name: '系统管理', id: '0-8', 
-        children: [{ name: '用户管理', id: '1-8', path: '/UserManagement' },{ name: '授权管理', id: '2-8', path: '/AuthManagement' },{ name: '运行监控', id: '3-8', path: '/OperationMonitoring' },{ name: '操作日志', id: '4-8', path: 'OperationLog' }] 
+      {
+        name: '系统管理', id: '0-8',
+        children: [{ name: '用户管理', id: '1-8', path: '/UserManagement' }, { name: '授权管理', id: '2-8', path: '/AuthManagement' }, { name: '运行监控', id: '3-8', path: '/OperationMonitoring' }, { name: '操作日志', id: '4-8', path: 'OperationLog' }]
       },
     ]
   }

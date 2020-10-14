@@ -11,33 +11,30 @@
         line-height: 30px;
         font-size: 17px;
     }
-
     .timeTableContent {
         width: 100%;
-
+        height: calc(100% - 30px);
+        background: #031B37;
+        // opacity: .67;
         .timeTableSelect {
             width: 100%;
-            height: 40px;
+            height: 50px;
             display: flex;
-
             .selectTimeType {
                 flex: 2;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-
                 .ant-select {
-                    width: 80%;
+                    width: 196px;
                     color: #fff;
                     border: 1px solid #2E6F8C;
-                    font-size: 13px;
+                    font-size: 17px;
                 }
-
                 .ant-select-selector {
                     border: none;
-                    background-color: #0A2967;
+                    background-color: #102A4B;
                 }
-
                 .ant-select-arrow {
                     color: #fff;
                 }
@@ -48,19 +45,16 @@
                 display: flex;
                 justify-content: left;
                 align-items: center;
-
                 .ant-select {
-                    width: 70%;
+                    width: 196px;
                     color: #fff;
                     border: 1px solid #2E6F8C;
-                    font-size: 13px;
+                    font-size: 17px;
                 }
-
                 .ant-select-selector {
                     border: none;
-                    background-color: #0A2967;
+                    background-color: #102A4B;
                 }
-
                 .ant-select-arrow {
                     color: #fff;
                 }
@@ -69,42 +63,44 @@
             .timeTableButton {
                 flex: 6;
                 position: relative;
-
                 .timeTableBtn {
                     display: flex;
                     position: absolute;
                     right: 23px;
                     top: 10px;
-
                     .addTable {
                         margin-left: 23px;
                         text-decoration: underline;
                         cursor: pointer;
                     }
-
                     .updateTable {
                         margin-left: 23px;
                         text-decoration: underline;
                         cursor: pointer;
                     }
-
                     .saveTable {
                         margin-left: 23px;
                         text-decoration: underline;
                         cursor: pointer;
                     }
                 }
-
-            }
-
-            .timeTableList {
-                width: 1173px;
-                height: 200px;
-                .tableList{
-                    width: 1173px;
-                    height: 200px;
-                }
             }
         }
+        .timeTableList {
+                width: 100%;
+                height: calc(100 - 30px);
+                .tableList{
+                   width: 100%;
+                    height: calc(100 - 30px);
+                    .tableName{
+                        width:100%;
+                        height: 100%;
+                            .tableTd:hover{
+                                background: #102A4B;
+                                cursor: pointer;
+                            }
+                    }
+                }
+            }
     }
 }

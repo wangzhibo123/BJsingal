@@ -42,6 +42,7 @@ class SignalParameters extends Component {
     return (
       <div className={styles.timingWrapper}>
         <div className={styles.timingcontainer}>
+          <div className={styles.titles}></div>
           <div className={styles.title}>信号参数管理</div>
           <div className={styles.searchBox}>
             <div><span>关键字</span><Input onChange={this.changeFont} placeholder="" /></div>
@@ -84,18 +85,23 @@ class SignalParameters extends Component {
                     <TimingMessage />
                   </div>
                 </div>
-                <div className={styles.mountingTr}>
-                  <div className={styles.mountingTd}><span><PlusOutlined /></span></div>
-                  <div className={styles.mountingTd}>*************</div>
-                  <div className={styles.mountingTd}>*************</div>
-                  <div className={styles.mountingTd}>*************</div>
-                  <div className={styles.mountingTd}>*************</div>
-                  <div className={styles.mountingTd}>*************</div>
-                  <div className={styles.mountingTd}>*************</div>
-                  <div className={styles.mountingTd}>
-                    <span className={styles.deviceMsg}>申请方案</span>
-                    <span className={styles.deviceMsg}>路口监视</span>
+                <div>
+                  <div className={styles.mountingTr}>
+                    <div className={styles.mountingTd}><span><PlusOutlined /></span></div>
+                    <div className={styles.mountingTd}>*************</div>
+                    <div className={styles.mountingTd}>*************</div>
+                    <div className={styles.mountingTd}>*************</div>
+                    <div className={styles.mountingTd}>*************</div>
+                    <div className={styles.mountingTd}>*************</div>
+                    <div className={styles.mountingTd}>*************</div>
+                    <div className={styles.mountingTd}>
+                      <span className={styles.deviceMsg}>申请方案</span>
+                      <span className={styles.deviceMsg}>路口监视</span>
+                    </div>
                   </div>
+                  {/* <div className={styles.mountingTrbox}>
+                    <TimingMessage />
+                  </div> */}
                 </div>
               </div>
             </div>
