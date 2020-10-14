@@ -43,7 +43,7 @@ $input-bac: rgba(0, 169, 192, 0.2);
         z-index: 9;
         top: 115px;
         right: 70px;
-        background: url('../imgs/plancontrolpageMessage.png') no-repeat;
+        background: url("../imgs/plancontrolpageMessage.png") no-repeat;
         background-size: 100% 100%;
         // background: linear-gradient(to right, rgba(0, 59, 129, 0.65), rgba(0, 38, 120, 0.65), rgba(0, 59, 129, 0.65));
         padding: 0 30px;
@@ -333,6 +333,39 @@ $input-bac: rgba(0, 169, 192, 0.2);
                 }
             }
         }
+        .phaseMessage {
+            width: 125px;
+            height: 335px;
+            .phaseMessageTop {
+                height: 50px;
+                .gostart {
+                    color: #4f6db6;
+                    height: 20px;
+                    text-align: right;
+                }
+                .locking {
+                    height: 30px;
+                    line-height: 30px;
+                    text-align: center;
+                }
+            }
+            .phaseMessageBox {
+                height: 285px;
+                display: flex;
+                flex-wrap: wrap;
+                li {
+                    width: 60px;
+                    height: 40px;
+                    img{
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+                :global(.ant-input-number){
+                    width: 100%;
+                }
+            }
+        }
     }
     .container {
         position: absolute;
@@ -498,6 +531,19 @@ $input-bac: rgba(0, 169, 192, 0.2);
                     }
                 }
             }
+        }
+        :global(.mapabcgl-popup-tip) {
+            display: none;
+        }
+        :global(.mapabcgl-popup-content) {
+            padding: 10px 8px 0px;
+            background: url("../imgs/phaseBac.png") no-repeat;
+            background-size: 100% 100%;
+        }
+        :global(.text-marker) {
+            background: url("../imgs/phaseBac.png") no-repeat;
+            background-size: 100% 100%;
+            transform: translate(-50%, -50%) translate(824px, 334px) rotateX(0deg) rotateZ(0deg) !important;
         }
     }
 }

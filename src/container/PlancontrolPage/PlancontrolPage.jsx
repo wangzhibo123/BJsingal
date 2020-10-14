@@ -1,11 +1,18 @@
 import React, { Component } from 'react'
-import { Menu, Input, DatePicker, Button, Select } from 'antd'
+import { Menu, Input, DatePicker, Button, Select, InputNumber } from 'antd'
 import { EditOutlined, CloseOutlined } from '@ant-design/icons';
 import styles from './PlancontrolPage.module.scss'
 import mapConfiger from '../utils/minemapConf'
 import startPng from '../imgs/start.png'
 import endPng from '../imgs/end.png'
 import carPng from '../imgs/car.png'
+import phase1 from '../imgs/03.png'
+import phase2 from '../imgs/03.png'
+import phase3 from '../imgs/03.png'
+import phase4 from '../imgs/03.png'
+import phase11 from '../imgs/03.png'
+import yellowPag from '../imgs/yellow.png'
+import redPag from '../imgs/red.png'
 const { SubMenu } = Menu;
 class Homepage extends Component {
   constructor(props) {
@@ -34,16 +41,60 @@ class Homepage extends Component {
         .addTo(this.map);
     }
   }
+  addMarkersTwo = (arr) => {
+    if (this.map) {
+      const el = document.createElement('div')
+      el.style.width = '20px'
+      el.style.height = '20px'
+      el.style.borderRadius = '50%'
+      el.style.backgroundColor = '#02FB09'
+      el.addEventListener('click', () => {
+        this.phaseChange()
+      })
+      const marker = new window.mapabcgl.Marker(el)
+        .setLngLat(arr)
+        .addTo(this.map);
+      this.addWin()
+    }
+  }
+  addWin = () => {
+    new window.mapabcgl.Marker(getMarkerEl())
+      .setLngLat([116.38384768997417, 39.92253455638905])
+      .addTo(this.map);
+    function getMarkerEl() {
+      var el = document.createElement('div')
+      el.className = "text-marker" //可以设置统一class，方便管理
+      el.innerHTML = `<img width="36px" height="36px" src="${phase3}" />`
+      el.style.width = '35px';
+      el.style.height = '41px';
+      el.style.paddingTop = '5px';
+      return el
+    }
+  }
+  phaseChange = () => {
+    var popupOption = {
+      closeOnClick: false,
+      closeButton: true,
+      anchor: "bottom-left",
+      offset: [-25, 60]
+    }
+    // <img width="36px" height="36px" src="${}" />
+    const popup = new window.mapabcgl.Popup(popupOption)
+      .setLngLat(new window.mapabcgl.LngLat(116.38384768997417, 39.92253455638905))
+      .setHTML(`<div><img width="36px" height="36px" src="${phase3}" /></div>`)
+      .addTo(this.map);
+  }
   gettitletops = (isShow) => {
     this.setState({
       Istitletops: isShow,
     })
     if (!isShow) {
       this.getstartpoint({ lng: 116.38261247568647, lat: 39.92257376086323 })
-      this.getendpoint({ lng: 116.38480970917607, lat: 39.92242670868208 })
+      this.getendpoint({ lng: 116.3909904231216, lat: 39.9223143411036 })
+      this.addMarkersTwo([116.38384768997417, 39.92253455638905])
     } else {
       this.getstartpoint({ lng: 116.39171507191793, lat: 39.910732551600205 })
-      this.getendpoint({ lng: 116.3909904231216, lat: 39.9223781190357 })
+      this.getendpoint({ lng: 116.3909904231216, lat: 39.9223143411036 })
     }
   }
   addMenu = () => {
@@ -107,7 +158,7 @@ class Homepage extends Component {
       endmarker.on('dragend', plan);
     }
     this.getstartpoint({ lng: 116.39171507191793, lat: 39.910732551600205 })
-    this.getendpoint({ lng: 116.3909904231216, lat: 39.9223781190357 })
+    this.getendpoint({ lng: 116.3909904231216, lat: 39.9223143411036 })
     function getChannelpoint(lnglat) {
       if (marker) {
         marker.remove();
@@ -692,7 +743,7 @@ class Homepage extends Component {
           </div>
           <Menu
             onClick={this.handleClick}
-            style={{ width: 251, color: '#86b7fa', height: '100%', overflowY: 'auto', fontSize: '16px' }}
+            style={{ width: 251, color: '#86b7fa', height: '60px', overflowY: 'auto', fontSize: '16px' }}
             // defaultSelectedKeys={['7']}
             // defaultOpenKeys={['sub2', 'sub3']}
             mode="inline"
@@ -730,6 +781,30 @@ class Homepage extends Component {
             >
             </SubMenu>
           </Menu>
+          <div className={styles.phaseMessage}>
+            <div className={styles.phaseMessageTop}>
+              <div className={styles.gostart}>
+                方案运行
+              </div>
+              <div className={styles.locking}>
+                阶段锁定
+              </div>
+            </div>
+            <div className={styles.phaseMessageBox}>
+              <li>黄闪</li>
+              <li>全红</li>
+              <li><img src={phase1} alt="" /></li>
+              <li><InputNumber min={1} max={10} defaultValue={3} /></li>
+              <li><img src={phase3} alt="" /></li>
+              <li><InputNumber min={1} max={10} defaultValue={3} /></li>
+              <li><img src={phase4} alt="" /></li>
+              <li><InputNumber min={1} max={10} defaultValue={3} /></li>
+              <li><img src={phase11} alt="" /></li>
+              <li><InputNumber min={1} max={10} defaultValue={3} /></li>
+              <li><img src={phase2} alt="" /></li>
+              <li><InputNumber min={1} max={10} defaultValue={3} /></li>
+            </div>
+          </div>
         </div>
         <div className={styles.container}>
           {
