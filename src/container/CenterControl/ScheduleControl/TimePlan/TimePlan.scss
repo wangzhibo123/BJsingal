@@ -14,7 +14,6 @@
         line-height: 30px;
         font-size: 17px;
     }
-
     .timePlanContent {
         width: 100%;
         height: 100%;
@@ -24,44 +23,61 @@
             flex: 7.5;
             display: flex;
             flex-wrap: wrap;
-
-
             .timePlanItem {
                 width: 200px;
-                height: 90px;
+                height: 80px;
                 background: url(../../../imgs/jiaoK.png) center no-repeat;
                 background-size: 100% 100%;
                 margin-left: 16px;
                 margin-top: 10px;
                 display: flex;
-
                 .timePlanIcon {
-                    flex: 1;
+                    flex: 2;
                     display: flex;
                     justify-content: center;
                     align-items: center;
                 }
-
                 .timePlanNum {
-                    flex: 1;
+                    flex:2;
                     display: flex;
                     justify-content: center;
                     align-items: center;
                     font-size: 40px;
                     color: #13D4EF;
-                    text-decoration: underline;
+                    text-decoration: underline #025FAC;
                     font-weight: 800;
                 }
-
                 .timePlanChange {
                     flex: 1;
                     display: flex;
-                    justify-content: center;
-                    align-items: center;
+                    flex-direction: column;
+                    
+                    position: relative;
+                    color: #0087C1;
+                    .CaretUpOutlined{
+                        font-size: 25px;
+                        position: absolute;
+                        top: 11px;
+                        left: 5px;
+                        cursor: pointer;
+                        &:hover{
+                            color: #13D4EF;
+                        }
+                    }
+                    .CaretDownOutlined{
+                        font-size: 25px;
+                        position: absolute;
+                            bottom: 11px;
+                            left: 5px;
+                            cursor: pointer;
+                        &:hover{
+                            color:#13D4EF;
+                        }
+                    }
+                    
                 }
             }
         }
-
         .timePlanExecuteHome {
             flex: 2.5;
             display: flex;
@@ -94,7 +110,6 @@
                     }
                 }
             }
-
             .timePlanExecute {
                 flex: 1;
                 display: flex;
@@ -115,7 +130,7 @@
                     right: 20px;
                     .timePlanExecuteBox{
                         width: 100%;
-                        height:50%;
+                        height:100%;
                         display: flex;
                         flex-direction: column;
                         color: #13D4EF;
@@ -124,7 +139,11 @@
                             width: 60%;
                             height: 50px;
                             text-align: center;
+                            line-height: 55px;
                             border-bottom: 3px solid #008EC7;
+                        }
+                        div:nth-child(1){
+                            border-color: #13D4EF;
                         }
                         div:nth-child(2){
                             color:#008EC7

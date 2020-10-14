@@ -40,10 +40,9 @@ export default class TimeTable extends Component {
                             </div>
                         </div>
                     </div>
-
                     <div className="timeTableList">
                         <div className="tableList">
-                            <table className="tableName" style={{ textAlign: "center", width: "100%", fontSize: "16px" }}>
+                            <table className="tableName" style={{ textAlign: "center", width: "100%", fontSize: "16px" }} >
                                 <tbody>
                                     <tr className="tableTh" style={{ width: "100%", height: 40, background: "#162E52", lineHeight: "40px" }}>
                                         <th>序号</th>
@@ -54,7 +53,7 @@ export default class TimeTable extends Component {
                                         <th>方案描述</th>
                                         <th>优先级</th>
                                     </tr>
-                                    <tr className="tableTd" style={{ height: 50, lineHeight: "50px" }}>
+                                    <tr className="tableTd" style={{ height: 50, lineHeight: "50px" }} >
                                         <td>1</td>
                                         <td>周一、周二、周三、周四、周五、周六、周日</td>
                                         <td>00:01</td>
@@ -144,7 +143,15 @@ export default class TimeTable extends Component {
                                         <td>描述</td>
                                         <td>1</td>
                                     </tr>
-
+                                    <tr className="tableTd" style={{ height: 50, lineHeight: "50px" }}>
+                                        <td>10</td>
+                                        <td>周一、周二、周三、周四、周五、周六、周日</td>
+                                        <td>00:01</td>
+                                        <td>方案调用</td>
+                                        <td>方案一</td>
+                                        <td>描述</td>
+                                        <td>1</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>

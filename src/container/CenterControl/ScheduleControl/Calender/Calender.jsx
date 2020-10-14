@@ -61,18 +61,18 @@ export default class Calender extends Component {
                     <div className="calenderTab">
                         <Radio.Group onChange={this.onChange} value={value}>
                             <div className="week">
-                                <Radio value={1} style={{ color: "#fff" }}>星期</Radio>
+                                <Radio value={1} style={{ color: "#fff", marginLeft: "15px" }}>星期</Radio>
                             </div>
                             <div className="gregorianCalendar">
-                                <Radio value={2} style={{ color: "#fff" }}>公历</Radio>
+                                <Radio value={2} style={{ color: "#fff", marginLeft: "15px" }}>公历</Radio>
                             </div>
                             <div className="lunarCalendar">
-                                <Radio value={3} style={{ color: "#fff" }}>农历</Radio>
+                                <Radio value={3} style={{ color: "#fff", marginLeft: "15px" }}>农历</Radio>
                             </div>
                         </Radio.Group>
                     </div>
                     <div className="calenderSelect">
-                        <Select defaultValue="优先级" onChange={this.handleChange} size="small">
+                        <Select defaultValue="优先级" onChange={this.handleChange} size="middle">
                             <Option value="1">优先级</Option>
                             <Option value="2">最优</Option>
                         </Select>
