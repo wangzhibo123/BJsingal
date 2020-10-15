@@ -6,7 +6,6 @@ import 'echarts-gl'
 function getParametricEquation(startRatio, endRatio, isSelected, isHovered, k) {
   // 计算
   let midRatio = (startRatio + endRatio) / 2;
-
   let startRadian = startRatio * Math.PI * 2;
   let endRadian = endRatio * Math.PI * 2;
   let midRadian = midRatio * Math.PI * 2;
@@ -124,13 +123,13 @@ function getPie3D(pieData, internalDiameterRatio) {
   // 补充一个透明的圆环，用于支撑高亮功能的近似实现。
   series.push({
     name: 'mouseoutSeries',
-    type: 'surface',    
-    silent: true,    
+    type: 'surface',
+    silent: true,
     animation: false,
     parametric: true,
     wireframe: {
       show: true
-    },    
+    },
     itemStyle: {
       opacity: 0,
     },
@@ -192,16 +191,16 @@ class Pie3D extends React.Component {
           name: '未完成',
           value: 11,
           itemStyle: {
-              color: 'yellow',
-              opacity: 0.5
-            }
-        }, 
+            color: 'yellow',
+            opacity: 0.5
+          }
+        },
         {
           name: '已完成',
           value: 22,
           itemStyle: {
-              color: '#02347D',
-              opacity: 0.5
+            color: '#02347D',
+            opacity: 0.5
           }
         }
       ],

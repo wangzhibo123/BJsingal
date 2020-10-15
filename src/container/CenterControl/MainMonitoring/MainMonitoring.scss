@@ -5,7 +5,6 @@
     background: url(../../imgs/sysbg.png) center center no-repeat;
     background-size: cover;
     font-family: 'PingFang-SC-Regular';
-
     .NavMon {
         z-index: 2;
         position: absolute;
@@ -13,10 +12,8 @@
         left: 5px;
         width: 208px;
         height: calc(100% - 60px);
-        // opacity: .3;
-        background: #041835;
-        opacity: .87;
-
+        background: rgba(3,28,68,.56);
+        
         .areaMonNum {
             width: 100%;
             height: 30px;
@@ -24,22 +21,18 @@
             line-height: 30px;
             background: #041D3E;
             color: #2D64C6;
-
             div {
                 margin-left: 10px;
             }
         }
-
         // 左侧导航头部
         .topNavMon {
             width: 100%;
             height: 30px;
             display: flex;
             margin-top: 10px;
-
             .selectNav {
                 flex: 4;
-
                 select {
                     width: 90%;
                     height: 30px;
@@ -48,27 +41,22 @@
                     text-indent: 5px;
                     cursor: pointer;
                 }
-
                 .ant-select {
                     width: 85px;
-                    color: #fff;
+                    color: rgb(255, 255, 255);
                 }
-
                 .ant-select-selector {
                     border: none;
                     background-color: #0A2967;
                 }
-
                 .ant-select-arrow {
                     color: #fff;
                 }
             }
-
             .iptSearchNav {
                 flex: 6;
                 padding-left: 5px;
                 position: relative;
-
                 .inptNavMon {
                     width: 90%;
                     height: 100%;
@@ -78,7 +66,6 @@
                     padding-left: 7px;
                     outline: none;
                 }
-
                 .MagBox {
                     width: 20%;
                     height: 100%;
@@ -93,20 +80,17 @@
                 }
             }
         }
-
         .listNav {
             width: 100%;
             height: 80%;
             margin-top: 20px;
-
             .allNavList {
                 width: 100%;
                 height: 100%;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                color: #fff;
-
+                color: rgb(46, 36, 196);
                 li {
                     width: 70%;
                     height: 55px;
@@ -117,7 +101,6 @@
                     cursor: pointer;
                     color: #7AA4E1;
                 }
-
                 .line {
                     width: 100%;
                     height: 2px;
@@ -134,7 +117,6 @@
                             rgba(0, 0, 0, 0) 90%,
                             rgba(0, 0, 0, 0) 100%)
                 }
-
                 li:hover {
                     width: 100%;
                     background: linear-gradient(to right,
@@ -153,11 +135,109 @@
             }
         }
     }
-
     .mapContent {
         position: absolute;
         bottom: 0;
         width: 100%;
         height: calc(100% - 60px);
+        .mapContainer{
+            width: 100%;
+            height: 100%;
+        }
+    }
+    .modeSwitchBtn{
+            width: 103px;
+            height: 28px;
+            position: absolute;
+            right: 24px;
+            top: 80px;
+            .modeTab{
+                width: 100%;
+                height: 100%;
+                text-align: center;
+                line-height: 28px;
+                background: url(../../imgs/kuang.png) center center no-repeat;
+                background-size: 100% 100%;
+                color: #ccc;
+                font-size: 16px;
+                cursor: pointer;
+            }
+        }
+    .modeMainMonitorHome{
+        .modeMainSlidMode{
+            width: 600px;
+            height: calc(100% - 90px);
+            position: absolute;
+            top: 90px;
+            left:70px;
+            background: rgba(3,28,68,.33);
+            .modeMainSlidHeadMode{
+                width: 100%;
+                height: 87px;
+                display: flex;
+                .modeMainIptHome{
+                    flex: 5;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    .modeMainIpt{
+                        width: 230px;
+                        height: 36px;
+                        background: #0A255E;
+                        border: none;
+                        margin-left: 5px;
+                        padding-left: 7px;
+                        outline: none;
+                    }
+                }
+                .modeMainLengthHome{
+                    display: flex;
+                    flex: 3;
+                    justify-content: center;
+                    align-items: center;
+                    .modeMainLength{
+                        font-size: 20px;
+                        font-weight: 700;
+                    }
+                    .modeMainLengthNum{
+                        font-size: 25px;
+                        color: #65D5FF;
+                        margin-left: 15px;
+                        font-weight: 700;
+                    }
+                    .modeMainLengthUnit{
+                        font-size: 14px;
+                        color: #65D5FF;
+                    }
+                    
+                }
+                .modeMainLabelHome{
+                    display: flex;
+                    flex: 2;
+                    .modeMainLabel{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        .modeMainLabelIcon{
+                            font-size: 20px;
+                            color: #6D8EF7;
+                        }
+                        .modeMainLabelText{
+                            font-size: 20px;
+                            font-weight: 700;
+                            margin-left: 6px;
+                        }   
+                    }
+                }
+            }
+        }
+        .modeMainContentMode{
+            width: calc(100% - 764px);
+            height: calc(100% - 90px);
+            position: absolute;
+            top: 90px;
+            right: 85px;
+            background: #f90;
+        }
     }
 }
