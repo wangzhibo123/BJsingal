@@ -12,26 +12,35 @@ export default class TimePlan extends Component {
         super(props)
         this.state = {
             timePlanState: [{
+                id: 1,
                 img: upDown,
                 num: 40,
             },
             {
+                id: 2,
                 img: leftUpUp,
                 num: 40,
             },
             {
+                id: 3,
                 img: leftUpRightDown,
                 num: 40,
             },
             {
+                id: 4,
                 img: leftRight,
                 num: 40,
             },
             {
+                id: 5,
                 img: upRightDownLeft,
                 num: 40,
             }]
         }
+    }
+    timePlanUpButton = (index) => {
+    }
+    timePlanDownButton = (index) => {
     }
     render() {
         const { timePlanState } = this.state;
@@ -54,9 +63,9 @@ export default class TimePlan extends Component {
                                         </div>
                                         <div className="timePlanChange">
                                             <div className="CaretUpOutlined">
-                                                <CaretUpOutlined />
+                                                <CaretUpOutlined onClick={() => this.timePlanUpButton(index)} />
                                             </div>
-                                            <div className="CaretDownOutlined">
+                                            <div className="CaretDownOutlined" onClick={() => this.timePlanDownButton(index)}>
                                                 <CaretDownOutlined />
                                             </div>
                                         </div>
