@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Select, Menu } from 'antd'
+import { Select, Menu, Progress } from 'antd'
 import { SearchOutlined, EditOutlined, CloseOutlined } from '@ant-design/icons'
 import Pie3D from '../../components/Pie3D/Pie3D'
 import Graph from './Graph/Graph'
@@ -70,7 +70,7 @@ class MochaItom extends Component {
   render() {
     const { mainHomePage, surfaceData } = this.state
     return (
-      <div className="homepageWrapper">
+      <div className="homepagesWrapper">
         <div className="container">
           <div className="asideLeft">
             <div className="asideItem" style={{flex:2}}>
@@ -90,8 +90,6 @@ class MochaItom extends Component {
                 <Menu
             onClick={this.handleClick}
             style={{ color: '#86b7fa', height: '100%', overflowY: 'auto', fontSize: '16px' }}
-            // defaultSelectedKeys={['7']}
-            // defaultOpenKeys={['sub2', 'sub3']}
             mode="inline">
             <SubMenu key="sub2" title="海淀区">
               <SubMenu key="sub3" title="知春路拥堵应急">
@@ -139,13 +137,45 @@ class MochaItom extends Component {
             <div className="asideItem">
               <div className="title">设备故障分布图</div>
               <div className="itemContent">
-              分布图
+                <div className="itemShow">
+                  <div  style={{ width: '170px' }}>
+                  信号机
+                  <Progress percent={50.12} size="small" steps={66} />
+                  </div>
+                  <div>
+                  信号灯
+                  <Progress percent={40} size="small" steps={66} />
+                  </div>
+                  <div>
+                  网络设备
+                  <Progress percent={50} size="small" steps={66} />
+                  </div>
+                  <div>
+                  电源
+                  <Progress percent={50} size="small" steps={66} />
+                  </div>
+                  <div>
+                  外设
+                  <Progress percent={50} size="small" steps={66} />
+                  </div>
+                </div>
+                
               </div>
             </div>
             <div className="asideItem">
               <div className="title">运维任务分布图</div>
-              <div className="itemContent">
-                <Pie3D resData={surfaceData} />
+              <div className="itemContent" style={{overflow:'hidden'}}>
+                <div className="pie3DCon">
+                  <div className="pie3DText">
+                    <text>
+                      <div className="textCon">
+                        <em>已完成18个</em> <br /> <s>62.07%</s>
+                      </div>
+                    </text>
+                    <text><em>未完成11个</em> <br /> <s>37.93%</s></text>
+                  </div>
+                  <Pie3D resData={surfaceData} />
+                </div>
               </div>
             </div>
             <div className="asideItem">
@@ -160,32 +190,32 @@ class MochaItom extends Component {
           <div className="contentCenter">
             <div className="title">运维管理</div>
             <div className="centerMain">
-              <div className="itemDom">
+              <div className="itemDom itemColor1">
                 <span>故障数</span>
                 <em>8</em>
                 <i>个</i>
               </div>
-              <div className="itemDom">
+              <div className="itemDom itemColor2">
                 <span>运维单</span>
                 <em>8</em>
                 <i>个</i>
               </div>
-              <div className="itemDom">
+              <div className="itemDom itemColor3">
                 <span>待派发</span>
                 <em>8</em>
                 <i>个</i>
               </div>
-              <div className="itemDom">
+              <div className="itemDom itemColor4">
                 <span>待接单</span>
                 <em>8</em>
                 <i>个</i>
               </div>
-              <div className="itemDom">
+              <div className="itemDom itemColor5">
                 <span>待维护</span>
                 <em>8</em>
                 <i>个</i>
               </div>
-              <div className="itemDom">
+              <div className="itemDom itemColor6">
                 <span>待审核</span>
                 <em>8</em>
                 <i>个</i>
