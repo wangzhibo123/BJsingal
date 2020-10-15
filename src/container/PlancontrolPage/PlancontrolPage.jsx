@@ -68,6 +68,8 @@ class Homepage extends Component {
       el.style.width = '35px';
       el.style.height = '41px';
       el.style.paddingTop = '5px';
+      el.style.position = 'relative';
+      el.style.top = '-70px';
       return el
     }
   }
@@ -81,7 +83,30 @@ class Homepage extends Component {
     // <img width="36px" height="36px" src="${}" />
     const popup = new window.mapabcgl.Popup(popupOption)
       .setLngLat(new window.mapabcgl.LngLat(116.38384768997417, 39.92253455638905))
-      .setHTML(`<div><img width="36px" height="36px" src="${phase3}" /></div>`)
+      .setHTML(`<div style="width: 125px;height: 335px;background-color: rgba(0, 19, 58, 0.5);">
+      <div style="height: 50px;">
+        <div style="color: #4f6db6;height: 20px;text-align: right;">
+          方案运行
+        </div>
+        <div style="height: 30px;line-height: 30px;text-align: center;">
+          阶段锁定
+        </div>
+      </div>
+      <div style="height: 285px;display: flex;flex-wrap: wrap;" className={styles.phaseMessageBox}>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src={yellowPag} alt="" /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src={redPag} alt="" /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src={phase1} alt="" /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><InputNumber min={1} max={10} defaultValue={3} /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src={phase3} alt="" /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><InputNumber min={1} max={10} defaultValue={3} /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src={phase4} alt="" /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><InputNumber min={1} max={10} defaultValue={3} /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src={phase11} alt="" /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><InputNumber min={1} max={10} defaultValue={3} /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src={phase2} alt="" /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><InputNumber min={1} max={10} defaultValue={3} /></li>
+      </div>
+    </div>`)
       .addTo(this.map);
   }
   gettitletops = (isShow) => {
@@ -90,7 +115,7 @@ class Homepage extends Component {
     })
     if (!isShow) {
       this.getstartpoint({ lng: 116.38261247568647, lat: 39.92257376086323 })
-      this.getendpoint({ lng: 116.3909904231216, lat: 39.9223143411036 })
+      this.getendpoint({ lng: 116.39008337019641, lat: 39.922239886918305 })
       this.addMarkersTwo([116.38384768997417, 39.92253455638905])
     } else {
       this.getstartpoint({ lng: 116.39171507191793, lat: 39.910732551600205 })
@@ -153,7 +178,7 @@ class Homepage extends Component {
       if (endmarker) {
         endmarker.remove();
       }
-      endmarker = addMarker(endPng, [lnglat.lng, lnglat.lat], 0);
+      endmarker = addMarkerEnd(endPng, [lnglat.lng, lnglat.lat], 0);
       plan();
       endmarker.on('dragend', plan);
     }
@@ -324,7 +349,22 @@ class Homepage extends Component {
 
     function addMarker(img, point, position) {
       var html = document.createElement('div');
-      html.style.cssText = 'background:url(' + img + ')' + position + 'px 0px no-repeat;width:80px;height:50px;'
+      html.style.cssText = 'background:url(' + img + ')' + position + 'px 0px no-repeat;width:80px;height:50px;';
+      html.style.backgroundSize = '100% 100%';
+      html.style.position = 'relative';
+      html.style.top = '-20px';
+      var marker = new window.mapabcgl.Marker(html)
+        .setLngLat(point)
+        .setDraggable(true)
+        .addTo(_this.map);
+      return marker;
+    };
+    function addMarkerEnd(img, point, position) {
+      var html = document.createElement('div');
+      html.style.cssText = 'background:url(' + img + ')' + position + 'px 0px no-repeat;width:80px;height:50px;';
+      html.style.backgroundSize = '100% 100%';
+      html.style.position = 'relative';
+      html.style.top = '-75px';
       var marker = new window.mapabcgl.Marker(html)
         .setLngLat(point)
         .setDraggable(true)
@@ -743,7 +783,7 @@ class Homepage extends Component {
           </div>
           <Menu
             onClick={this.handleClick}
-            style={{ width: 251, color: '#86b7fa', height: '60px', overflowY: 'auto', fontSize: '16px' }}
+            style={{ width: 251, color: '#86b7fa', height: '100%', overflowY: 'auto', fontSize: '16px' }}
             // defaultSelectedKeys={['7']}
             // defaultOpenKeys={['sub2', 'sub3']}
             mode="inline"
@@ -781,30 +821,6 @@ class Homepage extends Component {
             >
             </SubMenu>
           </Menu>
-          <div className={styles.phaseMessage}>
-            <div className={styles.phaseMessageTop}>
-              <div className={styles.gostart}>
-                方案运行
-              </div>
-              <div className={styles.locking}>
-                阶段锁定
-              </div>
-            </div>
-            <div className={styles.phaseMessageBox}>
-              <li>黄闪</li>
-              <li>全红</li>
-              <li><img src={phase1} alt="" /></li>
-              <li><InputNumber min={1} max={10} defaultValue={3} /></li>
-              <li><img src={phase3} alt="" /></li>
-              <li><InputNumber min={1} max={10} defaultValue={3} /></li>
-              <li><img src={phase4} alt="" /></li>
-              <li><InputNumber min={1} max={10} defaultValue={3} /></li>
-              <li><img src={phase11} alt="" /></li>
-              <li><InputNumber min={1} max={10} defaultValue={3} /></li>
-              <li><img src={phase2} alt="" /></li>
-              <li><InputNumber min={1} max={10} defaultValue={3} /></li>
-            </div>
-          </div>
         </div>
         <div className={styles.container}>
           {
