@@ -127,7 +127,7 @@ class MochaItom extends Component {
             <div className="asideItem">
               <div className="title">维护工单</div>
               <div className="itemContent">
-                <div className="runRate">
+                <div className="runRateCon">
                 维护工单
                 </div>
               </div>
