@@ -89,16 +89,25 @@
         .timeTableList {
                 width: 100%;
                 height: calc(100 - 30px);
+                table-layout : fixed;
                 .tableList{
                    width: 100%;
                     height: calc(100 - 30px);
                     .tableName{
                         width:100%;
-                        height: 100%;
+                        height: 20%;
                             .tableTd:hover{
                                 background: #102A4B;
                                 cursor: pointer;
                             }
+                    }
+                    .tableBody{
+                        width:100%;
+                        height: 80%;
+                        td{
+                            width:20%;
+                            white-space:normal;
+                        }
                     }
                 }
             }

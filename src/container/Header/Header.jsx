@@ -22,8 +22,7 @@ class Header extends Component {
       },
       { name: '效果评价', id: '0-5', children: [] },
       {
-        name: '运维管理', id: '0-6', children: []
-      },
+        name: '运维管理', id: '0-6',children: [], path: '/MochaItom'},
       {
         name: '综合管理', id: '0-7',
         children: [{ name: '路口管理', id: '1-6', path: '/intersection' }, { name: '区域管理', id: '2-6', path: '/region' }, { name: '信号参数管理', id: '3-6', path: '/signalParameters' }]

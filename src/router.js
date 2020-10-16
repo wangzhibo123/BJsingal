@@ -21,6 +21,7 @@ const TimeControl = loadable(() => import("./container/CenterControl/ScheduleCon
 const Intersection = loadable(() => import("./container/IntegratedManagement/Intersection/Intersection"), { LoadingComponent: LoadingPage })
 const Region = loadable(() => import("./container/IntegratedManagement/Region/Region"), { LoadingComponent: LoadingPage })
 const SignalParameters = loadable(() => import("./container/IntegratedManagement/SignalParameters/SignalParameters"), { LoadingComponent: LoadingPage })
+const MochaItom = loadable(() => import("./container/MochaItom/MochaItom"), { LoadingComponent: LoadingPage })
 const UserManagement = loadable(() => import("./container/SystemManagement/UserManagement/UserManagement"), { LoadingComponent: LoadingPage })
 const AuthManagement = loadable(() => import("./container/SystemManagement/AuthManagement/AuthManagement"), { LoadingComponent: LoadingPage })
 const OperationMonitoring = loadable(() => import("./container/SystemManagement/OperationMonitoring/OperationMonitoring"), { LoadingComponent: LoadingPage })
@@ -36,6 +37,7 @@ const Parent = () => (
     <Route exact path="/intermonitor" component={InterMonitor} />
     <Route exact path="/intersection" component={Intersection} />
     <Route exact path="/region" component={Region} />
+    <Route exact path="/MochaItom" component={MochaItom} />
     <Route exact path="/signalParameters" component={SignalParameters} />
     <Route exact path="/UserManagement" component={UserManagement} />
     <Route exact path="/AuthManagement" component={AuthManagement} />

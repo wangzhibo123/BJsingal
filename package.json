@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^7.2.1",
     "antd": "^4.6.5",
     "echarts": "^4.9.0",
+    "echarts-gl": "^1.1.1",
     "loadable-components": "^2.2.3",
     "moment": "^2.29.1",
     "node-sass": "^4.14.1",

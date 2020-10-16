@@ -1,0 +1,319 @@
+@font-face {
+    font-family: nums;
+    src: url(../../AgencyFB-Regular.ttf);
+    font-weight: 400;
+    color: #ffee00;
+    font-style: normal;
+    text-align: center;
+}
+.homepagesWrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: url(../imgs/sysbg.png) center center no-repeat;
+    background-size: cover;
+    font-family: 'PingFang-SC-Regular';
+    .container {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: calc(100% - 70px);
+        .asideLeft, .asideRight {
+            position: absolute;
+            bottom: 0;
+            width: 340px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            .asideItem {
+                flex: 1;
+                min-height: 260px;
+                display: flex;
+                flex-direction: column;
+                .title {
+                    height: 18px;
+                    text-align: center;
+                    line-height: 17px;
+                    background: url(../imgs/smalltit.png) center 5px no-repeat;
+                    background-size: 100% 100%;
+                }
+                .itemContent {
+                    flex: 1;
+                    font-size: 12px;
+                    overflow-y: auto;
+                    .interSearch {
+                      width:100%;
+                      padding:20px 0;
+                      display: flex;
+                      justify-content:center;
+                      align-items: center;
+                      background: rgba(1, 17, 50, 0.8);
+                      .ant-select {
+                          width: 85px;
+                          color: #fff;
+                      }
+                      .ant-select-selector {
+                          border: none;
+                          background-color: #0A2967;
+                      }
+                      .ant-select-arrow {
+                          color: #fff;
+                      }
+                      .searchInput {
+                          position: relative;
+                          .inputBox {
+                              width: 180px;
+                              height: 32px;
+                              margin-left: 10px;
+                              padding-left: 5px;
+                              border: none;
+                              outline: none;
+                              border-radius: 4px;
+                              background-color: #0A2967;
+                          }
+                          .searchIcon {
+                              position: absolute;
+                              top: 7px;
+                              right: 5px;
+                              font-size: 18px;
+                              color: #09A4E7;
+                          }
+                      }
+                    }
+                    .runRate {
+                        height: 100%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                    .itemShow{
+                        width:90%;
+                        margin:0 auto;
+                        color:#46E9F0;
+                        font-size:14px;
+                        >div{
+                            margin: 5px auto;
+                            display: inline-block;
+                            justify-content: center;
+                            align-items: center;
+                            .ant-progress-steps-item{
+                                height:14px!important;
+                            }
+                            .ant-progress-steps-item-active{
+                                height:14px!important;
+                            }
+                            .ant-progress-text{
+                                color:#46E9F0;
+                            }
+                        }
+                    }
+                    .pie3DCon{
+                        width:100%;
+                        height:90%;
+                        position:relative;
+                        bottom:-30px;
+                        user-select: none;
+                        .pie3DText{
+                            position:absolute;
+                            top:0;right:0;bottom:0;left:0;
+                            z-index:2;
+                            display: flex;
+                            justify-content: center;
+                            align-items: flex-start;
+                            >text{
+                                flex:1;
+                                line-height:96px;
+                                text-align: center;
+                                position: relative;
+                                background: url(../imgs/textBg.png) no-repeat center center;
+                                em{
+                                    position: relative;
+                                    top:-10px;
+                                    font-size:16px;
+                                }
+                                s{
+                                    position: relative;
+                                    bottom:-15px;
+                                    font-size:20px;
+                                    text-decoration: none;
+                                }
+                            }
+                            >text:first-child{
+                                left:-30px;
+                                transform: rotateY(180deg);
+                                -webkit-transform: rotateY(180deg);
+                                -moz-transform: rotateY(180deg);
+                                -ms-transform: rotateY(180deg);
+                                -o-transform: rotateY(180deg);
+                                .textCon{
+                                    transform: rotateY(-180deg);
+                                    -webkit-transform: rotateY(-180deg);
+                                    -moz-transform: rotateY(-180deg);
+                                    -ms-transform: rotateY(-180deg);
+                                    -o-transform: rotateY(-180deg);
+                                }                                    
+                            }
+                            >text:last-child{
+                                right:-30px; 
+                                top:28px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .asideLeft {
+            left: 0;
+        }
+        .asideRight {
+            right: 0;
+        }
+        .contentCenter {
+            position: absolute;
+            top: 0;
+            left: 350px;
+            width: calc(100% - 700px);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            .title {
+              height: 20px;
+              text-align: center;
+              line-height: 19px;
+              background: url(../imgs/titbg.png) center 5px no-repeat;
+              background-size: 100% 100%;
+            }
+            .centerMain {
+              position:absolute;
+              top:40px;
+              right:0;
+              left:0;
+              z-index:1;
+              display:flex;
+              justify-content: center;
+              align-items:center;
+              user-select:none;
+              .itemDom{                
+                width:160px;
+                height:60px;
+                margin:0 15px;
+                background:rgba(1,31,81, .8);
+                border-left:3px #01D5FF solid;
+                display:flex;
+                justify-content:space-between;
+                position: relative;
+                span,em,i{
+                  position:relative;
+                  display:inline-block;
+                }
+                >span{
+                  top:5px;
+                  left:15px;
+                  font-size:16px;
+                }
+                >em{
+                  font-size:50px;
+                  font-family:nums;
+                  top:-8px;
+                  font-style: oblique;
+                }
+                >i{
+                  line-height:80px;
+                  right:10px;
+                }
+              }
+              .itemColor1{
+                color:#00C6FE;
+              }
+              .itemColor2{
+                color:#00CBFD;
+              }
+              .itemColor3{
+                color:#FA8B00;
+              }
+              .itemColor4{
+                color:#41F443;
+              }
+              .itemColor5{
+                color:#0FF7F7;
+              }
+              .itemColor6{
+                color:#BA69FF;
+              }
+              .itemDom::before{
+                  content: '';
+                  width:3px;
+                  height:3px;
+                  position: absolute;
+                  top:0;
+                  right:0;
+                  background:#01D5FF;
+              }
+              .itemDom::after{
+                content: '';
+                  width:3px;
+                  height:3px;
+                  position: absolute;
+                  bottom:0;
+                  right:0;
+                  background:#01D5FF;
+              }
+            }
+        }
+    }
+
+}
+.menuBox{
+  width:100%;
+  height: 100%;
+  padding:0 15px;
+  background: linear-gradient(to bottom, rgba(1, 17, 50, 0.8), rgba(5, 38, 89, 0.6));
+  .ant-menu {
+    font-size: 16px;
+    color: white;
+    border-right: none;
+    background-color: transparent;
+  }
+  .ant-menu-submenu-inline > .ant-menu-submenu-title .ant-menu-submenu-arrow::after {
+      background-image: -webkit-gradient(
+          linear,
+          left top,
+          right top,
+          from(rgba(134, 183, 250, 0.85)),
+          to(rgba(134, 183, 250, 0.85))
+      );
+  }
+  .ant-menu-submenu-inline > .ant-menu-submenu-title .ant-menu-submenu-arrow::before {
+      background-image: -webkit-gradient(
+          linear,
+          left top,
+          right top,
+          from(rgba(134, 183, 250, 0.85)),
+          to(rgba(134, 183, 250, 0.85))
+      );
+  }
+  .ant-menu-submenu-active{
+    background: linear-gradient(90deg, rgba(52, 92, 167, 0.02), rgba(16, 68, 175, 0.99), rgba(52, 92, 167, 0));
+  }
+  .ant-menu-item-selected {
+      background: linear-gradient(to right, rgba(1, 17, 50, 0.8), rgba(21, 63, 149, 0.8), rgba(5, 38, 89, 0.6));
+  }
+  .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+      background: linear-gradient(to right, rgba(1, 17, 50, 0.8), rgba(21, 63, 149, 0.8), rgba(5, 38, 89, 0.6));
+  }
+  .ant-menu-item {
+      position: relative;
+      width: 100%;
+      padding-right: 20px;
+      padding-left: 65px !important;
+  }
+  .anticon {
+      position: absolute;
+      top: 15px;
+      right: -6px;
+  }
+}
+.ant-menu-inline{
+  border-right:none;
+}
