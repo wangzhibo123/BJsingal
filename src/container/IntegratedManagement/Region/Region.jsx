@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Menu, Input, DatePicker, Button, Select } from 'antd'
 import { EditOutlined, CloseOutlined } from '@ant-design/icons';
-import styles from './Region.module.scss'
+import './Region.scss'
 import mapConfiger from '../../utils/minemapConf'
 const { SubMenu } = Menu;
 class Region extends Component {
@@ -91,8 +91,8 @@ class Region extends Component {
     const { Option } = Select
     const { mainHomePage, Istitletops, IsddMessge } = this.state
     return (
-      <div className={styles.PlancontrolPageWrapper}>
-        <div className={styles.sidebarLeft}>
+      <div class='RegionBox'>
+        <div class='sidebarLeft'>
           <Menu
             onClick={this.handleClick}
             style={{ width: 251, color: '#86b7fa', height: '100%', overflowY: 'auto', fontSize: '16px' }}
@@ -134,12 +134,12 @@ class Region extends Component {
             </SubMenu>
           </Menu>
         </div>
-        <div className={styles.container}>
+        <div class='container'>
           {
             !mainHomePage &&
-            <div className={styles.contentCenter}>
-              <div className={styles.title}>区域管理</div>
-              <div id="mapContainer" className="map-container" style={{ height: 'calc(100% - 5px)' }}></div>
+            <div class='contentCenter'>
+              <div class='title'>区域管理</div>
+              <div id="mapContainer" class="map-container" style={{ height: 'calc(100% - 5px)' }}></div>
             </div>
           }
         </div>

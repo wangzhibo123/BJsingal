@@ -183,13 +183,13 @@ $bor-color: #a5fcff;
     }
 }
 .sidebarLeft {
-    :global(.ant-menu) {
+    .ant-menu {
         font-size: 16px;
         color: #86b7fa;
         border-right: none;
         background-color: transparent;
     }
-    :global(.ant-menu-submenu-inline > .ant-menu-submenu-title .ant-menu-submenu-arrow::after) {
+    .ant-menu-submenu-inline > .ant-menu-submenu-title .ant-menu-submenu-arrow::after {
         background-image: -webkit-gradient(
             linear,
             left top,
@@ -198,7 +198,7 @@ $bor-color: #a5fcff;
             to(rgba(134, 183, 250, 0.85))
         );
     }
-    :global(.ant-menu-submenu-inline > .ant-menu-submenu-title .ant-menu-submenu-arrow::before) {
+    .ant-menu-submenu-inline > .ant-menu-submenu-title .ant-menu-submenu-arrow::before {
         background-image: -webkit-gradient(
             linear,
             left top,
@@ -207,19 +207,19 @@ $bor-color: #a5fcff;
             to(rgba(134, 183, 250, 0.85))
         );
     }
-    :global(.ant-menu-item-selected) {
+    .ant-menu-item-selected {
         background: linear-gradient(to right, rgba(1, 17, 50, 0.8), rgba(21, 63, 149, 0.8), rgba(5, 38, 89, 0.6));
     }
-    :global(.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected) {
+    .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
         background: linear-gradient(to right, rgba(1, 17, 50, 0.8), rgba(21, 63, 149, 0.8), rgba(5, 38, 89, 0.6));
     }
-    :global(.ant-menu-item) {
+    .ant-menu-item {
         position: relative;
         width: 240px;
         padding-right: 20px;
         padding-left: 65px !important;
     }
-    :global(.anticon) {
+    .anticon {
         position: absolute;
         top: 15px;
         right: -6px;
