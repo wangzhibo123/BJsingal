@@ -20,6 +20,13 @@
             position: absolute;
             height: calc(100% - 40px);
             width: 100%;
+            .roadTrends {
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                width: 800px;
+                height: 300px;
+            }
             .conditionList {
                 position: absolute;
                 top: 0;
@@ -216,6 +223,9 @@
                                 background-color: #112954;
                             }
                         }
+                        .itemHover {
+                            background-color: #112954;
+                        }
                     }
                 }
                 .excutePlan {
@@ -243,7 +253,7 @@
                         .phaseTime {
                             display: flex;
                             width: 160px;
-                            height: 65px;
+                            height: 70px;
                             margin: 0 40px 15px 0;
                             background: url(../imgs/jiaoK.png) center center no-repeat;
                             background-size: 100% 100%;
@@ -290,8 +300,7 @@
                             .itemPic {
                                 width: 58px;
                                 height: 58px;
-                                margin: 0 10px 10px 0;
-                                border: 1px solid #fff;
+                                margin-right: 10px;
                             }
                         }
                     }
