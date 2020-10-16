@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./MainMonitoring.scss";
 import mineMapConf from "../../utils/minemapConf";
 import { SearchOutlined, CompassOutlined } from "@ant-design/icons";
-import { Select } from "antd";
+import { Select, Button } from "antd";
 const { Option } = Select;
 export default class MainMonitoring extends Component {
   constructor(props) {
@@ -62,9 +62,10 @@ export default class MainMonitoring extends Component {
           ]
         }
       ],
-      modeTabShow: false,
-      modeMapShow: false,
-      modeMainMonitor: true
+      modeNavShow: true,
+      modeMapShow: true,
+      modeMainMonitor: false,
+      modeMainTabShow: true
     };
   }
   componentDidMount() {
@@ -108,12 +109,13 @@ export default class MainMonitoring extends Component {
     });
     this.map = map;
   };
+
   render() {
-    const { modeTabShow, modeMapShow, modeMainMonitor } = this.state;
+    const { modeNavShow, modeMapShow, modeMainMonitor, modeMainTabShow } = this.state;
     return (
       <div className="mainMon">
         {
-          modeTabShow && <div className="NavMon">
+          modeNavShow && <div className="NavMon">
             <div className="topNavMon">
               <div className="selectNav">
                 <Select
@@ -163,6 +165,9 @@ export default class MainMonitoring extends Component {
               <div className="modeMainSlidHeadMode">
                 <div className="modeMainIptHome">
                   <input type="text" placeholder="查询…" className="modeMainIpt" />
+                  <div className="modeMainIptBox">
+                    <SearchOutlined />
+                  </div>
                 </div>
                 <div className="modeMainLengthHome">
                   <div className="modeMainLength">干线长度</div><div className="modeMainLengthNum">6 <span className="modeMainLengthUnit">km</span></div>
@@ -173,31 +178,68 @@ export default class MainMonitoring extends Component {
                     <div className="modeMainLabelText">东西向</div>
                   </div>
                 </div>
+              </div>
+              <div className="modeMainDirection">
+                <div className="modeMainEWMode">
+                  {/* 东西走向 */}
+                  <div className="modeMainEWBtn">
+                    <Button>东</Button>
+                    <Button>西</Button>
+                  </div>
+                  <div className="modeMainEWVideo">
+                    <video src="*" style={{ width: "100%", height: "100%" }} controls>
+                      <source src="*" type="video/mp4"></source>
+                    </video>
+                  </div>
+                </div>
+                <div className="modeMainSNMode">
+                  {/* 南北走向 */}
+                  <div className="modeMainSNBtn">
+                    <Button>南</Button>
+                    <Button>北</Button>
+                  </div>
+                  <div className="modeMainSNVideo">
+                    <video style={{ width: "100%", height: "100%" }} controls>
+                      <source src="*" type="video/mp4"></source>
+                    </video>
+                  </div>
+                </div>
+              </div>
 
-              </div>
-              <div className="modeMainEWMode">
-                {/* 东西走向 */}
-
-              </div>
-              <div className="modeMainSNMode">
-                {/* 南北走向 */}
-              </div>
             </div>
             <div className="modeMainContentMode">
-              内容
-                                  </div>
+              <div className="modeMainMonitor"><div className="modeMainMonitorContent">干线监视</div></div>
+              <div className="modeMainMonitorContent">
+                <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#02AED7,#0173C8)", borderRadius: "20px", position: "relative" }}>
+                  <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "-6px", top: 0 }}>
+
+                  </div>
+                </div>
+
+                <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#3929D6,#800DC8)", borderRadius: "20px", position: "relative" }}>
+                  <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "-6px", top: 0 }}>
+
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
         }
-        <div className="modeSwitchBtn">
-          <div className="modeTab" onClick={() => {
-            this.setState({
-              modeTabShow: false,
-              modeMapShow: false
-            })
-          }}>模式切换</div>
-        </div>
-      </div>
+        {
+          modeMainTabShow && <div className="modeSwitchBtn">
+            <div className="modeTab" onClick={() => {
+              this.setState({
+                modeNavShow: false,
+                modeMapShow: false,
+                modeMainMonitor: true,
+                modeMainTabShow: false
+              })
+            }}>模式切换</div>
+          </div>
+
+        }
+      </div >
     );
   }
 }
