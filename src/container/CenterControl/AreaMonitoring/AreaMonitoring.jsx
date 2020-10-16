@@ -85,7 +85,7 @@ export default class AreaMonitoring extends Component {
             <div className="selectNav">
               <Select
                 defaultValue="海淀区"
-                style={{ width: 100, height: 30 }}
+                style={{ width: 82, height: 30 }}
               >
                 {
                   this.state.stateSelect.map((item, index) => {

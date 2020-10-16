@@ -9,7 +9,11 @@ import feel from '../imgs/iconS.png'
 import hand from '../imgs/iconH.png'
 import allred from '../imgs/iconR.png'
 import yellow from '../imgs/IconY.png'
+import phasePic from '../imgs/01.png'
+import allRed from '../imgs/allRed.png'
+import allYellow from '../imgs/allY.png'
 import InterTimeList from './InterTimeList/InterTimeList'
+import Graph from './Graph/Graph'
 
 const { Option } = Select
 class InterMonitor extends Component {
@@ -17,7 +21,6 @@ class InterMonitor extends Component {
     super(props)
     this.state = {
       isModify: false,
-      controlContent: 'default',
       confListLeft: 0,
       modifyStage: false,
       modeIndex: null,
@@ -36,26 +39,34 @@ class InterMonitor extends Component {
     this.setState({
       isModify: true,
       modifyStage: true,
+      modeIndex: 0,
     })
   }
   handleCancelModify = () => {
     this.setState({
       isModify: false,
       modifyStage: false,
+      modeIndex: null,
     })
   }
   handleshowConfList = () => {
     const { confListLeft } = this.state
     this.setState({ confListLeft: confListLeft === 0 ? '-260px' : 0 })
   }
+  handleControlMode = (indexs) => {
+    this.setState({ modeIndex: indexs })
+  }
   render() {
-    const { isModify, controlContent, confListLeft, modifyStage } = this.state
+    const { isModify, confListLeft, modifyStage, modeIndex } = this.state
     return (
       <div className="interMonitorBox">
         <div className="interMessage">
           <div className="title">路口监视</div>
           <div className="monitorDetails">
             <InterTimeList />
+            <div className="roadTrends">
+              <Graph />
+            </div>
             <div className="conditionList">
               <div className="titles">各路口实时路况</div>
                 <div className="listBox">
@@ -133,9 +144,9 @@ class InterMonitor extends Component {
                 <div className="modeText">控制模式</div>
                 <div className="controlDetails">
                   {
-                    this.controlItems.map((item) => {
+                    this.controlItems.map((item, index) => {
                       return (
-                        <div className="controlItem" key={item.text} onClick={this.handleControlMode}>
+                        <div className={`controlItem ${modeIndex === index && 'itemHover'}`} key={item.text} onClick={() => this.handleControlMode(index)}>
                           <div className="icon"><img src={item.img} alt="" /></div>
                           <div className="text">{item.text}</div>
                         </div>
@@ -145,14 +156,15 @@ class InterMonitor extends Component {
                 </div>
               </div>
               {
-                controlContent === 'default' &&
+                modeIndex < 3 &&
                 <div className="excutePlan">
                   <span>执行方案</span>
                   {
                     modifyStage ?
                     <span className="planName">
                       <Select defaultValue="1">
-                        <Option key="1" value="1">日常方案(周期120)</Option>
+                        <Option key="1" value="1">日
+                        常方案(周期120)</Option>
                       </Select>
                     </span> :
                     <span className="planName">日常方案(周期120)</span>
@@ -161,27 +173,39 @@ class InterMonitor extends Component {
               }
               <div className="controlContent">
                 {
-                  controlContent === 'lockPhase' ?
+                  modeIndex > 2 ?
                     <div className="lockPhase">
                       <div className="lockText">锁定相位</div>
                       <div className="phaseList">
-                        <div className="itemPic">
-                          {/* 放相位图片 */}
-                        </div>
+                        {
+                          modeIndex === 3 &&
+                          <div>
+                            <img className="itemPic" src={phasePic} alt=""/>
+                            <img className="itemPic" src={phasePic} alt=""/>
+                          </div>
+                        }
+                        {
+                          modeIndex === 4 &&
+                          <img className="itemPic" src={allRed} alt="" />
+                        }
+                        {
+                          modeIndex === 5 &&
+                          <img className="itemPic" src={allYellow} alt="" />
+                        }
                       </div>
                     </div> :
                     <div className="phaseMsg">
                     {
                       modifyStage ?
                         <div className="phaseTime">
-                          <div className="phaseinner">1</div>
+                          <div className="phaseinner"><img src={phasePic} alt=""/></div>
                           <div className="phaseinner times">
                             <span>40</span>
                             <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
                           </div>
                         </div> :
                         <div className="phaseTime">
-                          <div className="phaseinner">1</div>
+                          <div className="phaseinner"><img src={phasePic} alt=""/></div>
                           <div className="phaseinner times">40</div>
                         </div>
                     }

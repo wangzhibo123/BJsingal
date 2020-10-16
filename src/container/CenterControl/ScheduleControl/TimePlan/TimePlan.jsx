@@ -51,28 +51,32 @@ export default class TimePlan extends Component {
                 </div>
                 <div className="timePlanContent">
                     <div className="timePlanDirection">
-                        {
-                            timePlanState.map((item, index) => {
-                                return (
-                                    <div className="timePlanItem" key={index}>
-                                        <div className="timePlanIcon">
-                                            <img src={item.img} alt="" />
-                                        </div>
-                                        <div className="timePlanNum">
-                                            {item.num}
-                                        </div>
-                                        <div className="timePlanChange">
-                                            <div className="CaretUpOutlined">
-                                                <CaretUpOutlined onClick={() => this.timePlanUpButton(index)} />
+                        <div className="timePlanDirectionHome">
+                            {
+                                timePlanState.map((item, index) => {
+                                    return (
+
+                                        <div className="timePlanItem" key={index}>
+                                            <div className="timePlanIcon">
+                                                <img src={item.img} alt="" />
                                             </div>
-                                            <div className="CaretDownOutlined" onClick={() => this.timePlanDownButton(index)}>
-                                                <CaretDownOutlined />
+                                            <div className="timePlanNum">
+                                                {item.num}
+                                            </div>
+                                            <div className="timePlanChange">
+                                                <div className="CaretUpOutlined">
+                                                    <CaretUpOutlined onClick={() => this.timePlanUpButton(index)} />
+                                                </div>
+                                                <div className="CaretDownOutlined" onClick={() => this.timePlanDownButton(index)}>
+                                                    <CaretDownOutlined />
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                )
-                            })
-                        }
+
+                                    )
+                                })
+                            }
+                        </div>
                     </div>
                     <div className="timePlanExecuteHome">
                         <div className="timePlanAllShow">
