@@ -43,6 +43,10 @@ class Homepage extends Component {
   }
   addMarkersTwo = (arr) => {
     if (this.map) {
+      var marker = ''
+      if (marker) {
+        marker.remove()
+      }
       const el = document.createElement('div')
       el.style.width = '20px'
       el.style.height = '20px'
@@ -51,14 +55,18 @@ class Homepage extends Component {
       el.addEventListener('click', () => {
         this.phaseChange()
       })
-      const marker = new window.mapabcgl.Marker(el)
+      marker = new window.mapabcgl.Marker(el)
         .setLngLat(arr)
         .addTo(this.map);
-      this.addWin()
+      // this.addWin()
     }
   }
   addWin = () => {
-    new window.mapabcgl.Marker(getMarkerEl())
+    var marker = ''
+    if (marker) {
+      marker.remove()
+    }
+    marker = new window.mapabcgl.Marker(getMarkerEl())
       .setLngLat([116.38384768997417, 39.92253455638905])
       .addTo(this.map);
     function getMarkerEl() {
@@ -348,26 +356,31 @@ class Homepage extends Component {
     }
 
     function addMarker(img, point, position) {
-      var html = document.createElement('div');
+      var marker = '', html = ''
+      html = document.createElement('div');
       html.style.cssText = 'background:url(' + img + ')' + position + 'px 0px no-repeat;width:80px;height:50px;';
       html.style.backgroundSize = '100% 100%';
-      html.style.position = 'relative';
-      html.style.top = '-20px';
-      var marker = new window.mapabcgl.Marker(html)
+      // html.style.position = 'relative';
+      // html.style.top = '-20px';
+      marker = new window.mapabcgl.Marker(html)
         .setLngLat(point)
         .setDraggable(true)
+        .setOffset([0, -20])
         .addTo(_this.map);
       return marker;
+
     };
     function addMarkerEnd(img, point, position) {
-      var html = document.createElement('div');
+      var marker = '', html = ''
+      html = document.createElement('div');
       html.style.cssText = 'background:url(' + img + ')' + position + 'px 0px no-repeat;width:80px;height:50px;';
       html.style.backgroundSize = '100% 100%';
-      html.style.position = 'relative';
-      html.style.top = '-75px';
-      var marker = new window.mapabcgl.Marker(html)
+      // html.style.position = 'relative';
+      // html.style.top = '-75px';
+      marker = new window.mapabcgl.Marker(html)
         .setLngLat(point)
         .setDraggable(true)
+        .setOffset([0, -20])
         .addTo(_this.map);
       return marker;
     };
