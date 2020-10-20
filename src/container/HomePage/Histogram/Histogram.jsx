@@ -12,18 +12,13 @@ class Histogram extends React.Component {
     const chartsBox = echarts.init(this.chartsBox)
     const { chartsDatas } = this.props
     if (chartsDatas) {
-      const xData = []
-      const seriseData = []
-      chartsDatas.forEach((item) => {
-        xData.push(item.area_name)
-        seriseData.push(item.amount)
-      })
-      this.renderCharts(chartsBox, xData, seriseData)
+      const { xData, cpus, harddisks, memeries } = chartsDatas
+      this.renderCharts(chartsBox, xData, cpus, harddisks, memeries)
     } else {
-      this.renderCharts(chartsBox, this.xDatas, this.series)
+      this.renderCharts(chartsBox, [], [], [], [])
     }
   }
-  renderCharts = (chartsBox, xData, seriesData) => {
+  renderCharts = (chartsBox, xData, cpus, harddisks, memeries) => {
     const options = {
       color: ['#3398DB'],
       title: {
@@ -142,7 +137,7 @@ class Histogram extends React.Component {
           name: '硬盘',
           type: 'bar',
           barWidth: '5',
-          data: seriesData, // [60, 80, 120, 160, 120, 100, 60, 40],
+          data: harddisks, // [60, 80, 120, 160, 120, 100, 60, 40],
           itemStyle: {// 柱状图圆角
             // emphasis: {
             //   barBorderRadius: 7,
@@ -163,7 +158,7 @@ class Histogram extends React.Component {
           name: '内存',
           type: 'bar',
           barWidth: '5',
-          data: seriesData, // [60, 80, 120, 160, 120, 100, 60, 40],
+          data: memeries, // [60, 80, 120, 160, 120, 100, 60, 40],
           itemStyle: {// 柱状图圆角
             // emphasis: {
             //   barBorderRadius: 7,
@@ -184,7 +179,7 @@ class Histogram extends React.Component {
           name: 'CPU',
           type: 'bar',
           barWidth: '5',
-          data: seriesData, // [60, 80, 120, 160, 120, 100, 60, 40],
+          data: cpus, // [60, 80, 120, 160, 120, 100, 60, 40],
           itemStyle: {// 柱状图圆角
             // emphasis: {
             //   barBorderRadius: 7,
