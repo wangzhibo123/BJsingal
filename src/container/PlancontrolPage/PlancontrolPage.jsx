@@ -6,13 +6,13 @@ import mapConfiger from '../utils/minemapConf'
 import startPng from '../imgs/start.png'
 import endPng from '../imgs/end.png'
 import carPng from '../imgs/car.png'
-// import phase1 from '../imgs/03.png'
-// import phase2 from '../imgs/03.png'
+import phase1 from '../imgs/03.png'
+import phase2 from '../imgs/03.png'
 import phase3 from '../imgs/03.png'
-// import phase4 from '../imgs/03.png'
-// import phase11 from '../imgs/03.png'
-// import yellowPag from '../imgs/yellow.png'
-// import redPag from '../imgs/red.png'
+import phase4 from '../imgs/03.png'
+import phase11 from '../imgs/03.png'
+import yellowPag from '../imgs/yellow.png'
+import redPag from '../imgs/red.png'
 const { SubMenu } = Menu;
 class Homepage extends Component {
   constructor(props) {
@@ -92,7 +92,7 @@ class Homepage extends Component {
     // <img width="36px" height="36px" src="${}" />
     const popup = new window.mapabcgl.Popup(popupOption)
       .setLngLat(new window.mapabcgl.LngLat(116.38384768997417, 39.92253455638905))
-      .setHTML(`<div style="width: 125px;height: 335px;background-color: rgba(0, 19, 58, 0.5);">
+      .setHTML(`<div style="width: 125px;height: 335px;background-color: rgba(21,42,149, 0.5);">
       <div style="height: 50px;">
         <div style="color: #4f6db6;height: 20px;text-align: right;">
           方案运行
@@ -102,18 +102,18 @@ class Homepage extends Component {
         </div>
       </div>
       <div style="height: 285px;display: flex;flex-wrap: wrap;" className={styles.phaseMessageBox}>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src={yellowPag} alt="" /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src={redPag} alt="" /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src={phase1} alt="" /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><InputNumber min={1} max={10} defaultValue={3} /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src={phase3} alt="" /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><InputNumber min={1} max={10} defaultValue={3} /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src={phase4} alt="" /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><InputNumber min={1} max={10} defaultValue={3} /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src={phase11} alt="" /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><InputNumber min={1} max={10} defaultValue={3} /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src={phase2} alt="" /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><InputNumber min={1} max={10} defaultValue={3} /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src="${yellowPag}" alt="" /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src="${redPag}" alt="" /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src="${phase1}" alt="" /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;">3</li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src="${phase3}" alt="" /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><InputNumber min={1} max={10} defaultValue="3" /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src="${phase4}" alt="" /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><InputNumber min={1} max={10} defaultValue="3" /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src="${phase11}" alt="" /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><InputNumber min={1} max={10} defaultValue="3" /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src="${phase2}" alt="" /></li>
+        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><InputNumber min={1} max={10} defaultValue="3" /></li>
       </div>
     </div>`)
       .addTo(this.map);

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Pagination, Button, Input } from 'antd'
 import {
   PlusOutlined,
+  MinusOutlined,
 } from '@ant-design/icons';
 import styles from './SignalParameters.module.scss'
 import TimingMessage from './TimingMessage/TimingMessage'
@@ -10,7 +11,9 @@ import TimingMessage from './TimingMessage/TimingMessage'
 class SignalParameters extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      nowNumber: '',
+    }
   }
   componentDidMount() {
   }
@@ -38,7 +41,12 @@ class SignalParameters extends Component {
   pageChange = (page, pageSize) => {
 
   }
+  // 点击打开下拉列表
+  btnOpen = () => {
+
+  }
   render() {
+    const { nowNumber } = this.state
     return (
       <div className={styles.timingWrapper}>
         <div className={styles.timingcontainer}>
@@ -69,7 +77,7 @@ class SignalParameters extends Component {
               <div className={styles.mountingTbody}>
                 <div>
                   <div className={styles.mountingTr}>
-                    <div className={styles.mountingTd}><span><PlusOutlined /></span></div>
+                    <div className={styles.mountingTd}><span>{!nowNumber ? <MinusOutlined /> : <PlusOutlined />}</span></div>
                     <div className={styles.mountingTd}>*************</div>
                     <div className={styles.mountingTd}>*************</div>
                     <div className={styles.mountingTd}>*************</div>
@@ -87,7 +95,7 @@ class SignalParameters extends Component {
                 </div>
                 <div>
                   <div className={styles.mountingTr}>
-                    <div className={styles.mountingTd}><span><PlusOutlined /></span></div>
+                    <div className={styles.mountingTd}><span onClick={() => this.btnOpen()}>{nowNumber ? <MinusOutlined /> : <PlusOutlined />}</span></div>
                     <div className={styles.mountingTd}>*************</div>
                     <div className={styles.mountingTd}>*************</div>
                     <div className={styles.mountingTd}>*************</div>
