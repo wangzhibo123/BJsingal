@@ -4,6 +4,7 @@ import './officeOpt.scss'
 // import Histogram from './Histogram/Histogram'
 // import Graph from './Graph/Graph'
 import mapConfiger from '../../utils/minemapConf'
+import GraphPlus from './GraphPlus/GraphPlus'
 
 class OfficeOpt extends Component {
   constructor(props) {
@@ -108,6 +109,7 @@ class OfficeOpt extends Component {
               <div className="itemContent">
                 <div className="runRate">
                   {/* <Graph /> */}
+                  <GraphPlus />
                 </div>
               </div>
             </div>

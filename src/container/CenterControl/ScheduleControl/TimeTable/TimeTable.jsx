@@ -41,10 +41,10 @@ export default class TimeTable extends Component {
                         </div>
                     </div>
                     <div className="timeTableList">
-                        <div className="tableList">
+                        <div className="tableList" style={{overflowY:"auto"}}>
                             <table className="tableName" style={{ textAlign: "center", width: "100%", fontSize: "16px" }} >
                                 <tbody>
-                                    <tr className="tableTh" style={{ width: "100%", height: 40, background: "#162E52", lineHeight: "40px" }}>
+                                    <tr className="tableTh" style={{ width: "50%", height: 40, background: "#162E52", lineHeight: "40px"}}>
                                         <th>序号</th>
                                         <th>日期类型</th>
                                         <th>时间</th>

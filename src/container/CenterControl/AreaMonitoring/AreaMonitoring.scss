@@ -4,8 +4,8 @@
     background: url(../../imgs/sysbg.png) center center no-repeat;
     background-size: cover;
     font-family: 'PingFang-SC-Regular';
-
-    .NavMon {
+    position: relative;
+    .modeAreaContent{
         position: absolute;
         top: 80px;
         left: 5px;
@@ -13,141 +13,251 @@
         height: calc(100% - 80px);
         background: rgba(3,28,68,.56);
         z-index: 2;
-        .areaMonNum {
-            width: 100%;
-            height: 30px;
-            display: flex;
-            line-height: 30px;
-            background: #041D3E;
-            color: #2D64C6;
-
-            div {
-                margin-left: 10px;
-            }
-        }
-
-        // 左侧导航头部
-        .topNavMon {
-            width: 100%;
-            height: 30px;
-            display: flex;
-            margin-top: 10px;
-
-            .selectNav {
-                flex: 4;
-
-                select {
-                    width: 90%;
-                    height: 30px;
-                    background: #0A255E;
-                    margin-left: 5px;
-                    text-indent: 5px;
-                    cursor: pointer;
-                }
-
-                .ant-select {
-                    width: 85px;
-                    color: #fff;
-                }
-
-                .ant-select-selector {
-                    border: none;
-                    background-color: #0A2967;
-                }
-
-                .ant-select-arrow {
-                    color: #fff;
-                }
-            }
-
-            .iptSearchNav {
-                flex: 6;
-                padding-left: 5px;
-                position: relative;
-                .inptNavMon {
-                    width: 90%;
-                    height: 100%;
-                    background: #0A255E;
-                    border: none;
-                    margin-left: 5px;
-                    padding-left: 7px;
-                    outline: none;
-                    border-radius: 4px;
-                }
-                .MagBox {
-                    width: 20%;
-                    height: 100%;
-                    background: #0A255E;
-                    position: absolute;
-                    right: 0;
-                    top: 0;
-                    color: skyblue;
-                    text-align: center;
-                    line-height: 30px;
-                    font-size: 18px;
-                }
-            }
-        }
-        .listNav {
-            width: 100%;
-            height: 80%;
-            margin-top: 20px;
-            position: relative;
-            .allNavList {
+        .NavMon {
+            .areaMonNum {
                 width: 100%;
-                height: 100%;
+                height: 30px;
                 display: flex;
-                flex-direction: column;
-                align-items: center;
-                li {
-                    width: 70%;
-                    height: 55px;
-                    text-align: center;
-                    line-height: 50px;
-                    font-size: 14px;
-                    margin-top: 5px;
-                    cursor: pointer;
-                    color: #7AA4E1;
-                }
-                .line {
-                    width: 100%;
-                    height: 2px;
-                    background: linear-gradient(to right,
-                            rgba(0, 0, 0, 0) 0%,
-                            rgba(0, 0, 0, 0) 10%,
-                            rgba(8, 41, 90, 0.6) 20%,
-                            rgba(8, 41, 90, 0.7) 30%,
-                            rgba(8, 41, 90, 0.7) 40%,
-                            rgba(8, 41, 90, 0.8) 50%,
-                            rgba(8, 41, 90, 0.7) 60%,
-                            rgba(8, 41, 90, 0.7) 70%,
-                            rgba(8, 41, 90, 0.6) 80%,
-                            rgba(0, 0, 0, 0) 90%,
-                            rgba(0, 0, 0, 0) 100%)
-                }
-                li:hover {
-                    width: 100%;
-                    background: linear-gradient(to right,
-                            rgba(0, 0, 0, 0) 0%,
-                            rgba(0, 0, 0, 0) 10%,
-                            rgba(18, 66, 158, 0.3) 20%,
-                            rgba(18, 66, 158, 0.5) 30%,
-                            rgba(18, 66, 158, 0.7) 40%,
-                            rgba(18, 66, 158, 0.8) 50%,
-                            rgba(18, 66, 158, 0.7) 60%,
-                            rgba(18, 66, 158, 0.5) 70%,
-                            rgba(18, 66, 158, 0.3) 80%,
-                            rgba(0, 0, 0, 0) 90%,
-                            rgba(0, 0, 0, 0) 100%)
+                line-height: 30px;
+                background: #041D3E;
+                color: #2D64C6;
+    
+                div {
+                    margin-left: 10px;
                 }
             }
+    
+            // 左侧导航头部
+            .topNavMon {
+                width: 100%;
+                height: 30px;
+                display: flex;
+                margin-top: 10px;
+    
+                .selectNav {
+                    flex: 4;
+    
+                    select {
+                        width: 90%;
+                        height: 30px;
+                        background: #0A255E;
+                        margin-left: 5px;
+                        text-indent: 5px;
+                        cursor: pointer;
+                    }
+    
+                    .ant-select {
+                        width: 85px;
+                        color: #fff;
+                    }
+    
+                    .ant-select-selector {
+                        border: none;
+                        background-color: #0A2967;
+                    }
+    
+                    .ant-select-arrow {
+                        color: #fff;
+                    }
+                }
+    
+                .iptSearchNav {
+                    flex: 6;
+                    padding-left: 5px;
+                    position: relative;
+                    .inptNavMon {
+                        width: 90%;
+                        height: 100%;
+                        background: #0A255E;
+                        border: none;
+                        margin-left: 5px;
+                        padding-left: 7px;
+                        outline: none;
+                        border-radius: 4px;
+                    }
+                    .MagBox {
+                        width: 20%;
+                        height: 100%;
+                        background: #0A255E;
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+                        color: skyblue;
+                        text-align: center;
+                        line-height: 30px;
+                        font-size: 18px;
+                        cursor: pointer;
+                    }
+                }
+            }
+            .listNav {
+                width: 100%;
+                height: 80%;
+                margin-top: 20px;
+                position: relative;
+                .allNavList {
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    li {
+                        width: 70%;
+                        height: 55px;
+                        text-align: center;
+                        line-height: 50px;
+                        font-size: 14px;
+                        margin-top: 5px;
+                        cursor: pointer;
+                        color: #7AA4E1;
+                    }
+                    .line {
+                        width: 100%;
+                        height: 2px;
+                        background: linear-gradient(to right,
+                                rgba(0, 0, 0, 0) 0%,
+                                rgba(0, 0, 0, 0) 10%,
+                                rgba(8, 41, 90, 0.6) 20%,
+                                rgba(8, 41, 90, 0.7) 30%,
+                                rgba(8, 41, 90, 0.7) 40%,
+                                rgba(8, 41, 90, 0.8) 50%,
+                                rgba(8, 41, 90, 0.7) 60%,
+                                rgba(8, 41, 90, 0.7) 70%,
+                                rgba(8, 41, 90, 0.6) 80%,
+                                rgba(0, 0, 0, 0) 90%,
+                                rgba(0, 0, 0, 0) 100%)
+                    }
+                    li:hover {
+                        width: 100%;
+                        color: #fff;
+                        background: linear-gradient(to right,
+                                rgba(0, 0, 0, 0) 0%,
+                                rgba(0, 0, 0, 0) 10%,
+                                rgba(18, 66, 158, 0.3) 20%,
+                                rgba(18, 66, 158, 0.5) 30%,
+                                rgba(18, 66, 158, 0.7) 40%,
+                                rgba(18, 66, 158, 0.8) 50%,
+                                rgba(18, 66, 158, 0.7) 60%,
+                                rgba(18, 66, 158, 0.5) 70%,
+                                rgba(18, 66, 158, 0.3) 80%,
+                                rgba(0, 0, 0, 0) 90%,
+                                rgba(0, 0, 0, 0) 100%)
+                    }
+                }
+            }
+    
         }
-
     }
-    .mapContent {
+        .mapContent {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: calc(100% - 60px);
+        }
+    .modeSwitchBtn{
+        width: 103px;
+        height: 28px;
         position: absolute;
-        bottom: 0;
+        right: 28px;
+        top: 113px;
+        .modeTab{
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            line-height: 28px;
+            background: url(../../imgs/kuang.png) center center no-repeat;
+            background-size: 100% 100%;
+            color: #ccc;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    }
+
+    .modeSequenceChartShowHome{
         width: 100%;
-        height: calc(100% - 60px);
-    }   
+        height: calc(100% - 100px);
+        position: absolute;
+        top: 100px;
+        .modeSequenceChartShowList{
+            width: 730px;
+            height: 100%;
+            background: rgba(2,22,49,1);
+            position: absolute;
+            left: 17px;
+            top: 0;
+            .modeSequenceCharShowListHead{
+                width: 100%;
+                height: 63px;
+                display: flex;
+                position: absolute;
+                left: 0;
+                top: 0;
+                font-size: 17px;
+                font-weight: 700;
+                .modeSequenceCharShowListHeadInfo{
+                    flex: 1;
+                }
+                .modeSequenceCharShowListHeadChildName{
+                    flex:1;
+                    display: flex;
+                    .modeChildMark{
+                        display: flex;
+                        flex: 1;
+                        
+                        .modeChildMarkNum{
+                            margin-left: 10px;
+                            color: rgba(5,187,188,1);
+                            font-size: 17px;
+                        }
+                    }
+                    .modeChildName{
+                        display: flex;
+                        flex: 1;
+                        .modeChildMarkText{
+                            margin-left: 10px;
+                            color: rgba(5,187,188,1);
+                            font-size: 17px;
+                        }
+                    }
+                }
+            }
+            .modeSequenceCharShowListBox{
+                width: 100%;
+                position: absolute;
+                left: 0;
+                top: 63px;
+                display: flex;
+                display: table;
+                .modeSequenceCharShowListBoxTh{
+                    flex: 1;
+                    display: table-row;
+                    .modeSequenceCharShowListBoxTd{
+                        height: 50px;
+                        display: table-cell;
+                        text-align: center;
+                        font-size: 15px;
+                        line-height: 50px;
+                        color: rgba(28,158,211,1);
+                    }
+                }
+                .modeSequenceCharShowListBoxTr{
+                    flex: 1;
+                    display: table-row;
+                    overflow-y: auto;
+                    .modeSequenceCharShowListBoxTd{
+                        height: 50px;
+                        display: table-cell;
+                        text-align: center;
+                        font-size: 15px;
+                        line-height: 50px;
+                    }
+                    &:hover{
+                        background: rgba(19,116,136,1);
+                    }
+                }
+
+            }
+        }
+    }
+    
 }

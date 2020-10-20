@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import "./MinMap.scss"
 import mineMapConf from "../../../utils/minemapConf";
-import { Input } from 'antd';
-
-const { Search } = Input;
+import { SearchOutlined } from "@ant-design/icons";
 export default class MinMap extends Component {
     constructor(props) {
         super(props)
@@ -49,12 +47,14 @@ export default class MinMap extends Component {
     };
     render() {
         return (
-            <div className="minMapHome">
+            <div className="minMapHome">            
                 <div className="mapHome">
-                    <Search
-                        onSearch={value => console.log(value)}
-                        style={{ width: 200 }}
-                    />
+                    <div className="modeMainIptHome">
+                    <input type="text" placeholder="查询…" className="modeMainIpt" />
+                    <div className="modeMainIptBox">
+                        <SearchOutlined />
+                    </div>
+                    </div>
                     <div className="mapContent">
                         <div id="mapContainer" className="map-container"></div>
                     </div>

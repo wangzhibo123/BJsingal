@@ -54,12 +54,19 @@
                     color: #13D4EF;
                     text-decoration: underline #025FAC;
                     font-weight: 800;
+                    input{
+                        width: 100%;
+                        border: none;
+                        outline: none;
+                        background: #03172F;
+                        text-align: center;
+                    }
+                    
                 }
                 .timePlanChange {
                     flex: 1;
                     display: flex;
                     flex-direction: column;
-                    
                     position: relative;
                     color: #0087C1;
                     .CaretUpOutlined{

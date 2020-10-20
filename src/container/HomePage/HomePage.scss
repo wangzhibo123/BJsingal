@@ -6,13 +6,21 @@
     font-style: normal;
     text-align: center;
 }
+@font-face {
+    font-family: pingfangbold;
+    src: url(../utils/pingfangbold.ttf);
+    font-weight: 200;
+    // color: #ffee00;
+    font-style: normal;
+    text-align: center;
+}
 .homepageWrapper {
     position: relative;
     width: 100%;
     height: 100%;
     background: url(../imgs/sysbg.png) center center no-repeat;
     background-size: cover;
-    font-family: 'PingFang-SC-Regular';
+    
     .container {
         position: absolute;
         left: 0;
@@ -308,7 +316,8 @@
                                     justify-content: center;
                                     flex-direction: column;
                                     padding-left: 10px;
-                                    font-size: 16px;
+                                    font-size: 17px;
+                                    font-family: 'pingfangbold';
                                     color: #0FF2FD;
                                     .infoText {
                                         padding-bottom: 5px;

@@ -12,18 +12,13 @@ class Graph extends React.Component {
     const chartsBox = echarts.init(this.chartsBox)
     const { chartsDatas } = this.props
     if (chartsDatas) {
-      const xData = []
-      const seriseData = []
-      chartsDatas.forEach((item) => {
-        xData.push(item.area_name)
-        seriseData.push(item.amount)
-      })
-      this.renderCharts(chartsBox, xData, seriseData)
+      const { xData, today, yesterday, lastday } = chartsDatas
+      this.renderCharts(chartsBox, xData, today, yesterday, lastday)
     } else {
-      this.renderCharts(chartsBox, this.xDatas, this.series)
+      this.renderCharts(chartsBox, [])
     }
   }
-  renderCharts = (chartsBox, xData, seriesData) => {
+  renderCharts = (chartsBox, xData, today, yesterday, lastday) => {
     const options = {
       color: ['#3398DB'],
       title: {
@@ -42,7 +37,7 @@ class Graph extends React.Component {
           show: false,
           xAxisIndex: [0],
           start: 0,
-          end: xData.length > 5 ? 30 : 100,
+          end: xData.length > 7 ? 40 : 100,
           top: 0,
         },
         {
@@ -144,7 +139,7 @@ class Graph extends React.Component {
           type: 'line',
           symbol: 'none',
           smooth: true,
-          data: [5, 6, 8, 4, 9], // [60, 80, 120, 160, 120, 100, 60, 40],
+          data: today, // [60, 80, 120, 160, 120, 100, 60, 40],
           itemStyle: {// 柱状图圆角
             color: '#3AFFDC',
           },
@@ -165,7 +160,7 @@ class Graph extends React.Component {
           type: 'line',
           symbol: 'none',
           smooth: true,
-          data: [3, 7, 5, 2, 6], // [60, 80, 120, 160, 120, 100, 60, 40],
+          data: yesterday, // [60, 80, 120, 160, 120, 100, 60, 40],
           itemStyle: {
             color: '#9257AE',
           },
@@ -186,7 +181,7 @@ class Graph extends React.Component {
           type: 'line',
           symbol: 'none',
           smooth: true,
-          data: [6, 2, 5, 3, 7], // [60, 80, 120, 160, 120, 100, 60, 40],
+          data: lastday, // [60, 80, 120, 160, 120, 100, 60, 40],
           itemStyle: {
             color: '#FFAE5E',
           },

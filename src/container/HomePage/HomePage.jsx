@@ -5,18 +5,135 @@ import './HomePage.scss'
 import Histogram from './Histogram/Histogram'
 import Graph from './Graph/Graph'
 import mapConfiger from '../utils/minemapConf'
+import axiosInstance from '../utils/getInterfaceData'
 
 class Homepage extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      mainHomePage: true
-
+      mainHomePage: true,
+      congestionList: null,
+      repairRateList: null,
+      singalStatus: null,
+      cloudSource: null,
+      oprationData: null,
+      faultData: null,
+      areaMsgList: null,
     }
     this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
+    this.rateColors = ['#FF0000', '#FF7800', '#FFD800', '#0CB424']
+    this.congestionUrl = '/engine-unified/index/getCongestionRanking?user_id=1'
+    this.repairRateUrl = '/engine-unified/index/getFailureRepairRate?user_id=1'
+    this.staticUrl = '/engine-unified/index/getRealtimeStatistics?user_id=1'
+    this.cloudUrl = '/engine-unified/index/getCloudResourceUtilization?user_id=1'
+    this.oprationUrl = '/engine-unified/index/getOperatingEfficiency?user_id=1'
+    this.faultUrl = '/engine-unified/index/getFaultStatistics?user_id=1'
+    this.areaList = '/engine-unified/index/getRealTimeMonitoring?user_id=1'
   }
   componentDidMount = () => {
-    this.renderChartsMap()
+    // this.renderChartsMap()
+    this.getAreaMsgLists()
+    this.getCongestionList()
+    this.getFaulRepairRate()
+    this.getSingalStatus()
+    this.getCloudSource()
+    this.getOprationEfficiency()
+    this.getFaultStatistics()
+  }
+  // 区域信息列表
+  getAreaMsgLists = () => {
+    axiosInstance.post(this.areaList).then((res) => {
+      const { code, list } = res.data
+      if (code === '1') {
+        this.setState({ areaMsgList: list })
+      } else {
+        this.setState({ areaMsgList: null })
+      }
+    })
+  }
+  // 实时拥堵排名
+  getCongestionList = () => {
+    axiosInstance.post(this.congestionUrl).then((res) => {
+      const { code, list } = res.data
+      if (code === '1') {
+        this.setState({ congestionList: list })
+      } else {
+        this.setState({ congestionList: [] })
+      }
+    })
+  }
+  // 故障报修率
+  getFaulRepairRate = () => {
+    axiosInstance.post(this.repairRateUrl).then((res) => {
+      const { code, list } = res.data
+      if (code === '1') {
+        this.setState({ repairRateList: list })
+      } else {
+        this.setState({ repairRateList: [], })
+      }
+    })
+  }
+  // 信号机实时状态统计
+  getSingalStatus = () => {
+    axiosInstance.post(this.staticUrl).then((res) => {
+      const { code, list } = res.data
+      if (code === '1') {
+        this.setState({ singalStatus: list })
+      } else {
+        this.setState({ singalStatus: [] })
+      }
+    })
+  }
+  // 云资源占用率
+  getCloudSource = () => {
+    axiosInstance.post(this.cloudUrl).then((res) => {
+      const { code, list } = res.data
+      if (code === '1') {
+        const areaList = []
+        const cpus = []
+        const harddisks = []
+        const memeries = []
+        list.forEach((item) => {
+          areaList.push(item.district_name)
+          cpus.push(item.cpu)
+          harddisks.push(item.harddisk)
+          memeries.push(item.memory)
+        })
+        this.setState({ cloudSource: { xData: areaList, cpus, harddisks, memeries } })
+      } else {
+        this.setState({ cloudSource: null })
+      }
+    })
+  }
+  // 运行效率
+  getOprationEfficiency = () => {
+    axiosInstance.post(this.oprationUrl).then((res) => {
+      const { code, lastlist, nowlist, yesterlist } = res.data
+      if (code === '1') {
+        const xData = lastlist.map(item => item.time)
+        const today = nowlist.map(item => item.opt)
+        const yesterday = yesterlist.map(item => item.opt)
+        const lastday = lastlist.map(item => item.opt)
+        this.setState({ oprationData: { xData, today, yesterday, lastday } })
+      } else {
+        this.setState({ oprationData: null, })
+      }
+    })
+  }
+  // 故障统计
+  getFaultStatistics = () => {
+    axiosInstance.post(this.faultUrl).then((res) => {
+      const { code, lastlist, nowlist, yesterlist } = res.data
+      if (code === '1') {
+        const xData = lastlist.map(item => item.time)
+        const today = nowlist.map(item => item.opt)
+        const yesterday = yesterlist.map(item => item.opt)
+        const lastday = lastlist.map(item => item.opt)
+        this.setState({ faultData: { xData, today, yesterday, lastday } })
+      } else {
+        this.setState({ faultData: null, })
+      }
+    })
   }
   addMarker = () => {
     if (this.map) {
@@ -123,7 +240,7 @@ class Homepage extends Component {
     })
   }
   render() {
-    const { mainHomePage } = this.state
+    const { mainHomePage, congestionList, repairRateList, singalStatus, cloudSource, oprationData, faultData, areaMsgList } = this.state
     return (
       <div className="homepageWrapper">
         <div className="container">
@@ -132,20 +249,20 @@ class Homepage extends Component {
               <div className="title">实时拥堵排名</div>
               <div className="itemContent">
                 <ul className="jammedSort">
-                  <li className="jammedLi">
-                    <div className="areaSort"><span className="sortNo">No.1</span> 朝阳区</div>
-                    <div className="sortValue">
-                      <span className="progressVal" style={{ width: '80%', backgroundColor: '#00BAFF' }} />
-                      <span className="value">8.0</span>
-                    </div>
-                  </li>
-                  <li className="jammedLi">
-                    <div className="areaSort"><span className="sortNo">No.2</span> 朝阳区</div>
-                    <div className="sortValue">
-                      <span className="progressVal" style={{ width: '70%', backgroundColor: '#FF8400' }} />
-                      <span className="value">7.0</span>
-                    </div>
-                  </li>
+                  {
+                    congestionList &&
+                    congestionList.map((item, index) => {
+                      return (
+                        <li className="jammedLi" key={item.area_id}>
+                          <div className="areaSort"><span className="sortNo">No.{index + 1}</span> {item.district_name}</div>
+                          <div className="sortValue">
+                            <span className="progressVal" style={{ width: `${(item.congestion_delay / 10) * 100}%`, backgroundColor: this.sortColors[index] }} />
+                            <span className="value">{item.congestion_delay}</span>
+                          </div>
+                        </li>
+                      )
+                    })
+                  }
                 </ul>
               </div>
             </div>
@@ -153,7 +270,10 @@ class Homepage extends Component {
               <div className="title">运行效率</div>
               <div className="itemContent">
                 <div className="runRate">
-                  <Graph />
+                  {
+                    oprationData &&
+                    <Graph chartsDatas={oprationData} />
+                  }
                 </div>
               </div>
             </div>
@@ -161,7 +281,10 @@ class Homepage extends Component {
               <div className="title">云资源占用率</div>
               <div className="itemContent">
                 <div className="holdRate">
-                  <Histogram />
+                  {
+                    cloudSource &&
+                    <Histogram chartsDatas={cloudSource} />
+                  }
                 </div>
               </div>
             </div>
@@ -171,42 +294,22 @@ class Homepage extends Component {
               <div className="title">故障报修率</div>
               <div className="itemContent">
                 <div className="faultRate">
-                  <div className="faultDetails">
-                    <div className="faultNo" style={{ backgroundColor: '#ff0000' }}>1</div>
-                    <div className="faultArea">朝阳区</div>
-                    <div className="present">95%</div>
-                    <div className="faultValue">
-                      <div className="progress" style={{ width: '80%' }} />
-                      <div className="value">130</div>
-                    </div>
-                  </div>
-                  <div className="faultDetails">
-                    <div className="faultNo" style={{ backgroundColor: '#FF7800' }}>2</div>
-                    <div className="faultArea">朝阳区</div>
-                    <div className="present">95%</div>
-                    <div className="faultValue">
-                      <div className="progress" style={{ width: '80%' }} />
-                      <div className="value">130</div>
-                    </div>
-                  </div>
-                  <div className="faultDetails">
-                    <div className="faultNo" style={{ backgroundColor: '#FFD800' }}>3</div>
-                    <div className="faultArea">朝阳区</div>
-                    <div className="present">95%</div>
-                    <div className="faultValue">
-                      <div className="progress" style={{ width: '80%' }} />
-                      <div className="value">130</div>
-                    </div>
-                  </div>
-                  <div className="faultDetails">
-                    <div className="faultNo" style={{ backgroundColor: '#0BB423' }}>4</div>
-                    <div className="faultArea">朝阳区</div>
-                    <div className="present">95%</div>
-                    <div className="faultValue">
-                      <div className="progress" style={{ width: '80%' }} />
-                      <div className="value">130</div>
-                    </div>
-                  </div>
+                  {
+                    repairRateList &&
+                    repairRateList.map((item, index) => {
+                      return (
+                        <div className="faultDetails" key={item.area_id}>
+                          <div className="faultNo" style={{ backgroundColor: index < 4 ? this.rateColors[index] : '#0CB424' }}>{index + 1}</div>
+                          <div className="faultArea">{item.district_name}</div>
+                          <div className="present">{(item.fault_number / 10) * 100}%</div>
+                          <div className="faultValue">
+                            <div className="progress" style={{ width: `${(item.fault_number / 10) * 100}%` }} />
+                            <div className="value">{item.fault_number}</div>
+                          </div>
+                        </div>
+                      )
+                    })
+                  }
                 </div>
               </div>
             </div>
@@ -214,7 +317,10 @@ class Homepage extends Component {
               <div className="title">故障统计曲线图</div>
               <div className="itemContent">
                 <div className="runRate">
-                  <Graph />
+                  {
+                    faultData &&
+                    <Graph chartsDatas={faultData} />
+                  }
                 </div>
               </div>
             </div>
@@ -224,30 +330,24 @@ class Homepage extends Component {
                 <div className="singalStatus">
                   <div className="statusEach"><span className="each">区域</span><span className="each">品牌</span></div>
                   <div className="statusDetails">
-                    <div className="singalMsg">
-                      <div className="singalName">西门子</div>
-                      <div className="presents">
-                        <div className="nomals" style={{ width: '80%' }}><span>80%</span></div>
-                        <div className="faults" style={{ width: '10%' }}><span>10%</span></div>
-                        <div className="outlines" style={{ width: '10%' }}><span>10%</span></div>
-                      </div>
-                    </div>
-                    <div className="singalMsg">
-                      <div className="singalName">海信</div>
-                      <div className="presents">
-                        <div className="nomals" style={{ width: '60%' }}><span>70%</span></div>
-                        <div className="faults" style={{ width: '15%' }}><span>10%</span></div>
-                        <div className="outlines" style={{ width: '25%' }}><span>20%</span></div>
-                      </div>
-                    </div>
-                    <div className="singalMsg">
-                      <div className="singalName">易华录</div>
-                      <div className="presents">
-                        <div className="nomals" style={{ width: '80%' }}><span>80%</span></div>
-                        <div className="faults" style={{ width: '10%' }}><span>10%</span></div>
-                        <div className="outlines" style={{ width: '10%' }}><span>10%</span></div>
-                      </div>
-                    </div>
+                    {
+                      singalStatus &&
+                      singalStatus.map((item) => {
+                        const onLineRate = (item.online_number / item.input_number) * 100
+                        const outLineRate = (item.offline_number / item.input_number) * 100
+                        const faultRate = (item.fault_number / item.input_number) * 100
+                        return (
+                          <div className="singalMsg" key={item.code_name}>
+                            <div className="singalName">{item.code_name}</div>
+                            <div className="presents">
+                              <div className="nomals" style={{ width: `${onLineRate}%` }}><span>{onLineRate}%</span></div>
+                              <div className="faults" style={{ width: `${outLineRate}%` }}><span>{outLineRate}%</span></div>
+                              <div className="outlines" style={{ width: `${faultRate}%` }}><span>{faultRate}%</span></div>
+                            </div>
+                          </div>
+                        )
+                      })
+                    }
                   </div>
                   <div className="statusInfo">
                     <div className="legendInfo"><span className="statusLegend nomal" /><span>正常</span></div>
@@ -265,32 +365,28 @@ class Homepage extends Component {
               <div className="centerMain">
                 <div className="centerBox">
                   <div className="ceterLeft">
-                    <div className="areaDetails">
-                      <div className="areaName">朝阳区</div>
-                      <div className="details">
-                        <div className="msg">
-                          <span className="online">接入：<span className="nomalVal">300</span></span>
-                          <span className="online">在线：<span className="nomalVal">280</span></span>
-                        </div>
-                        <div className="msg">
-                          <span className="outline">离线：<span className="outlineVal">10</span></span>
-                          <span className="outline">故障：<span className="faultVal">3</span></span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="areaDetails">
-                      <div className="areaName">西城区</div>
-                      <div className="details">
-                        <div className="msg">
-                          <span className="online">接入：<span className="nomalVal">300</span></span>
-                          <span className="online">在线：<span className="nomalVal">280</span></span>
-                        </div>
-                        <div className="msg">
-                          <span className="outline">离线：<span className="outlineVal">10</span></span>
-                          <span className="outline">故障：<span className="faultVal">3</span></span>
-                        </div>
-                      </div>
-                    </div>
+                    {
+                      areaMsgList &&
+                      areaMsgList.map((item, index) => {
+                        if (index < 10) {
+                          return (
+                            <div className="areaDetails" key={item.area_id}>
+                              <div className="areaName">{item.district_name}</div>
+                              <div className="details">
+                                <div className="msg">
+                                  <span className="online">接入：<span className="nomalVal">{item.input_number}</span></span>
+                                  <span className="online">在线：<span className="nomalVal">{item.online_number}</span></span>
+                                </div>
+                                <div className="msg">
+                                  <span className="outline">离线：<span className="outlineVal">{item.offline_number}</span></span>
+                                  <span className="outline">故障：<span className="faultVal">{item.fault_number}</span></span>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        }
+                      })
+                    }
                   </div>
                   <div className="center">
                     <div className="topInfo">
@@ -331,32 +427,28 @@ class Homepage extends Component {
                     <div className="centerMap" onClick={this.handleCutMap} ref={(input) => { this.chartMapBox = input }}></div>
                   </div>
                   <div className="centerRight">
-                    <div className="areaDetails">
-                        <div className="areaName">朝阳区</div>
-                        <div className="details">
-                          <div className="msg">
-                            <span className="online">接入：<span className="nomalVal">300</span></span>
-                            <span className="online">在线：<span className="nomalVal">280</span></span>
+                  {
+                    areaMsgList &&
+                    areaMsgList.map((item, index) => {
+                      if (index > 9) {
+                        return (
+                          <div className="areaDetails" key={item.area_id}>
+                            <div className="areaName">{item.district_name}</div>
+                            <div className="details">
+                              <div className="msg">
+                                <span className="online">接入：<span className="nomalVal">{item.input_number}</span></span>
+                                <span className="online">在线：<span className="nomalVal">{item.online_number}</span></span>
+                              </div>
+                              <div className="msg">
+                                <span className="outline">离线：<span className="outlineVal">{item.offline_number}</span></span>
+                                <span className="outline">故障：<span className="faultVal">{item.fault_number}</span></span>
+                              </div>
+                            </div>
                           </div>
-                          <div className="msg">
-                            <span className="outline">离线：<span className="outlineVal">10</span></span>
-                            <span className="outline">故障：<span className="faultVal">3</span></span>
-                          </div>   
-                        </div>
-                      </div>
-                      <div className="areaDetails">
-                        <div className="areaName">西城区</div>
-                        <div className="details">
-                          <div className="msg">
-                            <span className="online">接入：<span className="nomalVal">300</span></span>
-                            <span className="online">在线：<span className="nomalVal">280</span></span>
-                          </div>
-                          <div className="msg">
-                            <span className="outline">离线：<span className="outlineVal">10</span></span>
-                            <span className="outline">故障：<span className="faultVal">3</span></span>
-                          </div>   
-                        </div>
-                      </div>
+                        )
+                      }
+                    })
+                  }
                   </div>
                 </div>
               </div>
