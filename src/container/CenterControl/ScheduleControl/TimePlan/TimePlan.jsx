@@ -38,9 +38,10 @@ export default class TimePlan extends Component {
             }]
         }
     }
-    timePlanUpButton = (index) => {
+    timePlanUpButton = () => {
+        
     }
-    timePlanDownButton = (index) => {
+    timePlanDownButton = (item) => {
     }
     render() {
         const { timePlanState } = this.state;
@@ -55,19 +56,18 @@ export default class TimePlan extends Component {
                             {
                                 timePlanState.map((item, index) => {
                                     return (
-
                                         <div className="timePlanItem" key={index}>
                                             <div className="timePlanIcon">
                                                 <img src={item.img} alt="" />
                                             </div>
                                             <div className="timePlanNum">
-                                                {item.num}
+                                                <input type="text" defaultValue={item.num}/>
                                             </div>
                                             <div className="timePlanChange">
                                                 <div className="CaretUpOutlined">
-                                                    <CaretUpOutlined onClick={() => this.timePlanUpButton(index)} />
+                                                    <CaretUpOutlined onClick={this.timePlanUpButton} />
                                                 </div>
-                                                <div className="CaretDownOutlined" onClick={() => this.timePlanDownButton(index)}>
+                                                <div className="CaretDownOutlined" onClick={() => this.timePlanDownButton(item)}>
                                                     <CaretDownOutlined />
                                                 </div>
                                             </div>
