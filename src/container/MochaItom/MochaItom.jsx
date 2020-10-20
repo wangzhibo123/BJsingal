@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Select, Menu, Progress } from 'antd'
-import { SearchOutlined, EditOutlined, CloseOutlined } from '@ant-design/icons'
+import { SearchOutlined } from '@ant-design/icons'
 import Pie3D from '../../components/Pie3D/Pie3D'
 import Graph from './Graph/Graph'
 import mapConfiger from '../utils/minemapConf'
@@ -93,7 +93,7 @@ class MochaItom extends Component {
             mode="inline">
             <SubMenu key="sub2" title="海淀区">
               <SubMenu key="sub3" title="知春路拥堵应急">
-                <Menu.Item key="7">知春路与罗庄东路<EditOutlined /></Menu.Item>
+                <Menu.Item key="7">知春路与罗庄东路</Menu.Item>
                 <Menu.Item key="8">知春路与罗庄中路</Menu.Item>
                 <Menu.Item key="9">知春路与罗庄西路</Menu.Item>
                 <Menu.Item key="10">知春路与海淀黄庄路</Menu.Item>

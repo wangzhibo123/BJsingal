@@ -20,7 +20,7 @@ class Header extends Component {
         name: '信号优化', id: '0-4',
         children: [{ name: '局信号优化', id: '1-4', path: 'office' }, { name: '区信号优化', id: '2-4', path: '' }, { name: '路口优化', id: '3-4', path: '' }, { name: '区域优化', id: '4-4', path: '' }]
       },
-      { name: '效果评价', id: '0-5', children: [] },
+      { name: '效果评价', id: '0-5', children: [{ name: '路口评价', id: '1-5', path: '/inter' }, { name: '干线评价', id: '2-5', path: '/artery' }, { name: '区域评价', id: '3-5', path: '/area' }] },
       {
         name: '运维管理', id: '0-6',children: [], path: '/MochaItom'},
       {
