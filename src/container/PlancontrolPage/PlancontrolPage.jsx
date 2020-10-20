@@ -6,13 +6,13 @@ import mapConfiger from '../utils/minemapConf'
 import startPng from '../imgs/start.png'
 import endPng from '../imgs/end.png'
 import carPng from '../imgs/car.png'
-import phase1 from '../imgs/03.png'
-import phase2 from '../imgs/03.png'
+// import phase1 from '../imgs/03.png'
+// import phase2 from '../imgs/03.png'
 import phase3 from '../imgs/03.png'
-import phase4 from '../imgs/03.png'
-import phase11 from '../imgs/03.png'
-import yellowPag from '../imgs/yellow.png'
-import redPag from '../imgs/red.png'
+// import phase4 from '../imgs/03.png'
+// import phase11 from '../imgs/03.png'
+// import yellowPag from '../imgs/yellow.png'
+// import redPag from '../imgs/red.png'
 const { SubMenu } = Menu;
 class Homepage extends Component {
   constructor(props) {
@@ -58,7 +58,7 @@ class Homepage extends Component {
       marker = new window.mapabcgl.Marker(el)
         .setLngLat(arr)
         .addTo(this.map);
-      // this.addWin()
+      this.addWin()
     }
   }
   addWin = () => {
@@ -68,6 +68,7 @@ class Homepage extends Component {
     }
     marker = new window.mapabcgl.Marker(getMarkerEl())
       .setLngLat([116.38384768997417, 39.92253455638905])
+      .setOffset([0, 28])
       .addTo(this.map);
     function getMarkerEl() {
       var el = document.createElement('div')
@@ -76,8 +77,8 @@ class Homepage extends Component {
       el.style.width = '35px';
       el.style.height = '41px';
       el.style.paddingTop = '5px';
-      el.style.position = 'relative';
-      el.style.top = '-70px';
+      // el.style.position = 'relative';
+      // el.style.top = '-70px';
       return el
     }
   }
