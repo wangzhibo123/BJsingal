@@ -13,7 +13,7 @@
         :global(.ant-picker) {
             height: 30px;
             border: none;
-            background-color: #16537F;
+            background-color: #0A2967;
             color: #F1F1FB;
         }
         :global(.ant-picker-suffix) {
@@ -29,7 +29,7 @@
             line-height: 28px;
         }
         :global(.ant-select-selector) {
-            background-color: #16537F;
+            background-color: #0A2967;
             color: #F1F1FB;
             border: none;
             box-shadow: none;
@@ -57,10 +57,13 @@
             border-radius: 3px;
             color: #5F9FDC;;
             cursor: pointer;
-            background-color: #264D88;
+            background-color: #0A2967;
+            &:hover{
+                background-color: #0673B6;                
+            }
         }
         .searchActive {
-            background-color: #0673B6;
+            background-color: #0A2967;
             color: #2AC8F1;
         }
     }
