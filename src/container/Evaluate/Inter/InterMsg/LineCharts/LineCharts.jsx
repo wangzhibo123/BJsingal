@@ -80,7 +80,7 @@ class LineCharts extends React.Component {
       },
       toolbox: {
         show: true,
-        top: 25,
+        top: 5,
         right: 5,
         feature: {
           magicType: { show: true, type: ['line', 'bar'] },
