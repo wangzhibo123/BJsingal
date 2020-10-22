@@ -31,9 +31,13 @@ export default class AreaMonitoring extends Component {
           children: []
         }
       ],
+      //切换按钮
       modeAreaTabShow:true,
+      //地图
       modeAreaMapShow:true,
+      //左侧侧边栏
       modeAreaContentShow:true,
+      //第二页面
       modeSequenceChartShow:false
     };
   }
@@ -132,13 +136,13 @@ export default class AreaMonitoring extends Component {
             <ul className="allNavList">
               <li>万泉河路</li>
               <div className="line"></div>
-              <li>万泉河路</li>
+              <li>中关村大街</li>
               <div className="line"></div>
-              <li>万泉河路</li>
+              <li>中关村东路</li>
               <div className="line"></div>
-              <li>万泉河路</li>
+              <li>知春路</li>
               <div className="line"></div>
-              <li>万泉河路</li>
+              <li>学院路</li>
               <div className="line"></div>
             </ul>
           </div>
@@ -168,11 +172,11 @@ export default class AreaMonitoring extends Component {
               <div className="modeSequenceChartShowList">
                 <div className="modeSequenceCharShowListHead">
                       <div className="modeSequenceCharShowListHeadInfo">
-                        <div>子区详细信息</div>
+                        <div className="subareaDetails">子区详细信息<div className="BGLine"></div></div>
                       </div>
                       <div className="modeSequenceCharShowListHeadChildName">
-                        <div className="modeChildMark">子区号:<div className="modeChildMarkNum">254</div></div>
-                        <div className="modeChildName">子区名称:<div className="modeChildMarkText">平安大街</div></div>
+                        <div className="modeChildMark">子区号:<div className="modeChildMarkNum"><h3>254</h3></div></div>
+                        <div className="modeChildName">子区名称:<div className="modeChildMarkText">郭沫若故居</div></div>
                       </div>
                 </div>
                 <div className="modeSequenceCharShowListBox">
@@ -321,7 +325,7 @@ export default class AreaMonitoring extends Component {
                     <div className="modeSequenceChartShowChartIptSearch">
                       <Select
                         showSearch
-                        style={{ width: 273,height:37,position:"absolute",left:"30px",top:"25px"}}
+                        style={{ width: 273,height:37,position:"absolute",left:"30px",top:"25px",backgroundColor:"red"}}
                         placeholder="请输入子区名称进行搜索"
                         optionFilterProp="children"
                         onChange={this.onChange}
@@ -341,12 +345,13 @@ export default class AreaMonitoring extends Component {
                     </div>
                     <div className="modeSwitchBtn">
                     <div className="modeTab" onClick={() => {
-                      this.forceUpdate() 
                       this.setState({
                         modeAreaTabShow:true,
                         modeAreaMapShow:true,
                         modeAreaContentShow:true,
                         modeSequenceChartShow:false
+                      },()=>{
+                        this.renderMap()
                       })
                     }}>地图模式</div>
                   </div>

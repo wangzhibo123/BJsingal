@@ -76,12 +76,20 @@ export default class MainMonitoring extends Component {
     };
   }
   componentDidMount() {
-    if (this.state.modeMapShow) {
-      this.renderMap();
-    }
+    this.state.modeMapShow&&this.renderMap();
   }
   onChange(checked) {
     console.log(`switch to ${checked}`);
+  }
+  modeTabToMapPage=()=>{
+    this.setState({
+      modeNavShow: true,
+      modeMapShow: true,
+      modeMainMonitor: false,
+      modeMainTabShow: true
+    },()=>{
+      this.renderMap()
+    })
   }
   addMarker = () => {
     if (this.map) {
@@ -96,6 +104,9 @@ export default class MainMonitoring extends Component {
       console.log(marker);
     }
   };
+  modeMainEBtn=()=>{
+    alert(111)
+  }
   renderMap = () => {
     mineMapConf.zoom = 11;
     const map = new window.mapabcgl.Map(mineMapConf);
@@ -128,7 +139,8 @@ export default class MainMonitoring extends Component {
               <div className="selectNav">
                 <Select
                   defaultValue="海淀区"
-                  style={{ width: 100, height: 30 }}
+                  style={{ width: 100,height:30 }}
+                  size="middle"      
                 >
                   {
                     this.state.stateSelect.map((item, index) => {
@@ -150,13 +162,13 @@ export default class MainMonitoring extends Component {
               <ul className="allNavList">
                 <li>万泉河路</li>
                 <div className="line"></div>
-                <li>万泉河路</li>
+                <li>中关村大街</li>
                 <div className="line"></div>
-                <li>万泉河路</li>
+                <li>中关村东路</li>
                 <div className="line"></div>
-                <li>万泉河路</li>
+                <li>知春路</li>
                 <div className="line"></div>
-                <li>万泉河路</li>
+                <li>学院路</li>
                 <div className="line"></div>
               </ul>
             </div>
@@ -191,7 +203,7 @@ export default class MainMonitoring extends Component {
                 <div className="modeMainEWMode">
                   {/* 东西走向 */}
                   <div className="modeMainEWBtn">
-                    <Button>东</Button>
+                    <Button onClick={this.modeMainEBtn} className="modeShowStyle">东</Button>
                     <Button>西</Button>
                   </div>
                   <div className="modeMainEWVideo">
@@ -217,7 +229,7 @@ export default class MainMonitoring extends Component {
             <div className="modeMainContentMode">
               <div className="modeMainMonitor"><div className="modeMainMonitorContentSink">干线监视</div>
               <div className="modeSwitchBtn">
-                  <div className="modeTab">模式切换</div>
+                  <div className="modeTab" onClick={this.modeTabToMapPage}>模式切换</div>
               </div>
            </div>
               <div className="modeMainMonitorContent">
@@ -251,7 +263,7 @@ export default class MainMonitoring extends Component {
                             <div className="modeMainMonitorContentListImg"><img src={red} alt=""/></div>
                             <div className="modeMainMonitorContentListImg"><img src={leftRightPng} alt=""/></div> 
                             <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
-                            <div className="modeMainMonitorContentListImg"><img src={upDownPng} alt=""/></div>
+                            <div className="modeMainMonitorContentListImg"  style={{background:"#000E35"}}><img src={upDownPng} alt=""/></div>
                             <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
                             <div className="modeMainMonitorContentListImg"><img src={upLeftDownRight} alt=""/></div>
                             <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
@@ -285,7 +297,7 @@ export default class MainMonitoring extends Component {
                             <div className="autoOper">自动运行</div>
                             <div className="switch"><Switch defaultChecked onChange={this.onChange} style={{background:"#4A62E7"}}/></div>
                             <div className="openHand">开启手动</div>
-                        </div>
+                        </div>  
                         <div className="modeMainMonitorContentListBottom">
                           <div className="modeMainMonitorContentListTable">
                             <div className="modeMainMonitorContentListImg"><img src={yellow} alt=""/></div>
@@ -296,7 +308,7 @@ export default class MainMonitoring extends Component {
                             <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
                             <div className="modeMainMonitorContentListImg"><img src={upLeftDownRight} alt=""/></div>
                             <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
-                            <div className="modeMainMonitorContentListImg"><img src={upLeftUp} alt=""/></div>
+                            <div className="modeMainMonitorContentListImg" style={{background:"#000E35"}}><img src={upLeftUp} alt=""/></div>
                             <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
                             <div className="modeMainMonitorContentListImg"><img src={rightUpLeftDown} alt=""/></div>
                             <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
