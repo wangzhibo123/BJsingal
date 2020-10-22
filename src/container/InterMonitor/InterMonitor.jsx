@@ -3,15 +3,12 @@ import { Select } from 'antd'
 import { SearchOutlined, DoubleLeftOutlined, DoubleRightOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons'
 import './InterMonitor.scss'
 
-import Time from '../imgs/iconT.png'
 import cneter from '../imgs/iconM.png'
-import feel from '../imgs/iconS.png'
 import hand from '../imgs/iconH.png'
 import allred from '../imgs/iconR.png'
 import yellow from '../imgs/IconY.png'
 import phasePic from '../imgs/01.png'
-import allRed from '../imgs/allRed.png'
-import allYellow from '../imgs/allY.png'
+import test1 from '../imgs/test1.png'
 import InterTimeList from './InterTimeList/InterTimeList'
 import Graph from './Graph/Graph'
 
@@ -26,12 +23,7 @@ class InterMonitor extends Component {
       modeIndex: null,
     }
     this.confItems = ['基础信息', '信号参数', '一口一档', '交通指标', '时间表控制']
-    // this.confItems = ['信号灯组参数', '检测器参数', '车道参数', '相位参数', '阶段参数', '配时方案', '方案相序表', '方案配时表', '日计划表', '调度表' ]
     this.controlItems = [
-      // { text: '时间表控制', img: Time },
-      
-      // { text: '感应控制', img: feel },
-      
       { text: '全红控制', img: allred },
       { text: '闪黄控制', img: yellow },
       { text: '中心控制', img: cneter },
@@ -60,10 +52,13 @@ class InterMonitor extends Component {
     this.setState({ modeIndex: indexs })
   }
   render() {
-    const { isModify, confListLeft, modifyStage, modeIndex } = this.state
+    const { confListLeft, modeIndex } = this.state
     return (
       <div className="interMonitorBox">
         <div className="interMessage">
+          <div className="interPic">
+            <img src={test1} alt="" />
+          </div>
           <div className="title">路口监视</div>
           <div className="monitorDetails">
             <InterTimeList />
@@ -158,66 +153,56 @@ class InterMonitor extends Component {
                   }
                 </div>
                 <div className="controlDetails">
-                  
-                </div>
-              </div>
-              {
-                modeIndex < 3 &&
-                <div className="excutePlan">
-                  <span>执行方案</span>
-                  {
-                    modifyStage ?
-                    <span className="planName">
-                      <Select defaultValue="1">
-                        <Option key="1" value="1">日
-                        常方案(周期120)</Option>
-                      </Select>
-                    </span> :
-                    <span className="planName">日常方案(周期120)</span>
-                  }
-                </div>
-              }
-              <div className="controlContent">
-                {
-                  modeIndex > 2 ?
-                    <div className="lockPhase">
-                      <div className="lockText">锁定相位</div>
-                      <div className="phaseList">
-                        {
-                          modeIndex === 3 &&
-                          <div>
-                            <img className="itemPic" src={phasePic} alt=""/>
-                            <img className="itemPic" src={phasePic} alt=""/>
-                          </div>
-                        }
-                        {
-                          modeIndex === 4 &&
-                          <img className="itemPic" src={allRed} alt="" />
-                        }
-                        {
-                          modeIndex === 5 &&
-                          <img className="itemPic" src={allYellow} alt="" />
-                        }
-                      </div>
-                    </div> :
-                    <div className="phaseMsg">
-                    {
-                      modifyStage ?
-                        <div className="phaseTime">
-                          <div className="phaseinner"><img src={phasePic} alt=""/></div>
-                          <div className="phaseinner times">
-                            <span>40</span>
-                            <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
-                          </div>
-                        </div> :
-                        <div className="phaseTime">
-                          <div className="phaseinner"><img src={phasePic} alt=""/></div>
-                          <div className="phaseinner times">40</div>
-                        </div>
-                    }
+                  <div className="phaseTime">
+                    <div className="phaseinner"><img src={phasePic} alt=""/></div>
+                    <div className="phaseinner times">
+                      <span>540</span>
+                      <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
+                    </div>
                   </div>
-                }
-                
+                  <div className="phaseTime">
+                    <div className="phaseinner"><img src={phasePic} alt=""/></div>
+                    <div className="phaseinner times">
+                      <span>40</span>
+                      <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
+                    </div>
+                  </div>
+                  <div className="phaseTime">
+                    <div className="phaseinner"><img src={phasePic} alt=""/></div>
+                    <div className="phaseinner times">
+                      <span>40</span>
+                      <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
+                    </div>
+                  </div>
+                  <div className="phaseTime">
+                    <div className="phaseinner"><img src={phasePic} alt=""/></div>
+                    <div className="phaseinner times">
+                      <span>40</span>
+                      <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
+                    </div>
+                  </div>
+                  <div className="phaseTime">
+                    <div className="phaseinner"><img src={phasePic} alt=""/></div>
+                    <div className="phaseinner times">
+                      <span>40</span>
+                      <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
+                    </div>
+                  </div>
+                  <div className="phaseTime">
+                    <div className="phaseinner"><img src={phasePic} alt=""/></div>
+                    <div className="phaseinner times">
+                      <span>40</span>
+                      <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
+                    </div>
+                  </div>
+                  <div className="phaseTime">
+                    <div className="phaseinner"><img src={phasePic} alt=""/></div>
+                    <div className="phaseinner times">
+                      <span>40</span>
+                      <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
