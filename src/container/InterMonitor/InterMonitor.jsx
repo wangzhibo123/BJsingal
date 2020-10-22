@@ -25,14 +25,17 @@ class InterMonitor extends Component {
       modifyStage: false,
       modeIndex: null,
     }
-    this.confItems = ['信号灯组参数', '检测器参数', '车道参数', '相位参数', '阶段参数', '配时方案', '方案相序表', '方案配时表', '日计划表', '调度表' ]
+    this.confItems = ['基础信息', '信号参数', '一口一档', '交通指标', '时间表控制']
+    // this.confItems = ['信号灯组参数', '检测器参数', '车道参数', '相位参数', '阶段参数', '配时方案', '方案相序表', '方案配时表', '日计划表', '调度表' ]
     this.controlItems = [
-      { text: '时间表控制', img: Time },
-      { text: '中心控制', img: cneter },
-      { text: '感应控制', img: feel },
-      { text: '中心手控', img: hand },
+      // { text: '时间表控制', img: Time },
+      
+      // { text: '感应控制', img: feel },
+      
       { text: '全红控制', img: allred },
       { text: '闪黄控制', img: yellow },
+      { text: '中心控制', img: cneter },
+      { text: '中心手控', img: hand },
     ]
   }
   handleModifyConf = () => {
@@ -130,19 +133,19 @@ class InterMonitor extends Component {
               </ul>
             </div>
             <div className="controlExecute">
+              <div className="controlMsg">
+                <span className="controlItems">网络状态：<span className="itemsVal">在线</span></span>
+                <span className="controlItems">控制模式：<span className="itemsVal">中心控制</span></span>
+                <span className="controlItems">是否锁定：<span className="itemsVal">未锁</span></span>
+                <span className="controlItems">方案号：<span className="itemsVal">4</span></span>
+                <span className="controlItems">周期：<span className="itemsVal">141</span></span>
+              </div>
               <div className="modifyBox">
-                {
-                  isModify ?
-                    <React.Fragment>
-                      <div className="modifyBtn" onClick={this.handleCancelModify}>取消</div>
-                      <div className="modifyBtn" style={{ color: '#fff' }}>执行</div>
-                    </React.Fragment> :
-                    <div className="modifyBtn modify" onClick={this.handleModifyConf}>修改</div>
-                }
+                <div className="modifyBtn modify">运行</div>
+                <div className="modifyBtn modify">复位</div>
               </div>
               <div className="controlMode">
-                <div className="modeText">控制模式</div>
-                <div className="controlDetails">
+                <div className="modeItems">
                   {
                     this.controlItems.map((item, index) => {
                       return (
@@ -153,6 +156,9 @@ class InterMonitor extends Component {
                       )
                     })
                   }
+                </div>
+                <div className="controlDetails">
+                  
                 </div>
               </div>
               {

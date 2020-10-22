@@ -177,6 +177,20 @@
                 padding: 10px 0 0 20px;
                 background: linear-gradient(0deg, rgba(0, 59, 129, 0), rgba(0, 38, 120, 0.99), rgba(0, 46, 146, 0.02));
                 font-family: 'MicrosoftYaHei';
+                .controlMsg {
+                    height: 40px;
+                    display: flex;
+                    align-items: center;
+                }
+                .controlItems {
+                    margin-right: 20px;
+                    .itemsVal {
+                        padding: 2px 10px;
+                        border: 1px solid #3E70FF;
+                        border-radius: 2px;
+                        color: #87AEF8;
+                    }
+                }
                 .modifyBox {
                     position: absolute;
                     right: 0;
@@ -200,27 +214,27 @@
                 }
                 .controlMode {
                     display: flex;
-                    height: 62px;
                     align-items: center;
-                    .modeText {
-                        padding-right: 20px;
-                    }
-                    .controlDetails {
-                        flex: 1;
+                    .modeItems {
+                        // flex: 1;
+                        width: 200px;
+                        height: 156px;
                         display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        flex-wrap: wrap;
                         .controlItem {
-                            width: 100px;
-                            padding: 5px 0;
+                            width: 90px;
+                            padding: 8px 0;
+                            margin: 0 10px 10px 0;
                             display: flex;
                             flex-direction: column;
                             align-items: center;
                             color: #87AEF8;
+                            background-color: #112954;
                             cursor: pointer;
                             .icon {
                                 height: 30px;
-                            }
-                            &:hover {
-                                background-color: #112954;
                             }
                         }
                         .itemHover {
