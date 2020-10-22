@@ -26,7 +26,7 @@ export default class TimeTable extends Component {
                         </div>
                         <div className="selectTime">
                             <Select
-                                defaultValue="搜索日期"
+                                defaultValue="搜索日期" 
                                 size="middle"
                             >
                                 <Option value="2" style={{ width: 100, height: 30 }} key="2">10.1</Option>
