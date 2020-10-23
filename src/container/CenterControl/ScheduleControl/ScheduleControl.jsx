@@ -12,12 +12,12 @@ export default class ScheduleControl extends Component {
         return (
             <div className="scheduleHome">
                 <div className="scheduleHomePage">
-                    <div className="timeTable">
-                        <TimeTable />
-                    </div>
-                    <div className="timePlan">
-                        <TimePlan />
-                    </div>
+                        <div className="timeTable">
+                            <TimeTable />
+                        </div>
+                        <div className="timePlan">
+                            <TimePlan />
+                        </div>
                     <div className="mapCalender">
                         <div className="calender">
                             <Calender />
@@ -26,7 +26,6 @@ export default class ScheduleControl extends Component {
                             <MinMap />
                         </div>
                     </div>
-
                 </div>
             </div>
         )

@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import "./AreaMonitoring.scss";
+import ModeSequenceChartShowChart from "../../utils/GreenWaveCharts/GreenWaveCharts.jsx"
 import mineMapConf from "../../utils/minemapConf";
 import { SearchOutlined } from "@ant-design/icons";
-import { Select } from "antd";
+import { Select,Button } from "antd";
 const { Option } = Select;
 export default class AreaMonitoring extends Component {
   constructor(props) {
@@ -30,16 +31,19 @@ export default class AreaMonitoring extends Component {
           children: []
         }
       ],
+      //切换按钮
       modeAreaTabShow:true,
+      //地图
       modeAreaMapShow:true,
+      //左侧侧边栏
       modeAreaContentShow:true,
+      //第二页面
       modeSequenceChartShow:false
     };
   }
   componentDidMount() {
-    if(this.state.modeAreaMapShow){
-      this.renderMap();
-    }
+    console.log(11)
+    this.state.modeAreaMapShow&&this.renderMap();
   }
 
   addMarker = () => {
@@ -77,6 +81,21 @@ export default class AreaMonitoring extends Component {
     });
     this.map = map;
   };
+  onChange(value) {
+    console.log(`selected ${value}`);
+  }
+  
+  onBlur() {
+    console.log('blur');
+  }
+  
+  onFocus() {
+    console.log('focus');
+  }
+  
+  onSearch(val) {
+    console.log('search:', val);
+  }
   render() {
     const {modeAreaTabShow,modeAreaMapShow,modeAreaContentShow,modeSequenceChartShow} =this.state;
     return (
@@ -108,7 +127,7 @@ export default class AreaMonitoring extends Component {
             <div className="iptSearchNav">
               <input type="text" placeholder="查询…" className="inptNavMon" />
               <div className="MagBox">
-                <SearchOutlined />
+                <SearchOutlined  style={{cursor: "pointer"}}/>
               </div>
             </div>
           </div>
@@ -117,13 +136,13 @@ export default class AreaMonitoring extends Component {
             <ul className="allNavList">
               <li>万泉河路</li>
               <div className="line"></div>
-              <li>万泉河路</li>
+              <li>中关村大街</li>
               <div className="line"></div>
-              <li>万泉河路</li>
+              <li>中关村东路</li>
               <div className="line"></div>
-              <li>万泉河路</li>
+              <li>知春路</li>
               <div className="line"></div>
-              <li>万泉河路</li>
+              <li>学院路</li>
               <div className="line"></div>
             </ul>
           </div>
@@ -136,7 +155,6 @@ export default class AreaMonitoring extends Component {
                 <div id="mapContainer" className="map-container"></div>
             </div>
         }
-        
         {
           modeAreaTabShow && <div className="modeSwitchBtn">
             <div className="modeTab" onClick={() => {
@@ -151,19 +169,20 @@ export default class AreaMonitoring extends Component {
         }
         {
           modeSequenceChartShow&&<div className="modeSequenceChartShowHome">
-            <div className="modeSequenceChartShowList">
+              <div className="modeSequenceChartShowList">
                 <div className="modeSequenceCharShowListHead">
                       <div className="modeSequenceCharShowListHeadInfo">
-                        <div>子区详细信息</div>
+                        <div className="subareaDetails">子区详细信息<div className="BGLine"></div></div>
                       </div>
                       <div className="modeSequenceCharShowListHeadChildName">
-                        <div className="modeChildMark">子区号:<div className="modeChildMarkNum">254</div></div>
-                        <div className="modeChildName">子区名称:<div className="modeChildMarkText">平安大街</div></div>
+                        <div className="modeChildMark">子区号:<div className="modeChildMarkNum"><h3>254</h3></div></div>
+                        <div className="modeChildName">子区名称:<div className="modeChildMarkText">郭沫若故居</div></div>
                       </div>
                 </div>
                 <div className="modeSequenceCharShowListBox">
-                      <div className="modeSequenceCharShowListBoxTh">
-                        <div className="modeSequenceCharShowListBoxTd">路口号</div>
+                  <div className="modeSequenceCharShowListBoxTable">
+                  <div className="modeSequenceCharShowListBoxTh">
+                        <div className="modeSequenceCharShowListBoxTd moveLeft">路口号</div>
                         <div className="modeSequenceCharShowListBoxTd">控制模式</div>
                         <div className="modeSequenceCharShowListBoxTd">当前方案</div>
                         <div className="modeSequenceCharShowListBoxTd">周期</div>
@@ -172,7 +191,7 @@ export default class AreaMonitoring extends Component {
                         <div className="modeSequenceCharShowListBoxTd">时间(秒)</div>
                       </div>
                       <div className="modeSequenceCharShowListBoxTr">
-                      <div className="modeSequenceCharShowListBoxTd">25521-郭沫若故居</div>
+                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
                         <div className="modeSequenceCharShowListBoxTd">中心控制</div>
                         <div className="modeSequenceCharShowListBoxTd">4</div>
                         <div className="modeSequenceCharShowListBoxTd">141</div>
@@ -181,7 +200,7 @@ export default class AreaMonitoring extends Component {
                         <div className="modeSequenceCharShowListBoxTd">73</div>
                       </div>
                       <div className="modeSequenceCharShowListBoxTr">
-                      <div className="modeSequenceCharShowListBoxTd">25521-郭沫若故居</div>
+                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
                         <div className="modeSequenceCharShowListBoxTd">中心控制</div>
                         <div className="modeSequenceCharShowListBoxTd">4</div>
                         <div className="modeSequenceCharShowListBoxTd">141</div>
@@ -190,7 +209,7 @@ export default class AreaMonitoring extends Component {
                         <div className="modeSequenceCharShowListBoxTd">73</div>
                       </div>
                       <div className="modeSequenceCharShowListBoxTr">
-                      <div className="modeSequenceCharShowListBoxTd">25521-郭沫若故居</div>
+                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
                         <div className="modeSequenceCharShowListBoxTd">中心控制</div>
                         <div className="modeSequenceCharShowListBoxTd">4</div>
                         <div className="modeSequenceCharShowListBoxTd">141</div>
@@ -199,7 +218,7 @@ export default class AreaMonitoring extends Component {
                         <div className="modeSequenceCharShowListBoxTd">73</div>
                       </div>
                       <div className="modeSequenceCharShowListBoxTr">
-                      <div className="modeSequenceCharShowListBoxTd">25521-郭沫若故居</div>
+                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
                         <div className="modeSequenceCharShowListBoxTd">中心控制</div>
                         <div className="modeSequenceCharShowListBoxTd">4</div>
                         <div className="modeSequenceCharShowListBoxTd">141</div>
@@ -207,12 +226,140 @@ export default class AreaMonitoring extends Component {
                         <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
                         <div className="modeSequenceCharShowListBoxTd">73</div>
                       </div>
-                      
+                      <div className="modeSequenceCharShowListBoxTr">
+                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
+                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
+                        <div className="modeSequenceCharShowListBoxTd">4</div>
+                        <div className="modeSequenceCharShowListBoxTd">141</div>
+                        <div className="modeSequenceCharShowListBoxTd">0</div>
+                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
+                        <div className="modeSequenceCharShowListBoxTd">73</div>
+                      </div>
+                      <div className="modeSequenceCharShowListBoxTr">
+                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
+                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
+                        <div className="modeSequenceCharShowListBoxTd">4</div>
+                        <div className="modeSequenceCharShowListBoxTd">141</div>
+                        <div className="modeSequenceCharShowListBoxTd">0</div>
+                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
+                        <div className="modeSequenceCharShowListBoxTd">73</div>
+                      </div>
+                      <div className="modeSequenceCharShowListBoxTr">
+                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
+                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
+                        <div className="modeSequenceCharShowListBoxTd">4</div>
+                        <div className="modeSequenceCharShowListBoxTd">141</div>
+                        <div className="modeSequenceCharShowListBoxTd">0</div>
+                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
+                        <div className="modeSequenceCharShowListBoxTd">73</div>
+                      </div>
+                      <div className="modeSequenceCharShowListBoxTr">
+                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
+                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
+                        <div className="modeSequenceCharShowListBoxTd">4</div>
+                        <div className="modeSequenceCharShowListBoxTd">141</div>
+                        <div className="modeSequenceCharShowListBoxTd">0</div>
+                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
+                        <div className="modeSequenceCharShowListBoxTd">73</div>
+                      </div>
+                      <div className="modeSequenceCharShowListBoxTr">
+                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
+                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
+                        <div className="modeSequenceCharShowListBoxTd">4</div>
+                        <div className="modeSequenceCharShowListBoxTd">141</div>
+                        <div className="modeSequenceCharShowListBoxTd">0</div>
+                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
+                        <div className="modeSequenceCharShowListBoxTd">73</div>
+                      </div>
+                      <div className="modeSequenceCharShowListBoxTr">
+                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
+                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
+                        <div className="modeSequenceCharShowListBoxTd">4</div>
+                        <div className="modeSequenceCharShowListBoxTd">141</div>
+                        <div className="modeSequenceCharShowListBoxTd">0</div>
+                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
+                        <div className="modeSequenceCharShowListBoxTd">73</div>
+                      </div>
+                      <div className="modeSequenceCharShowListBoxTr">
+                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
+                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
+                        <div className="modeSequenceCharShowListBoxTd">4</div>
+                        <div className="modeSequenceCharShowListBoxTd">141</div>
+                        <div className="modeSequenceCharShowListBoxTd">0</div>
+                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
+                        <div className="modeSequenceCharShowListBoxTd">73</div>
+                      </div>
+                      <div className="modeSequenceCharShowListBoxTr">
+                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
+                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
+                        <div className="modeSequenceCharShowListBoxTd">4</div>
+                        <div className="modeSequenceCharShowListBoxTd">141</div>
+                        <div className="modeSequenceCharShowListBoxTd">0</div>
+                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
+                        <div className="modeSequenceCharShowListBoxTd">73</div>
+                      </div>
+
+                      <div className="modeSequenceCharShowListBoxTr">
+                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
+                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
+                        <div className="modeSequenceCharShowListBoxTd">4</div>
+                        <div className="modeSequenceCharShowListBoxTd">141</div>
+                        <div className="modeSequenceCharShowListBoxTd">0</div>
+                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
+                        <div className="modeSequenceCharShowListBoxTd">73</div>
+                      </div>
+                      <div className="modeSequenceCharShowListBoxTr">
+                        <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
+                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
+                        <div className="modeSequenceCharShowListBoxTd">4</div>
+                        <div className="modeSequenceCharShowListBoxTd">141</div>
+                        <div className="modeSequenceCharShowListBoxTd">0</div>
+                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
+                        <div className="modeSequenceCharShowListBoxTd">73</div>
+                      </div>
+                  </div>
                 </div>
-            </div>
-            <div className="modeSequenceChartShowChart">
-              
-            </div>
+              </div>
+              <div className="modeSequenceChartShowChart">
+                <div className="modeSequenceChartShowChartHead">
+                    <div className="modeSequenceChartShowChartIptSearch">
+                      <Select
+                        showSearch
+                        style={{ width: 273,height:37,position:"absolute",left:"30px",top:"25px",backgroundColor:"red"}}
+                        placeholder="请输入子区名称进行搜索"
+                        optionFilterProp="children"
+                        onChange={this.onChange}
+                        onFocus={this.onFocus}
+                        onBlur={this.onBlur}
+                        onSearch={this.onSearch}
+                        filterOption={(input, option) =>
+                          option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
+                        size="large"
+                      >
+                        <Option value="jack">1</Option>
+                        <Option value="lucy">2</Option>
+                        <Option value="tom">3</Option>
+                      </Select>
+                      <Button type="primary" style={{width:68,height:37,position:"absolute",left:"312px",top:'25px'}}>搜索</Button>
+                    </div>
+                    <div className="modeSwitchBtn">
+                    <div className="modeTab" onClick={() => {
+                      this.setState({
+                        modeAreaTabShow:true,
+                        modeAreaMapShow:true,
+                        modeAreaContentShow:true,
+                        modeSequenceChartShow:false
+                      },()=>{
+                        this.renderMap()
+                      })
+                    }}>地图模式</div>
+                  </div>
+                </div>
+                <div className="modeSequenceChartShowChartList">
+                    <ModeSequenceChartShowChart></ModeSequenceChartShowChart>
+              </div>
+              </div>
           </div>
         }
       </div>

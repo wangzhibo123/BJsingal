@@ -87,7 +87,7 @@ class Homepage extends Component {
       closeOnClick: false,
       closeButton: true,
       anchor: "bottom-left",
-      offset: [-25, 60]
+      offset: [-25, 350]
     }
     // <img width="36px" height="36px" src="${}" />
     const popup = new window.mapabcgl.Popup(popupOption)
