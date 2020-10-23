@@ -58,7 +58,7 @@ class GraphPlus extends Component {
                 color: 'rgba(21,55,83,.6)',
             }, {
                 offset: 1,
-                color: 'rgba(0,207,253,.6)',
+                color: 'rgba(154,143,1,.6)',
             }]),
             barBorderRadius: [0, 0, 0, 180],
             borderWidth: 1,
@@ -86,7 +86,7 @@ class GraphPlus extends Component {
                 color: 'rgba(21,55,83,.6)',
             }, {
                 offset: 1,
-                color: 'rgba(0,207,253,.6)',
+                color: 'rgba(154,143,1,.6)',
             }]),
             barBorderRadius: [0, 0, 180, 0],
             borderWidth: 1,
@@ -109,9 +109,9 @@ class GraphPlus extends Component {
         type: 'pictorialBar',
         itemStyle: {
           normal: {
-            color: '#00C5FA',
+            color: '#9A8F01',
             borderWidth: 1,
-            borderColor: '#00CAF8',
+            borderColor: '#9A8F01',
           }
         },
         symbol: 'rect',
