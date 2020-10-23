@@ -1,0 +1,76 @@
+.mountingTable {
+    width: 100%;
+    color: white;
+    height: 100%;
+    // background-color: #03385A;
+    display: flex;
+    flex-direction: column;
+  .mountingThead {
+    font-size: 10px;
+    height: 40px;
+    display: flex;
+    background: #162E52;
+  }
+  .mountingTr {
+    height: 40px;
+    margin-top: 10px;
+    display: flex;
+  }
+  .mountingThead {
+    // background-color: rgba(14, 28, 63, 0.7);
+  }
+  .mountingTh{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+  }
+  .mountingTd {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+  }
+  .mountingTr:hover{
+    background: #0D2443;
+  }
+  .mountingThs{
+    flex: 1.3;
+    display: flex;
+  }
+  dl{
+    margin: 0;
+    width: 25%;
+    height: 100%;
+    font-size: 12px;
+    padding: 3px 10px;
+    display: flex;
+    flex-direction: column;
+    dt{
+      flex: 2.2;
+      background-color: red;
+    }
+    dd{
+      text-align: center;
+      flex: 1;
+    }
+  }
+  .deviceMsg {
+    margin: 0 10px;
+    border: 1px solid #B7DEEF;
+    padding: 2px;
+    cursor: pointer;
+    color: white;
+  }
+  .mountingTr {
+  }
+  //   .mountingTr:nth-child(even) {
+  //     background-color: rgba(14, 28, 63, 0.7);
+  //   }
+  .mountingTbody {
+    height: 100%;
+    overflow-y: auto;
+  }
+}
