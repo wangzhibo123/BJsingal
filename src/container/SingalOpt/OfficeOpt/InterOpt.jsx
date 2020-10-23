@@ -1,14 +1,12 @@
 import React, { Component } from 'react'
-import { Progress } from 'antd';
 import './officeOpt.scss'
 
 // import Histogram from './Histogram/Histogram'
 // import Graph from './Graph/Graph'
 import mapConfiger from '../../utils/minemapConf'
 import GraphPlus from './GraphPlus/GraphPlus'
-import GraphPlusYellow from './GraphPlusYellow/GraphPlus'
-import Graph from './Graph/Graph'
-class OfficeOpt extends Component {
+
+class InterOpt extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -119,24 +117,16 @@ class OfficeOpt extends Component {
               <div className="title">优化后指标影响统计</div>
               <div className="itemContent">
                 <div className="holdRate">
-                  <GraphPlusYellow />
+                  {/* <Histogram /> */}
                 </div>
               </div>
             </div>
           </div>
           <div className="asideRight">
-            <div className="asideItem" style={{flex:1.5}}>
+            <div className="asideItem">
               <div className="title">优化执行率</div>
               <div className="itemContent">
-                {
-                  [1,2,3,4,5,6,7,8,9,10].map((item,i) => {
-                    return <div className="progressNowBox">
-                            <i>{item}</i>
-                            <em className="areaText">{"朝阳区"+item}</em>
-                            <Progress strokeColor={{ from: '#007AFF', to: '#4FE2F2' }} status="active" percent={65} />
-                          </div>
-                  })
-                }
+                
               </div>
             </div>
             <div className="asideItem">
@@ -165,8 +155,7 @@ class OfficeOpt extends Component {
             <div className="asideItem">
               <div className="title">运行效益走势曲线</div>
               <div className="itemContent">
-                <Graph />
-                {/* <div className="singalStatus">
+                <div className="singalStatus">
                   <div className="statusEach"><span className="each">区域</span><span className="each">品牌</span></div>
                   <div className="statusDetails">
                     <div className="singalMsg">
@@ -199,7 +188,7 @@ class OfficeOpt extends Component {
                     <div className="legendInfo"><span className="statusLegend fault" /><span>故障</span></div>
                     <div className="legendInfo"><span className="statusLegend outline" /><span>离线</span></div>
                   </div>
-                </div> */}
+                </div>
               </div>
             </div>
           </div>
@@ -264,4 +253,4 @@ class OfficeOpt extends Component {
   }
 }
 
-export default OfficeOpt
+export default InterOpt
