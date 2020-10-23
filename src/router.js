@@ -27,6 +27,9 @@ const AuthManagement = loadable(() => import("./container/SystemManagement/AuthM
 const OperationMonitoring = loadable(() => import("./container/SystemManagement/OperationMonitoring/OperationMonitoring"), { LoadingComponent: LoadingPage })
 const OperationLog = loadable(() => import("./container/SystemManagement/OperationLog/OperationLog"), { LoadingComponent: LoadingPage })
 const OfficeOpt = loadable(() => import("./container/SingalOpt/OfficeOpt/OfficeOpt"), { LoadingComponent: LoadingPage })
+const DistrictOpt = loadable(() => import("./container/SingalOpt/OfficeOpt/DistrictOpt"), { LoadingComponent: LoadingPage })
+const InterOpt = loadable(() => import("./container/SingalOpt/OfficeOpt/InterOpt"), { LoadingComponent: LoadingPage })
+const RegionOpt = loadable(() => import("./container/SingalOpt/OfficeOpt/RegionOpt"), { LoadingComponent: LoadingPage })
 const Inter = loadable(() => import("./container/Evaluate/Inter/Inter"), { LoadingComponent: LoadingPage })
 const Artery = loadable(() => import("./container/Evaluate/Artery/Artery"), { LoadingComponent: LoadingPage })
 const Area = loadable(() => import("./container/Evaluate/Area/Area"), { LoadingComponent: LoadingPage })
@@ -48,6 +51,9 @@ const Parent = () => (
     <Route exact path="/OperationMonitoring" component={OperationMonitoring} />
     <Route exact path="/OperationLog" component={OperationLog} />
     <Route exact path="/office" component={OfficeOpt} />
+    <Route exact path="/districtOpt" component={DistrictOpt} />
+    <Route exact path="/interOpt" component={InterOpt} />
+    <Route exact path="/regionOpt" component={RegionOpt} />
     <Route exact path="/inter" component={Inter} />
     <Route exact path="/artery" component={Artery} />
     <Route exact path="/area" component={Area} />

@@ -17,7 +17,7 @@ class OperationMonitoring extends Component {
           <div className={styles.title}></div>
           <div className={styles.content}>
             <div className={styles.listName}>运行监控</div>
-            <div className={styles.listContent}>列表</div>
+            <div className={styles.listContent}>正在研发中...</div>
           </div>
         </div>
       </div>

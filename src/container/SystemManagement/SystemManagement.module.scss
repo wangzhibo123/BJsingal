@@ -24,6 +24,7 @@ $bg-color:#1A344F;
       background-size: 100% 100%;
     }
     .content{
+      height: 100%;
       margin: 20px 50px 0;
       display: flex;
       flex-direction: column;
@@ -193,7 +194,7 @@ $bg-color:#1A344F;
   }
   // 翻页
   .pagination {
-    width: calc(100% - 70px);
+    width: 100%;
     height: 70px;
     position: absolute;
     bottom: 0;

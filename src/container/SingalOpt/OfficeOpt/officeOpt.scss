@@ -42,6 +42,58 @@
                     flex: 1;
                     font-size: 12px;
                     overflow-y: auto;
+                    .pie3DCon{
+                        width:100%;
+                        height:90%;
+                        position:relative;
+                        bottom:-30px;
+                        user-select: none;
+                        .pie3DText{
+                            position:absolute;
+                            top:0;right:0;bottom:0;left:0;
+                            z-index:2;
+                            display: flex;
+                            justify-content: center;
+                            align-items: flex-start;
+                            >text{
+                                flex:1;
+                                line-height:96px;
+                                text-align: center;
+                                position: relative;
+                                background: url(../../imgs/textBg.png) no-repeat center center;
+                                em{
+                                    position: relative;
+                                    top:-10px;
+                                    font-size:16px;
+                                }
+                                s{
+                                    position: relative;
+                                    bottom:-15px;
+                                    font-size:20px;
+                                    text-decoration: none;
+                                }
+                            }
+                            >text:first-child{
+                                left:-30px;
+                                transform: rotateY(180deg);
+                                -webkit-transform: rotateY(180deg);
+                                -moz-transform: rotateY(180deg);
+                                -ms-transform: rotateY(180deg);
+                                -o-transform: rotateY(180deg);
+                                .textCon{
+                                    transform: rotateY(-180deg);
+                                    -webkit-transform: rotateY(-180deg);
+                                    -moz-transform: rotateY(-180deg);
+                                    -ms-transform: rotateY(-180deg);
+                                    -o-transform: rotateY(-180deg);
+                                }                                    
+                            }
+                            >text:last-child{
+                                right:-30px; 
+                                top:28px;
+                            }
+                        }
+                    }
                     .jammedSort {
                         width: 100%;
                         height: 100%;
@@ -351,4 +403,48 @@
         }
     }
 
+}
+.progressNowBox{
+    position: relative;
+    padding-left:40px;
+    margin:5px 0;
+    i{
+        width: 18px;
+        height: 18px;
+        display: inline-block;
+        margin: 1px 5px 0 0;
+        text-align: center;
+        line-height: 17px;
+        border-radius: 50%;
+        color: #0F2854;
+        background:#5dbaf7 ;   
+        position: absolute; 
+        left:5px;
+        top:9px;
+    }
+    .areaText{
+        color: #5dbaf7;
+        font-size: 12px;
+        position: absolute; 
+    }
+}
+.ant-progress-show-info .ant-progress-outer {
+    margin-right: calc(-1em);
+    padding-right: calc(1em);
+}
+.ant-progress-line{
+    padding-top:8px;
+}
+.ant-progress-inner{
+    background-color: #2E415F;
+}
+.ant-progress-bg{
+    height: 3px!important;
+}
+.ant-progress-text{
+    color: #5dbaf7;
+    font-size: 12px;
+    position: absolute;
+    right: 15px;
+    top:4px;
 }
