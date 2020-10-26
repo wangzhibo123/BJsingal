@@ -9,7 +9,7 @@
         position: absolute;
         top: 80px;
         left: 5px;
-        width: 251px;
+        width: 300px;
         height: calc(100% - 80px);
         background: rgba(3,28,68,.56);
         z-index: 2;
@@ -99,57 +99,22 @@
                 width: 100%;
                 height: calc(100% - 90px);
                 margin-top: 20px;
-                position: relative;
-                .allNavList {
-                    width: 100%;
-                    height: 100%;
-                    display: flex;
-                    flex: 1;
-                    overflow: auto;
-                    flex-direction: column;
-                    align-items: center;
-                    li {
-                        width: 70%;
-                        height: 55px;
-                        text-align: center;
-                        line-height: 50px;
-                        font-size: 14px;
-                        margin-top: 5px;
-                        cursor: pointer;
-                        color: #61A4FF;
-                    }
-                    .line {
-                        width: 100%;
-                        height: 2px;
-                        background: linear-gradient(to right,
-                                rgba(0, 0, 0, 0) 0%,
-                                rgba(0, 0, 0, 0) 10%,
-                                rgba(8, 41, 90, 0.6) 20%,
-                                rgba(8, 41, 90, 0.7) 30%,
-                                rgba(74, 120, 189, 0.8) 40%,
-                                rgba(74, 120, 189, 0.8) 50%,
-                                rgba(74, 120, 189, 0.8) 60%,
-                                rgba(8, 41, 90, 0.7) 70%,
-                                rgba(8, 41, 90, 0.6) 80%,
-                                rgba(0, 0, 0, 0) 90%,
-                                rgba(0, 0, 0, 0) 100%)
-                    }
-                    li:hover {
-                        width: 100%;
-                        color: #fff;
-                        background: linear-gradient(to right,
-                                rgba(0, 0, 0, 0) 0%,
-                                rgba(0, 0, 0, 0) 10%,
-                                rgba(18, 66, 158, 0.3) 20%,
-                                rgba(18, 66, 158, 0.5) 30%,
-                                rgba(18, 66, 158, 0.7) 40%,
-                                rgba(18, 66, 158, 0.8) 50%,
-                                rgba(18, 66, 158, 0.7) 60%,
-                                rgba(18, 66, 158, 0.5) 70%,
-                                rgba(18, 66, 158, 0.3) 80%,
-                                rgba(0, 0, 0, 0) 90%,
-                                rgba(0, 0, 0, 0) 100%)
-                    }
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                .ant-menu{
+                    background: rgba(4,24,56,0);
+                    border: none;
+                    color: rgb(134, 183, 250);
+                }
+                 .ant-menu-submenu-arrow::before {
+                    background-image: -webkit-gradient(linear, left top, right top, from(rgba(134, 183, 250, 0.85)), to(rgba(134, 183, 250, 0.85)));
+                }
+                 .ant-menu-submenu-arrow::after {
+                    background-image: -webkit-gradient(linear, left top, right top, from(rgba(134, 183, 250, 0.85)), to(rgba(134, 183, 250, 0.85)));
+                }
+                .ant-menu-item-selected {
+                    background: linear-gradient(to right, rgba(1, 17, 50, 0.8), rgba(21, 63, 149, 0.8), rgba(5, 38, 89, 0.6));
                 }
             }
     

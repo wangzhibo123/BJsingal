@@ -7,12 +7,12 @@ import leftRightPng from "../../imgs/01.png"
 import upLeftDownRight from "../../imgs/04.png"
 import upLeftUp from "../../imgs/11.png"
 import rightUpLeftDown from "../../imgs/02.png"
-import ballPurple from "../../imgs/ballOne.jpg"
 
 import mineMapConf from "../../utils/minemapConf";
-import { SearchOutlined, CompassOutlined } from "@ant-design/icons";
-import { Select, Button,Switch } from "antd";
+import { EditOutlined,SearchOutlined, CompassOutlined } from "@ant-design/icons";
+import { Select, Button,Switch,Menu } from "antd";
 const { Option } = Select;
+const { SubMenu } = Menu;
 export default class MainMonitoring extends Component {
   constructor(props) {
     super(props);
@@ -74,7 +74,15 @@ export default class MainMonitoring extends Component {
       modeNavShow: true,
       modeMapShow: true,
       modeMainMonitor: false,
-      modeMainTabShow: true
+      modeMainTabShow: true,
+      //向东 按钮
+      modeMainEStyle:true,
+       //向西 按钮
+      modeMainWStyle:false,
+       //向南 按钮
+      modeMainSStyle:true,
+       //向北 按钮
+      modeMainNStyle:false
     };
   }
   componentDidMount() {
@@ -107,7 +115,28 @@ export default class MainMonitoring extends Component {
     }
   };
   modeMainEBtn=()=>{
-    alert(111)
+    this.setState({
+      modeMainEStyle:true,
+      modeMainWStyle:false
+    })
+  }
+  modeMainWBtn=()=>{
+    this.setState({
+      modeMainEStyle:false,
+      modeMainWStyle:true
+    })
+  }
+  modeMainSBtn=()=>{
+    this.setState({
+      modeMainSStyle:true,
+      modeMainNStyle:false
+    })
+  }
+  modeMainNBtn=()=>{
+    this.setState({
+      modeMainSStyle:false,
+      modeMainNStyle:true
+    })
   }
   renderMap = () => {
     mineMapConf.zoom = 11;
@@ -132,7 +161,7 @@ export default class MainMonitoring extends Component {
     this.map = map;
   };
   render() {
-    const { modeNavShow, modeMapShow, modeMainMonitor, modeMainTabShow } = this.state;
+    const { modeNavShow, modeMapShow, modeMainMonitor, modeMainTabShow ,modeMainEStyle,modeMainWStyle,modeMainSStyle,modeMainNStyle} = this.state;
     return (
       <div className="mainMon">
         {
@@ -161,18 +190,45 @@ export default class MainMonitoring extends Component {
               </div>
             </div>
             <div className="listNav">
-              <ul className="allNavList">
-                <li>万泉河路</li>
-                <div className="line"></div>
-                <li>中关村大街</li>
-                <div className="line"></div>
-                <li>中关村东路</li>
-                <div className="line"></div>
-                <li>知春路</li>
-                <div className="line"></div>
-                <li>学院路</li>
-                <div className="line"></div>
-              </ul>
+            <Menu
+            onClick={this.handleClick}
+            style={{ width: 251, color: '#86b7fa', height: '100%', overflowY: 'auto',overflowX:"hidden", fontSize: '16px' }}
+            // defaultSelectedKeys={['7']}
+            // defaultOpenKeys={['sub2', 'sub3']}
+            mode="inline"
+          >
+            <SubMenu key="sub2" title="海淀区">
+              {/* <Menu.Item key="5"></Menu.Item> */}
+              <SubMenu key="sub3" title="知春路拥堵应急">
+                <Menu.Item key="7">知春路与罗庄东路<EditOutlined /></Menu.Item>
+                <Menu.Item key="8">知春路与罗庄中路</Menu.Item>
+                <Menu.Item key="9">知春路与罗庄西路</Menu.Item>
+                <Menu.Item key="10">知春路与海淀黄庄路</Menu.Item>
+              </SubMenu>
+              <SubMenu key="sub3-2" title="万泉庄路"></SubMenu>
+            </SubMenu>
+            <SubMenu
+              key="sub4"
+              title="房山区"
+            >
+              {/* <Menu.Item key="1-2-9">Option 9</Menu.Item> */}
+            </SubMenu>
+            <SubMenu
+              key="sub5"
+              title="通州区"
+            >
+            </SubMenu>
+            <SubMenu
+              key="sub6"
+              title="门头沟区"
+            >
+            </SubMenu>
+            <SubMenu
+              key="sub7"
+              title="中关村东路"
+            >
+            </SubMenu>
+          </Menu>
             </div>
           </div>
         }
@@ -205,8 +261,8 @@ export default class MainMonitoring extends Component {
                 <div className="modeMainEWMode">
                   {/* 东西走向 */}
                   <div className="modeMainEWBtn">
-                    <Button onClick={this.modeMainEBtn} className="modeShowStyle">东</Button>
-                    <Button>西</Button>
+                    <Button onClick={this.modeMainEBtn} className={modeMainEStyle&&"modeShowStyle"}>东</Button>
+                    <Button onClick={this.modeMainWBtn} className={modeMainWStyle&&"modeShowStyle"}>西</Button>
                   </div>
                   <div className="modeMainEWVideo">
                     <video src="*" style={{ width: "100%", height: "100%" }} controls>
@@ -217,8 +273,8 @@ export default class MainMonitoring extends Component {
                 <div className="modeMainSNMode">
                   {/* 南北走向 */}
                   <div className="modeMainSNBtn">
-                    <Button>南</Button>
-                    <Button>北</Button>
+                    <Button onClick={this.modeMainSBtn} className={modeMainSStyle&&"modeShowStyle"}>南</Button>
+                    <Button onClick={this.modeMainNBtn} className={modeMainNStyle&&"modeShowStyle"}>北</Button>
                   </div>
                   <div className="modeMainSNVideo">
                     <video style={{ width: "100%", height: "100%" }} controls>

@@ -14,7 +14,7 @@ $bor-color: #a5fcff;
         z-index: 9;
         padding: 15px;
         transition: all 1s;
-        background: rgba(75, 98, 129, 0.8);
+        background: rgba(5, 32, 87, 0.7);
         .slideRightBoxAdd {
             height: 100%;
             width: 100%;
@@ -64,27 +64,31 @@ $bor-color: #a5fcff;
             .lineBox {
                 height: calc(100% - 170px);
                 overflow-y: auto;
-                display: flex;
-                .lineBoxLeft {
-                    width: 50px;
-                    height: 100%;
-                }
-                .lineBoxRight {
-                    width: 100%;
-                    padding-left: 15px;
-                    p {
+                .lineBoxer {
+                    display: flex;
+                    .lineBoxLeft {
+                        width: 20px;
+                        background: url("../../imgs/startEndBac.png") no-repeat;
+                        background-size: 100% 100%;
+                    }
+                    .lineBoxRight {
                         width: 100%;
-                        height: 55px;
-                        color: #5f9ef2;
-                        display: flex;
-                        margin-bottom: 0;
-                        .inputBox {
+                        padding-left: 15px;
+                        p {
                             width: 100%;
-                            height: 30px;
-                            outline: none;
-                            border: 1px solid #1c59ce;
-                            background-color: #18346a;
-                            padding-left: 5px;
+                            height: 55px;
+                            color: #5f9ef2;
+                            display: flex;
+                            margin-bottom: 0;
+                            align-items: center;
+                            .inputBox {
+                                width: 100%;
+                                height: 30px;
+                                outline: none;
+                                border: 1px solid #1c59ce;
+                                background-color: #18346a;
+                                padding-left: 5px;
+                            }
                         }
                     }
                 }
@@ -150,7 +154,7 @@ $bor-color: #a5fcff;
                     padding-left: 15px;
                     .streetBox {
                         height: 55px;
-                        p{
+                        p {
                             margin-bottom: 0;
                         }
                         .street {
@@ -167,18 +171,49 @@ $bor-color: #a5fcff;
                             display: flex;
                             align-items: center;
                             span {
-                                color: #02BDE3;
+                                color: #02bde3;
                                 margin-left: 20px;
                                 padding: 0px 5px;
                                 height: 16px;
                                 line-height: 16px;
-                                background-color: #0668C2;
+                                background-color: #0668c2;
                                 border-radius: 5px;
                             }
                         }
                     }
                 }
             }
+        }
+    }
+    .iptSearchNavMap {
+        width: 220px;
+        height: 35px;
+        position: absolute;
+        top: 100px;
+        left: 320px;
+        z-index: 9;
+        .inptNavMon {
+            width: 90%;
+            height: 100%;
+            background: #0a255e;
+            border: none;
+            margin-left: 5px;
+            padding-left: 7px;
+            outline: none;
+            border-radius: 4px;
+        }
+        .MagBox {
+            width: 20%;
+            height: 100%;
+            background: #0a255e;
+            position: absolute;
+            right: 0;
+            top: 0;
+            color: skyblue;
+            text-align: center;
+            line-height: 30px;
+            font-size: 18px;
+            cursor: pointer;
         }
     }
     .sidebarLeft {
@@ -283,6 +318,12 @@ $bor-color: #a5fcff;
         bottom: 0;
         width: 100%;
         height: calc(100% - 70px);
+        .mapabcgl-popup-close-button {
+            top: 5px;
+            color: #599fe0;
+            right: -55px;
+            font-size: 16px;
+        }
         .contentCenter {
             width: 100%;
             height: calc(100% - 20px);

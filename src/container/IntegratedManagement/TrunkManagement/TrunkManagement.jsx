@@ -15,6 +15,7 @@ class TrunkManagement extends Component {
       Istitletops: true,
       IsddMessge: true,
       isAddEdit: true,
+      roadValue: [],
       clickNum: '',
       rights: -300,
       stateSelect: [
@@ -55,6 +56,12 @@ class TrunkManagement extends Component {
       }
     ]
   }
+  intersectionRenderin = async () => {
+    await this.getstartpoint({ lng: 116.37444598230212, lat: 39.90703191238288 })
+    await this.getendpoint({ lng: 116.40319230452138, lat: 39.90767284675621 })
+    await this.getChannelpoint({ lng: 116.39934569026138, lat: 39.90753821453271 })
+    await this.getChannelpoint({ lng: 116.38315705392921, lat: 39.907079696277606 })
+  }
   addMenu = () => {
     const _this = this
     this.map.flyTo({ center: [116.391, 39.911], zoom: 14, pitch: 60 })
@@ -83,11 +90,12 @@ class TrunkManagement extends Component {
         _this.getendpoint(lnglat)
       })
       channel.addEventListener('click', function (e) {
-        getChannelpoint(lnglat)
+        _this.getChannelpoint(lnglat)
       })
       clear.addEventListener('click', function (e) {
         clearMap();
       })
+      // 初始话渲染路口
     })
 
     this.getstartpoint = (lnglat) => {
@@ -111,13 +119,15 @@ class TrunkManagement extends Component {
       if (endmarker) {
         endmarker.remove();
       }
-      endmarker = addMarkerEnd(endPng, [lnglat.lng, lnglat.lat], 0);
+      endmarker = addMarker(endPng, [lnglat.lng, lnglat.lat], 0);
       plan();
       endmarker.on('dragend', plan);
     }
+    _this.intersectionRenderin()
     // this.getstartpoint({ lng: 116.39171507191793, lat: 39.910732551600205 })
     // this.getendpoint({ lng: 116.3909904231216, lat: 39.9223143411036 })
-    function getChannelpoint(lnglat) {
+    this.getChannelpoint = (lnglat) => {
+      console.log(lnglat, '途经点')
       if (marker) {
         marker.remove();
       }
@@ -125,7 +135,7 @@ class TrunkManagement extends Component {
         alert("途径点最多支持16个")
         return;
       }
-      var pointMarker = addMarker('http://map.mapabc.com:35001/mapdemo/apidemos/sourceLinks/img/point_1.png', [lnglat.lng, lnglat.lat], -441);
+      var pointMarker = addMarkerpoint('http://map.mapabc.com:35001/mapdemo/apidemos/sourceLinks/img/point_1.png', [lnglat.lng, lnglat.lat], -441);
       channelmarker.push(pointMarker)
       var ary = [];
       rgeocode(3, pointMarker.getLngLat().lng + ',' + pointMarker.getLngLat().lat);
@@ -251,7 +261,7 @@ class TrunkManagement extends Component {
       document.getElementById('endInp').value = '';
       document.getElementById('channelInp').value = '';
     }
-
+    let roadValue = []
     function rgeocode(type, location) {
       var start = document.getElementById('startInp');
       var end = document.getElementById('endInp');
@@ -267,9 +277,16 @@ class TrunkManagement extends Component {
           } else if (type == 2) {
             end.value = data.result[0].formatted_address;
           } else {
-            var str = channel.value ? channel.value + ';' : channel.value;
-            channel.value = trim(channel.value) + data.result[0].formatted_address + ';';
-            channel.value = trim(channel.value)
+            // var str = channel.value ? channel.value + ';' : channel.value;
+            console.log(data.result[0].formatted_address, 'vvv')
+            // console.log(channel, 'sss')
+            roadValue.push(data.result[0].formatted_address)
+            _this.setState({
+              roadValue
+            })
+            // console.log(str, channel, data, 'vvvvvXR')
+            // channel.value = trim(channel.value) + data.result[0].formatted_address + ';';
+            // channel.value = trim(channel.value)
           }
         };
       });
@@ -295,17 +312,13 @@ class TrunkManagement extends Component {
       return marker;
 
     };
-    function addMarkerEnd(img, point, position) {
+    function addMarkerpoint(img, point, position) {
       var marker = '', html = ''
       html = document.createElement('div');
-      html.style.cssText = 'background:url(' + img + ')' + position + 'px 0px no-repeat;width:80px;height:50px;';
-      html.style.backgroundSize = '100% 100%';
-      // html.style.position = 'relative';
-      // html.style.top = '-75px';
+      html.style.cssText = 'background:url(' + img + ')' + position + 'px 0px no-repeat;width:35px;height:26px;'
       marker = new window.mapabcgl.Marker(html)
         .setLngLat(point)
         .setDraggable(true)
-        .setOffset([0, -20])
         .addTo(_this.map);
       return marker;
     };
@@ -316,22 +329,27 @@ class TrunkManagement extends Component {
   ClickMessge = () => {
     var popupOption = {
       closeOnClick: false,
-      closeButton: false,
+      closeButton: true,
       // anchor: "bottom-left",
       offset: [-20, -10]
     }
     // <img width="36px" height="36px" src="${}" />
     this.popup = new window.mapabcgl.Popup(popupOption)
       .setLngLat(new window.mapabcgl.LngLat(116.391, 39.911))
-      .setHTML(`<div style="width: 310px; font-size:12px;height: 165px;background:url(${messageBac}) no-repeat;background-size: 100% 100%; ">
-      <div style="height:32px;line-height:32px; text-align:right"><span style="color:#599FE0">车农庄大街与车公庄北街路口</span></div>
+      .setHTML(`
+      <div style="width: 310px;color: #599FE0; font-size:12px;height: 165px;background:rgba(6,21,65,.5);border: 1px solid #3167AA; ">
+      <div style="height:32px;line-height:32px;text-align: left;padding-left: 20px;"><span style="color:#599FE0">车农庄大街与车公庄北街路口</span></div>
       <div>
-      <p style="height:32px;margin-bottom:0;line-height:32px;padding-left:40px"><span>路口名称 ：</span>车农庄大街与车公庄北街路口</p>
       <p style="height:32px;margin-bottom:0;line-height:32px;padding-left:40px"><span>路口编号 ：</span>120461</p>
       <p style="height:32px;margin-bottom:0;line-height:32px;padding-left:40px"><span>所属类型 ：</span>十字路口</p>
       <p style="height:32px;margin-bottom:0;line-height:32px;padding-left:40px"><span>所属区域 ：</span>西城区</p>
+      <p style="height:32px;margin-bottom:0;line-height:32px;display: flex;align-items: center;justify-content: center;"><span style="
+      padding: 0px 5px;
+      height: 25px;
+      line-height: 25px;
+      color: #EBEFF7;
+      background-color: #094FBA;">加入区域</span></p>
       </div>
-      
     </div>`)
       .addTo(this.map);
   }
@@ -374,6 +392,7 @@ class TrunkManagement extends Component {
         map.removeLayerAndSource('icon');
       };
       this.addMenu()
+
     })
     map.on('click', () => {
       if (this.popup) {
@@ -436,7 +455,7 @@ class TrunkManagement extends Component {
   }
   render() {
     const { Option } = Select
-    const { mainHomePage, stateSelect, clickNum, Istitletops, isAddEdit, IsddMessge, rights } = this.state
+    const { mainHomePage, stateSelect, clickNum, Istitletops, isAddEdit, IsddMessge, rights, roadValue } = this.state
     return (
       <div className='TrunkManagementBox'>
         <div className='sildeRight' style={{ right: `${rights}px` }}>
@@ -450,15 +469,23 @@ class TrunkManagement extends Component {
                 <p><span>干线名称：</span><input type="text" className='inputBox' placeholder="干线名称" /></p>
                 <p><span>干线编号：</span><input type="text" className='inputBox' placeholder="干线编号" /></p>
                 <div className='lineBox'>
-                  <div className="lineBoxLeft"></div>
-                  <div className="lineBoxRight">
-                    {/* document.getElementById('startInp').value = '';
+                  <div className='lineBoxer'>
+                    <div className="lineBoxLeft"></div>
+                    <div className="lineBoxRight">
+                      {/* document.getElementById('startInp').value = '';
                     document.getElementById('endInp').value = '';
                     document.getElementById('channelInp').value = ''; */}
-                    <p><input type="text" className='inputBox' id='startInp' placeholder="搜索地图或点击地图选中" /></p>
-                    <p><input type="text" className='inputBox' id='channelInp' placeholder="搜索路口或点击地图选中" /></p>
-                    <p><input type="text" className='inputBox' placeholder="搜索路口或点击地图选中" /></p>
-                    <p><input type="text" className='inputBox' id='endInp' placeholder="搜索路口或点击地图选中" /></p>
+                      <p><input type="text" className='inputBox' id='startInp' placeholder="搜索地图或点击地图选中" /></p>
+                      {
+                        roadValue && roadValue.map((item, index) => {
+                          return (
+                            <p><input type="text" key={item + index} className='inputBox' id='channelInp' value={item} placeholder="搜索路口或点击地图选中" /></p>
+                          )
+                        })
+                      }
+                      {/*  <p><input type="text" className='inputBox' placeholder="搜索路口或点击地图选中" /></p> */}
+                      <p><input type="text" className='inputBox' id='endInp' placeholder="搜索路口或点击地图选中" /></p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -494,6 +521,12 @@ class TrunkManagement extends Component {
                 </div>
               </div>
           }
+        </div>
+        <div className="iptSearchNavMap">
+          <input type="text" placeholder="查询…" className="inptNavMon" />
+          <div className="MagBox">
+            <SearchOutlined />
+          </div>
         </div>
         <div className='sidebarLeft'>
           <div className='tabLeft'>
