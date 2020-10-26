@@ -8,7 +8,7 @@ class GreenWaveCharts extends React.Component {
     super(props)
     this.state = {
       svgs: null,
-      reverseSvgs: null,
+      reverseSvgs: null,  
       publicSvgs: null,
       reversePlubSvgs: null,
     }
@@ -18,10 +18,10 @@ class GreenWaveCharts extends React.Component {
     this.yAxis = 900 // y轴的总时间s
     this.Hs = this.H / this.yAxis // 每秒所占px值
     this.Ws = this.W / this.xAxis // 每千米所占px值
-    this.ySplit = 18 // y轴分10份
-    this.ySplitS = this.yAxis / this.ySplit // y轴每份的秒数
+    this.ySplit = 10 // y轴分10份
+    this.ySplitS = this.yAxis / this.ySplit// y轴每份的秒数
     this.yScaleH = this.Hs * this.ySplitS // y轴每个刻度的高度
-    this.xSplit = 9 // x轴分5份
+    this.xSplit = 5 // x轴分5份
     this.xSplitD = this.xAxis / this.xSplit // x轴每份的距离
     this.xScaleW = this.Ws * this.xSplitD // x轴每个刻度的宽度
     this.cycleTime = 196 // 路口周期时长（后期获取各路口中的phaseList中的cycle_time）
@@ -459,21 +459,12 @@ class GreenWaveCharts extends React.Component {
               return (
                 <div className="xAxisBox" style={{ width: this.Ws * item + 'px', left: '0px' }} key={'x' + index}>
                   <div style={{ position: 'relative' }}>
+                    {/* <span className="xScalText">{item}</span> */}
                     <span className="xScalText">{item}</span>
                   </div>
                   <div className="xAxisInterMsg" style={{ width: '200px', left: this.Ws * item - 60 + 'px' }} key={interMsg.inter_name + interMsg.forwordSpeed + interMsg.reverseSpeed}>
                     <div>{interMsg.inter_name}</div>
                     {/* <div>周期：{interMsg.phaseList.length > 0 ? interMsg.phaseList[0].cycle_time : 0}秒</div> */}
-                    <div>郭沫若故居</div>
-                    <div>北海后门</div>
-                    <div>地安门</div>
-                    <div>东板桥胡同</div>
-                    <div>铜鼓巷</div>
-                    <div>北河沿</div>
-                    <div>宽街</div>
-                    <div>剪子巷</div>
-                    <div>段祺瑞执政府</div>
-                    <div>张自忠路</div>
                   </div>
                 </div>
               )
