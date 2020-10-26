@@ -1,5 +1,7 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
-import { Menu, Input, DatePicker, Button, Select, InputNumber } from 'antd'
+import { Menu, Input, DatePicker, Button, Select } from 'antd'
 import { EditOutlined, CloseOutlined } from '@ant-design/icons';
 import styles from './PlancontrolPage.module.scss'
 import mapConfiger from '../utils/minemapConf'
@@ -142,7 +144,7 @@ class Homepage extends Component {
       var lnglat = item.lngLat;
       var style = 'background:#fff;color:#000;';
       var html = document.createElement('div');
-      var contextmenu = '<div class="context_menu" style="padding:5px 10px;' + style + '">' + '<li id="start" style="cursor:point;">起点</li>' + '<li style="cursor:point;" id="end">终点</li>' + '<li style="cursor:point;" id="channel">途径点</li>' + '<li style="cursor:point;" id="clearmap">清空地图</li>' + '</div>';
+      var contextmenu = `<div class="context_menu" style="padding:5px 10px;${style}"><li id="start" style="cursor:point;">起点</li><li style="cursor:point;" id="end">终点</li><li style="cursor:point;" id="channel">途径点</li><li style="cursor:point;" id="clearmap">清空地图</li></div>`;
       html.innerHTML = contextmenu;
       marker = new window.mapabcgl.Marker(html)
         .setLngLat([lnglat.lng, lnglat.lat])
@@ -220,7 +222,7 @@ class Homepage extends Component {
       }
       if (channelmarker.length > 0) {
         for (var i = 0; i < channelmarker.length; i++) {
-          str += i == 0 ? channelmarker[i].getLngLat().lng + ',' + channelmarker[i].getLngLat().lat : ';' + channelmarker[i].getLngLat().lng + ',' + channelmarker[i].getLngLat().lat
+          str += i === 0 ? channelmarker[i].getLngLat().lng + ',' + channelmarker[i].getLngLat().lat : ';' + channelmarker[i].getLngLat().lng + ',' + channelmarker[i].getLngLat().lat
         }
       }
       if (startmarker && endmarker) {
@@ -233,6 +235,7 @@ class Homepage extends Component {
           waypoints: str//途经点
         }, function (data) {
           if (data.status == 0) {
+            // eslint-disable-next-line no-redeclare
             var data = data.result.routes[0].steps, xys = '';
             _this.map.removeLayerAndSource('plan');
             _this.map.removeLayerAndSource('plan1');

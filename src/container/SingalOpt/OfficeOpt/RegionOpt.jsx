@@ -5,6 +5,7 @@ import { SearchOutlined, DoubleRightOutlined, DoubleLeftOutlined } from '@ant-de
 import './Region.scss'
 import $ from 'jquery'
 import mapConfiger from '../../utils/minemapConf'
+import GraphCharts from '../../../components/GraphCharts/GraphCharts'
 const { SubMenu } = Menu;
 class RegionOpt extends Component {
   constructor(props) {
@@ -15,7 +16,12 @@ class RegionOpt extends Component {
       IsddMessge: true,
       iconFlag: true,
       iconFlagR: true,
+      faultCompare: {
+        delay:[10, 20, 30, 40, 10, 25, 34, 25, 22, 33, 50, 60, 10, 15, 5, 20, 10, 10, 5, 20, 40, 22, 19, 14], 
+        speed:[22, 19, 14, 33, 50, 60, 10, 15, 5, 20, 10, 10, 5, 20, 40, 10, 20, 30, 40, 10, 25, 34, 25, 22]
+      },
     }
+    this.time = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00']
     this.stylesH = `position:fixed;
       top:100px;
       left: 0px;
@@ -139,7 +145,7 @@ class RegionOpt extends Component {
     const _this = this;
     if (!this.state.iconFlagR) {
       $(e.target).parent().parent().attr('style', _this.stylesR)
-      $(e.target).next().attr('style','')
+      $(e.target).next().attr('style','flex:3')
       $(e.target).attr('title', '展开')
       this.setState({
         iconFlagR: true,
@@ -275,7 +281,9 @@ class RegionOpt extends Component {
             <div className='asideItem'>
               <div className='titleName'>区域运行整体指标</div>
               <div className='itemContent'>
-                  <div className='runRateCharts'>图表</div>
+                  <div className='runRateCharts'>
+                    <GraphCharts chartsDatas={this.state.faultCompare} times={this.time} />
+                  </div>
               </div>
             </div>
           </div>
