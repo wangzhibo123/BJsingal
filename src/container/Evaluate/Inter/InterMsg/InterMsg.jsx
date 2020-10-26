@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import moment from 'moment'
 import { DatePicker, Select } from 'antd'
 
-import LineCharts from './LineCharts/LineCharts'
+import LineCharts from '../../../../components/LineCharts/LineCharts'
 
 import styles from './InterMsg.module.scss'
 

@@ -295,6 +295,7 @@ input[type="number"]{ -moz-appearance: textfield; }
                     }
                     .runRateCharts {
                         height: 100%;
+                        min-height:180px;
                         display: flex;
                         justify-content: center;
                         align-items: center;
@@ -305,6 +306,9 @@ input[type="number"]{ -moz-appearance: textfield; }
         .iconDirection{
             right: unset;
             left:240px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
     }
     .container {
