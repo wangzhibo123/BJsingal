@@ -7,6 +7,8 @@ import leftRightPng from "../../imgs/01.png"
 import upLeftDownRight from "../../imgs/04.png"
 import upLeftUp from "../../imgs/11.png"
 import rightUpLeftDown from "../../imgs/02.png"
+import ballPurple from "../../imgs/ballOne.jpg"
+
 import mineMapConf from "../../utils/minemapConf";
 import { SearchOutlined, CompassOutlined } from "@ant-design/icons";
 import { Select, Button,Switch } from "antd";
@@ -190,7 +192,7 @@ export default class MainMonitoring extends Component {
                   </div>
                 </div>
                 <div className="modeMainLengthHome">
-                  <div className="modeMainLength">干线长度</div><div className="modeMainLengthNum">6 <span className="modeMainLengthUnit">km</span></div>
+                  <div className="modeMainLength">干线长度</div><div className="modeMainLengthNum"><span className="modeMainLengthUnit">6</span>km</div>
                 </div>
                 <div className="modeMainLabelHome">
                   <div className="modeMainLabel">
@@ -237,7 +239,7 @@ export default class MainMonitoring extends Component {
                   {/* 条状图 */}
                   <div className="modeMainMonitorContentStrip">
                       <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#02AED7,#0173C8)", borderRadius: "20px", position: "relative" }}>
-                        <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "-6px", top: 0 }}>
+                        <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0}}>
                         </div>
                       </div>
                   </div>
@@ -249,7 +251,6 @@ export default class MainMonitoring extends Component {
                         </div>
                     </div>
                     <div className="modeMainMonitorContentball">
-                        
                     </div>
                     <div className="modeMainMonitorContentList">
                         <div className="modeMainMonitorContentListTop">
@@ -277,8 +278,8 @@ export default class MainMonitoring extends Component {
                   </div>
                   {/* 条状图 */}
                   <div className="modeMainMonitorContentStripTwo">
-                      <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#02AED7,#0173C8)", borderRadius: "20px", position: "relative" }}>
-                        <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "-6px", top: 0 }}>
+                      <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#0163DA,#0147CB)", borderRadius: "20px", position: "relative" }}>
+                        <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0}}>
                         </div>
                       </div>
                   </div>

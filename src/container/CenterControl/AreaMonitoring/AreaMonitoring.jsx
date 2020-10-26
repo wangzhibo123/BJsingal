@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./AreaMonitoring.scss";
 import ModeSequenceChartShowChart from "../../utils/GreenWaveCharts/GreenWaveCharts.jsx"
+import AreaMessage from "./AreaMessage/AreaMessage"
 import mineMapConf from "../../utils/minemapConf";
 import { SearchOutlined } from "@ant-design/icons";
 import { Select,Button } from "antd";
@@ -180,144 +181,7 @@ export default class AreaMonitoring extends Component {
                       </div>
                 </div>
                 <div className="modeSequenceCharShowListBox">
-                  <div className="modeSequenceCharShowListBoxTable">
-                  <div className="modeSequenceCharShowListBoxTh">
-                        <div className="modeSequenceCharShowListBoxTd moveLeft">路口号</div>
-                        <div className="modeSequenceCharShowListBoxTd">控制模式</div>
-                        <div className="modeSequenceCharShowListBoxTd">当前方案</div>
-                        <div className="modeSequenceCharShowListBoxTd">周期</div>
-                        <div className="modeSequenceCharShowListBoxTd">相位差</div>
-                        <div className="modeSequenceCharShowListBoxTd">当前阶段</div>
-                        <div className="modeSequenceCharShowListBoxTd">时间(秒)</div>
-                      </div>
-                      <div className="modeSequenceCharShowListBoxTr">
-                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
-                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
-                        <div className="modeSequenceCharShowListBoxTd">4</div>
-                        <div className="modeSequenceCharShowListBoxTd">141</div>
-                        <div className="modeSequenceCharShowListBoxTd">0</div>
-                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
-                        <div className="modeSequenceCharShowListBoxTd">73</div>
-                      </div>
-                      <div className="modeSequenceCharShowListBoxTr">
-                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
-                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
-                        <div className="modeSequenceCharShowListBoxTd">4</div>
-                        <div className="modeSequenceCharShowListBoxTd">141</div>
-                        <div className="modeSequenceCharShowListBoxTd">0</div>
-                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
-                        <div className="modeSequenceCharShowListBoxTd">73</div>
-                      </div>
-                      <div className="modeSequenceCharShowListBoxTr">
-                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
-                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
-                        <div className="modeSequenceCharShowListBoxTd">4</div>
-                        <div className="modeSequenceCharShowListBoxTd">141</div>
-                        <div className="modeSequenceCharShowListBoxTd">0</div>
-                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
-                        <div className="modeSequenceCharShowListBoxTd">73</div>
-                      </div>
-                      <div className="modeSequenceCharShowListBoxTr">
-                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
-                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
-                        <div className="modeSequenceCharShowListBoxTd">4</div>
-                        <div className="modeSequenceCharShowListBoxTd">141</div>
-                        <div className="modeSequenceCharShowListBoxTd">0</div>
-                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
-                        <div className="modeSequenceCharShowListBoxTd">73</div>
-                      </div>
-                      <div className="modeSequenceCharShowListBoxTr">
-                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
-                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
-                        <div className="modeSequenceCharShowListBoxTd">4</div>
-                        <div className="modeSequenceCharShowListBoxTd">141</div>
-                        <div className="modeSequenceCharShowListBoxTd">0</div>
-                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
-                        <div className="modeSequenceCharShowListBoxTd">73</div>
-                      </div>
-                      <div className="modeSequenceCharShowListBoxTr">
-                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
-                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
-                        <div className="modeSequenceCharShowListBoxTd">4</div>
-                        <div className="modeSequenceCharShowListBoxTd">141</div>
-                        <div className="modeSequenceCharShowListBoxTd">0</div>
-                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
-                        <div className="modeSequenceCharShowListBoxTd">73</div>
-                      </div>
-                      <div className="modeSequenceCharShowListBoxTr">
-                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
-                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
-                        <div className="modeSequenceCharShowListBoxTd">4</div>
-                        <div className="modeSequenceCharShowListBoxTd">141</div>
-                        <div className="modeSequenceCharShowListBoxTd">0</div>
-                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
-                        <div className="modeSequenceCharShowListBoxTd">73</div>
-                      </div>
-                      <div className="modeSequenceCharShowListBoxTr">
-                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
-                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
-                        <div className="modeSequenceCharShowListBoxTd">4</div>
-                        <div className="modeSequenceCharShowListBoxTd">141</div>
-                        <div className="modeSequenceCharShowListBoxTd">0</div>
-                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
-                        <div className="modeSequenceCharShowListBoxTd">73</div>
-                      </div>
-                      <div className="modeSequenceCharShowListBoxTr">
-                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
-                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
-                        <div className="modeSequenceCharShowListBoxTd">4</div>
-                        <div className="modeSequenceCharShowListBoxTd">141</div>
-                        <div className="modeSequenceCharShowListBoxTd">0</div>
-                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
-                        <div className="modeSequenceCharShowListBoxTd">73</div>
-                      </div>
-                      <div className="modeSequenceCharShowListBoxTr">
-                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
-                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
-                        <div className="modeSequenceCharShowListBoxTd">4</div>
-                        <div className="modeSequenceCharShowListBoxTd">141</div>
-                        <div className="modeSequenceCharShowListBoxTd">0</div>
-                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
-                        <div className="modeSequenceCharShowListBoxTd">73</div>
-                      </div>
-                      <div className="modeSequenceCharShowListBoxTr">
-                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
-                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
-                        <div className="modeSequenceCharShowListBoxTd">4</div>
-                        <div className="modeSequenceCharShowListBoxTd">141</div>
-                        <div className="modeSequenceCharShowListBoxTd">0</div>
-                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
-                        <div className="modeSequenceCharShowListBoxTd">73</div>
-                      </div>
-                      <div className="modeSequenceCharShowListBoxTr">
-                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
-                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
-                        <div className="modeSequenceCharShowListBoxTd">4</div>
-                        <div className="modeSequenceCharShowListBoxTd">141</div>
-                        <div className="modeSequenceCharShowListBoxTd">0</div>
-                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
-                        <div className="modeSequenceCharShowListBoxTd">73</div>
-                      </div>
-
-                      <div className="modeSequenceCharShowListBoxTr">
-                      <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
-                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
-                        <div className="modeSequenceCharShowListBoxTd">4</div>
-                        <div className="modeSequenceCharShowListBoxTd">141</div>
-                        <div className="modeSequenceCharShowListBoxTd">0</div>
-                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
-                        <div className="modeSequenceCharShowListBoxTd">73</div>
-                      </div>
-                      <div className="modeSequenceCharShowListBoxTr">
-                        <div className="modeSequenceCharShowListBoxTd moveLeft">25521-郭沫若故居</div>
-                        <div className="modeSequenceCharShowListBoxTd">中心控制</div>
-                        <div className="modeSequenceCharShowListBoxTd">4</div>
-                        <div className="modeSequenceCharShowListBoxTd">141</div>
-                        <div className="modeSequenceCharShowListBoxTd">0</div>
-                        <div className="modeSequenceCharShowListBoxTd">1-东西直左</div>
-                        <div className="modeSequenceCharShowListBoxTd">73</div>
-                      </div>
-                  </div>
+                  <AreaMessage></AreaMessage>
                 </div>
               </div>
               <div className="modeSequenceChartShowChart">
