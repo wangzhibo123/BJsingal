@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Select } from 'antd';
 import "./TimeTable.scss"
+import TimeTableMessage from "./TimeTableMessage/TimeTableMessage"
 const { Option } = Select
 export default class TimeTable extends Component {
     constructor(props) {
@@ -42,118 +43,7 @@ export default class TimeTable extends Component {
                     </div>
                     <div className="timeTableList">
                         <div className="tableList" style={{overflowY:"auto"}}>
-                            <table className="tableName" style={{ textAlign: "center", width: "100%", fontSize: "16px" }} >
-                                <tbody>
-                                    <tr className="tableTh" style={{ width: "50%", height: 40, background: "#162E52", lineHeight: "40px"}}>
-                                        <th>序号</th>
-                                        <th>日期类型</th>
-                                        <th>时间</th>
-                                        <th>功能</th>
-                                        <th>方案</th>
-                                        <th>方案描述</th>
-                                        <th>优先级</th>
-                                    </tr>
-                                    <tr className="tableTd" style={{ height: 50, lineHeight: "50px" }} >
-                                        <td>1</td>
-                                        <td>周一、周二、周三、周四、周五、周六、周日</td>
-                                        <td>00:01</td>
-                                        <td>方案调用</td>
-                                        <td>方案一</td>
-                                        <td>描述</td>
-                                        <td>1</td>
-                                    </tr>
-                                    <tr className="tableTd" style={{ height: 50, lineHeight: "50px" }}>
-                                        <td>2</td>
-                                        <td>周一、周二、周三、周四、周五、周六、周日</td>
-                                        <td>00:01</td>
-                                        <td>方案调用</td>
-                                        <td>方案一</td>
-                                        <td>描述</td>
-                                        <td>1</td>
-                                    </tr>
-                                    <tr className="tableTd" style={{ height: 50, lineHeight: "50px" }}>
-                                        <td>3</td>
-                                        <td>周一、周二、周三、周四、周五、周六、周日</td>
-                                        <td>00:01</td>
-                                        <td>方案调用</td>
-                                        <td>方案一</td>
-                                        <td>描述</td>
-                                        <td>1</td>
-                                    </tr>
-                                    <tr className="tableTd" style={{ height: 50, lineHeight: "50px" }}>
-                                        <td>4</td>
-                                        <td>周一、周二、周三、周四、周五、周六、周日</td>
-                                        <td>00:01</td>
-                                        <td>方案调用</td>
-                                        <td>方案一</td>
-                                        <td>描述</td>
-                                        <td>1</td>
-                                    </tr>
-                                    <tr className="tableTd" style={{ height: 50, lineHeight: "50px" }}>
-                                        <td>5</td>
-                                        <td>周一、周二、周三、周四、周五、周六、周日</td>
-                                        <td>00:01</td>
-                                        <td>方案调用</td>
-                                        <td>方案一</td>
-                                        <td>描述</td>
-                                        <td>1</td>
-                                    </tr>
-                                    <tr className="tableTd" style={{ height: 50, lineHeight: "50px" }}>
-                                        <td>6</td>
-                                        <td>周一、周二、周三、周四、周五、周六、周日</td>
-                                        <td>00:01</td>
-                                        <td>方案调用</td>
-                                        <td>方案一</td>
-                                        <td>描述</td>
-                                        <td>1</td>
-                                    </tr>
-                                    <tr className="tableTd" style={{ height: 50, lineHeight: "50px" }}>
-                                        <td>7</td>
-                                        <td>周一、周二、周三、周四、周五、周六、周日</td>
-                                        <td>00:01</td>
-                                        <td>方案调用</td>
-                                        <td>方案一</td>
-                                        <td>描述</td>
-                                        <td>1</td>
-                                    </tr>
-                                    <tr className="tableTd" style={{ height: 50, lineHeight: "50px" }}>
-                                        <td>8</td>
-                                        <td>周一、周二、周三、周四、周五、周六、周日</td>
-                                        <td>00:01</td>
-                                        <td>方案调用</td>
-                                        <td>方案一</td>
-                                        <td>描述</td>
-                                        <td>1</td>
-                                    </tr>
-                                    <tr className="tableTd" style={{ height: 50, lineHeight: "50px" }}>
-                                        <td>9</td>
-                                        <td>周一、周二、周三、周四、周五、周六、周日</td>
-                                        <td>00:01</td>
-                                        <td>方案调用</td>
-                                        <td>方案一</td>
-                                        <td>描述</td>
-                                        <td>1</td>
-                                    </tr>
-                                    <tr className="tableTd" style={{ height: 50, lineHeight: "50px" }}>
-                                        <td>10</td>
-                                        <td>周一、周二、周三、周四、周五、周六、周日</td>
-                                        <td>00:01</td>
-                                        <td>方案调用</td>
-                                        <td>方案一</td>
-                                        <td>描述</td>
-                                        <td>1</td>
-                                    </tr>
-                                    <tr className="tableTd" style={{ height: 50, lineHeight: "50px" }}>
-                                        <td>10</td>
-                                        <td>周一、周二、周三、周四、周五、周六、周日</td>
-                                        <td>00:01</td>
-                                        <td>方案调用</td>
-                                        <td>方案一</td>
-                                        <td>描述</td>
-                                        <td>1</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <TimeTableMessage/>
                         </div>
                     </div>
                 </div>
