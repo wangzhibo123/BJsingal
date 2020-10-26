@@ -2,7 +2,7 @@ import React from 'react'
 import { Select, Menu } from 'antd'
 import { SearchOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons'
 import InterMsg from './InterMsg/InterMsg'
-import LineCharts from './InterMsg/LineCharts/LineCharts'
+import LineCharts from '../../../components/LineCharts/LineCharts'
 import publics from '../Evaluate.module.scss'
 const { Option } = Select
 const { SubMenu } = Menu

@@ -3,9 +3,10 @@ import "./AreaMonitoring.scss";
 import ModeSequenceChartShowChart from "../../utils/GreenWaveCharts/GreenWaveCharts.jsx"
 import AreaMessage from "./AreaMessage/AreaMessage"
 import mineMapConf from "../../utils/minemapConf";
-import { SearchOutlined } from "@ant-design/icons";
-import { Select,Button } from "antd";
+import { EditOutlined,SearchOutlined, CompassOutlined } from "@ant-design/icons";
+import { Select, Button,Switch,Menu } from "antd";
 const { Option } = Select;
+const { SubMenu } = Menu;
 export default class AreaMonitoring extends Component {
   constructor(props) {
     super(props)
@@ -134,18 +135,46 @@ export default class AreaMonitoring extends Component {
           </div>
 
           <div className="listNav">
-            <ul className="allNavList">
-              <li>万泉河路</li>
-              <div className="line"></div>
-              <li>中关村大街</li>
-              <div className="line"></div>
-              <li>中关村东路</li>
-              <div className="line"></div>
-              <li>知春路</li>
-              <div className="line"></div>
-              <li>学院路</li>
-              <div className="line"></div>
-            </ul>
+          <Menu
+            onClick={this.handleClick}
+            style={{ width: 251, color: '#86b7fa', height: '100%', overflowY: 'auto',overflowX:"hidden", fontSize: '16px' }}
+            // defaultSelectedKeys={['7']}
+            // defaultOpenKeys={['sub2', 'sub3']}
+            mode="inline"
+          >
+            <SubMenu key="sub2" title="海淀区">
+              {/* <Menu.Item key="5"></Menu.Item> */}
+              <SubMenu key="sub3" title="知春路拥堵应急">
+                <Menu.Item key="7">知春路与罗庄东路<EditOutlined /></Menu.Item>
+                <Menu.Item key="8">知春路与罗庄中路</Menu.Item>
+                <Menu.Item key="9">知春路与罗庄西路</Menu.Item>
+                <Menu.Item key="10">知春路与海淀黄庄路</Menu.Item>
+              </SubMenu>
+              <SubMenu key="sub3-2" title="万泉庄路"></SubMenu>
+            </SubMenu>
+            <SubMenu
+              key="sub4"
+              title="房山区"
+            >
+              {/* <Menu.Item key="1-2-9">Option 9</Menu.Item> */}
+            </SubMenu>
+            <SubMenu
+              key="sub5"
+              title="通州区"
+            >
+            </SubMenu>
+            <SubMenu
+              key="sub6"
+              title="门头沟区"
+            >
+            </SubMenu>
+            <SubMenu
+              key="sub7"
+              title="中关村东路"
+            >
+            </SubMenu>
+          </Menu>
+            
           </div>
         </div>
           </div>

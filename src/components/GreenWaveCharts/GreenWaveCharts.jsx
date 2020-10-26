@@ -8,18 +8,18 @@ class GreenWaveCharts extends React.Component {
     super(props)
     this.state = {
       svgs: null,
-      reverseSvgs: null,  
+      reverseSvgs: null,
       publicSvgs: null,
       reversePlubSvgs: null,
     }
-    this.W = 940 // 容器width
-    this.H = 265 // 容器height
-    this.xAxis =960|| this.props.totleDistance  // x轴的总距离（后期表示数据中各个路口距离之和）
-    this.yAxis = 900 // y轴的总时间s
+    this.W = 950 // 容器width
+    this.H = 345  // 容器height
+    this.xAxis = this.props.totleDistance // x轴的总距离（后期表示数据中各个路口距离之和）
+    this.yAxis = 400 // y轴的总时间s
     this.Hs = this.H / this.yAxis // 每秒所占px值
     this.Ws = this.W / this.xAxis // 每千米所占px值
     this.ySplit = 10 // y轴分10份
-    this.ySplitS = this.yAxis / this.ySplit// y轴每份的秒数
+    this.ySplitS = this.yAxis / this.ySplit // y轴每份的秒数
     this.yScaleH = this.Hs * this.ySplitS // y轴每个刻度的高度
     this.xSplit = 5 // x轴分5份
     this.xSplitD = this.xAxis / this.xSplit // x轴每份的距离
@@ -41,7 +41,6 @@ class GreenWaveCharts extends React.Component {
     this.cycleNumArr = []
     this.reverseCycleNumArr = []
     this.reverseWave = []
-    this.x=[{"area_name":"琼山区","lenAll":0,"data_version":"20180630","reverseSpeed":"41.83","execute_end_date":"","reverse_phase_plan_id":"1","execute_start_date":"","forward_phase_plan_name":"A","forward_offset":"0.0","reverse_offset":"0.0","is_key_inter":0,"len":0,"inter_name":"甲秀南路与花冠路路口","forward_phase_plan_id":"1","geohash":"w7w3xwbm0p","reverse_phase_plan_name":"A","id":"11LQA0636J0","lev":"4","lat":19.98914904,"inter_id":"1010","lng":110.36900202,"adcode":"460100","area_code":"460107","phaseList":[{"inter_id":"11LQA0636J0","offset":0,"data_version":"20180630","adcode":"460100","stat_date":"20200803235959","end_time":"20:40:00","task_id":"0","split_time":81,"phas e_plan_id":"1","offset_type_no":1,"dt":"20200803","start_time":"18:40:00","ctlregion_id":"manual_2","cyclesplit_source":1,"update_frequency":1,"cycle_time":126,"id":331705285,"phase_name":"A","doe_date_type":99},{"inter_id":"11LQA0636J0","offset":81,"data_version":"20180630","adcode":"460100","stat_date":"20200803235959","end_time":"20:40:00","task_id":"0","split_time":45,"phase_plan_id":"1","offset_type_no":1,"dt":"20200803","start_time":"18:40:00","ctlregion_id":"manual_2","cyclesplit_source":1,"update_frequency":1,"cycle_time":126,"id":331705286,"phase_name":"B","doe_date_type":99}],"name":"甲秀南路与花冠路路口","cycle_time":126,"forwordSpeed":"0.00"},{"area_name":"琼山区","lenAll":455,"data_version":"20180630","reverseSpeed":"40.51","execute_end_date":"","reverse_phase_plan_id":"1","execute_start_date":"","forward_phase_plan_name":"A","forward_offset":"50.0","reverse_offset":"50.0","is_key_inter":0,"len":455,"inter_name":"花桐路与花冠路路口","forward_phase_plan_id":"1","geohash":"w7w3xx52hd","reverse_phase_plan_name":"A","id":"11LRL0636O0","lev":"4","lat":19.9896365,"inter_id":"1011","lng":110.37331932,"adcode":"460100","area_code":"460107","phaseList":[{"inter_id":"11LRL0636O0","offset":50,"data_version":"20180630","adcode":"460100","stat_date":"20200803235959","end_time":"20:40:00","task_id":"0","split_time":31,"phase_plan_id":"1","offset_type_no":1,"dt":"20200803","start_time":"18:40:00","ctlregion_id":"manual_2","cyclesplit_source":1,"update_frequency":1,"cycle_time":126,"id":331705287,"phase_name":"A","doe_date_type":99},{"inter_id":"11LRL0636O0","offset":81,"data_version":"20180630","adcode":"460100","stat_date":"20200803235959","end_time":"20:40:00","task_id":"0","split_time":43,"phase_plan_id":"1","offset_type_no":1,"dt":"20200803","start_time":"18:40:00","ctlregion_id":"manual_2","cyclesplit_source":1,"update_frequency":1,"cycle_time":126,"id":331705288,"phase_name":"B","doe_date_type":99},{"inter_id":"11LRL0636O0","offset":124,"data_version":"20180630","adcode":"460100","stat_date":"20200803235959","end_time":"20:40:00","task_id":"0","split_time":31,"phase_plan_id":"1","offset_type_no":1,"dt":"20200803","start_time":"18:40:00","ctlregion_id":"manual_2","cyclesplit_source":1,"update_frequency":1,"cycle_time":126,"id":331705289,"phase_name":"D","doe_date_type":99},{"inter_id":"11LRL0636O0","offset":155, "data_version":"20180630","adcode":"460100","stat_date":"20200803235959","end_time":"20:40:00","task_id":"0","split_time":21,"phase_plan_id":"1","offset_type_no":1,"dt":"20200803","start_time":"18:40:00","ctlregion_id":"manual_2","cyclesplit_source":1,"update_frequency":1,"cycle_time":126,"id":331705290,"phase_name":"E","doe_date_type":99}],"name":"花桐路与花冠路路口","cycle_time":126,"forwordSpeed":"41.43"},{"area_name":"琼山区","lenAll":924,"data_version":"20180630","reverseSpeed":"0.00","execute_end_date":"","reverse_phase_plan_id":"1","execute_start_date":"","forward_phase_plan_name":"A","forward_offset":"19.0","reverse_offset":"19.0","len":469,"inter_name":"清溪路与花冠路路口","forward_phase_plan_id":"1","geohash":"w7w3xxq2gh","reverse_phase_plan_name":"A","id":"11LSU063770","lev":"4","lat":19.99114796,"inter_id":"1011","lng":110.37736797,"adcode":"460100","area_code":"460107","phaseList":[{"inter_id":"11LSU063770","offset":19,"data_version":"20180630","adcode":"460100","stat_date":"20200803235959","end_time":"20:40:00","task_id":"0","split_time":22,"phase_plan_id":"1","offset_type_no":1,"dt":"20200803","start_time":"18:40:00","ctlregion_id":"manual_2","cyclesplit_source":1,"update_frequency":1,"cycle_time":126,"id":331705291,"phase_name":"A","doe_date_type":99},{"inter_id":"11LSU063770","offset":41,"data_version":"20180630","adcode":"460100","stat_date":"20200803235959","end_time":"20:40:00","task_id":"0","split_time":26,"phase_plan_id":"1","offset_type_no":1,"dt":"20200803","start_time":"18:40:00","ctlregion_id":"manual_2","cyclesplit_source":1,"update_frequency":1,"cycle_time":126,"id":331705292,"phase_name":"B","doe_date_type":99},{"inter_id":"11LSU063770","offset":67,"data_version":"20180630","adcode":"460100","stat_date":"20200803235959","end_time":"20:40:00","task_id":"0","split_time":22,"phase_plan_id":"1","offset_type_no":1,"dt":"20200803","start_time":"18:40:00","ctlregion_id":"manual_2","cyclesplit_source":1,"update_frequency":1,"cycle_time":126,"id":331705293,"phase_name":"C","doe_date_type":99},{"inter_id":"11LSU063770","offset":89,"data_version":"20180630","adcode":"460100","stat_date":"20200803235959","end_time":"20:40:00","task_id":"0","split_time":28,"phase_plan_id":"1","offset_type_no":1,"dt":"20200803","start_time":"18:40:00","ctlregion_id":"manual_2","cyclesplit_source":1,"update_frequency":1,"cycle_time":126,"id":331705294,"phase_name":"D","doe_date_type":99},{"inter_id":"11LSU063770","offset":117,"data_version":"20180630","adcode":"460100","stat_date":"20200803235959","end_time":"20:40:00","task_id":"0","split_time":28,"phase_plan_id":"1","offset_type_no":1,"dt":"20200803","start_time":"18:40:00","ctlregion_id":"manual_2","cyclesplit_source":1,"update_frequency":1,"cycle_time":126,"id":331705295,"phase_name":"F","doe_date_type":99}],"name":"清溪路与花冠路路口","cycle_time":126,"forwordSpeed":"42.11"}]
   }
   componentDidMount = () => {
     this.prevTime = 0
@@ -53,9 +52,7 @@ class GreenWaveCharts extends React.Component {
     this.cycleNumArr = []
     this.reverseCycleNumArr = []
     this.reverseWave = []
-    
-    // this.getGreenWaveCharts(this.props.chartsData) this.props.chartsData   
-    this.getGreenWaveCharts(this.x)
+    this.getGreenWaveCharts(this.props.chartsData)
   }
   componentWillReceiveProps = (nextProps) => {
     this.prevTime = 0
@@ -73,8 +70,7 @@ class GreenWaveCharts extends React.Component {
       publicSvgs: null,
       reversePlubSvgs: null,
     }, () => {
-      // nextProps.chartsData
-      this.getGreenWaveCharts(this.x)
+      this.getGreenWaveCharts(nextProps.chartsData)
     })
   }
   getGreenWaveCharts = (chartsData) => {
@@ -111,18 +107,18 @@ class GreenWaveCharts extends React.Component {
           const nextLen = parseFloat(chartsData[index + 1].lenAll)
           const disTime = (nextLen - interLen) / (nextForwarSpeed / 3.6) // 行程时间
           // 开始计算位置点
-          const leftBottom = 265 - (index === 0 ? this.forwardOffset * this.Hs : this.offsetTime * this.Hs) // 当前路口的绿波起点
-          const rightBottom = 265 - ((disTime + this.offsetTime) * this.Hs) // 下一个路口的绿波起点
+          const leftBottom = 345 - (index === 0 ? this.forwardOffset * this.Hs : this.offsetTime * this.Hs) // 当前路口的绿波起点
+          const rightBottom = 345 - ((disTime + this.offsetTime) * this.Hs) // 下一个路口的绿波起点
           const phaseTime = (chartsData[index].phaseList.filter(phaseItem => chartsData[index].forward_phase_plan_name === phaseItem.phase_name))[0].split_time // 当前路口的协调相位时间
           // (disTime + this.offsetTime) 下个路口的起始时间
-          const rightTop = 265 - ((disTime + this.offsetTime + parseFloat(phaseTime)) * this.Hs)
+          const rightTop = 345 - ((disTime + this.offsetTime + parseFloat(phaseTime)) * this.Hs)
           const leftTop = (leftBottom + (rightTop - rightBottom))
           const interLeft = item.lenAll * this.Ws
           const nextInterLeft = chartsData[index + 1].lenAll * this.Ws
           // 各路口协调相位的开始和结束位置，为了计算公共部分绿波带
-          const leftStart = item.forward_offset >= 0 ? 265 - (item.forward_offset * this.Hs) : 265 - ((item.cycle_time + item.forward_offset) * this.Hs)
+          const leftStart = item.forward_offset >= 0 ? 345 - (item.forward_offset * this.Hs) : 345 - ((item.cycle_time + item.forward_offset) * this.Hs)
           const leftEnd = leftStart - $('#phaseBox' + index).height()
-          const rightStart = chartsData[index + 1].forward_offset >= 0 ? 265 - (chartsData[index + 1].forward_offset * this.Hs) : 265 - ((chartsData[index + 1].cycle_time + chartsData[index + 1].forward_offset) * this.Hs)
+          const rightStart = chartsData[index + 1].forward_offset >= 0 ? 344 - (chartsData[index + 1].forward_offset * this.Hs) : 344 - ((chartsData[index + 1].cycle_time + chartsData[index + 1].forward_offset) * this.Hs)
           const rightEnd = rightStart - $('#phaseBox' + (index + 1)).height()
           const obj = {
             leftBottom,
@@ -148,7 +144,7 @@ class GreenWaveCharts extends React.Component {
     // 获取反向绿波坐标点 px
     for (let i = chartsData.length - 1; i >= 0; i--) {
       const reverseChartsData = chartsData[i]
-      // console.log(reverseChartsData)
+      console.log(reverseChartsData)
 
       if (reverseChartsData.cycle_time !== '' && reverseChartsData.phaseList.length > 0) {
         const reverseOffset = parseFloat(reverseChartsData.reverse_offset) // 相位差时间，转为px，就是当前路口的绿波起点，leftBottom
@@ -172,18 +168,18 @@ class GreenWaveCharts extends React.Component {
           const nextLen = parseFloat(chartsData[i - 1].lenAll)
           const disTime = (interLen - nextLen) / (nextReverseSpeed / 3.6) // 行程时间
           // 开始计算位置点
-          const leftBottom = 265 - (i === chartsData.length - 1 ? this.reverseOffset * this.Hs : this.reverseOffsetTime * this.Hs) // 当前路口的绿波起点
-          const rightBottom = 265 - ((disTime + this.reverseOffsetTime) * this.Hs) // 下一个路口的绿波起点
+          const leftBottom = 345 - (i === chartsData.length - 1 ? this.reverseOffset * this.Hs : this.reverseOffsetTime * this.Hs) // 当前路口的绿波起点
+          const rightBottom = 345 - ((disTime + this.reverseOffsetTime) * this.Hs) // 下一个路口的绿波起点
           const phaseTime = (chartsData[i - 1].phaseList.filter(phaseItem => chartsData[i - 1].reverse_phase_plan_name === phaseItem.phase_name))[0].split_time // 当前路口的协调相位时间
           // (disTime + this.offsetTime) 下个路口的起始时间
-          const rightTop = 265 - ((disTime + this.reverseOffsetTime + parseFloat(phaseTime)) * this.Hs)
+          const rightTop = 345 - ((disTime + this.reverseOffsetTime + parseFloat(phaseTime)) * this.Hs)
           const leftTop = (leftBottom + (rightTop - rightBottom))
           const interLeft = (reverseChartsData.lenAll * this.Ws) + 20
           const nextInterLeft = (chartsData[i - 1].lenAll * this.Ws) + 20
           // 各路口协调相位的开始和结束位置，为了计算公共部分绿波带
-          const leftStart = reverseChartsData.reverse_offset >= 0 ? 265 - (reverseChartsData.reverse_offset * this.Hs) : 265 - ((reverseChartsData.cycle_time + reverseChartsData.reverse_offset) * this.Hs)
+          const leftStart = reverseChartsData.reverse_offset >= 0 ? 345 - (reverseChartsData.reverse_offset * this.Hs) : 345 - ((reverseChartsData.cycle_time + reverseChartsData.reverse_offset) * this.Hs)
           const leftEnd = leftStart - $('#reversePhaseBox' + i).height()
-          const rightStart = chartsData[i - 1].reverse_offset >= 0 ? 265 - (chartsData[i - 1].reverse_offset * this.Hs) : 265 - ((chartsData[i - 1].cycle_time + chartsData[i - 1].reverse_offset) * this.Hs)
+          const rightStart = chartsData[i - 1].reverse_offset >= 0 ? 344 - (chartsData[i - 1].reverse_offset * this.Hs) : 344 - ((chartsData[i - 1].cycle_time + chartsData[i - 1].reverse_offset) * this.Hs)
           const rightEnd = rightStart - $('#reversePhaseBox' + (i - 1)).height()
           const obj = {
             leftBottom,
@@ -200,7 +196,7 @@ class GreenWaveCharts extends React.Component {
             rightEnd,
           }
           this.reverseOffsetTime += disTime
-          // console.log('反向：：：：：：', obj)
+          console.log('反向：：：：：：', obj)
           this.reversePoints.push(obj)
         }
       }
@@ -244,7 +240,7 @@ class GreenWaveCharts extends React.Component {
         }
       }
     })
-    // console.log('公共绿波部分正向：：：：', this.publicSvgs)
+    console.log('公共绿波部分正向：：：：', this.publicSvgs)
     this.setState({ svgs: this.svgs, publicSvgs: this.publicSvgs })
 
     // 反向绿波
@@ -292,8 +288,8 @@ class GreenWaveCharts extends React.Component {
     return (
       <div className="greenWaveBox">
         {
-         true || this.props.showForwordWave &&
-          <svg style={{ position: 'absolute', top: '0', zIndex: '1', opacity: '.8' }} width="1000px" height="265px" viewBox="0 0 1000 265">
+          this.props.showForwordWave &&
+          <svg style={{ position: 'absolute', top: '0', zIndex: '1', opacity: '.8' }} width="1000px" height="350px" viewBox="0 0 1000 350">
             {
               this.state.svgs &&
               this.state.svgs.map((item, indexs) => {
@@ -321,8 +317,8 @@ class GreenWaveCharts extends React.Component {
           </svg>
         }
         {
-         true|| this.props.showReverseWave &&
-          <svg style={{ position: 'absolute', top: '0', zIndex: '1', opacity: '.8' }} width="1000px" height="265px" viewBox="0 0 1000 265">
+          this.props.showReverseWave &&
+          <svg style={{ position: 'absolute', top: '0', zIndex: '1', opacity: '.8' }} width="1000px" height="350px" viewBox="0 0 1000 350">
             {
               // "723,313  850,298  850,268  723,283" #4e7e1a 反向
               this.state.reverseSvgs &&
@@ -353,11 +349,10 @@ class GreenWaveCharts extends React.Component {
         <div className="xCoordinate"><div className="xarrows"></div></div>
         <div className="yCoordinate"><div className="yarrows"></div></div>
         {
-           this.x.map((item, index) => {
+          this.props.chartsData.map((item, index) => {
             if (item.cycle_time !== '') {
               const num = this.H / (item.cycle_time * this.Hs)
               const cycleTimeArr = new Array(Math.ceil(num)).fill(item.cycle_time * this.Hs)
-              // console.log(cycleTimeArr,'cycleTimeArr')
               return (
                 <div className="graphBox" style={{ left: item.lenAll * this.Ws + 'px' }} key={item.forward_offset+index}>
                   <div className="repeatBox" style={{ left: '0' }}>
@@ -454,17 +449,18 @@ class GreenWaveCharts extends React.Component {
         }
         {
           this.xAxisArr.map((item, index) => {
-            const interMsg =  this.x ||[{"real_phase_time":10,"proposal_phase_time":5,"coordinate_phase":5,"node_name":"甲秀南路与花冠路路口","unit_latitude":26.423111,"deciation":5,"unit_longitude":106.663039,"speed":50,"node_id":1010},{"real_phase_time":20,"proposal_phase_time":6,"coordinate_phase":14,"node_name":"花桐路与花冠路路口","unit_latitude":26.421309,"deciation":6,"unit_longitude":106.665673,"speed":45,"node_id":1011},{"real_phase_time":30,"proposal_phase_time":8,"coordinate_phase":22,"node_name":"清溪路与花冠路路口","unit_latitude":26.41954,"deciation":8,"unit_longitude":106.677221,"speed":50,"node_id":1012},{"real_phase_time":20,"proposal_phase_time":7,"coordinate_phase":13,"node_name":"贵惠大道与花冠路路口","unit_latitude":26.415368,"deciation":7,"unit_longitude":106.727392,"speed":55,"node_id":1013},{"real_phase_time":20,"proposal_phase_time":6,"coordinate_phase":14,"node_name":"花孟大道与花冠路路口","unit_latitude":26.426773,"deciation":6,"unit_longitude":106.728598,"speed":30,"node_id":1014},{"real_phase_time":15,"proposal_phase_time":2,"coordinate_phase":13,"node_name":"翁岩路与花冠路路口","unit_latitude":26.455552,"deciation":2,"unit_longitude":106.727322,"speed":40,"node_id":1015},{"real_phase_time":30,"proposal_phase_time":5,"coordinate_phase":15,"node_name":"金戈路与花冠路路口","unit_latitude":26.485092,"deciation":5,"unit_longitude":106.723892,"speed":40,"node_id":1016},{"real_phase_time":20,"proposal_phase_time":6,"coordinate_phase":14,"node_name":"长江路与花冠路路口","unit_latitude":26.520463,"deciation":6,"unit_longitude":106.722957,"speed":35,"node_id":1017},{"real_phase_time":10,"proposal_phase_time":7,"coordinate_phase":3,"node_name":"东站路与花冠路路口","unit_latitude":26.54597,"deciation":7,"unit_longitude":106.73116,"speed":40,"node_id":1018}]
+            const interMsg = this.props.chartsData[index]
             if (interMsg) {
               return (
                 <div className="xAxisBox" style={{ width: this.Ws * item + 'px', left: '0px' }} key={'x' + index}>
                   <div style={{ position: 'relative' }}>
-                    {/* <span className="xScalText">{item}</span> */}
                     <span className="xScalText">{item}</span>
                   </div>
-                  <div className="xAxisInterMsg" style={{ width: '200px', left: this.Ws * item - 60 + 'px' }} key={interMsg.inter_name + interMsg.forwordSpeed + interMsg.reverseSpeed}>
+                  <div className="xAxisInterMsg" style={{ width: '200px', left: this.Ws * item - 20 + 'px' }} key={interMsg.inter_name + interMsg.forwordSpeed + interMsg.reverseSpeed}>
                     <div>{interMsg.inter_name}</div>
-                    {/* <div>周期：{interMsg.phaseList.length > 0 ? interMsg.phaseList[0].cycle_time : 0}秒</div> */}
+                    <div>周期：{interMsg.phaseList.length > 0 ? interMsg.phaseList[0].cycle_time : 0}秒</div>
+                    <div>速度(正)：{interMsg.forwordSpeed}km/h</div>
+                    <div>速度(反)：{interMsg.reverseSpeed}km/h</div>
                   </div>
                 </div>
               )
