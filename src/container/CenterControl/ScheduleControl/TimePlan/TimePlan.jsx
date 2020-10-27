@@ -61,7 +61,7 @@ export default class TimePlan extends Component {
                                                 <img src={item.img} alt="" />
                                             </div>
                                             <div className="timePlanNum">
-                                                <input type="text" defaultValue={item.num} maxLength="3"/>
+                                                <input type="text" defaultValue={item.num} maxLength="4"/>
                                             </div>
                                             <div className="timePlanChange">
                                                 <div className="CaretUpOutlined">

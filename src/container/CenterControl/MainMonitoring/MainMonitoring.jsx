@@ -82,7 +82,7 @@ export default class MainMonitoring extends Component {
        //向南 按钮
       modeMainSStyle:true,
        //向北 按钮
-      modeMainNStyle:false
+      modeMainNStyle:false,
     };
   }
   componentDidMount() {
@@ -150,7 +150,7 @@ export default class MainMonitoring extends Component {
     const options = {
       minzoom: 1, // 路况显示的最小级别(1-24)
       maxzoom: 24, // 路况显示的最大级别(1-24)
-      type: "vector", // 路况图层类型:vector(矢量),raster(栅格)
+      type: "raster", // 路况图层类型:vector(矢量),raster(栅格)
       refresh: 30 * 1000, // 路况图层刷新时间，毫秒
       // before:'roads-symbol-49'
     };
@@ -292,6 +292,7 @@ export default class MainMonitoring extends Component {
            </div>
               <div className="modeMainMonitorContent">
                 <div className="modeMainMonitorContentHome">
+
                   {/* 条状图 */}
                   <div className="modeMainMonitorContentStrip">
                       <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#02AED7,#0173C8)", borderRadius: "20px", position: "relative" }}>
@@ -332,15 +333,16 @@ export default class MainMonitoring extends Component {
                         </div>
                     </div>
                   </div>
+                  
                   {/* 条状图 */}
-                  <div className="modeMainMonitorContentStripTwo">
+                  <div className="modeMainMonitorContentStripTwo" style={{position: "absolute",top: "202px",left: "calc(190px * 1)"}}>
                       <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#0163DA,#0147CB)", borderRadius: "20px", position: "relative" }}>
                         <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0}}>
                         </div>
                       </div>
                   </div>
                   {/* 球形+内容 */}
-                  <div className="modeMainMonitorContentLineTwo">
+                  <div className="modeMainMonitorContentLineTwo" style={{position: "absolute",top: "0px",left: "calc(155px + 185px * 1)"}}>
                     <div className="modeMainMonitorContentCross">
                         <div className="modeMainMonitorContentCrossText">
                             中关村大街
@@ -373,8 +375,224 @@ export default class MainMonitoring extends Component {
                         </div>
                     </div>
                   </div>
+              
+
+
+
+
+              {/* 条状图 */}
+              <div className="modeMainMonitorContentStripTwo" style={{position: "absolute",top: "202px",left: "calc((190px - 2px) * 2)"}}>
+                      <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#0163DA,#0147CB)", borderRadius: "20px", position: "relative" }}>
+                        <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0}}>
+                        </div>
+                      </div>
+                  </div>
+                  {/* 球形+内容 */}
+                  <div className="modeMainMonitorContentLineTwo" style={{position: "absolute",top: "0px",left: "calc(155px + 185px * 2)"}}>
+                    <div className="modeMainMonitorContentCross">
+                        <div className="modeMainMonitorContentCrossText">
+                            中关村大街
+                        </div>
+                    </div>
+                    <div className="modeMainMonitorContentball">
+                        
+                    </div>
+                    <div className="modeMainMonitorContentList">
+                        <div className="modeMainMonitorContentListTop">
+                            <div className="autoOper">自动运行</div>
+                            <div className="switch"><Switch defaultChecked onChange={this.onChange} style={{background:"#4A62E7"}}/></div>
+                            <div className="openHand">开启手动</div>
+                        </div>  
+                        <div className="modeMainMonitorContentListBottom">
+                          <div className="modeMainMonitorContentListTable">
+                            <div className="modeMainMonitorContentListImg"><img src={yellow} alt=""/></div>
+                            <div className="modeMainMonitorContentListImg"><img src={red} alt=""/></div>
+                            <div className="modeMainMonitorContentListImg"><img src={leftRightPng} alt=""/></div> 
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                            <div className="modeMainMonitorContentListImg"><img src={upDownPng} alt=""/></div>
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                            <div className="modeMainMonitorContentListImg"><img src={upLeftDownRight} alt=""/></div>
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                            <div className="modeMainMonitorContentListImg" style={{background:"#000E35"}}><img src={upLeftUp} alt=""/></div>
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                            <div className="modeMainMonitorContentListImg"><img src={rightUpLeftDown} alt=""/></div>
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+
+                {/* 条状图 */}
+              <div className="modeMainMonitorContentStripTwo" style={{position: "absolute",top: "202px",left: "calc((190px - 3px) * 3)"}}>
+                      <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#0163DA,#0147CB)", borderRadius: "20px", position: "relative" }}>
+                        <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0}}>
+                        </div>
+                      </div>
+                  </div>
+                  {/* 球形+内容 */}
+                  <div className="modeMainMonitorContentLineTwo" style={{position: "absolute",top: "0px",left: "calc(155px + 185px * 3)"}}>
+                    <div className="modeMainMonitorContentCross">
+                        <div className="modeMainMonitorContentCrossText">
+                            中关村大街
+                        </div>
+                    </div>
+                    <div className="modeMainMonitorContentball">
+                        
+                    </div>
+                    <div className="modeMainMonitorContentList">
+                        <div className="modeMainMonitorContentListTop">
+                            <div className="autoOper">自动运行</div>
+                            <div className="switch"><Switch defaultChecked onChange={this.onChange} style={{background:"#4A62E7"}}/></div>
+                            <div className="openHand">开启手动</div>
+                        </div>  
+                        <div className="modeMainMonitorContentListBottom">
+                          <div className="modeMainMonitorContentListTable">
+                            <div className="modeMainMonitorContentListImg"><img src={yellow} alt=""/></div>
+                            <div className="modeMainMonitorContentListImg"><img src={red} alt=""/></div>
+                            <div className="modeMainMonitorContentListImg"><img src={leftRightPng} alt=""/></div> 
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                            <div className="modeMainMonitorContentListImg"><img src={upDownPng} alt=""/></div>
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                            <div className="modeMainMonitorContentListImg"><img src={upLeftDownRight} alt=""/></div>
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                            <div className="modeMainMonitorContentListImg" style={{background:"#000E35"}}><img src={upLeftUp} alt=""/></div>
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                            <div className="modeMainMonitorContentListImg"><img src={rightUpLeftDown} alt=""/></div>
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+
+                {/* 条状图 */}
+              <div className="modeMainMonitorContentStripTwo" style={{position: "absolute",top: "202px",left: "calc((190px - 4px) * 4)"}}>
+                      <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#0163DA,#0147CB)", borderRadius: "20px", position: "relative" }}>
+                        <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0}}>
+                        </div>
+                      </div>
+                  </div>
+                  {/* 球形+内容 */}
+                  <div className="modeMainMonitorContentLineTwo" style={{position: "absolute",top: "0px",left: "calc(155px + 185px * 4)"}}>
+                    <div className="modeMainMonitorContentCross">
+                        <div className="modeMainMonitorContentCrossText">
+                            中关村大街
+                        </div>
+                    </div>
+                    <div className="modeMainMonitorContentball">
+                        
+                    </div>
+                    <div className="modeMainMonitorContentList">
+                        <div className="modeMainMonitorContentListTop">
+                            <div className="autoOper">自动运行</div>
+                            <div className="switch"><Switch defaultChecked onChange={this.onChange} style={{background:"#4A62E7"}}/></div>
+                            <div className="openHand">开启手动</div>
+                        </div>  
+                        <div className="modeMainMonitorContentListBottom">
+                          <div className="modeMainMonitorContentListTable">
+                            <div className="modeMainMonitorContentListImg"><img src={yellow} alt=""/></div>
+                            <div className="modeMainMonitorContentListImg"><img src={red} alt=""/></div>
+                            <div className="modeMainMonitorContentListImg"><img src={leftRightPng} alt=""/></div> 
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                            <div className="modeMainMonitorContentListImg"><img src={upDownPng} alt=""/></div>
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                            <div className="modeMainMonitorContentListImg"><img src={upLeftDownRight} alt=""/></div>
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                            <div className="modeMainMonitorContentListImg" style={{background:"#000E35"}}><img src={upLeftUp} alt=""/></div>
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                            <div className="modeMainMonitorContentListImg"><img src={rightUpLeftDown} alt=""/></div>
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+
+                  {/* 条状图 */}
+              <div className="modeMainMonitorContentStripTwo" style={{position: "absolute",top: "202px",left: "calc((190px - 4px) * 5)"}}>
+                      <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#0163DA,#0147CB)", borderRadius: "20px", position: "relative" }}>
+                        <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0}}>
+                        </div>
+                      </div>
+                  </div>
+                  {/* 球形+内容 */}
+                  <div className="modeMainMonitorContentLineTwo" style={{position: "absolute",top: "0px",left: "calc(155px + 185px * 5)"}}>
+                    <div className="modeMainMonitorContentCross">
+                        <div className="modeMainMonitorContentCrossText">
+                            中关村大街
+                        </div>
+                    </div>
+                    <div className="modeMainMonitorContentball">
+                        
+                    </div>
+                    <div className="modeMainMonitorContentList">
+                        <div className="modeMainMonitorContentListTop">
+                            <div className="autoOper">自动运行</div>
+                            <div className="switch"><Switch defaultChecked onChange={this.onChange} style={{background:"#4A62E7"}}/></div>
+                            <div className="openHand">开启手动</div>
+                        </div>  
+                        <div className="modeMainMonitorContentListBottom">
+                          <div className="modeMainMonitorContentListTable">
+                            <div className="modeMainMonitorContentListImg"><img src={yellow} alt=""/></div>
+                            <div className="modeMainMonitorContentListImg"><img src={red} alt=""/></div>
+                            <div className="modeMainMonitorContentListImg"><img src={leftRightPng} alt=""/></div> 
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                            <div className="modeMainMonitorContentListImg"><img src={upDownPng} alt=""/></div>
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                            <div className="modeMainMonitorContentListImg"><img src={upLeftDownRight} alt=""/></div>
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                            <div className="modeMainMonitorContentListImg" style={{background:"#000E35"}}><img src={upLeftUp} alt=""/></div>
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                            <div className="modeMainMonitorContentListImg"><img src={rightUpLeftDown} alt=""/></div>
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                          </div>
+                        </div>
+                    </div>
+                    </div>
+
+                    {/* 条状图 */}
+              <div className="modeMainMonitorContentStripTwo" style={{position: "absolute",top: "202px",left: "calc((190px - 4px) * 6)"}}>
+                      <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#0163DA,#0147CB)", borderRadius: "20px", position: "relative" }}>
+                        <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0}}>
+                        </div>
+                      </div>
+                  </div>
+                  {/* 球形+内容 */}
+                  <div className="modeMainMonitorContentLineTwo" style={{position: "absolute",top: "0px",left: "calc(155px + 185px * 6)"}}>
+                    <div className="modeMainMonitorContentCross">
+                        <div className="modeMainMonitorContentCrossText">
+                            中关村大街
+                        </div>
+                    </div>
+                    <div className="modeMainMonitorContentball">
+                        
+                    </div>
+                    <div className="modeMainMonitorContentList">
+                        <div className="modeMainMonitorContentListTop">
+                            <div className="autoOper">自动运行</div>
+                            <div className="switch"><Switch defaultChecked onChange={this.onChange} style={{background:"#4A62E7"}}/></div>
+                            <div className="openHand">开启手动</div>
+                        </div>  
+                        <div className="modeMainMonitorContentListBottom">
+                          <div className="modeMainMonitorContentListTable">
+                            <div className="modeMainMonitorContentListImg"><img src={yellow} alt=""/></div>
+                            <div className="modeMainMonitorContentListImg"><img src={red} alt=""/></div>
+                            <div className="modeMainMonitorContentListImg"><img src={leftRightPng} alt=""/></div> 
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                            <div className="modeMainMonitorContentListImg"><img src={upDownPng} alt=""/></div>
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                            <div className="modeMainMonitorContentListImg"><img src={upLeftDownRight} alt=""/></div>
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                            <div className="modeMainMonitorContentListImg" style={{background:"#000E35"}}><img src={upLeftUp} alt=""/></div>
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                            <div className="modeMainMonitorContentListImg"><img src={rightUpLeftDown} alt=""/></div>
+                            <div className="modeMainMonitorContentListNum"><div className="contentListNum">44</div></div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+
+                  </div>
                 </div>
-              </div>
+
             </div>
           </div>
         }
