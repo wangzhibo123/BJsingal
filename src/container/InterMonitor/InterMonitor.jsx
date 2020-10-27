@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import { Select } from 'antd'
-import { SearchOutlined, DoubleLeftOutlined, DoubleRightOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons'
+import {
+  SearchOutlined, DoubleLeftOutlined, DoubleRightOutlined, CaretUpOutlined, CaretDownOutlined, LeftCircleOutlined,
+  RightCircleOutlined, UpCircleOutlined, DownCircleOutlined,
+} from '@ant-design/icons'
+import 'animate.css'
 import './InterMonitor.scss'
 
 import cneter from '../imgs/iconM.png'
@@ -21,6 +25,10 @@ class InterMonitor extends Component {
       confListLeft: 0,
       modifyStage: false,
       modeIndex: null,
+      moveLeft: null,
+      moveRight: null,
+      moveUp: null,
+      moveDown: null,
     }
     this.confItems = ['基础信息', '信号参数', '一口一档', '交通指标', '时间表控制']
     this.controlItems = [
@@ -51,13 +59,25 @@ class InterMonitor extends Component {
   handleControlMode = (indexs) => {
     this.setState({ modeIndex: indexs })
   }
+  handleToggleInter = (e) => {
+    const dir = e.currentTarget.getAttribute('dir')
+    this.setState({ [dir]: true }, () => {
+      setTimeout(() => {
+        this.setState({ [dir]: false })
+      }, 600)
+    })
+  }
   render() {
-    const { confListLeft, modeIndex } = this.state
+    const { confListLeft, modeIndex, moveLeft, moveRight, moveUp, moveDown } = this.state
     return (
       <div className="interMonitorBox">
         <div className="interMessage">
+          <span className="slideLeft slideIcon" dir="moveLeft" onClick={this.handleToggleInter}><LeftCircleOutlined /></span>
+          <span className="slideRight slideIcon" dir="moveRight" onClick={this.handleToggleInter}><RightCircleOutlined /></span>
+          <span className="slideUp slideIcon" dir="moveUp" onClick={this.handleToggleInter}><UpCircleOutlined /></span>
+          <span className="slideDown slideIcon" dir="moveDown" onClick={this.handleToggleInter}><DownCircleOutlined /></span>
           <div className="interPic">
-            <img src={test1} alt="" />
+            <img className={`${moveLeft ? 'slideInLeft' : moveRight ? 'slideInRight' : moveUp ? 'slideInUp' : moveDown ? 'slideInDown' : ''}`} src={test1} alt="" />
           </div>
           <div className="title">路口监视</div>
           <div className="monitorDetails">

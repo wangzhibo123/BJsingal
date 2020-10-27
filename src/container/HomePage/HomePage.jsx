@@ -19,6 +19,10 @@ class Homepage extends Component {
       oprationData: null,
       faultData: null,
       areaMsgList: null,
+      errline: '0',
+      offline: '0',
+      online: '0',
+      pointlist: null,
     }
     this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
     this.rateColors = ['#FF0000', '#FF7800', '#FFD800', '#0CB424']
@@ -29,6 +33,7 @@ class Homepage extends Component {
     this.oprationUrl = '/engine-unified/index/getOperatingEfficiency?user_id=1'
     this.faultUrl = '/engine-unified/index/getFaultStatistics?user_id=1'
     this.areaList = '/engine-unified/index/getRealTimeMonitoring?user_id=1'
+    this.pointLists = '/engine-unified/index/getPointByFault?user_id=1'
   }
   componentDidMount = () => {
     // this.renderChartsMap()
@@ -39,6 +44,18 @@ class Homepage extends Component {
     this.getCloudSource()
     this.getOprationEfficiency()
     this.getFaultStatistics()
+    this.getMapPoints()
+  }
+  // 地图点位
+  getMapPoints = () => {
+    axiosInstance.post(this.pointLists).then((res) => {
+      console.log(res)
+      const { code, errline, offline, online, pointlist } = res.data
+      if (code === '1') {
+        this.pointLists = pointlist
+        this.setState({ errline, offline, online, pointlist })
+      }
+    })
   }
   // 区域信息列表
   getAreaMsgLists = () => {
@@ -135,17 +152,20 @@ class Homepage extends Component {
       }
     })
   }
-  addMarker = () => {
+  addMarker = (points) => {
     if (this.map) {
-      const el = document.createElement('div')
-      el.style.width = '20px'
-      el.style.height = '20px'
-      el.style.borderRadius = '50%'
-      el.style.backgroundColor = 'green'
-      const marker = new window.mapabcgl.Marker(el)
-              .setLngLat([116.391,  39.911])
+      
+      this.markers = []
+      points.forEach((item, index) => {
+        const el = document.createElement('div')
+        el.style.width = '20px'
+        el.style.height = '20px'
+        el.style.borderRadius = '50%'
+        el.style.backgroundColor = 'green'
+        const marker = new window.mapabcgl.Marker(el)
+              .setLngLat([item.longitude, item.latitude])
               .addTo(this.map);
-      console.log(marker)
+      })
     }
   }
   renderChartsMap = () => {
@@ -227,7 +247,7 @@ class Homepage extends Component {
     };
     map.on('load', () => {
       map.trafficLayer(true, options);
-      this.addMarker()
+      this.addMarker(this.pointLists)
     })
     this.map = map
   }

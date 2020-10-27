@@ -1,0 +1,354 @@
+@font-face {
+    font-family: num;
+    src: url(../../290.7218c42.woff) format("woff");
+    font-weight: 400;
+    color: #ffee00;
+    font-style: normal;
+    text-align: center;
+}
+
+.branchHomeWrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: url(../imgs/sysbg.png) center center no-repeat;
+    background-size: cover;
+    .container {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: calc(100% - 70px);
+        .asideLeft, .asideRight {
+            position: absolute;
+            bottom: 0;
+            width: 340px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            .asideItem {
+                flex: 1;
+                min-height: 260px;
+                display: flex;
+                flex-direction: column;
+                .title {
+                    height: 18px;
+                    text-align: center;
+                    line-height: 17px;
+                    background: url(../imgs/smalltit.png) center 5px no-repeat;
+                    background-size: 100% 100%;
+                }
+                .itemContent {
+                    flex: 1;
+                    font-size: 12px;
+                    overflow-y: auto;
+                    .jammedSort {
+                        width: 100%;
+                        height: 100%;
+                        padding: 20px 30px 10px 20px;
+                        .jammedLi {
+                            padding-bottom: 10px;
+                            .sortNo {
+                                font-weight: bold;
+                                color: #00BAFF;
+                            }
+                            .sortValue {
+                                position: relative;
+                                width: 100%;
+                                height: 12px;
+                                border-bottom: 1px solid rgba(0, 141, 250, 0.5);
+                                .progressVal {
+                                    position: absolute;
+                                    top: 4px;
+                                    left: 0;
+                                    width: 80%;
+                                    height: 5px;
+                                    background-color: #ff0000;
+                                }
+                                .value {
+                                    position: absolute;
+                                    right: -16px;
+                                    bottom: 1px;
+                                }
+                            }
+                        }
+                    }
+                    .faultRate {
+                        height: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        padding: 10px;
+                        font-size: 13px;
+                        .faultDetails {
+                            height: 30px;
+                            display: flex;
+                            align-items: center;
+                            .faultNo {
+                                width: 18px;
+                                height: 18px;
+                                margin-right: 5px;
+                                text-align: center;
+                                line-height: 16px;
+                                border-radius: 50%;
+                                color: #0F2854;
+                            }
+                            .faultArea {
+                                width: 80px;
+                                padding-right: 5px;
+                                white-space: nowrap;
+                                text-overflow: ellipsis;
+                                overflow: hidden;
+                                color: #CAF2F5;
+                            }
+                            .present {
+                                margin-right: 5px;
+                                color: #CAF2F5;
+                            }
+                            .faultValue {
+                                position: relative;
+                                width: 180px;
+                                height: 13px;
+                                background-color: #0F3270;
+                                .progress {
+                                    position: absolute;
+                                    left: 0;
+                                    top: 0;
+                                    height: 100%;
+                                    border-radius: 0 10px 10px 0;
+                                    background-image: linear-gradient(to right, #06F0B8, #3859FF);
+                                }
+                                .value {
+                                    position: absolute;
+                                    bottom: 0;
+                                    right: 2px;
+                                    font-size: 12px;
+                                }
+                            }
+                        }
+                    }
+                    .singalStatus {
+                        height: 100%;
+                        padding: 10px;
+                        display: flex;
+                        flex-direction: column;
+                        .statusEach, .statusInfo {
+                            height: 20px;
+                            display: flex;
+                            justify-content: flex-end;
+                            align-items: center;
+                            .each {
+                                margin-left: 10px;
+                                padding-bottom: 1px;
+                                text-decoration: underline;
+                                cursor: pointer;
+                                &:hover {
+                                    color: #2AFAFD;
+                                }
+                            }
+                            .legendInfo {
+                                margin-left: 20px;
+                                display: flex;
+                                .statusLegend {
+                                    width: 16px;
+                                    height: 16px;
+                                    margin-right: 5px;
+                                }
+                                .nomal {
+                                    background-color: #009944;
+                                }
+                                .fault {
+                                    background-color: #890202;
+                                }
+                                .outline {
+                                    background-color:#996002;
+                                }
+                            }
+                        }
+                        .statusDetails {
+                            flex: 1;
+                            display: flex;
+                            flex-direction: column;
+                            overflow-y: auto;
+                            padding: 0 10px;
+                            .singalMsg {
+                                height: 30px;
+                                display: flex;
+                                align-items: center;
+                                margin-top: 10px;
+                                .singalName {
+                                    width: 60px;
+                                    white-space: nowrap;
+                                    text-overflow: ellipsis;
+                                    overflow: hidden;
+                                }
+                                .presents {
+                                    flex: 1;
+                                    display: flex;
+                                    .nomals, .faults, .outlines {
+                                        height: 4px;
+                                        position: relative;
+                                        span {
+                                            position: absolute;
+                                            bottom: 4px;
+                                            right: 0px;
+                                        }
+                                    }
+                                    .nomals {
+                                        background-color: #009944;
+                                    }
+                                    .faults {
+                                        background-color: #890202;
+                                    }
+                                    .outlines {
+                                        background-color: #996002;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .holdRate, .runRate {
+                        height: 100%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                }
+            }
+        }
+        .asideLeft {
+            left: 0;
+        }
+        .asideRight {
+            right: 0;
+        }
+        .contentCenter {
+            position: absolute;
+            top: 0;
+            left: 350px;
+            width: calc(100% - 700px);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            .title {
+                height: 20px;
+                text-align: center;
+                line-height: 19px;
+                background: url(../imgs/titbg.png) center 5px no-repeat;
+                background-size: 100% 100%;
+            }
+            .centerMain {
+                z-index: 2;
+                flex: 1;
+                .centerBox {
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    .ceterLeft, .centerRight {
+                        width: 200px;
+                        height: 100%;
+                        padding-top: 10px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        overflow-y: auto;
+                        .areaDetails {
+                            width: 160px;
+                            margin-bottom: 20px;
+                            .areaName {
+                                margin-bottom: 6px;
+                                font-size: 22px;
+                                color: #FFA200;
+                            }
+                            .details {
+                                height: 42px;
+                                padding-left: 7px;
+                                background: url(../imgs/singalmsg.png) center center no-repeat;
+                                background-size: 100% 100%;
+                                font-size: 13px;
+                                .msg {
+                                    display: flex;
+                                    justify-content: space-between;
+                                    .online, .outline {
+                                        min-width: 70px;
+                                        height: 20px;
+                                        display: flex;
+                                        align-items: center;
+                                        .nomalVal {
+                                            color: #2AFAFE;
+                                        }
+                                        .outlineVal {
+                                            color: #818181;
+                                        }
+                                        .faultVal {
+                                            color: #FF0001;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .center {
+                        flex: 1;
+                        background-color: #031334;
+                        position: relative;
+                        .topInfo {
+                            position: absolute;
+                            top: 10px;
+                            left: 0;
+                            width: 100%;
+                            display: flex;
+                            flex-wrap: wrap;
+                            justify-content: center;
+                            .info {
+                                width: 260px;
+                                height: 90px;
+                                margin-right: 20px;
+                                background: url(../imgs/numbg.png) center center no-repeat;
+                                background-size: 100% 100%;
+                                display: flex;
+                                .infoName {
+                                    display: flex;
+                                    justify-content: center;
+                                    flex-direction: column;
+                                    padding-left: 10px;
+                                    
+                                    font-size: 18px;
+                                    color: #0FF2FD;
+                                    .infoText {
+                                        padding-bottom: 5px;
+                                    }
+                                }
+                                .infoValue {
+                                    flex: 1;
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    padding-right: 10px;
+                                    .infoNum {
+                                        width: 32px;
+                                        height: 50px;
+                                        background: url(../imgs/22.png) center center no-repeat;
+                                        background-size: 100% 100%;
+                                        font: 50px num;
+                                        text-indent: 3px;
+                                        line-height: 50px;
+                                        color: #FEF500;
+                                    }
+                                }
+                            }
+                        }
+                        .centerMap {
+                            position: absolute;
+                            bottom: 0;
+                            width: 100%;
+                            height: calc(100% - 100px);
+                            background: url(../imgs/mapbg.png) center center no-repeat;
+                            background-size: contain;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}
