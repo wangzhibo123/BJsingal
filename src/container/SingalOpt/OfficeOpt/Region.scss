@@ -2,6 +2,139 @@ $ft_color: #dcdde2;
 $bor-color: #a5fcff;
 input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; }
 input[type="number"]{ -moz-appearance: textfield; }
+.ant-modal{
+    height:100%;
+}
+.ant-modal-header{
+    background:#051B44;
+    border-bottom: 1px  rgba(5, 38, 89, 1) solid;
+    .ant-modal-title{
+        color:#00E7F1;
+    }
+    font-size:18px;
+}
+.ant-modal-content{
+    background: linear-gradient(to bottom, rgba(1, 17, 50, 0.8), rgba(5, 38, 89, 0.6));
+    color:#00E7F1;
+    height:calc(100% - 40px);
+    margin:20px 0;
+    .modalBox{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        width:100%;
+        height: 100%;
+        .greenWrapper {
+            z-index: 13;
+            height: calc(100% - 40px);
+            padding-bottom: 25px;
+            .greenWave {
+                padding-bottom: 15px;
+                height: 525px;
+                width: 100%;
+                border-bottom: 1px solid #3D839D;
+            }
+        }
+        .modalSearch, .modalContent{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            flex-wrap: wrap;
+            .itemContent{
+                flex:1;
+            }
+            .chartsItem {
+                padding: 0 5px;
+                margin: 2px;
+                min-width: 33%;
+                flex: 1;
+                background: #051B44;
+                .itemTitle {
+                    position: relative;
+                    padding: 5px 0 0 5px;
+                    font-size: 15px;
+                    color: #25B8D4;
+                    .chartsRoom {
+                        position: absolute;
+                        top: 5px;
+                        right: 5px;
+                        transition: all .2s;
+                        cursor: pointer;
+                        &:hover {
+                            font-size: 20px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.ant-modal-close-x{
+    color:#00E7F1;
+    & svg:hover{
+        transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transition:  all .5s;
+        -webkit-transition:  all .5s;
+        -moz-transition:  all .5s;
+        -ms-transition:  all .5s;
+        -o-transition:  all .5s;
+    }
+}
+.ant-modal-footer{
+    display: none;
+}
+.interContainer {
+    position: fixed;
+    top:0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    z-index: 1001;
+    .zoomChartsBox {
+        z-index: 1;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0, .5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .zoomBox {
+            width: 90%;
+            padding: 10px 0;
+            margin-top: -50px;
+            border-radius: 5px;
+            background: linear-gradient(to bottom, rgba(29, 64, 113, 0.9), rgba(21, 46, 83, 0.9));
+            .itemTitle {
+                position: relative;
+                padding-left: 10px;
+                font-size: 16px;
+                color: #25B8D4;
+                .chartsRoom {
+                    position: absolute;
+                    top: 0;
+                    right: 10px;
+                    transition: all .2s;
+                    cursor: pointer;
+                    &:hover {
+                        font-size: 20px;
+                    }
+                }
+            }
+        }
+    }
+  }
 .RegionBox {
     position: relative;
     width: 100%;
@@ -36,10 +169,33 @@ input[type="number"]{ -moz-appearance: textfield; }
             }
         }
         .asideItem {
-            flex: 1;
-            min-height: 260px;
+            height: 100%;
             display: flex;
             flex-direction: column;
+            .signaContainer_right_bom {
+                height: 240px;
+                display: flex;
+                background-color: rgba(2, 24, 61, 0.7);
+                flex-direction: column;
+                .signaRB_top {
+                  height: 40px;
+                  display: flex;
+                  div {
+                    flex: 1;
+                    font-size: 16px;
+                    background-color: #062551;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    cursor: pointer;
+                    margin: 0 1px;
+                    border: 1px solid #0f3358;
+                  }
+                }
+                .signaRB_bom {
+                  flex: 1;
+                }
+              }
             .itemContent {
                 flex: 1;
                 font-size: 12px;
