@@ -7,6 +7,7 @@ import $ from 'jquery'
 import mapConfiger from '../../utils/minemapConf'
 import LineCharts from '../../../components/LineCharts/LineCharts'
 import EchartsPage from '../../../components/ecahrtsPage/EchartsPage'
+import ClockCharts from '../../../components/ClockCharts/ClockCharts'
 // import GraphCharts from '../../../components/GraphCharts/GraphCharts'
 // import GreenWaveCharts from '../../../components/GreenWaveCharts/GreenWaveCharts'
 import Optimize from './Optimize/optimize'
@@ -375,7 +376,7 @@ class RegionOpt extends Component {
                 {
                 [1,2,3,4].map((item)=>{
                   return <div className='itemFormBox'>
-                    <div className='itemTit'><i/>知春路与***路</div>
+                    <div className='itemTit'>{ item % 2 === 0 ? <i/> : <i className='blue' /> }知春路与***路</div>
                     <div className='itemForm'>
                       <dl>
                         <dd>实时相位差</dd>
@@ -397,7 +398,9 @@ class RegionOpt extends Component {
                         </Select>
                         </dd>
                       </dl>
-                      <div className='itemPic'/>
+                      <div className='itemPic'>
+                        <ClockCharts />
+                      </div>
                     </div>
                   </div>
                 })
