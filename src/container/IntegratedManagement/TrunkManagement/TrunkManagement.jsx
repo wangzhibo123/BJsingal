@@ -1,9 +1,11 @@
+/* eslint-disable no-redeclare */
+/* eslint-disable eqeqeq */
 import React, { Component } from 'react'
-import { Menu, Input, DatePicker, Button, Select } from 'antd'
-import { EditOutlined, CloseOutlined, SearchOutlined } from '@ant-design/icons';
+import { Menu, Select } from 'antd'
+import { EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import './TrunkManagement.scss'
 import mapConfiger from '../../utils/minemapConf'
-import messageBac from '../../imgs/messageBac.png'
+// import messageBac from '../../imgs/messageBac.png'
 import startPng from '../../imgs/start.png'
 import endPng from '../../imgs/end.png'
 const { SubMenu } = Menu;
@@ -18,6 +20,7 @@ class TrunkManagement extends Component {
       roadValue: [],
       clickNum: '',
       rights: -300,
+      ismodify: false,
       stateSelect: [
         {
           name: "海淀区",
@@ -56,9 +59,17 @@ class TrunkManagement extends Component {
       }
     ]
   }
+  getismodify = (isShow) => {
+    this.setState({
+      ismodify: isShow,
+    })
+  }
+  getChangeValue = (e) => {
+    console.log(e)
+  }
   intersectionRenderin = async () => {
-    await this.getstartpoint({ lng: 116.37444598230212, lat: 39.90703191238288 })
-    await this.getendpoint({ lng: 116.40319230452138, lat: 39.90767284675621 })
+    await this.getstartpoint({ lng: 116.38251572176512, lat: 39.90708534816005 })
+    await this.getendpoint({ lng: 116.41149060058893, lat: 39.90803874332477 })
     await this.getChannelpoint({ lng: 116.39934569026138, lat: 39.90753821453271 })
     await this.getChannelpoint({ lng: 116.38315705392921, lat: 39.907079696277606 })
   }
@@ -137,15 +148,15 @@ class TrunkManagement extends Component {
       }
       var pointMarker = addMarkerpoint('http://map.mapabc.com:35001/mapdemo/apidemos/sourceLinks/img/point_1.png', [lnglat.lng, lnglat.lat], -441);
       channelmarker.push(pointMarker)
-      var ary = [];
+      // var ary = [];
       rgeocode(3, pointMarker.getLngLat().lng + ',' + pointMarker.getLngLat().lat);
       plan();
       pointMarker.on('dragend', plan);
     }
 
     function plan() {
-      var str = '',
-        channelName = '';
+      var str = '';
+      // channelName = '';
       if (startmarker) {
         rgeocode(1, startmarker.getLngLat().lng + ',' + startmarker.getLngLat().lat);
       }
@@ -154,7 +165,7 @@ class TrunkManagement extends Component {
       }
       if (channelmarker.length > 0) {
         for (var i = 0; i < channelmarker.length; i++) {
-          str += i == 0 ? channelmarker[i].getLngLat().lng + ',' + channelmarker[i].getLngLat().lat : ';' + channelmarker[i].getLngLat().lng + ',' + channelmarker[i].getLngLat().lat
+          str += i === 0 ? channelmarker[i].getLngLat().lng + ',' + channelmarker[i].getLngLat().lat : ';' + channelmarker[i].getLngLat().lng + ',' + channelmarker[i].getLngLat().lat
         }
       }
       if (startmarker && endmarker) {
@@ -455,7 +466,7 @@ class TrunkManagement extends Component {
   }
   render() {
     const { Option } = Select
-    const { mainHomePage, stateSelect, clickNum, Istitletops, isAddEdit, IsddMessge, rights, roadValue } = this.state
+    const { mainHomePage, stateSelect, clickNum, Istitletops, isAddEdit, ismodify, IsddMessge, rights, roadValue } = this.state
     return (
       <div className='TrunkManagementBox'>
         <div className='sildeRight' style={{ right: `${rights}px` }}>
@@ -475,16 +486,16 @@ class TrunkManagement extends Component {
                       {/* document.getElementById('startInp').value = '';
                     document.getElementById('endInp').value = '';
                     document.getElementById('channelInp').value = ''; */}
-                      <p><input type="text" className='inputBox' id='startInp' placeholder="搜索地图或点击地图选中" /></p>
+                      <p><input type="text" className='inputBox' id='startInp' /></p>
                       {
                         roadValue && roadValue.map((item, index) => {
                           return (
-                            <p><input type="text" key={item + index} className='inputBox' id='channelInp' value={item} placeholder="搜索路口或点击地图选中" /></p>
+                            <p key={item + index}><input type="text" onChange={this.getChangeValue} className='inputBox' id='channelInp' value={item} /></p>
                           )
                         })
                       }
-                      {/*  <p><input type="text" className='inputBox' placeholder="搜索路口或点击地图选中" /></p> */}
-                      <p><input type="text" className='inputBox' id='endInp' placeholder="搜索路口或点击地图选中" /></p>
+                      {/*  <p><input type="text" className='inputBox' /></p> */}
+                      <p><input type="text" className='inputBox' id='endInp' /></p>
                     </div>
                   </div>
                 </div>
@@ -493,7 +504,9 @@ class TrunkManagement extends Component {
               <div className='slideRightBoxEdit'>
                 <div className='addMainLine'>
                   <div className='newLine'>长安街干线详情</div>
-                  <div className='operationLine'><span>编辑</span></div>
+                  {
+                    !ismodify ? <div className='operationLine'><span onClick={() => this.getismodify(true)}>编辑</span></div> : <div className='operationLineAdd'><span>保存</span><span onClick={() => this.getismodify(false)}>取消</span></div>
+                  }
                 </div>
                 <p>干线编号：<span>0001</span></p>
                 <p>干线长度：<span>7.3公里</span></p>
@@ -502,19 +515,19 @@ class TrunkManagement extends Component {
                   <div className="lineBoxLeft"></div>
                   <div className="lineBoxRight">
                     <div className='streetBox'>
-                      <p className='street'><span>01</span>西长安街与西单北大街</p>
+                      <p className='street'><span>01</span>西长安街与西单北大街{ismodify ? <DeleteOutlined /> : ''}</p>
                       <p className='intersection'><span>十字路口</span><span>西城区</span></p>
                     </div>
                     <div className='streetBox'>
-                      <p className='street'><span>01</span>西长安街与西单北大街</p>
+                      <p className='street'><span>01</span>西长安街与西单北大街{ismodify ? <DeleteOutlined /> : ''}</p>
                       <p className='intersection'><span>十字路口</span><span>西城区</span></p>
                     </div>
                     <div className='streetBox'>
-                      <p className='street'><span>01</span>西长安街与西单北大街</p>
+                      <p className='street'><span>01</span>西长安街与西单北大街{ismodify ? <DeleteOutlined /> : ''}</p>
                       <p className='intersection'><span>十字路口</span><span>西城区</span></p>
                     </div>
                     <div className='streetBox'>
-                      <p className='street'><span>01</span>西长安街与西单北大街</p>
+                      <p className='street'><span>01</span>西长安街与西单北大街{ismodify ? <DeleteOutlined /> : ''}</p>
                       <p className='intersection'><span>十字路口</span><span>西城区</span></p>
                     </div>
                   </div>
@@ -538,7 +551,7 @@ class TrunkManagement extends Component {
           <div className="topNavMon">
             <div className="selectNav">
               <Select
-                defaultValue="海淀区"
+                // defaultValue="海淀区"
                 style={{ width: 100, height: 30 }}
               >
                 {
