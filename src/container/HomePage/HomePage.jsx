@@ -25,6 +25,7 @@ class Homepage extends Component {
       online: '0',
       pointlist: null,
     }
+    this.trafficTimer = null
     this.mapPopup = null
     this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
     this.rateColors = ['#FF0000', '#FF7800', '#FFD800', '#0CB424']
@@ -47,6 +48,17 @@ class Homepage extends Component {
     this.getOprationEfficiency()
     this.getFaultStatistics()
     this.getMapPoints()
+  }
+  // 添加实时路况
+  addTrafficLayer = () => {
+    if (this.trafficTimer) {
+      clearTimeout(this.trafficTimer)
+    }
+    this.map.trafficLayer(false)
+    this.map.trafficLayer(true)
+    this.trafficTimer = setTimeout(() => {
+      this.addTrafficLayer()
+    }, 5 * 1000)
   }
   // 地图点位
   getMapPoints = () => {
@@ -185,9 +197,9 @@ class Homepage extends Component {
         el.addEventListener('click',function(e){
           currentThis.addInfoWindow(item) 
         });
-        const marker = new window.mapabcgl.Marker(el)
-              .setLngLat([item.longitude, item.latitude])
-              .addTo(this.map)
+        new window.mapabcgl.Marker(el)
+          .setLngLat([item.longitude, item.latitude])
+          .addTo(this.map)
       })
     }
   }
@@ -256,15 +268,8 @@ class Homepage extends Component {
     mapConfiger.zoom = 11
     this.map = new window.mapabcgl.Map(mapConfiger)
     this.map.addControl(new window.mapabcgl.NavigationControl());
-    const options = {
-      minzoom: 1, // 路况显示的最小级别(1-24)
-      maxzoom: 24, // 路况显示的最大级别(1-24)
-      type: 'vector', // 路况图层类型:vector(矢量),raster(栅格)
-      refresh: 30*1000, // 路况图层刷新时间，毫秒
-      // before:'roads-symbol-49'
-    };
     this.map.on('load', () => {
-      this.map.trafficLayer(true, options);
+      this.addTrafficLayer()
       this.addMarker(this.pointLists)
     })
   }

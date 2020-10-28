@@ -20,6 +20,7 @@ class branchHome extends Component {
       faultData: null,
       controlStatus: null,
     }
+    this.trafficTimer = null
     this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
     this.rateColors = ['#FF0000', '#FF7800', '#FFD800', '#0CB424']
     this.congestionUrl = '/engine-unified/index/getCrossGongestion?user_id=2'
@@ -28,9 +29,11 @@ class branchHome extends Component {
     this.oprationUrl = '/engine-unified/index/getOperatingEfficiency?user_id=2'
     this.faultUrl = '/engine-unified/index/getFaultStatistics?user_id=2'
     this.staticUrl = '/engine-unified/index/getRealtimeStatistics?user_id=2'
+    this.pointLists = '/engine-unified/index/getPointByFault?user_id=2'
   }
   componentDidMount = () => {
     this.renderMap()
+    this.getMapPoints()
     this.getCongestionList()
     this.getControlCounts()
     this.getSingalStatus()
@@ -38,17 +41,47 @@ class branchHome extends Component {
     this.getFaultStatistics()
     this.getSingalControl()
   }
-  addMarker = () => {
+  addMarker = (points) => {
     if (this.map) {
-      const el = document.createElement('div')
-      el.style.width = '20px'
-      el.style.height = '20px'
-      el.style.borderRadius = '50%'
-      el.style.backgroundColor = 'green'
-      new window.mapabcgl.Marker(el)
-        .setLngLat([116.391, 39.911])
-        .addTo(this.map);
+      const currentThis = this
+      this.markers = []
+      points.forEach((item, index) => {
+        const el = document.createElement('div')
+        el.style.width = '20px'
+        el.style.height = '20px'
+        el.style.borderRadius = '50%'
+        el.style.backgroundColor = 'green'
+        el.style.cursor = 'pointer'
+        el.addEventListener('click',function(e){
+          currentThis.addInfoWindow(item) 
+        });
+        new window.mapabcgl.Marker(el)
+          .setLngLat([item.longitude, item.latitude])
+          .addTo(this.map)
+      })
     }
+  }
+  // 添加实时路况
+  addTrafficLayer = () => {
+    if (this.trafficTimer) {
+      clearTimeout(this.trafficTimer)
+    }
+    this.map.trafficLayer(false)
+    this.map.trafficLayer(true)
+    this.trafficTimer = setTimeout(() => {
+      this.addTrafficLayer()
+    }, 5 * 1000)
+  }
+  // 地图点位
+  getMapPoints = () => {
+    axiosInstance.post(this.pointLists).then((res) => {
+      console.log(res)
+      const { code, errline, offline, online, pointlist } = res.data
+      if (code === '1') {
+        this.pointLists = pointlist
+        this.setState({ errline, offline, online, pointlist })
+      }
+    })
   }
   // 手动控制次数
   getControlCounts = () => {
@@ -132,20 +165,12 @@ class branchHome extends Component {
   }
   renderMap = () => {
     mapConfiger.zoom = 11
-    const map = new window.mapabcgl.Map(mapConfiger)
-    map.addControl(new window.mapabcgl.NavigationControl());
-    const options = {
-      minzoom: 1, // 路况显示的最小级别(1-24)
-      maxzoom: 24, // 路况显示的最大级别(1-24)
-      type: 'vector', // 路况图层类型:vector(矢量),raster(栅格)
-      refresh: 30 * 1000, // 路况图层刷新时间，毫秒
-      // before:'roads-symbol-49'
-    };
-    map.on('load', () => {
-      map.trafficLayer(true, options);
-      this.addMarker()
+    this.map = new window.mapabcgl.Map(mapConfiger)
+    this.map.addControl(new window.mapabcgl.NavigationControl());
+    this.map.on('load', () => {
+      this.addTrafficLayer()
+      this.addMarker(this.pointLists)
     })
-    this.map = map
   }
   randomData = () => {
     return Math.round(Math.random() * 500);
@@ -299,6 +324,7 @@ class branchHome extends Component {
                           <span className="infoNum">3</span>
                           <span className="infoNum">3</span>
                           <span className="infoNum">3</span>
+                          <i className="numText">处</i>
                         </div>
                       </div>
                       <div className="info">
@@ -310,6 +336,7 @@ class branchHome extends Component {
                           <span className="infoNum">5</span>
                           <span className="infoNum">3</span>
                           <span className="infoNum">3</span>
+                          <i className="numText">处</i>
                         </div>
                       </div>
                       <div className="info">
@@ -321,6 +348,7 @@ class branchHome extends Component {
                           <span className="infoNum">2</span>
                           <span className="infoNum">3</span>
                           <span className="infoNum">3</span>
+                          <i className="numText">处</i>
                         </div>
                       </div>
                     </div>
