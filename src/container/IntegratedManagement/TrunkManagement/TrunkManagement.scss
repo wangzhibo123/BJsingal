@@ -102,11 +102,27 @@ $bor-color: #a5fcff;
                 display: flex;
                 .newLine {
                     font-size: 18px;
-                    width: 210px;
+                    width: 160px;
                     line-height: 60px;
                 }
                 .operationLine {
-                    width: 60px;
+                    width: 110px;
+                    font-size: 12px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-around;
+                    span {
+                        width: 50px;
+                        height: 30px;
+                        text-align: center;
+                        cursor: pointer;
+                        border-radius: 3px;
+                        line-height: 30px;
+                        background-color: #18459b;
+                    }
+                }
+                .operationLineAdd {
+                    width: 110px;
                     font-size: 12px;
                     display: flex;
                     align-items: center;
@@ -163,6 +179,9 @@ $bor-color: #a5fcff;
                                 display: inline-block;
                                 width: 20px;
                                 color: #15e94f;
+                                &:nth-child(2){
+                                   color: #0570AD; 
+                                }
                             }
                         }
                         .intersection {

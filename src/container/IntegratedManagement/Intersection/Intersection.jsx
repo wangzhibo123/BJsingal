@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
-import { Menu, Input, DatePicker, Button, Select } from 'antd'
-import { EditOutlined, CloseOutlined } from '@ant-design/icons';
+import { Menu, Select } from 'antd'
+import { EditOutlined } from '@ant-design/icons';
 import './Intersection.scss'
 import mapConfiger from '../../utils/minemapConf'
 const { SubMenu } = Menu;
@@ -91,8 +92,8 @@ class Intersection extends Component {
     const { Option } = Select
     const { mainHomePage, Istitletops, IsddMessge } = this.state
     return (
-      <div class='PlancontrolPageWrapper'>
-        <div class='sidebarLeft'>
+      <div className='PlancontrolPageWrapper'>
+        <div className='sidebarLeft'>
           <Menu
             onClick={this.handleClick}
             style={{ width: 251, color: '#86b7fa', height: '100%', overflowY: 'auto', fontSize: '16px' }}
@@ -134,12 +135,12 @@ class Intersection extends Component {
             </SubMenu>
           </Menu>
         </div>
-        <div class='container'>
+        <div className='container'>
           {
             !mainHomePage &&
-            <div class='contentCenter'>
-              <div class='title'>路口管理</div>
-              <div id="mapContainer" class="map-container" style={{ height: "calc(100% - 5px)" }}></div>
+            <div className='contentCenter'>
+              <div className='title'>路口管理</div>
+              <div id="mapContainer" className="map-container" style={{ height: "calc(100% - 5px)" }}></div>
             </div>
           }
         </div>

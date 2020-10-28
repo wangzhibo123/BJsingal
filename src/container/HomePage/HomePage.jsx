@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import echarts from 'echarts'
+import $ from 'jquery'
 import './HomePage.scss'
 
 import Histogram from './Histogram/Histogram'
@@ -24,6 +25,8 @@ class Homepage extends Component {
       online: '0',
       pointlist: null,
     }
+    this.trafficTimer = null
+    this.mapPopup = null
     this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
     this.rateColors = ['#FF0000', '#FF7800', '#FFD800', '#0CB424']
     this.congestionUrl = '/engine-unified/index/getCongestionRanking?user_id=1'
@@ -45,6 +48,17 @@ class Homepage extends Component {
     this.getOprationEfficiency()
     this.getFaultStatistics()
     this.getMapPoints()
+  }
+  // 添加实时路况
+  addTrafficLayer = () => {
+    if (this.trafficTimer) {
+      clearTimeout(this.trafficTimer)
+    }
+    this.map.trafficLayer(false)
+    this.map.trafficLayer(true)
+    this.trafficTimer = setTimeout(() => {
+      this.addTrafficLayer()
+    }, 5 * 1000)
   }
   // 地图点位
   getMapPoints = () => {
@@ -152,9 +166,26 @@ class Homepage extends Component {
       }
     })
   }
+  getInfoWindowHtml = (interMsg) => {
+    return `
+      <div class="infoWindow">
+        <div class="infotitle">${interMsg.unit_name}</div>
+        <div class="interMessage">
+          <div class="message">设备类型：信号灯</div>
+          <div class="message">所属城区：${interMsg.district_name}</div>
+          <div class="message">控制状态：${interMsg.control_state}</div>
+          <div class="message">信号系统：${interMsg.signal_system_code}</div>
+          <div class="message">信号机IP：${interMsg.signal_ip}</div>
+          <div class="message">设备状态：${interMsg.alarm_state}</div>
+          <div class="message">运行阶段：${interMsg.stage_code}</div>
+        </div>
+        <div class="interDetails"><div class="monitorBtn">路口检测</div></div>
+      </div>
+    `
+  }
   addMarker = (points) => {
     if (this.map) {
-      
+      const currentThis = this
       this.markers = []
       points.forEach((item, index) => {
         const el = document.createElement('div')
@@ -162,11 +193,31 @@ class Homepage extends Component {
         el.style.height = '20px'
         el.style.borderRadius = '50%'
         el.style.backgroundColor = 'green'
-        const marker = new window.mapabcgl.Marker(el)
-              .setLngLat([item.longitude, item.latitude])
-              .addTo(this.map);
+        el.style.cursor = 'pointer'
+        el.addEventListener('click',function(e){
+          currentThis.addInfoWindow(item) 
+        });
+        new window.mapabcgl.Marker(el)
+          .setLngLat([item.longitude, item.latitude])
+          .addTo(this.map)
       })
     }
+  }
+  addInfoWindow = (marker) => {
+    if (this.mapPopup) {
+      this.mapPopup.remove()
+    }
+    this.map.addControl(new window.mapabcgl.NavigationControl())
+    const popupOption = {
+      closeOnClick: false,
+      closeButton: true,
+      offset: [0,0]
+    }
+    this.mapPopup = new window.mapabcgl.Popup(popupOption)
+      .setLngLat( new window.mapabcgl.LngLat(marker.longitude, marker.latitude))
+      .setHTML(this.getInfoWindowHtml(marker))
+      .addTo(this.map)
+    $('.mapabcgl-popup')[0].style.maxWidth = '1000px'
   }
   renderChartsMap = () => {
     const geoJson = require('./beijing.json')
@@ -180,76 +231,47 @@ class Homepage extends Component {
       },  
       tooltip : {  
           trigger: 'item'  
-      },  
-      
-      //左侧小导航图标
+      },
+      // 左侧小导航图标
       visualMap: {  
-          show : false,  
-          x: 'left',  
-          y: 'center',  
-          splitList: [   
-              {start: 500, end:600},{start: 400, end: 500},  
-              {start: 300, end: 400},{start: 200, end: 300},  
-              {start: 100, end: 200},{start: 0, end: 100},  
-          ],  
-          color: ['#5475f5', '#9feaa5', '#85daef','#74e2ca', '#e6ac53', '#9fb5ea']  
-      },  
-      
-      //配置属性
-      series: [{  
-          name: '数据',  
-          type: 'map',  
-          mapType: 'beijing',   
-          roam: true,  
-          label: {  
-              normal: {  
-                  show: true  //省份名称  
-              },  
-              emphasis: {  
-                  show: false  
-              }  
-          },  
-          data:[  
-            {name: '北京',value: '100' },{name: '天津',value: this.randomData() },  
-            {name: '上海',value: this.randomData() },{name: '重庆',value: this.randomData() },  
-            {name: '河北',value: this.randomData() },{name: '河南',value: this.randomData() },  
-            {name: '云南',value: this.randomData() },{name: '辽宁',value: this.randomData() },  
-            {name: '黑龙江',value: this.randomData() },{name: '湖南',value: this.randomData() },  
-            {name: '安徽',value: this.randomData() },{name: '山东',value: this.randomData() },  
-            {name: '新疆',value: this.randomData() },{name: '江苏',value: this.randomData() },  
-            {name: '浙江',value: this.randomData() },{name: '江西',value: this.randomData() },  
-            {name: '湖北',value: this.randomData() },{name: '广西',value: this.randomData() },  
-            {name: '甘肃',value: this.randomData() },{name: '山西',value: this.randomData() },  
-            {name: '内蒙古',value: this.randomData() },{name: '陕西',value: this.randomData() },  
-            {name: '吉林',value: this.randomData() },{name: '福建',value: this.randomData() },  
-            {name: '贵州',value: this.randomData() },{name: '广东',value: this.randomData() },  
-            {name: '青海',value: this.randomData() },{name: '西藏',value: this.randomData() },  
-            {name: '四川',value: this.randomData() },{name: '宁夏',value: this.randomData() },  
-            {name: '海南',value: this.randomData() },{name: '台湾',value: this.randomData() },  
-            {name: '香港',value: this.randomData() },{name: '澳门',value: this.randomData() }  
-        ]  //数据
+        show : false,
+        x: 'left',
+        y: 'center',
+        splitList: [
+            {start: 500, end:600},{start: 400, end: 500},
+            {start: 300, end: 400},{start: 200, end: 300},
+            {start: 100, end: 200},{start: 0, end: 100},
+        ],
+        color: ['#5475f5', '#9feaa5', '#85daef','#74e2ca', '#e6ac53', '#9fb5ea']
+      },
+      // 配置属性
+      series: [{
+        name: '数据',
+        type: 'map',
+        mapType: 'beijing',
+        roam: true,
+        label: {
+          normal: {
+              show: true  //省份名称
+          },
+          emphasis: {
+              show: false
+          }
+        },  
+        data:[]  //数据
       }]  
     }
-    
     const myChart = echarts.init(this.chartMapBox)
     myChart.setOption(optionMap)
   }
   renderMap = () => {
     mapConfiger.zoom = 11
-    const map = new window.mapabcgl.Map(mapConfiger)
-    map.addControl(new window.mapabcgl.NavigationControl());
-    const options = {
-      minzoom: 1, // 路况显示的最小级别(1-24)
-      maxzoom: 24, // 路况显示的最大级别(1-24)
-      type: 'vector', // 路况图层类型:vector(矢量),raster(栅格)
-      refresh: 30*1000, // 路况图层刷新时间，毫秒
-      // before:'roads-symbol-49'
-    };
-    map.on('load', () => {
-      map.trafficLayer(true, options);
+    this.map = new window.mapabcgl.Map(mapConfiger)
+    this.map.addControl(new window.mapabcgl.NavigationControl());
+    this.map.on('load', () => {
+      this.addTrafficLayer()
       this.addMarker(this.pointLists)
     })
-    this.map = map
   }
   randomData = () => {  
     return Math.round(Math.random()*500);  
