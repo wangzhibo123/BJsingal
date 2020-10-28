@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
-import { Menu, Input, DatePicker, Button, Select } from 'antd'
-import { EditOutlined, CloseOutlined } from '@ant-design/icons';
+import { Menu, Select } from 'antd'
+import { EditOutlined, } from '@ant-design/icons';
 import './Region.scss'
 import mapConfiger from '../../utils/minemapConf'
 const { SubMenu } = Menu;
