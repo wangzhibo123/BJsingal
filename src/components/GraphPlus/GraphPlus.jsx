@@ -8,12 +8,16 @@ class GraphPlus extends Component {
   }
   componentDidMount = () => {
     const chartsBox = echarts.init(this.chartsBox)
-    this.renderCharts(chartsBox)
+    console.log(this.props.chartsDatas)
+    if (this.props.chartsDatas) {
+      const { xData, datas } = this.props.chartsDatas
+      this.renderCharts(chartsBox, xData, datas)
+    }
   }
-  renderCharts = (chartsBox) => {
+  renderCharts = (chartsBox, xData, datas) => {
     const options = {
       xAxis: {
-        data: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        data: xData,
         axisLabel: {
           show: true,
           textStyle: {
@@ -71,7 +75,7 @@ class GraphPlus extends Component {
             }]),
           }
         },
-        data: [220, 182, 191, 234, 290, 330, 310]
+        data: datas
       }, {
         name: 'a',
         tooltip: {
@@ -99,7 +103,7 @@ class GraphPlus extends Component {
             }]),
           }
         },
-        data: [220, 182, 191, 234, 290, 330, 310],
+        data: datas,
         barGap: 0
       }, {
         name: 'b',
@@ -119,7 +123,7 @@ class GraphPlus extends Component {
         symbolSize: ['11', '11'],
         symbolOffset: ['0', '-6'],
         symbolPosition: 'end',
-        data: [220, 182, 191, 234, 290, 330, 310],
+        data: datas,
         z: 3
       }]
     };
