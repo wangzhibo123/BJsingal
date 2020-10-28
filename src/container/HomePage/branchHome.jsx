@@ -13,14 +13,18 @@ class branchHome extends Component {
     this.state = {
       mainHomePage: false,
       congestionList: null,
+      controlCount: null,
     }
     this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
+    this.rateColors = ['#FF0000', '#FF7800', '#FFD800', '#0CB424']
     this.congestionUrl = '/engine-unified/index/getCrossGongestion?user_id=2'
-    this.singalStatus = '/engine-unified/index/getSignalRealState?user_id=2'
+    this.singalStatusUrl = '/engine-unified/index/getSignalRealState?user_id=2'
+    this.controlCountUrl = '/engine-unified/index/getControlCount?user_id=2'
   }
   componentDidMount = () => {
     this.renderMap()
     this.getCongestionList()
+    this.getControlCounts()
   }
   addMarker = () => {
     if (this.map) {
@@ -29,11 +33,21 @@ class branchHome extends Component {
       el.style.height = '20px'
       el.style.borderRadius = '50%'
       el.style.backgroundColor = 'green'
-      const marker = new window.mapabcgl.Marker(el)
+      new window.mapabcgl.Marker(el)
         .setLngLat([116.391, 39.911])
         .addTo(this.map);
-      console.log(marker)
     }
+  }
+  // 手动控制次数
+  getControlCounts = () => {
+    axiosInstance.post(this.controlCountUrl).then((res) => {
+      const { code, list } = res.data
+      if (code === '1') {
+        this.setState({ controlCount: list })
+      } else {
+        this.setState({ controlCount: [] })
+      }
+    })
   }
   // 实时拥堵排名
   getCongestionList = () => {
@@ -48,7 +62,7 @@ class branchHome extends Component {
   }
   // 信号实时状态
   getSingalStatus = () => {
-    axiosInstance.post(this.singalStatus).then((res) => {
+    axiosInstance.post(this.singalStatusUrl).then((res) => {
       const { code, list } = res.data
       if (code === '1') {
         this.setState({ singalStatus: list })
@@ -83,12 +97,12 @@ class branchHome extends Component {
     })
   }
   render() {
-    const { mainHomePage, congestionList } = this.state
+    const { mainHomePage, congestionList, controlCount } = this.state
     return (
       <div className="branchHomeWrapper">
         <div className="container">
           <div className="asideLeft">
-            
+
             <div className="asideItem">
               <div className="title">实时拥堵排名</div>
               <div className="itemContent">
@@ -135,42 +149,20 @@ class branchHome extends Component {
               <div className="title">手动控制次数</div>
               <div className="itemContent">
                 <div className="faultRate">
-                  <div className="faultDetails">
-                    <div className="faultNo" style={{ backgroundColor: '#ff0000' }}>1</div>
-                    <div className="faultArea">朝阳区</div>
-                    <div className="present">95%</div>
-                    <div className="faultValue">
-                      <div className="progress" style={{ width: '80%' }} />
-                      <div className="value">130</div>
-                    </div>
-                  </div>
-                  <div className="faultDetails">
-                    <div className="faultNo" style={{ backgroundColor: '#FF7800' }}>2</div>
-                    <div className="faultArea">朝阳区</div>
-                    <div className="present">95%</div>
-                    <div className="faultValue">
-                      <div className="progress" style={{ width: '80%' }} />
-                      <div className="value">130</div>
-                    </div>
-                  </div>
-                  <div className="faultDetails">
-                    <div className="faultNo" style={{ backgroundColor: '#FFD800' }}>3</div>
-                    <div className="faultArea">朝阳区</div>
-                    <div className="present">95%</div>
-                    <div className="faultValue">
-                      <div className="progress" style={{ width: '80%' }} />
-                      <div className="value">130</div>
-                    </div>
-                  </div>
-                  <div className="faultDetails">
-                    <div className="faultNo" style={{ backgroundColor: '#0BB423' }}>4</div>
-                    <div className="faultArea">朝阳区</div>
-                    <div className="present">95%</div>
-                    <div className="faultValue">
-                      <div className="progress" style={{ width: '80%' }} />
-                      <div className="value">130</div>
-                    </div>
-                  </div>
+                  {
+                    controlCount &&
+                    controlCount.map((item, index) => (
+                      <div className="faultDetails">
+                        <div className="faultNo" style={{ backgroundColor: this.rateColors[index] }}>{index + 1}</div>
+                        <div className="faultArea">{item.unit_name}</div>
+                        <div className="times">{item.time}</div>
+                        <div className="faultValue">
+                          <div className="progress" style={{ width: `${(item.num / 10) * 100}%` }} />
+                          <div className="value">{item.num}</div>
+                        </div>
+                      </div>
+                    ))
+                  }
                 </div>
               </div>
             </div>

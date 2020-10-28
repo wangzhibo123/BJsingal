@@ -86,28 +86,30 @@
                             .faultNo {
                                 width: 18px;
                                 height: 18px;
-                                margin-right: 5px;
+                                margin-right: 10px;
                                 text-align: center;
                                 line-height: 16px;
                                 border-radius: 50%;
                                 color: #0F2854;
                             }
                             .faultArea {
-                                width: 80px;
+                                width: 110px;
                                 padding-right: 5px;
                                 white-space: nowrap;
                                 text-overflow: ellipsis;
                                 overflow: hidden;
                                 color: #CAF2F5;
                             }
-                            .present {
-                                margin-right: 5px;
+                            .times {
+                                width: 70px;
+                                text-align: center;
+                                margin-right: 10px;
                                 color: #CAF2F5;
                             }
                             .faultValue {
                                 position: relative;
-                                width: 180px;
-                                height: 13px;
+                                width: 100px;
+                                height: 12px;
                                 background-color: #0F3270;
                                 .progress {
                                     position: absolute;
@@ -119,7 +121,7 @@
                                 }
                                 .value {
                                     position: absolute;
-                                    bottom: 0;
+                                    bottom: -2px;
                                     right: 2px;
                                     font-size: 12px;
                                 }
