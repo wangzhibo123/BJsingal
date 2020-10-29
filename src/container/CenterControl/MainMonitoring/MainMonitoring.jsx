@@ -7,8 +7,10 @@ import leftRightPng from "../../imgs/01.png"
 import upLeftDownRight from "../../imgs/04.png"
 import upLeftUp from "../../imgs/11.png"
 import rightUpLeftDown from "../../imgs/02.png"
+import startPng from '../../imgs/start.png'
+import endPng from '../../imgs/end.png'
 
-import mineMapConf from "../../utils/minemapConf";
+import mapConfiger from "../../utils/minemapConf";
 import { EditOutlined,SearchOutlined, CompassOutlined } from "@ant-design/icons";
 import { Select, Button,Switch,Menu } from "antd";
 const { Option } = Select;
@@ -89,7 +91,6 @@ export default class MainMonitoring extends Component {
     this.state.modeMapShow&&this.renderMap();
   }
   onChange(checked) {
-    console.log(`switch to ${checked}`);
   }
   modeTabToMapPage=()=>{
     this.setState({
@@ -101,19 +102,296 @@ export default class MainMonitoring extends Component {
       this.renderMap()
     })
   }
+  intersectionRenderin = async () => {
+    await this.getstartpoint({ lng: 116.38251572176512, lat: 39.90708534816005 })
+    await this.getendpoint({ lng: 116.41149060058893, lat: 39.90803874332477 })
+    await this.getChannelpoint({ lng: 116.39934569026138, lat: 39.90753821453271 })
+    await this.getChannelpoint({ lng: 116.38315705392921, lat: 39.907079696277606 })
+  }
+  addMenu = () => {
+    const _this = this
+    this.map.flyTo({ center: [116.391, 39.911], zoom: 15, pitch: 60 })
+    var marker = '', startmarker = '', endmarker = '', channelmarker = [];
+    this.map.on('contextmenu', function (item) {
+      if (marker) {
+        marker.remove();
+      }
+      var lnglat = item.lngLat;
+      var style = 'background:#081F42;color:#fff;';
+      var html = document.createElement('div');
+      var contextmenu = '<div class="context_menu" style="padding:5px 10px;' + style + '">' + '<li id="start" style="cursor:point;">起点</li>' + '<li style="cursor:point;" id="end">终点</li>' + '<li style="cursor:point;" id="channel">途径点</li>' + '<li style="cursor:point;" id="clearmap">清空地图</li>' + '</div>';
+      html.innerHTML = contextmenu;
+      marker = new window.mapabcgl.Marker(html)
+        .setLngLat([lnglat.lng, lnglat.lat])
+        .setOffset([30, 0])
+        .addTo(_this.map);
+      var start = document.getElementById('start');
+      var end = document.getElementById('end');
+      var channel = document.getElementById('channel');
+      var clear = document.getElementById('clearmap');
+      start.addEventListener('click', function (e) {
+        _this.getstartpoint(lnglat);
+      })
+      end.addEventListener('click', function (e) {
+        _this.getendpoint(lnglat)
+      })
+      channel.addEventListener('click', function (e) {
+        _this.getChannelpoint(lnglat)
+      })
+      clear.addEventListener('click', function (e) {
+        clearMap();
+      })
+      // 初始话渲染路口
+    })
+    //起始点
+    this.getstartpoint = (lnglat) => {
+      if (marker) {
+        marker.remove();
+      }
+      if (startmarker) {
+        startmarker.remove();
+      }
+      startmarker = addMarker(startPng, [lnglat.lng, lnglat.lat], 0);
+      plan()
+      startmarker.on('dragend', plan);
+    }
+    //结束点
+    this.getendpoint = (lnglat) => {
+      if (marker) {
+        marker.remove();
+      }
+      if (endmarker) {
+        endmarker.remove();
+      }
+      endmarker = addMarker(endPng, [lnglat.lng, lnglat.lat], 0);
+      plan();
+      endmarker.on('dragend', plan);
+    }
+    //途径点
+    _this.intersectionRenderin()
+    this.getChannelpoint = (lnglat) => {
+      if (marker) {
+        marker.remove();
+      }
+      if (channelmarker.length >= 16) {
+        alert("途径点最多支持16个")
+        return;
+      }
+      var pointMarker = addMarkerpoint('http://map.mapabc.com:35001/mapdemo/apidemos/sourceLinks/img/point_1.png', [lnglat.lng, lnglat.lat], -441);
+      channelmarker.push(pointMarker)
+      rgeocode(3, pointMarker.getLngLat().lng + ',' + pointMarker.getLngLat().lat);
+      plan();
+      pointMarker.on('dragend', plan);
+    }
+    function plan() {
+      var str = '';
+      if (startmarker) {
+        rgeocode(1, startmarker.getLngLat().lng + ',' + startmarker.getLngLat().lat);
+      }
+      if (endmarker) {
+        rgeocode(2, endmarker.getLngLat().lng + ',' + endmarker.getLngLat().lat);
+      }
+      if (channelmarker.length > 0) {
+        for (var i = 0; i < channelmarker.length; i++) {
+          str += i === 0 ? channelmarker[i].getLngLat().lng + ',' + channelmarker[i].getLngLat().lat : ';' + channelmarker[i].getLngLat().lng + ',' + channelmarker[i].getLngLat().lat
+        }
+      }
+      if (startmarker && endmarker) {
+        var origin = startmarker.getLngLat().lng + ',' + startmarker.getLngLat().lat;
+        var destination = endmarker.getLngLat().lng + ',' + endmarker.getLngLat().lat;
+        _this.map.Driving({
+          origin: origin,
+          destination: destination,
+          waypoints: str//途经点
+        }, function (data) {
+          if (data.status == 0) {
+            var data = data.result.routes[0].steps, xys = '';
+            _this.map.removeLayerAndSource('plan');
+            _this.map.removeLayerAndSource('plan1');
+            for (var i = 0; i < data.length; i++) {
+              xys += data[i].path + ';';
+            }
+            if (xys) {
+              xys = xys.substr(0, xys.length - 1)
+              var path = xys.split(';'), lines = [];
+              for (var k = 0; k < path.length; k++) {
+                var xy = path[k].split(',')
+                lines.push(xy)
+              }
+              _this.map.removeLayerAndSource('addArrowImg');
+              addplanline(lines, 'plan', '#D6CE22')
+            }
+          } else if (data.status != '0') {
+            alert(data.message);
+          };
+        })
+      }
+    }
+    function addplanline(lines, id, color) {
+      var geojson = {
+        "type": "FeatureCollection",
+        "features": [{
+          "type": "Feature",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": lines
+          }
+        }]
+      };
+      _this.map.addLayer({
+        "id": id,
+        "type": "line",
+        "source": {
+          "type": "geojson",
+          "data": geojson
+        },
+        "layout": {
+          "line-join": "miter",
+          "line-cap": "square"
+        },
+        "paint": {
+          "line-color": color,
+          "line-width": 8,
+          "line-opacity": 1,
+        }
+      });
+      _this.map.addLayer({
+        "id": id + 1,
+        "type": "line",
+        "source": {
+          "type": "geojson",
+          "data": geojson
+        },
+        "paint": {
+          "line-width": 8,
+          "line-pattern": 'arrowImg',
+        }
+      });
+    }
+    function clearMap() {
+      if (marker) {
+        marker.remove();
+        marker = ''
+      }
+      if (startmarker) {
+        startmarker.remove();
+        startmarker = ''
+      }
+      if (endmarker) {
+        endmarker.remove();
+        endmarker = ''
+      }
+      if (channelmarker.length > 0) {
+        for (var i = 0; i < channelmarker.length; i++) {
+          channelmarker[i].remove();
+        }
+        channelmarker = []
+      }
+      _this.map.removeLayerAndSource('plan');
+      _this.map.removeLayerAndSource('plan1');
+    }
+    let roadValue = []
+    function rgeocode(type, location) {
+      _this.map.Geocoder({ location: location }, function (data) {
+        if (data.status != '0') {
+          alert(data.message);
+          return
+        };
+        if (data.result.length > 0) {
+          if (type == 1) {
+          } else if (type == 2) {
+          } else {
+            roadValue.push(data.result[0].formatted_address)
+            _this.setState({
+              roadValue
+            })
+          }
+        };
+      });
+    }
+    function trim(str) { //删除左右两端的空格
+      return str.replace(/(^\s*)|(\s*$)/g, "");
+    }
+    function addMarker(img, point, position) {
+      var marker = '', html = ''
+      html = document.createElement('div');
+      html.style.cssText = 'background:url(' + img + ')' + position + 'px 0px no-repeat;width:80px;height:50px;';
+      html.style.backgroundSize = '100% 100%';
+      marker = new window.mapabcgl.Marker(html)
+        .setLngLat(point)
+        .setDraggable(true)
+        .setOffset([0, -20])
+        .addTo(_this.map);
+      return marker;
+    };
+    function addMarkerpoint(img, point, position) {
+      var marker = '', html = ''
+      html = document.createElement('div');
+      html.style.cssText = 'background:url(' + img + ')' + position + 'px 0px no-repeat;width:35px;height:26px;'
+      marker = new window.mapabcgl.Marker(html)
+        .setLngLat(point)
+        .setDraggable(true)
+        .addTo(_this.map);
+      return marker;
+    };
+  }
+  ClickMessge = () => {
+    var popupOption = {
+      closeOnClick: false,
+      closeButton: true,
+      offset: [-20, -10]
+    }
+    this.popup = new window.mapabcgl.Popup(popupOption)
+      .setLngLat(new window.mapabcgl.LngLat(116.391, 39.911))
+      .addTo(this.map);
+  }
   addMarker = () => {
     if (this.map) {
-      const el = document.createElement("div");
-      el.style.width = "20px";
-      el.style.height = "20px";
-      el.style.borderRadius = "50%";
-      el.style.backgroundColor = "green";
+      const el = document.createElement('div')
+      el.style.width = '20px'
+      el.style.height = '20px'
+      el.style.borderRadius = '50%'
+      el.style.backgroundColor = 'green'
+      el.addEventListener('click', (e) => {
+        e.stopPropagation()
+        this.ClickMessge()
+      })
       const marker = new window.mapabcgl.Marker(el)
         .setLngLat([116.391, 39.911])
         .addTo(this.map);
-      console.log(marker);
     }
-  };
+  }
+  gettitletops = (isShow) => {
+    this.setState({
+      Istitletops: isShow,      
+    })
+  }
+  renderMap = () => {
+    mapConfiger.zoom = 11
+    const map = new window.mapabcgl.Map(mapConfiger)
+    map.addControl(new window.mapabcgl.NavigationControl());
+    const options = {
+      minzoom: 1, // 路况显示的最小级别(1-24)
+      maxzoom: 24, // 路况显示的最大级别(1-24)
+      type: 'vector', // 路况图层类型:vector(矢量),raster(栅格)
+      refresh: 30 * 1000, // 路况图层刷新时间，毫秒
+      // before:'roads-symbol-49'
+    };
+    map.on('load', () => {
+      map.trafficLayer(true, options);
+      this.addMarker()
+      window.onbeforeunload = function (e) {
+        map.removeLayerAndSource('icon');
+      };
+      this.addMenu()
+    })
+    map.on('click', () => {
+      if (this.popup) {
+        this.popup.remove()
+      }
+    })
+    this.map = map
+  }
   modeMainEBtn=()=>{
     this.setState({
       modeMainEStyle:true,
@@ -138,28 +416,7 @@ export default class MainMonitoring extends Component {
       modeMainNStyle:true
     })
   }
-  renderMap = () => {
-    mineMapConf.zoom = 11;
-    const map = new window.mapabcgl.Map(mineMapConf);
-    map.addControl(
-      new window.mapabcgl.NavigationControl({
-        showCompass: true,
-        position: "bottom-right",
-      })
-    );
-    const options = {
-      minzoom: 1, // 路况显示的最小级别(1-24)
-      maxzoom: 24, // 路况显示的最大级别(1-24)
-      type: "raster", // 路况图层类型:vector(矢量),raster(栅格)
-      refresh: 30 * 1000, // 路况图层刷新时间，毫秒
-      // before:'roads-symbol-49'
-    };
-    map.on("load", () => {
-      map.trafficLayer(true, options);
-      this.addMarker();
-    });
-    this.map = map;
-  };
+ 
   render() {
     const { modeNavShow, modeMapShow, modeMainMonitor, modeMainTabShow ,modeMainEStyle,modeMainWStyle,modeMainSStyle,modeMainNStyle} = this.state;
     return (
@@ -265,8 +522,8 @@ export default class MainMonitoring extends Component {
                     <Button onClick={this.modeMainWBtn} className={modeMainWStyle&&"modeShowStyle"}>西</Button>
                   </div>
                   <div className="modeMainEWVideo">
-                    <video src="*" style={{ width: "100%", height: "100%" }} controls>
-                      <source src="*" type="video/mp4"></source>
+                    <video src="//www.jb51.net/~j/theora_testsuite/320x240.ogg" style={{ width: "100%", height: "100%" }} controls>
+                      <source src="//www.jb51.net/~j/theora_testsuite/320x240.ogg" type="video/mp4"></source>
                     </video>
                   </div>
                 </div>

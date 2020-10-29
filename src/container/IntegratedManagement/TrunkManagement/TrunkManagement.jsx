@@ -382,7 +382,7 @@ class TrunkManagement extends Component {
   }
   gettitletops = (isShow) => {
     this.setState({
-      Istitletops: isShow,
+      Istitletops: isShow,      
     })
   }
   renderMap = () => {
