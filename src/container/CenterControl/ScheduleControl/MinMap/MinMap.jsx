@@ -5,11 +5,13 @@ import { SearchOutlined } from "@ant-design/icons";
 export default class MinMap extends Component {
     constructor(props) {
         super(props)
-        this.state = {};
+        this.state = {
+          mapBaseInfo:{ center: [116.462, 39.941], zoom: 12, pitch: 0 }
+        };
     }
       addMenu = () => {
         const _this = this
-        this.map.flyTo({ center: [116.391, 39.911], zoom: 17, pitch: 60 })
+        this.map.flyTo(this.state.mapBaseInfo)
         var marker = '', startmarker = '', endmarker = '', channelmarker = [];
         this.map.on('contextmenu', function (item) {
           if (marker) {
@@ -120,8 +122,6 @@ export default class MinMap extends Component {
               }
             }]
           };
-    
-    
           _this.map.addLayer({
             "id": id,
             "type": "line",
@@ -280,9 +280,15 @@ export default class MinMap extends Component {
             this.addMenu()
         });
         map.setZoom(13)
-        map.setCenter([116.46216681806493, 39.94101458892803])
+        map.setCenter([116.391, 39.911])
         this.map = map;
     };
+    SearchOutlinedEvent=()=>{
+      this.setState({
+        mapBaseInfo:{ center: [117.389, 39.81111], zoom: 12, pitch: 0 }
+      })
+      this.renderMap();
+    }
     render() {
         return (
             <div className="minMapHome">            
@@ -290,7 +296,7 @@ export default class MinMap extends Component {
                     <div className="modeMainIptHome">
                     <input type="text" placeholder="查询…" className="modeMainIpt" />
                     <div className="modeMainIptBox">
-                        <SearchOutlined />
+                        <SearchOutlined onClick={this.SearchOutlinedEvent}/>
                     </div>
                     </div>
                     <div className="mapContent">
