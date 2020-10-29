@@ -410,7 +410,7 @@ class Homepage extends Component {
                     {
                       areaMsgList &&
                       areaMsgList.map((item, index) => {
-                        if (index < 10) {
+                        if (index < 9) {
                           return (
                             <div className="areaDetails" key={item.area_id}>
                               <div className="areaName">{item.district_name}</div>
@@ -472,7 +472,7 @@ class Homepage extends Component {
                   {
                     areaMsgList &&
                     areaMsgList.map((item, index) => {
-                      if (index > 9) {
+                      if (index >= 9) {
                         return (
                           <div className="areaDetails" key={item.area_id}>
                             <div className="areaName">{item.district_name}</div>

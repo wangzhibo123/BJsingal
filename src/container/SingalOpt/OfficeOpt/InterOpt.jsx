@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import './officeOpt.scss'
 
-// import Histogram from './Histogram/Histogram'
-// import Graph from './Graph/Graph'
 import mapConfiger from '../../utils/minemapConf'
-import GraphPlus from './GraphPlus/GraphPlus'
+import GraphPlus from '../../../components/GraphPlus/GraphPlus'
 
 class InterOpt extends Component {
   constructor(props) {
@@ -108,8 +106,7 @@ class InterOpt extends Component {
               <div className="title">优化原因占比统计</div>
               <div className="itemContent">
                 <div className="runRate">
-                  {/* <Graph /> */}
-                  <GraphPlus />
+                  <GraphPlus colors={{startColor: 'rgba(21,55,83,.6)', endColor: 'rgba(0,207,253,.6)', lidColor: '#00C5FA'}} />
                 </div>
               </div>
             </div>

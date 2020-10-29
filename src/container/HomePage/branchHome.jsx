@@ -228,7 +228,7 @@ class branchHome extends Component {
                   {/* <Histogram /> */}
                   {
                     controlStatus &&
-                    <GraphPlus chartsDatas={controlStatus} />
+                    <GraphPlus chartsDatas={controlStatus} colors={{startColor: 'rgba(21,55,83,.6)', endColor: 'rgba(0,207,253,.6)', lidColor: '#00C5FA'}} />
                   }
                 </div>
               </div>

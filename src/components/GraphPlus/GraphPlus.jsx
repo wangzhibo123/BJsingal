@@ -15,6 +15,7 @@ class GraphPlus extends Component {
     }
   }
   renderCharts = (chartsBox, xData, datas) => {
+    const { startColor, endColor } = this.props.colors
     const options = {
       xAxis: {
         data: xData,
@@ -59,19 +60,19 @@ class GraphPlus extends Component {
           normal: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                 offset: 0,
-                color: 'rgba(21,55,83,.6)',
+                color: startColor,
             }, {
                 offset: 1,
-                color: 'rgba(0,207,253,.6)',
+                color: endColor,
             }]),
             barBorderRadius: [0, 0, 0, 180],
             borderWidth: 1,
             borderColor: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                 offset: 0,
-                color: 'rgba(21,55,83)',
+                color: startColor,
             }, {
                 offset: 1,
-                color: 'rgba(0,207,253)',
+                color: endColor,
             }]),
           }
         },
@@ -87,19 +88,19 @@ class GraphPlus extends Component {
           normal: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                 offset: 0,
-                color: 'rgba(21,55,83,.6)',
+                color: startColor,
             }, {
                 offset: 1,
-                color: 'rgba(0,207,253,.6)',
+                color: endColor,
             }]),
             barBorderRadius: [0, 0, 180, 0],
             borderWidth: 1,
             borderColor: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                 offset: 0,
-                color: 'rgba(21,55,83)',
+                color: startColor,
             }, {
                 offset: 1,
-                color: 'rgba(0,207,253)',
+                color: endColor,
             }]),
           }
         },
@@ -115,7 +116,7 @@ class GraphPlus extends Component {
           normal: {
             color: '#00C5FA',
             borderWidth: 1,
-            borderColor: '#00CAF8',
+            borderColor: '#00C5FA',
           }
         },
         symbol: 'rect',

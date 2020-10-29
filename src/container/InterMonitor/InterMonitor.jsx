@@ -7,6 +7,7 @@ import {
 import 'animate.css'
 import './InterMonitor.scss'
 
+import axiosInstance from '../utils/getInterfaceData'
 import cneter from '../imgs/iconM.png'
 import hand from '../imgs/iconH.png'
 import allred from '../imgs/iconR.png'
@@ -29,6 +30,7 @@ class InterMonitor extends Component {
       moveRight: null,
       moveUp: null,
       moveDown: null,
+      trafficInfoList: null,
     }
     this.confItems = ['基础信息', '信号参数', '一口一档', '交通指标', '时间表控制']
     this.controlItems = [
@@ -37,6 +39,43 @@ class InterMonitor extends Component {
       { text: '中心控制', img: cneter },
       { text: '中心手控', img: hand },
     ]
+    this.modeUrl = '/engine-unified/unit/getControlModeById?unit_id=1'
+    this.trafficUrl = '/engine-unified/unit/getRealtimeTrafficById?unit_id=1'
+    this.trendUrl = '/engine-unified/unit/getRoadTrendById?unit_id=1'
+    this.messageUrl = '/engine-unified/unit/getUnitInfoById?unit_id=1'
+  }
+  componentDidMount = () => {
+    this.getControlMode()
+    this.getTrafficInfo()
+  }
+  // 路口信息
+  getInterInfo = () => {
+    axiosInstance.post(this.messageUrl).then((res) => {
+      console.log(res)
+    })
+  }
+  // 获取实时状态控制模式
+  getControlMode = () => {
+    axiosInstance.post(this.modeUrl).then((res) => {
+      console.log(res)
+    })
+  }
+  // 获取实时路况
+  getTrafficInfo = () => {
+    axiosInstance.post(this.trafficUrl).then((res) => {
+      const { code, list } = res.data
+      if (code === '1') {
+        this.setState({ trafficInfoList: list })
+      } else {
+        this.setState({ trafficInfoList: null })
+      }
+    })
+  }
+  // 路况趋势
+  getRoadTrend = () => {
+    axiosInstance.post(this.trendUrl).then((res) => {
+      console.log(res)
+    })
   }
   handleModifyConf = () => {
     this.setState({
@@ -68,7 +107,7 @@ class InterMonitor extends Component {
     })
   }
   render() {
-    const { confListLeft, modeIndex, moveLeft, moveRight, moveUp, moveDown } = this.state
+    const { confListLeft, modeIndex, moveLeft, moveRight, moveUp, moveDown, trafficInfoList } = this.state
     return (
       <div className="interMonitorBox">
         <div className="interMessage">
@@ -85,6 +124,7 @@ class InterMonitor extends Component {
             <div className="roadTrends">
               <Graph />
             </div>
+            {/* <Example /> */}
             <div className="conditionList">
               <div className="titles">各路口实时路况</div>
                 <div className="listBox">
@@ -95,33 +135,40 @@ class InterMonitor extends Component {
                     <div className="listTd">平均车速</div>
                     <div className="listTd">饱和度</div>
                   </div>
-                  <div className="listTr">
-                    <span className="innterBorder" />
-                    <div className="listTd">北路</div>
-                    <div className="listTd">40</div>
-                    <div className="listTd">37km/h</div>
-                    <div className="listTd">2.0</div>
-                  </div>
-                  <div className="listTr">
-                    <span className="innterBorder" />
-                    <div className="listTd">南路</div>
-                    <div className="listTd">32</div>
-                    <div className="listTd">35km/h</div>
-                    <div className="listTd">1.8</div>
-                  </div>
-                  <div className="listTr">
-                    <span className="innterBorder" />
-                    <div className="listTd">东路</div>
-                    <div className="listTd">38</div>
-                    <div className="listTd">34km/h</div>
-                    <div className="listTd">1.7</div>
-                  </div>
-                  <div className="listTr">
-                    <span className="innterBorder" />
-                    <div className="listTd">西路</div>
-                    <div className="listTd">27</div>
-                    <div className="listTd">40km/h</div>
-                    <div className="listTd">1.1</div>
+                  <div className="listBody">
+                    {
+                      trafficInfoList &&
+                      trafficInfoList.map((item) => (
+                        <div className="listTr">
+                          <span className="innterBorder" />
+                          <div className="listTd">{item.distriction}路</div>
+                          <div className="listTd">{item.jam_dur}</div>
+                          <div className="listTd">{item.speed}km/h</div>
+                          <div className="listTd">{item.saturation}</div>
+                        </div>
+                      ))
+                    }
+                    <div className="listTr">
+                      <span className="innterBorder" />
+                      <div className="listTd">南路</div>
+                      <div className="listTd">32</div>
+                      <div className="listTd">35km/h</div>
+                      <div className="listTd">1.8</div>
+                    </div>
+                    <div className="listTr">
+                      <span className="innterBorder" />
+                      <div className="listTd">东路</div>
+                      <div className="listTd">38</div>
+                      <div className="listTd">34km/h</div>
+                      <div className="listTd">1.7</div>
+                    </div>
+                    <div className="listTr">
+                      <span className="innterBorder" />
+                      <div className="listTd">西路</div>
+                      <div className="listTd">27</div>
+                      <div className="listTd">40km/h</div>
+                      <div className="listTd">1.1</div>
+                    </div>
                   </div>
                 </div>
             </div>
