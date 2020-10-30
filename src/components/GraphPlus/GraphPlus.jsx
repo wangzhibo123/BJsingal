@@ -8,12 +8,17 @@ class GraphPlus extends Component {
   }
   componentDidMount = () => {
     const chartsBox = echarts.init(this.chartsBox)
-    this.renderCharts(chartsBox)
+    console.log(this.props.chartsDatas)
+    if (this.props.chartsDatas) {
+      const { xData, datas } = this.props.chartsDatas
+      this.renderCharts(chartsBox, xData, datas)
+    }
   }
-  renderCharts = (chartsBox) => {
+  renderCharts = (chartsBox, xData, datas) => {
+    const { startColor, endColor } = this.props.colors
     const options = {
       xAxis: {
-        data: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        data: xData,
         axisLabel: {
           show: true,
           textStyle: {
@@ -55,23 +60,23 @@ class GraphPlus extends Component {
           normal: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                 offset: 0,
-                color: 'rgba(21,55,83,.6)',
+                color: startColor,
             }, {
                 offset: 1,
-                color: 'rgba(154,143,1,.6)',
+                color: endColor,
             }]),
             barBorderRadius: [0, 0, 0, 180],
             borderWidth: 1,
             borderColor: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                 offset: 0,
-                color: 'rgba(21,55,83)',
+                color: startColor,
             }, {
                 offset: 1,
-                color: 'rgba(0,207,253)',
+                color: endColor,
             }]),
           }
         },
-        data: [220, 182, 191, 234, 290, 330, 310]
+        data: datas
       }, {
         name: 'a',
         tooltip: {
@@ -83,23 +88,23 @@ class GraphPlus extends Component {
           normal: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                 offset: 0,
-                color: 'rgba(21,55,83,.6)',
+                color: startColor,
             }, {
                 offset: 1,
-                color: 'rgba(154,143,1,.6)',
+                color: endColor,
             }]),
             barBorderRadius: [0, 0, 180, 0],
             borderWidth: 1,
             borderColor: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                 offset: 0,
-                color: 'rgba(21,55,83)',
+                color: startColor,
             }, {
                 offset: 1,
-                color: 'rgba(0,207,253)',
+                color: endColor,
             }]),
           }
         },
-        data: [220, 182, 191, 234, 290, 330, 310],
+        data: datas,
         barGap: 0
       }, {
         name: 'b',
@@ -109,9 +114,9 @@ class GraphPlus extends Component {
         type: 'pictorialBar',
         itemStyle: {
           normal: {
-            color: '#9A8F01',
+            color: '#00C5FA',
             borderWidth: 1,
-            borderColor: '#9A8F01',
+            borderColor: '#00C5FA',
           }
         },
         symbol: 'rect',
@@ -119,7 +124,7 @@ class GraphPlus extends Component {
         symbolSize: ['11', '11'],
         symbolOffset: ['0', '-6'],
         symbolPosition: 'end',
-        data: [220, 182, 191, 234, 290, 330, 310],
+        data: datas,
         z: 3
       }]
     };

@@ -2,11 +2,8 @@ import React, { Component } from 'react'
 import { Progress } from 'antd';
 import './officeOpt.scss'
 
-// import Histogram from './Histogram/Histogram'
-// import Graph from './Graph/Graph'
 import mapConfiger from '../../utils/minemapConf'
-import GraphPlus from './GraphPlus/GraphPlus'
-import GraphPlusYellow from './GraphPlusYellow/GraphPlus'
+import GraphPlus from '../../../components/GraphPlus/GraphPlus'
 import Graph from './Graph/Graph'
 class OfficeOpt extends Component {
   constructor(props) {
@@ -110,8 +107,7 @@ class OfficeOpt extends Component {
               <div className="title">优化原因占比统计</div>
               <div className="itemContent">
                 <div className="runRate">
-                  {/* <Graph /> */}
-                  <GraphPlus />
+                  <GraphPlus colors={{startColor: 'rgba(21,55,83,.6)', endColor: 'rgba(0,207,253,.6)', lidColor: '#00C5FA'}} />
                 </div>
               </div>
             </div>
@@ -119,7 +115,7 @@ class OfficeOpt extends Component {
               <div className="title">优化后指标影响统计</div>
               <div className="itemContent">
                 <div className="holdRate">
-                  <GraphPlusYellow />
+                  <GraphPlus colors={{startColor: 'rgba(21,55,83,.6)', endColor: 'rgba(154,143,1,.6)', lidColor: '#9A8F01'}} />
                 </div>
               </div>
             </div>
@@ -166,40 +162,6 @@ class OfficeOpt extends Component {
               <div className="title">运行效益走势曲线</div>
               <div className="itemContent">
                 <Graph />
-                {/* <div className="singalStatus">
-                  <div className="statusEach"><span className="each">区域</span><span className="each">品牌</span></div>
-                  <div className="statusDetails">
-                    <div className="singalMsg">
-                      <div className="singalName">西门子</div>
-                      <div className="presents">
-                        <div className="nomals" style={{ width: '80%' }}><span>80%</span></div>
-                        <div className="faults" style={{ width: '10%' }}><span>10%</span></div>
-                        <div className="outlines" style={{ width: '10%' }}><span>10%</span></div>
-                      </div>
-                    </div>
-                    <div className="singalMsg">
-                      <div className="singalName">海信</div>
-                      <div className="presents">
-                        <div className="nomals" style={{ width: '60%' }}><span>70%</span></div>
-                        <div className="faults" style={{ width: '15%' }}><span>10%</span></div>
-                        <div className="outlines" style={{ width: '25%' }}><span>20%</span></div>
-                      </div>
-                    </div>
-                    <div className="singalMsg">
-                      <div className="singalName">易华录</div>
-                      <div className="presents">
-                        <div className="nomals" style={{ width: '80%' }}><span>80%</span></div>
-                        <div className="faults" style={{ width: '10%' }}><span>10%</span></div>
-                        <div className="outlines" style={{ width: '10%' }}><span>10%</span></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="statusInfo">
-                    <div className="legendInfo"><span className="statusLegend nomal" /><span>正常</span></div>
-                    <div className="legendInfo"><span className="statusLegend fault" /><span>故障</span></div>
-                    <div className="legendInfo"><span className="statusLegend outline" /><span>离线</span></div>
-                  </div>
-                </div> */}
               </div>
             </div>
           </div>

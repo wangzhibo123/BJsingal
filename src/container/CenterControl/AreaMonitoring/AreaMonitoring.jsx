@@ -230,9 +230,9 @@ export default class AreaMonitoring extends Component {
                         }
                         size="large"
                       >
-                        <Option value="jack">1</Option>
-                        <Option value="lucy">2</Option>
-                        <Option value="tom">3</Option>
+                        <Option value="1">1</Option>
+                        <Option value="2">2</Option>
+                        <Option value="3">3</Option>
                       </Select>
                       <Button type="primary" style={{width:68,height:37,position:"absolute",left:"312px",top:'25px'}}>搜索</Button>
                     </div>

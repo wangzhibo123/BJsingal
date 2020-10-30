@@ -1,6 +1,5 @@
 import React from 'react'
-import $ from 'jquery'
-import { Icon, Select, DatePicker } from 'antd'
+import { Select, DatePicker } from 'antd'
 import './optimize.scss'
 
 // import requestBaseUrl from '../../../../../utils/getRequestBaseUrl'

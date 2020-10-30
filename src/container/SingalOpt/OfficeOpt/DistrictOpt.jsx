@@ -5,8 +5,7 @@ import './officeOpt.scss'
 // import Histogram from './Histogram/Histogram'
 // import Graph from './Graph/Graph'
 import mapConfiger from '../../utils/minemapConf'
-import GraphPlus from './GraphPlus/GraphPlus'
-import GraphPlusYellow from './GraphPlusYellow/GraphPlus'
+import GraphPlus from '../../../components/GraphPlus/GraphPlus'
 import Graph from './Graph/Graph'
 import Pie3D from '../../../components/Pie3D/Pie3D'
 class DistrictOpt extends Component {
@@ -105,7 +104,7 @@ class DistrictOpt extends Component {
               <div className="itemContent">
                 <div className="runRate">
                   {/* <Graph /> */}
-                  <GraphPlus />
+                  <GraphPlus colors={{startColor: 'rgba(21,55,83,.6)', endColor: 'rgba(0,207,253,.6)', lidColor: '#00C5FA'}} />
                 </div>
               </div>
             </div>
@@ -113,8 +112,7 @@ class DistrictOpt extends Component {
               <div className="title">优化后指标影响统计</div>
               <div className="itemContent">
                 <div className="holdRate">
-                  {/* <Histogram /> */}
-                  <GraphPlusYellow />
+                  <GraphPlus colors={{startColor: 'rgba(21,55,83,.6)', endColor: 'rgba(154,143,1,.6)', lidColor: '#9A8F01'}} />
                 </div>
               </div>
             </div>

@@ -81,7 +81,6 @@
                         }
                     }
                     .faultRate {
-                        height: 100%;
                         display: flex;
                         flex-direction: column;
                         padding: 10px;
@@ -108,13 +107,13 @@
                                 color: #CAF2F5;
                             }
                             .present {
-                                margin-right: 5px;
+                                width: 40px;
                                 color: #CAF2F5;
                             }
                             .faultValue {
                                 position: relative;
                                 width: 180px;
-                                height: 13px;
+                                height: 12px;
                                 background-color: #0F3270;
                                 .progress {
                                     position: absolute;
@@ -126,7 +125,7 @@
                                 }
                                 .value {
                                     position: absolute;
-                                    bottom: 0;
+                                    bottom: -2px;
                                     right: 2px;
                                     font-size: 12px;
                                 }
@@ -236,6 +235,77 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            .mapabcgl-popup-anchor-bottom {
+                .mapabcgl-popup-tip {
+                    border-top-color: rgba(3, 38, 120, .8);
+                }
+            }
+            .mapabcgl-popup-anchor-top {
+                .mapabcgl-popup-tip {
+                    border-bottom-color: rgba(3, 38, 120, .8);
+                }
+            }
+            .mapabcgl-popup-anchor-left {
+                .mapabcgl-popup-tip {
+                    border-right-color: rgba(3, 38, 120, .8);
+                }
+            }
+            .mapabcgl-popup-anchor-right {
+                .mapabcgl-popup-tip {
+                    border-left-color: rgba(3, 38, 120, .8);
+                }
+            }
+            .mapabcgl-popup-content {
+                padding: 0;
+                background-color: transparent;
+                .mapabcgl-popup-close-button {
+                    right: 10px;
+                    top: 8px;
+                    font-size: 26px;
+                    color: #62bbff;
+                }
+                .infoWindow {
+                    width: 400px;
+                    height: 225px;
+                    background: rgba(3, 16, 96, 0.8);
+                    background-image: linear-gradient(to bottom, rgba(3, 38, 120, .8), rgba(0, 59, 129, .8), rgba(3, 38, 120, .8));
+                    font-size: 14px;
+                    color: #62bbff;
+                    border-radius: 4px;
+                    box-shadow: inset 0 0 10px rgba(62, 112, 255, .8);
+                    .infotitle {
+                        height: 40px;
+                        line-height: 40px;
+                        padding-left: 20px;
+                    }
+                    .interMessage {
+                        display: flex;
+                        flex-wrap: wrap;
+                        padding-left: 20px;
+                        justify-content: space-between;
+                        .message {
+                            width: 180px;
+                            height: 35px;
+                            text-align: left;
+                            line-height: 35px;
+                        }
+                    }
+                    .interDetails {
+                        height: 40px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        .monitorBtn {
+                            width: 80px;
+                            height: 28px;
+                            text-align: center;
+                            line-height: 28px;
+                            background-color: rgba(98, 187, 255, .4);
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
             .title {
                 height: 20px;
                 text-align: center;
@@ -245,6 +315,7 @@
             }
             .centerMain {
                 flex: 1;
+                overflow: hidden;
                 .centerBox {
                     width: 100%;
                     height: 100%;
@@ -259,7 +330,7 @@
                         overflow-y: auto;
                         .areaDetails {
                             width: 160px;
-                            margin-bottom: 20px;
+                            margin-bottom: 18px;
                             .areaName {
                                 margin-bottom: 6px;
                                 font-size: 22px;
@@ -355,5 +426,4 @@
             }
         }
     }
-
 }

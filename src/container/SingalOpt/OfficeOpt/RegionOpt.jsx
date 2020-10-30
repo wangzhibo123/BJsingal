@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { Menu, Input, DatePicker, Button, Select, Switch, Modal } from 'antd'
+import { Menu, Select, Switch, Modal } from 'antd'
 import 'animate.css'
-import { SearchOutlined, DoubleRightOutlined, DoubleLeftOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
+import { SearchOutlined, DoubleRightOutlined, DoubleLeftOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import './Region.scss'
 import $ from 'jquery'
 import mapConfiger from '../../utils/minemapConf'
@@ -95,7 +95,7 @@ class RegionOpt extends Component {
       el.style.height = '20px'
       el.style.borderRadius = '50%'
       el.style.backgroundColor = 'green'
-      const marker = new window.mapabcgl.Marker(el)
+      new window.mapabcgl.Marker(el)
         .setLngLat([116.33372103894942, 39.976474739839944])
         .addTo(this.map);
     }
@@ -156,7 +156,6 @@ class RegionOpt extends Component {
   // 左边栏的收起和展开
   handleLeftClick = (e) => {
     const _this = this;
-    const styleLeft = 'left:0;transition:all .5s;'
     if (!this.state.iconFlag) {
       $(e.target).parent().attr('style', _this.stylesL)
       $(e.target).next().attr('style','')
@@ -165,7 +164,6 @@ class RegionOpt extends Component {
         iconFlag: true,
       })
     } else {
-      const styleLeftH = 'transition:all .5s;'
       $(e.target).parent().attr('style', _this.stylesH)
       $(e.target).next().attr('style', 'flex:0;overflow:hidden;')
       $(e.target).attr('title', '收起')
@@ -177,7 +175,6 @@ class RegionOpt extends Component {
   }
   // 右边栏的收起和展开
   handleRightClick = (e) => {
-    const styleR = 'right:5px;transition:all .5s;'
     const _this = this;
     if (!this.state.iconFlagR) {
       $(e.target).parent().parent().attr('style', _this.stylesR)
@@ -187,7 +184,6 @@ class RegionOpt extends Component {
         iconFlagR: true,
       })
     } else {
-      const styleRH = 'transition:all .5s;'
       $(e.target).parent().parent().attr('style', _this.stylesRH)
       $(e.target).next().attr('style', 'display:none;')
       $(e.target).attr('title', '收起')
@@ -218,7 +214,7 @@ class RegionOpt extends Component {
     }
   render() {
     const { Option } = Select
-    const { mainHomePage, iconFlag, iconFlagR, areaOptStatus, greenWaveData, totleDistance, showForwordWave, showReverseWave, isShowTree, showZoomCharts, zoomChartsName, zoomChartsData, speedDelayDatas, num } = this.state
+    const { mainHomePage, iconFlag, iconFlagR, areaOptStatus, showZoomCharts, zoomChartsName, zoomChartsData, speedDelayDatas, num } = this.state
     return (
       <div className='RegionBox'>
         {
