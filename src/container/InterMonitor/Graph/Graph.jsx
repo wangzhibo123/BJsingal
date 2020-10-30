@@ -20,7 +20,8 @@ class Graph extends React.Component {
       })
       this.renderCharts(chartsBox, xData, seriseData)
     } else {
-      this.renderCharts(chartsBox, this.xDatas, this.series)
+      // this.renderCharts(chartsBox, this.xDatas, this.series)
+      this.testRenderCharts(chartsBox)
     }
   }
   renderCharts = (chartsBox, xData, seriesData) => {
@@ -60,9 +61,9 @@ class Graph extends React.Component {
       },
       legend: {
         show: true,
-        left: 'right',
+        left: 'center',
         top: 10,
-        data: ['今日', '同比', '环比'],
+        data: ['同比', '环比'],
         textStyle: { // ----图例内容样式
           color: '#FFFFFF', // ---所有图例的字体颜色
           // backgroundColor:'black',  //---所有图例的字体背景色
@@ -211,6 +212,178 @@ class Graph extends React.Component {
           },
         },
       ],
+    }
+    chartsBox.setOption(options, true)
+  }
+  testRenderCharts = (chartsBox) => {
+    const options = {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross',
+          crossStyle: {
+            color: '#999'
+          }
+        }
+      },
+      grid: {
+        // show: false, // ---是否显示直角坐标系网格
+        top: '15%', // 等价于 y: '16%'
+        left: '3%',
+        bottom: '10', // ---相对位置，top\bottom\left\right
+        right: '4%',
+        containLabel: true, // ---grid 区域是否包含坐标轴的刻度标签
+      },
+      legend: {
+        data: ['蒸发量', '降水量', '平均温度'],
+        textStyle: { // ----图例内容样式
+          color: '#FFFFFF', // ---所有图例的字体颜色
+          // backgroundColor:'black',  //---所有图例的字体背景色
+        },
+      },
+      xAxis: [
+        {
+          type: 'category',
+          data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+          axisPointer: {
+            type: 'shadow'
+          },
+          axisLabel: {
+            show: true,
+            textStyle: {
+              color: '#5dbaf7', // 更改坐标轴文字颜色
+              fontSize: 12, // 更改坐标轴文字大小
+            },
+            interval: 0,
+            formatter(value) {
+              let ret = ''
+              const maxLength = 10 // 每项显示文字个数
+              const valLength = value.length // X轴类目项的文字个数
+              const rowN = Math.ceil(valLength / maxLength) // 类目项需要换行的行数
+              if (rowN > 1) { // 如果类目项的文字大于3
+                for (let i = 0; i < rowN; i++) {
+                  let temp = '' // 每次截取的字符串
+                  const start = i * maxLength // 开始截取的位置
+                  const end = start + maxLength // 结束截取的位置
+                  temp = `${value.substring(start, end)}\n`
+                  ret += temp // 凭借最终的字符串
+                }
+                return ret
+              }
+              return value
+            },
+          },
+          axisTick: {
+            alignWithLabel: true,
+          },
+          axisLine: {
+            // show: true,
+            lineStyle: {
+              color: '#1C385F', // 轴的颜色
+            },
+          },
+        }
+      ],
+      yAxis: [
+        {
+          type: 'value',
+          name: '',
+          min: 0,
+          max: 250,
+          interval: 50,
+          axisLabel: {
+            show: true,
+            textStyle: {
+              color: '#5dbaf7', // 更改坐标轴文字颜色
+              fontSize: 13, // 更改坐标轴文字大小
+            },
+            formatter: '{value} ml'
+          },
+          splitLine: { // ---grid 区域中的分隔线
+            show: true, // ---是否显示，'category'类目轴不显示，此时我的X轴为类目轴，splitLine属性是无意义的
+            lineStyle: {
+              color: ['#2A4065'],
+              width: 1,
+              type: 'solid',
+            },
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#1C385F', // 轴的颜色
+            },
+          },
+        },
+        {
+          type: 'value',
+          name: '',
+          min: 0,
+          max: 25,
+          interval: 5,
+          axisLabel: {
+            show: true,
+            textStyle: {
+              color: '#5dbaf7', // 更改坐标轴文字颜色
+              fontSize: 13, // 更改坐标轴文字大小
+            },
+            formatter: '{value} °C'
+          },
+          splitLine: { // ---grid 区域中的分隔线
+            show: true, // ---是否显示，'category'类目轴不显示，此时我的X轴为类目轴，splitLine属性是无意义的
+            lineStyle: {
+              color: ['#2A4065'],
+              width: 1,
+              type: 'solid',
+            },
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#1C385F', // 轴的颜色
+            },
+          },
+        }
+      ],
+      series: [
+        {
+          name: '蒸发量',
+          type: 'line',
+          smooth: true,
+          data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
+          itemStyle: {
+            color: '#9257AE',
+          },
+          areaStyle: {
+            normal: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                offset: 0,
+                color: '#9257AE'
+              }, {
+                offset: 1,
+                color: '#031334'
+              }])
+            }
+          },
+        },
+        {
+          name: '降水量',
+          type: 'line',
+          smooth: true,
+          data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
+          itemStyle: {
+            color: '#FFAE5E',
+          },
+          areaStyle: {
+            normal: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                offset: 0,
+                color: '#FFAE5E'
+              }, {
+                offset: 1,
+                color: '#031334'
+              }])
+            }
+          },
+        },
+      ]
     }
     chartsBox.setOption(options, true)
   }
