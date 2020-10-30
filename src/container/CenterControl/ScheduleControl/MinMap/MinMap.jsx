@@ -20,7 +20,7 @@ export default class MinMap extends Component {
           var lnglat = item.lngLat;
           var style = 'background:#fff;color:#000;';
           var html = document.createElement('div');
-          var contextmenu = '<div class="context_menu" style="padding:5px 10px;' + style + '">' + '<li id="start" style="cursor:point;">起点</li>' + '<li style="cursor:point;" id="end">终点</li>' + '<li style="cursor:point;" id="channel">途径点</li>' + '<li style="cursor:point;" id="clearmap">清空地图</li>' + '</div>';
+          var contextmenu = `<div class="context_menu" style="padding:5px 10px;${style}"><li id="start" style="cursor:point;">起点</li><li style="cursor:point;" id="end">终点</li><li style="cursor:point;" id="channel">途径点</li><li style="cursor:point;" id="clearmap">清空地图</li></div>`;
           html.innerHTML = contextmenu;
           marker = new window.mapabcgl.Marker(html)
             .setLngLat([lnglat.lng, lnglat.lat])

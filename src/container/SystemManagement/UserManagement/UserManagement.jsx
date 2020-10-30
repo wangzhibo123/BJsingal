@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Tabs, Tree, Pagination } from 'antd';
-import { CarryOutOutlined, FormOutlined } from '@ant-design/icons';
+import { CarryOutOutlined } from '@ant-design/icons';
 import styles from '../SystemManagement.module.scss'
 const { TabPane } = Tabs;
 const treeData = [

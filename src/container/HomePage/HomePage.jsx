@@ -295,7 +295,7 @@ class Homepage extends Component {
                     congestionList &&
                     congestionList.map((item, index) => {
                       return (
-                        <li className="jammedLi" key={item.area_id}>
+                        <li className="jammedLi" key={item.district_name}>
                           <div className="areaSort"><span className="sortNo">No.{index + 1}</span> {item.district_name}</div>
                           <div className="sortValue">
                             <span className="progressVal" style={{ width: `${(item.congestion_delay / 10) * 100}%`, backgroundColor: this.sortColors[index] }} />
@@ -340,7 +340,7 @@ class Homepage extends Component {
                     repairRateList &&
                     repairRateList.map((item, index) => {
                       return (
-                        <div className="faultDetails" key={item.area_id}>
+                        <div className="faultDetails" key={item.district_name}>
                           <div className="faultNo" style={{ backgroundColor: index < 4 ? this.rateColors[index] : '#0CB424' }}>{index + 1}</div>
                           <div className="faultArea">{item.district_name}</div>
                           <div className="present">{(item.fault_number / 10) * 100}%</div>
@@ -412,7 +412,7 @@ class Homepage extends Component {
                       areaMsgList.map((item, index) => {
                         if (index < 9) {
                           return (
-                            <div className="areaDetails" key={item.area_id}>
+                            <div className="areaDetails" key={item.district_name}>
                               <div className="areaName">{item.district_name}</div>
                               <div className="details">
                                 <div className="msg">
@@ -474,7 +474,7 @@ class Homepage extends Component {
                     areaMsgList.map((item, index) => {
                       if (index >= 9) {
                         return (
-                          <div className="areaDetails" key={item.area_id}>
+                          <div className="areaDetails" key={item.district_name}>
                             <div className="areaName">{item.district_name}</div>
                             <div className="details">
                               <div className="msg">

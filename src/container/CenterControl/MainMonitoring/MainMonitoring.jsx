@@ -119,7 +119,7 @@ export default class MainMonitoring extends Component {
       var lnglat = item.lngLat;
       var style = 'background:#081F42;color:#fff;';
       var html = document.createElement('div');
-      var contextmenu = '<div class="context_menu" style="padding:5px 10px;' + style + '">' + '<li id="start" style="cursor:point;">起点</li>' + '<li style="cursor:point;" id="end">终点</li>' + '<li style="cursor:point;" id="channel">途径点</li>' + '<li style="cursor:point;" id="clearmap">清空地图</li>' + '</div>';
+      var contextmenu = `<div class="context_menu" style="padding:5px 10px;${style}"><li id="start" style="cursor:point;">起点</li><li style="cursor:point;" id="end">终点</li><li style="cursor:point;" id="channel">途径点</li><li style="cursor:point;" id="clearmap">清空地图</li></div>`;
       html.innerHTML = contextmenu;
       marker = new window.mapabcgl.Marker(html)
         .setLngLat([lnglat.lng, lnglat.lat])
@@ -204,7 +204,7 @@ export default class MainMonitoring extends Component {
           destination: destination,
           waypoints: str//途经点
         }, function (data) {
-          if (data.status == 0) {
+          if (data.status === 0) {
             var data = data.result.routes[0].steps, xys = '';
             _this.map.removeLayerAndSource('plan');
             _this.map.removeLayerAndSource('plan1');
@@ -221,7 +221,7 @@ export default class MainMonitoring extends Component {
               _this.map.removeLayerAndSource('addArrowImg');
               addplanline(lines, 'plan', '#D6CE22')
             }
-          } else if (data.status != '0') {
+          } else if (data.status !== '0') {
             alert(data.message);
           };
         })
@@ -293,13 +293,13 @@ export default class MainMonitoring extends Component {
     let roadValue = []
     function rgeocode(type, location) {
       _this.map.Geocoder({ location: location }, function (data) {
-        if (data.status != '0') {
+        if (data.status !== '0') {
           alert(data.message);
           return
         };
         if (data.result.length > 0) {
-          if (type == 1) {
-          } else if (type == 2) {
+          if (type === 1) {
+          } else if (type === 2) {
           } else {
             roadValue.push(data.result[0].formatted_address)
             _this.setState({
@@ -309,9 +309,9 @@ export default class MainMonitoring extends Component {
         };
       });
     }
-    function trim(str) { //删除左右两端的空格
-      return str.replace(/(^\s*)|(\s*$)/g, "");
-    }
+    // function trim(str) { //删除左右两端的空格
+    //   return str.replace(/(^\s*)|(\s*$)/g, "");
+    // }
     function addMarker(img, point, position) {
       var marker = '', html = ''
       html = document.createElement('div');
@@ -356,7 +356,7 @@ export default class MainMonitoring extends Component {
         e.stopPropagation()
         this.ClickMessge()
       })
-      const marker = new window.mapabcgl.Marker(el)
+      new window.mapabcgl.Marker(el)
         .setLngLat([116.391, 39.911])
         .addTo(this.map);
     }
