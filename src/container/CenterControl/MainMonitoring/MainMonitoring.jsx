@@ -73,6 +73,8 @@ export default class MainMonitoring extends Component {
           ]
         }
       ],
+      modeMapFlyToPitch:60,
+      modeMapFlyToZoom:15,
       modeNavShow: true,
       modeMapShow: true,
       modeMainMonitor: false,
@@ -85,6 +87,10 @@ export default class MainMonitoring extends Component {
       modeMainSStyle:true,
        //向北 按钮
       modeMainNStyle:false,
+      //切换到2D按钮
+      modeMainTabTypeD:true,
+      //2D到3D
+      modeMainTabD:true
     };
   }
   componentDidMount() {
@@ -110,20 +116,20 @@ export default class MainMonitoring extends Component {
   }
   addMenu = () => {
     const _this = this
-    this.map.flyTo({ center: [116.391, 39.911], zoom: 15, pitch: 60 })
+    this.map.flyTo({ center: [116.391, 39.911], zoom: this.state.modeMapFlyToZoom, pitch: this.state.modeMapFlyToPitch })
     var marker = '', startmarker = '', endmarker = '', channelmarker = [];
     this.map.on('contextmenu', function (item) {
       if (marker) {
         marker.remove();
       }
       var lnglat = item.lngLat;
-      var style = 'background:#081F42;color:#fff;';
+      var style = 'background:#fff;color:#000;';
       var html = document.createElement('div');
-      var contextmenu = `<div class="context_menu" style="padding:5px 10px;${style}"><li id="start" style="cursor:point;">起点</li><li style="cursor:point;" id="end">终点</li><li style="cursor:point;" id="channel">途径点</li><li style="cursor:point;" id="clearmap">清空地图</li></div>`;
+      var contextmenu = '<div class="context_menu" style="padding:5px 10px;' + style + '">' + '<li id="start" style="cursor:point;">起点</li>' + '<li style="cursor:point;" id="end">终点</li>' + '<li style="cursor:point;" id="channel">途径点</li>' + '<li style="cursor:point;" id="clearmap">清空地图</li>' + '</div>';
       html.innerHTML = contextmenu;
       marker = new window.mapabcgl.Marker(html)
         .setLngLat([lnglat.lng, lnglat.lat])
-        .setOffset([30, 0])
+        .setOffset([50, 0])
         .addTo(_this.map);
       var start = document.getElementById('start');
       var end = document.getElementById('end');
@@ -143,8 +149,9 @@ export default class MainMonitoring extends Component {
       })
       // 初始话渲染路口
     })
-    //起始点
+
     this.getstartpoint = (lnglat) => {
+      console.log(lnglat, '开始')
       if (marker) {
         marker.remove();
       }
@@ -155,8 +162,9 @@ export default class MainMonitoring extends Component {
       plan()
       startmarker.on('dragend', plan);
     }
-    //结束点
+
     this.getendpoint = (lnglat) => {
+      console.log(lnglat, '结束')
       if (marker) {
         marker.remove();
       }
@@ -167,9 +175,11 @@ export default class MainMonitoring extends Component {
       plan();
       endmarker.on('dragend', plan);
     }
-    //途径点
     _this.intersectionRenderin()
+    // this.getstartpoint({ lng: 116.39171507191793, lat: 39.910732551600205 })
+    // this.getendpoint({ lng: 116.3909904231216, lat: 39.9223143411036 })
     this.getChannelpoint = (lnglat) => {
+      console.log(lnglat, '途经点')
       if (marker) {
         marker.remove();
       }
@@ -179,12 +189,15 @@ export default class MainMonitoring extends Component {
       }
       var pointMarker = addMarkerpoint('http://map.mapabc.com:35001/mapdemo/apidemos/sourceLinks/img/point_1.png', [lnglat.lng, lnglat.lat], -441);
       channelmarker.push(pointMarker)
+      // var ary = [];
       rgeocode(3, pointMarker.getLngLat().lng + ',' + pointMarker.getLngLat().lat);
       plan();
       pointMarker.on('dragend', plan);
     }
+
     function plan() {
       var str = '';
+      // channelName = '';
       if (startmarker) {
         rgeocode(1, startmarker.getLngLat().lng + ',' + startmarker.getLngLat().lat);
       }
@@ -199,12 +212,13 @@ export default class MainMonitoring extends Component {
       if (startmarker && endmarker) {
         var origin = startmarker.getLngLat().lng + ',' + startmarker.getLngLat().lat;
         var destination = endmarker.getLngLat().lng + ',' + endmarker.getLngLat().lat;
+
         _this.map.Driving({
           origin: origin,
           destination: destination,
           waypoints: str//途经点
         }, function (data) {
-          if (data.status === 0) {
+          if (data.status == 0) {
             var data = data.result.routes[0].steps, xys = '';
             _this.map.removeLayerAndSource('plan');
             _this.map.removeLayerAndSource('plan1');
@@ -214,6 +228,7 @@ export default class MainMonitoring extends Component {
             if (xys) {
               xys = xys.substr(0, xys.length - 1)
               var path = xys.split(';'), lines = [];
+
               for (var k = 0; k < path.length; k++) {
                 var xy = path[k].split(',')
                 lines.push(xy)
@@ -221,12 +236,13 @@ export default class MainMonitoring extends Component {
               _this.map.removeLayerAndSource('addArrowImg');
               addplanline(lines, 'plan', '#D6CE22')
             }
-          } else if (data.status !== '0') {
+          } else if (data.status != '0') {
             alert(data.message);
           };
         })
       }
     }
+
     function addplanline(lines, id, color) {
       var geojson = {
         "type": "FeatureCollection",
@@ -238,6 +254,8 @@ export default class MainMonitoring extends Component {
           }
         }]
       };
+
+
       _this.map.addLayer({
         "id": id,
         "type": "line",
@@ -268,6 +286,7 @@ export default class MainMonitoring extends Component {
         }
       });
     }
+
     function clearMap() {
       if (marker) {
         marker.remove();
@@ -287,42 +306,56 @@ export default class MainMonitoring extends Component {
         }
         channelmarker = []
       }
+
       _this.map.removeLayerAndSource('plan');
       _this.map.removeLayerAndSource('plan1');
+      
     }
     let roadValue = []
     function rgeocode(type, location) {
       _this.map.Geocoder({ location: location }, function (data) {
-        if (data.status !== '0') {
+        if (data.status != '0') {
           alert(data.message);
           return
         };
         if (data.result.length > 0) {
-          if (type === 1) {
-          } else if (type === 2) {
+          if (type == 1) {
+          } else if (type == 2) {
           } else {
+            // var str = channel.value ? channel.value + ';' : channel.value;
+            console.log(data.result[0].formatted_address, 'vvv')
+            // console.log(channel, 'sss')
             roadValue.push(data.result[0].formatted_address)
             _this.setState({
               roadValue
             })
+            // console.log(str, channel, data, 'vvvvvXR')
+            // channel.value = trim(channel.value) + data.result[0].formatted_address + ';';
+            // channel.value = trim(channel.value)
           }
         };
       });
+
     }
-    // function trim(str) { //删除左右两端的空格
-    //   return str.replace(/(^\s*)|(\s*$)/g, "");
-    // }
+
+    function trim(str) { //删除左右两端的空格
+      return str.replace(/(^\s*)|(\s*$)/g, "");
+    }
+
     function addMarker(img, point, position) {
       var marker = '', html = ''
       html = document.createElement('div');
       html.style.cssText = 'background:url(' + img + ')' + position + 'px 0px no-repeat;width:80px;height:50px;';
       html.style.backgroundSize = '100% 100%';
+      // html.style.position = 'relative';
+      // html.style.top = '-20px';
       marker = new window.mapabcgl.Marker(html)
         .setLngLat(point)
         .setDraggable(true)
         .setOffset([0, -20])
         .addTo(_this.map);
       return marker;
+
     };
     function addMarkerpoint(img, point, position) {
       var marker = '', html = ''
@@ -335,14 +368,33 @@ export default class MainMonitoring extends Component {
       return marker;
     };
   }
+  
   ClickMessge = () => {
     var popupOption = {
       closeOnClick: false,
       closeButton: true,
+      // anchor: "bottom-left",
       offset: [-20, -10]
     }
+    // <img width="36px" height="36px" src="${}" />
+    //控制绿点弹出框
     this.popup = new window.mapabcgl.Popup(popupOption)
       .setLngLat(new window.mapabcgl.LngLat(116.391, 39.911))
+      .setHTML(`
+      <div style="width: 310px;color: #599FE0; font-size:12px;height: 165px;background:rgba(6,21,65,.5);border: 1px solid #3167AA; ">
+      <div style="height:32px;line-height:32px;text-align: left;padding-left: 20px;"><span style="color:#599FE0">车农庄大街与车公庄北街路口</span></div>
+      <div>
+      <p style="height:32px;margin-bottom:0;line-height:32px;padding-left:40px"><span>路口编号 ：</span>120461</p>
+      <p style="height:32px;margin-bottom:0;line-height:32px;padding-left:40px"><span>所属类型 ：</span>十字路口</p>
+      <p style="height:32px;margin-bottom:0;line-height:32px;padding-left:40px"><span>所属区域 ：</span>西城区</p>
+      <p style="height:32px;margin-bottom:0;line-height:32px;display: flex;align-items: center;justify-content: center;"><span style="
+      padding: 0px 5px;
+      height: 25px;
+      line-height: 25px;
+      color: #EBEFF7;
+      background-color: #094FBA;">加入区域</span></p>
+      </div>
+    </div>`)
       .addTo(this.map);
   }
   addMarker = () => {
@@ -356,7 +408,8 @@ export default class MainMonitoring extends Component {
         e.stopPropagation()
         this.ClickMessge()
       })
-      new window.mapabcgl.Marker(el)
+      const marker = new window.mapabcgl.Marker(el)
+      //绿色中心点坐标
         .setLngLat([116.391, 39.911])
         .addTo(this.map);
     }
@@ -373,7 +426,7 @@ export default class MainMonitoring extends Component {
     const options = {
       minzoom: 1, // 路况显示的最小级别(1-24)
       maxzoom: 24, // 路况显示的最大级别(1-24)
-      type: 'vector', // 路况图层类型:vector(矢量),raster(栅格)
+      type: 'raster', // 路况图层类型:vector(矢量),raster(栅格)
       refresh: 30 * 1000, // 路况图层刷新时间，毫秒
       // before:'roads-symbol-49'
     };
@@ -384,6 +437,7 @@ export default class MainMonitoring extends Component {
         map.removeLayerAndSource('icon');
       };
       this.addMenu()
+
     })
     map.on('click', () => {
       if (this.popup) {
@@ -416,9 +470,28 @@ export default class MainMonitoring extends Component {
       modeMainNStyle:true
     })
   }
- 
+  //2D,3D切换
+  flyTo2D=()=>{
+    if(this.state.modeMainTabD){
+      this.setState({
+        modeMapFlyToPitch:0,
+        modeMainTabD:false,
+        modeMapFlyToZoom:13
+      },()=>{
+        this.addMenu()
+      })
+    }else{
+      this.setState({
+        modeMapFlyToPitch:60,
+        modeMainTabD:true,
+        modeMapFlyToZoom:15
+      },()=>{
+        this.addMenu()
+      })
+    }
+  }
   render() {
-    const { modeNavShow, modeMapShow, modeMainMonitor, modeMainTabShow ,modeMainEStyle,modeMainWStyle,modeMainSStyle,modeMainNStyle} = this.state;
+    const { modeNavShow, modeMapShow, modeMainMonitor, modeMainTabShow ,modeMainEStyle,modeMainWStyle,modeMainSStyle,modeMainNStyle,modeMainTabTypeD,modeMainTabD} = this.state;
     return (
       <div className="mainMon">
         {
@@ -863,6 +936,11 @@ export default class MainMonitoring extends Component {
                 modeMainTabShow: false
               })
             }}>模式切换</div>
+          </div>
+        }
+        {
+          modeMainTabTypeD&&<div style={{width:"50px",height:'50px',background:'rgba(32, 120, 195,.6)',color:"#fff",position:"absolute",right:"30px",bottom:"45px",textAlign:"center",cursor:'pointer',borderRadius:"5px",lineHeight:"50px",fontWeight:700}}>
+            <div style={{fontSize:'17px'}} onClick={this.flyTo2D}>{modeMainTabD?"2D":"3D"}</div>
           </div>
         }
       </div >

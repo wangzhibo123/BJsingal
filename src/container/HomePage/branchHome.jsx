@@ -186,7 +186,6 @@ class branchHome extends Component {
       <div className="branchHomeWrapper">
         <div className="container">
           <div className="asideLeft">
-
             <div className="asideItem">
               <div className="title">实时拥堵排名</div>
               <div className="itemContent">
