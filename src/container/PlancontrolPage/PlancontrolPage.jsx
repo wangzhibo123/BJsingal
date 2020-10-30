@@ -161,7 +161,7 @@ class Homepage extends Component {
         _this.getendpoint(lnglat)
       })
       channel.addEventListener('click', function (e) {
-        getChannelpoint(lnglat)
+        _this.getChannelpoint(lnglat)
       })
       clear.addEventListener('click', function (e) {
         clearMap();
@@ -189,13 +189,13 @@ class Homepage extends Component {
       if (endmarker) {
         endmarker.remove();
       }
-      endmarker = addMarkerEnd(endPng, [lnglat.lng, lnglat.lat], 0);
+      endmarker = addMarker(endPng, [lnglat.lng, lnglat.lat], 0);
       plan();
       endmarker.on('dragend', plan);
     }
     this.getstartpoint({ lng: 116.39171507191793, lat: 39.910732551600205 })
     this.getendpoint({ lng: 116.3909904231216, lat: 39.9223143411036 })
-    function getChannelpoint(lnglat) {
+    this.getChannelpoint = (lnglat) => {
       if (marker) {
         marker.remove();
       }
@@ -203,7 +203,7 @@ class Homepage extends Component {
         alert("途径点最多支持16个")
         return;
       }
-      var pointMarker = addMarker('http://map.mapabc.com:35001/mapdemo/apidemos/sourceLinks/img/point_1.png', [lnglat.lng, lnglat.lat], -441);
+      var pointMarker = addMarkerpoint('http://map.mapabc.com:35001/mapdemo/apidemos/sourceLinks/img/point_1.png', [lnglat.lng, lnglat.lat], -441);
       channelmarker.push(pointMarker)
       var ary = [];
       rgeocode(3, pointMarker.getLngLat().lng + ',' + pointMarker.getLngLat().lat);
@@ -374,17 +374,13 @@ class Homepage extends Component {
       return marker;
 
     };
-    function addMarkerEnd(img, point, position) {
+    function addMarkerpoint(img, point, position) {
       var marker = '', html = ''
       html = document.createElement('div');
-      html.style.cssText = 'background:url(' + img + ')' + position + 'px 0px no-repeat;width:80px;height:50px;';
-      html.style.backgroundSize = '100% 100%';
-      // html.style.position = 'relative';
-      // html.style.top = '-75px';
+      html.style.cssText = 'background:url(' + img + ')' + position + 'px 0px no-repeat;width:35px;height:26px;'
       marker = new window.mapabcgl.Marker(html)
         .setLngLat(point)
         .setDraggable(true)
-        .setOffset([0, -20])
         .addTo(_this.map);
       return marker;
     };

@@ -80,6 +80,7 @@ class branchHome extends Component {
       if (code === '1') {
         this.pointLists = pointlist
         this.setState({ errline, offline, online, pointlist })
+        this.addMarker(this.pointLists)
       }
     })
   }
@@ -169,7 +170,6 @@ class branchHome extends Component {
     this.map.addControl(new window.mapabcgl.NavigationControl());
     this.map.on('load', () => {
       this.addTrafficLayer()
-      this.addMarker(this.pointLists)
     })
   }
   randomData = () => {

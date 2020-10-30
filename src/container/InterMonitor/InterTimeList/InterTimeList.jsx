@@ -27,7 +27,7 @@ class InterTimeList extends Component {
           <div className="listTh">
             <span className="innterBorder" />
             <div className="listTd">时间</div>
-            <div className="listTd">平均车速</div>
+            <div className="listTd">方案说明</div>
             <div className="listTd">周期</div>
           </div>
           <div className="listTr">
