@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import "./Calender.scss"
-import { Radio, Select } from "antd"
+import { Radio, Select,Calendar, Col, Row } from "antd"
+import { LeftOutlined,RightOutlined } from "@ant-design/icons";
 const { Option } = Select;
+const { Group, Button } = Radio;
 export default class Calender extends Component {
     constructor(props) {
         super(props);
@@ -49,6 +51,16 @@ export default class Calender extends Component {
     handleChange(value) {
         console.log(`selected ${value}`);
     }
+    onPanelChange(value, mode) {
+        console.log(value, mode);
+    }
+    dateFullCellRender(){
+        
+    }
+    monthFullCellRender(){
+        console.log(11)
+        return `一，二，三，四，五，六，日`
+    }
     render() {
         const { value, calenderShow } = this.state;
         const { weekShow, gregorianCalendarShow, lunarCalendarShow } = calenderShow;
@@ -64,11 +76,9 @@ export default class Calender extends Component {
                                 <Radio value={1} style={{ color: "#fff", marginLeft: "15px" }}>星期</Radio>
                             </div>
                             <div className="gregorianCalendar">
-                                <Radio value={2} style={{ color: "#fff", marginLeft: "15px" }}>公历</Radio>
+                                <Radio value={2} style={{ color: "#fff", marginLeft: "15px" }}>日历</Radio>
                             </div>
-                            <div className="lunarCalendar">
-                                <Radio value={3} style={{ color: "#fff", marginLeft: "15px" }}>农历</Radio>
-                            </div>
+                            
                         </Radio.Group>
                     </div>
                     <div className="calenderSelect">
@@ -178,151 +188,105 @@ export default class Calender extends Component {
                         </div>
                     }
                     {
-                        gregorianCalendarShow && <div style={{ width: "100%", height: "100%" }}>
-                            <table style={{ width: "100%", height: "100%", background: "#032443" }} border>
-                                <tbody>
-                                    <tr style={{ height: 30, textAlign: "center" }}>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }} rowSpan="2">月</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>1</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>2</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>3</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>4</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>5</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>6</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>7</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>8</td>
-                                    </tr>
-                                    <tr style={{ height: 30, textAlign: "center" }}>
-                                        {/* <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td> */}
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>7</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>8</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>9</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>10</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>11</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>12</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td>
-                                    </tr>
-                                    <tr style={{ height: 30, textAlign: "center" }}>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }} rowSpan="4">日</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>1</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>2</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>3</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>4</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>5</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>6</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>7</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>8</td>
-                                    </tr>
-                                    <tr style={{ height: 30, textAlign: "center" }}>
-                                        {/* <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td> */}
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>9</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>10</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>11</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#016194" }}>12</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#016194" }}>13</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#016194" }}>14</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#016194" }}>15</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>16</td>
-                                    </tr>
-                                    <tr style={{ height: 30, textAlign: "center" }}>
-                                        {/* <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td> */}
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>17</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>18</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#016194" }}>19</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#016194" }}>20</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#016194" }}>21</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#016194" }}>22</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#016194" }}>23</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#016194" }}>24</td>
-                                    </tr>
-                                    <tr style={{ height: 30, textAlign: "center" }}>
-                                        {/* <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td> */}
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>25</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>26</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>27</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>28</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>29</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>30</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>31</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                    {
-                        lunarCalendarShow && <div style={{ width: "100%", height: "100%" }}>
-                            <table style={{ width: "100%", height: "100%", background: "#032443" }} border>
-                                <tbody>
-                                    <tr style={{ height: 30, textAlign: "center" }}>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }} rowspan="2">月</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>1</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>2</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>3</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>4</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>5</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>6</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>7</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>8</td>
-                                    </tr>
-                                    <tr style={{ height: 30, textAlign: "center" }}>
-                                        {/* <td style={{ border: "1px solid #015681", verticalAlign: "middle", colspan: "2" }}></td> */}
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>7</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>8</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>9</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>10</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>11</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#016194" }}>12</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td>
-                                    </tr>
-                                    <tr style={{ height: 30, textAlign: "center" }}>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }} rowSpan="4">日</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>初一</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>初二</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>初三</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#016194" }}>初四</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>初五</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#016194" }}>初六</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#016194" }}>初七</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#016194" }}>初八</td>
-                                    </tr>
-                                    <tr style={{ height: 30, textAlign: "center" }}>
-                                        {/* <td style={{ border: "1px solid #015681", verticalAlign: "middle", rowspan: "2" }}></td> */}
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>初九</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>初十</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>十一</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>十二</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>十三</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>十四</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>十五</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>十六</td>
-                                    </tr>
-                                    <tr style={{ height: 30, textAlign: "center" }}>
-                                        {/* <td style={{ border: "1px solid #015681", verticalAlign: "middle", rowspan: "2" }}></td> */}
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>十七</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>十八</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>十九</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>廿十</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>廿一</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>廿二</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>廿三</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>廿四</td>
-                                    </tr>
-                                    <tr style={{ height: 30, textAlign: "center" }}>
-                                        {/* <td style={{ border: "1px solid #015681", verticalAlign: "middle", rowspan: "2" }}></td> */}
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>廿五</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>廿六</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>廿七</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>廿八</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>廿九</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>三十</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        gregorianCalendarShow && <div style={{ width: "100%", height: "100%"}}>
+                            <div style={{ width: "100%",height:"100%", border: '1px solid #015681', borderRadius: 4}}>
+                                <Calendar
+                                monthFullCellRender={this.monthFullCellRender}
+                                style={{background:"#032443"}}
+                                fullscreen={false}
+                                headerRender={({ value, type, onChange, onTypeChange }) => {
+                                    const start = 0;
+                                    const end = 12;
+                                    const monthOptions = [];
+                                    const current = value.clone();
+                                    const localeData = value.localeData();
+                                    const months = [];
+                                    for (let i = 0; i < 12; i++) {
+                                    current.month(i);
+                                    months.push(localeData.monthsShort(current));
+                                    }
+
+                                    for (let index = start; index < end; index++) {
+                                    monthOptions.push(
+                                        <Select.Option className="month-item" key={`${index}`}>
+                                        {months[index]}
+                                        </Select.Option>,
+                                    );
+                                    }
+                                    const month = value.month();
+
+                                    const year = value.year();
+                                    const options = [];
+                                    for (let i = year - 10; i < year + 10; i += 1) {
+                                    options.push(
+                                        <Select.Option key={i} value={i} className="year-item">
+                                        {i}年
+                                        </Select.Option>,
+                                    );
+                                    }
+                                    return (
+                                    <div style={{ padding: 10}}>
+                                        <Row type="flex" justify="space-between">
+                                        <Col style={{display:"flex"}}>
+                                            <div style={{width:"32px",height:"32px",border:"1px solid  #00A0EE",textAlign:"center",lineHeight:'32px',color:"#fff",cursor:"pointer"}}>
+                                                <LeftOutlined />
+                                            </div>
+                                            <Select
+                                            size="middle"
+                                            dropdownMatchSelectWidth={false}
+                                            className="my-year-select"
+                                            onChange={newYear => {
+                                                const now = value.clone().year(newYear);
+                                                onChange(now);
+                                            }}
+                                            value={String(year)}
+                                            style={{width:"115px"}}
+                                            >
+                                            {options}
+                                            </Select>
+                                            <div style={{width:"32px",height:"32px",border:"1px solid  #00A0EE",textAlign:"center",lineHeight:'32px',color:"#fff",cursor:"pointer"}}>
+                                                <RightOutlined />
+                                            </div>
+                                        </Col>
+                                        <Col style={{display:"flex"}}>
+                                            <div style={{width:"32px",height:"32px",border:"1px solid  #00A0EE",textAlign:"center",lineHeight:'32px',color:"#fff",cursor:"pointer"}}>
+                                                <LeftOutlined />
+                                            </div>
+                                            <Select
+                                            size="middle"
+                                            dropdownMatchSelectWidth={false}
+                                            value={String(month)}
+                                            onChange={selectedMonth => {
+                                                const newValue = value.clone();
+                                                newValue.month(parseInt(selectedMonth, 10));
+                                                onChange(newValue);
+                                            }}
+                                            style={{width:"115px"}}
+                                            >
+                                            {monthOptions}
+                                            </Select>
+                                            <div style={{width:"32px",height:"32px",border:"1px solid  #00A0EE",textAlign:"center",lineHeight:'32px',color:"#fff",cursor:"pointer"}}>
+                                                <RightOutlined />
+                                            </div>
+                                        </Col>
+                                        <Col>
+                                            <Select size="middle" style={{width:"115px"}} value="放假安排">
+                                                <Option>放假安排</Option>
+                                            </Select>
+                                            <Group size="middle" onChange={e => onTypeChange(e.target.value)} value={type}>
+                                                <Button style={{background:"#032443",borderColor:"#00A0EE",color:"#fff"}}>返回今天</Button>
+                                            </Group>
+                                        </Col>
+                                        </Row>
+                                    </div>
+                                    );
+                                }}
+                                onPanelChange={this.onPanelChange}
+                                fullscreen={false}
+                                monthFullCellRender={this.monthFullCellRender}
+                                monthFullCellRender={this.monthFullCellRender}
+                                />
+                            </div>
                         </div>
                     }
                 </div>

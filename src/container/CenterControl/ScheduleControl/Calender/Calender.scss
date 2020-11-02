@@ -13,8 +13,6 @@
     .calenderNav{
         width: 100%;
         height: 40px;
-        float: left;
-        line-height:    px;
         .calenderTab{
             float: left;
             margin-top: 5px;
@@ -100,5 +98,36 @@
     .calenderContent{
         width: 100%;
         height: calc(100% - 70px);
+        .ant-picker-panel{
+            background: #032443;
+            border: none;
+        }
+        .ant-select-selector {
+            border: 1px solid #00A0EE;
+            background-color: #112B4C;
+            color: #fff;
+        }
+        .ant-select-arrow {
+            color: #fff;
+        }
+        .ant-select-selection-item{
+            padding-top: 3px;
+            padding-left: 1px;
+        }
+        .ant-picker-calendar-date-value{
+            color: #fff;
+        }
+        .ant-picker-cell{
+            height: 52px;
+            border: 1px solid #00A0EE;
+            line-height: 40px;
+        }
+        
+        .ant-picker-content th {
+            height: 40px;
+            color: #fff;
+            border: 1px solid #00A0EE;
+            line-height:40px;
+        }
     }
 }
