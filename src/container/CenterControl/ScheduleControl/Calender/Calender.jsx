@@ -1,18 +1,17 @@
 import React, { Component } from 'react'
 import "./Calender.scss"
 import { Radio, Select,Calendar, Col, Row } from "antd"
-import { LeftOutlined,RightOutlined } from "@ant-design/icons";
+import CalendarPublic from "./calender/calender"
 const { Option } = Select;
 const { Group, Button } = Radio;
 export default class Calender extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: 1,
+            value: 2,
             calenderShow: {
-                weekShow: true,
-                gregorianCalendarShow: false,
-                lunarCalendarShow: false
+                weekShow: false,
+                gregorianCalendarShow: true,
             }
         }
     }
@@ -53,13 +52,6 @@ export default class Calender extends Component {
     }
     onPanelChange(value, mode) {
         console.log(value, mode);
-    }
-    dateFullCellRender(){
-        
-    }
-    monthFullCellRender(){
-        console.log(11)
-        return `一，二，三，四，五，六，日`
     }
     render() {
         const { value, calenderShow } = this.state;
@@ -189,104 +181,7 @@ export default class Calender extends Component {
                     }
                     {
                         gregorianCalendarShow && <div style={{ width: "100%", height: "100%"}}>
-                            <div style={{ width: "100%",height:"100%", border: '1px solid #015681', borderRadius: 4}}>
-                                <Calendar
-                                monthFullCellRender={this.monthFullCellRender}
-                                style={{background:"#032443"}}
-                                fullscreen={false}
-                                headerRender={({ value, type, onChange, onTypeChange }) => {
-                                    const start = 0;
-                                    const end = 12;
-                                    const monthOptions = [];
-                                    const current = value.clone();
-                                    const localeData = value.localeData();
-                                    const months = [];
-                                    for (let i = 0; i < 12; i++) {
-                                    current.month(i);
-                                    months.push(localeData.monthsShort(current));
-                                    }
-
-                                    for (let index = start; index < end; index++) {
-                                    monthOptions.push(
-                                        <Select.Option className="month-item" key={`${index}`}>
-                                        {months[index]}
-                                        </Select.Option>,
-                                    );
-                                    }
-                                    const month = value.month();
-
-                                    const year = value.year();
-                                    const options = [];
-                                    for (let i = year - 10; i < year + 10; i += 1) {
-                                    options.push(
-                                        <Select.Option key={i} value={i} className="year-item">
-                                        {i}年
-                                        </Select.Option>,
-                                    );
-                                    }
-                                    return (
-                                    <div style={{ padding: 10}}>
-                                        <Row type="flex" justify="space-between">
-                                        <Col style={{display:"flex"}}>
-                                            <div style={{width:"32px",height:"32px",border:"1px solid  #00A0EE",textAlign:"center",lineHeight:'32px',color:"#fff",cursor:"pointer"}}>
-                                                <LeftOutlined />
-                                            </div>
-                                            <Select
-                                            size="middle"
-                                            dropdownMatchSelectWidth={false}
-                                            className="my-year-select"
-                                            onChange={newYear => {
-                                                const now = value.clone().year(newYear);
-                                                onChange(now);
-                                            }}
-                                            value={String(year)}
-                                            style={{width:"115px"}}
-                                            >
-                                            {options}
-                                            </Select>
-                                            <div style={{width:"32px",height:"32px",border:"1px solid  #00A0EE",textAlign:"center",lineHeight:'32px',color:"#fff",cursor:"pointer"}}>
-                                                <RightOutlined />
-                                            </div>
-                                        </Col>
-                                        <Col style={{display:"flex"}}>
-                                            <div style={{width:"32px",height:"32px",border:"1px solid  #00A0EE",textAlign:"center",lineHeight:'32px',color:"#fff",cursor:"pointer"}}>
-                                                <LeftOutlined />
-                                            </div>
-                                            <Select
-                                            size="middle"
-                                            dropdownMatchSelectWidth={false}
-                                            value={String(month)}
-                                            onChange={selectedMonth => {
-                                                const newValue = value.clone();
-                                                newValue.month(parseInt(selectedMonth, 10));
-                                                onChange(newValue);
-                                            }}
-                                            style={{width:"115px"}}
-                                            >
-                                            {monthOptions}
-                                            </Select>
-                                            <div style={{width:"32px",height:"32px",border:"1px solid  #00A0EE",textAlign:"center",lineHeight:'32px',color:"#fff",cursor:"pointer"}}>
-                                                <RightOutlined />
-                                            </div>
-                                        </Col>
-                                        <Col>
-                                            <Select size="middle" style={{width:"115px"}} value="放假安排">
-                                                <Option>放假安排</Option>
-                                            </Select>
-                                            <Group size="middle" onChange={e => onTypeChange(e.target.value)} value={type}>
-                                                <Button style={{background:"#032443",borderColor:"#00A0EE",color:"#fff"}}>返回今天</Button>
-                                            </Group>
-                                        </Col>
-                                        </Row>
-                                    </div>
-                                    );
-                                }}
-                                onPanelChange={this.onPanelChange}
-                                fullscreen={false}
-                                monthFullCellRender={this.monthFullCellRender}
-                                monthFullCellRender={this.monthFullCellRender}
-                                />
-                            </div>
+                            <CalendarPublic/>
                         </div>
                     }
                 </div>
