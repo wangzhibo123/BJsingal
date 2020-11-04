@@ -588,8 +588,8 @@ export default class MainMonitoring extends Component {
                     <Button onClick={this.modeMainWBtn} className={modeMainWStyle&&"modeShowStyle"}>西</Button>
                   </div>
                   <div className="modeMainEWVideo">
-                    <video src="//www.jb51.net/~j/theora_testsuite/320x240.ogg" style={{ width: "100%", height: "100%" }} controls>
-                      <source src="//www.jb51.net/~j/theora_testsuite/320x240.ogg" type="video/mp4"></source>
+                    <video src="*" style={{ width: "100%", height: "100%" }} controls>
+                      <source src="*" type="video/mp4"></source>
                     </video>
                   </div>
                 </div>

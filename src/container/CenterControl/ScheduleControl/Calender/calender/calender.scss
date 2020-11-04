@@ -126,5 +126,39 @@
         width: 100%;
         height: calc(100% - 37px);
         margin-top: 5px;
+        .calenderContentTable{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            .calenderContentTHead{
+                width: 100%;
+                height: 40px;
+                display: flex;
+                .calenderContentTh{
+                    flex: 1;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border: 1px solid #015681;
+                    background: #023960;
+                }
+            }
+            .calenderContentTBody{
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                .calenderContentTD{
+                    width: calc(100% / 7);
+                    height: calc(100% / 6);
+                    display: flex;
+                    flex-direction: column;
+                   justify-content: center;
+                   align-items: center;
+                   border: 1px solid #015681;
+                }
+            }
+        }
     }
 }
