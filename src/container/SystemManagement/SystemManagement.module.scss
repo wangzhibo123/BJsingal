@@ -103,6 +103,7 @@ $bg-color:#1A344F;
           justify-content: space-around;
           align-items: center;
           padding:15px;
+          line-height: 32px;
           >span{
             flex: 1;
             display: flex;
@@ -270,7 +271,7 @@ $bg-color:#1A344F;
 
       // 操作日志
       .searchContent{
-        padding:20px 30px;
+        padding:5px 30px;
         margin-bottom: 10px;
         border:1px solid $bor-color;
         display: flex;
