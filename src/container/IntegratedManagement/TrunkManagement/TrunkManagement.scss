@@ -32,7 +32,7 @@ $bor-color: #a5fcff;
                     display: flex;
                     align-items: center;
                     justify-content: space-around;
-                    span {
+                    > span {
                         width: 50px;
                         height: 30px;
                         text-align: center;
@@ -43,22 +43,33 @@ $bor-color: #a5fcff;
                     }
                 }
             }
-            > p {
+            > p,
+            .divs {
                 height: 55px;
                 color: #5f9ef2;
                 display: flex;
                 align-items: center;
                 margin-bottom: 0;
-                span {
+                > span {
                     width: 75px;
                 }
                 .inputBox {
                     flex: 1;
                     height: 30px;
                     outline: none;
+                    color: #5f9ef2;
                     border: 1px solid #1c59ce;
                     background-color: #18346a;
                     padding-left: 5px;
+                }
+                .ant-select-selector {
+                    color: #5f9ef2;
+                    border: 1px solid #1c59ce;
+                    background-color: #18346a;
+                    padding-left: 5px;
+                }
+                .ant-select-arrow {
+                    color: #fff;
                 }
             }
             .lineBox {
@@ -179,9 +190,9 @@ $bor-color: #a5fcff;
                                 display: inline-block;
                                 width: 20px;
                                 color: #15e94f;
-                                &:nth-child(2){
-                                   color: #0570AD; 
-                                   cursor: pointer;
+                                &:nth-child(2) {
+                                    color: #0570ad;
+                                    cursor: pointer;
                                 }
                             }
                         }
@@ -272,7 +283,6 @@ $bor-color: #a5fcff;
 
             .selectNav {
                 flex: 4;
-
                 select {
                     width: 90%;
                     height: 30px;
@@ -330,6 +340,11 @@ $bor-color: #a5fcff;
             width: 100%;
             height: 100%;
             overflow-y: auto;
+            // .anticon {
+            //     position: absolute;
+            //     top: 15px;
+            //     right: -6px;
+            // }
         }
     }
     .container {
@@ -548,10 +563,5 @@ $bor-color: #a5fcff;
         width: 240px;
         padding-right: 20px;
         padding-left: 65px !important;
-    }
-    .anticon {
-        position: absolute;
-        top: 15px;
-        right: -6px;
     }
 }
