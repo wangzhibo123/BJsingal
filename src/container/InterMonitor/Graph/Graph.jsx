@@ -24,199 +24,14 @@ class Graph extends React.Component {
       this.testRenderCharts(chartsBox)
     }
   }
-  renderCharts = (chartsBox, xData, seriesData) => {
-    const options = {
-      color: ['#3398DB'],
-      title: {
-        show: false,
-        text: '实时信号控制状态',
-        padding: [5, 0, 0, 20],
-        textStyle: {
-          fontWeight: 'normal',
-          color: '#FFFFFF',
-        },
-      },
-      dataZoom: [
-        {
-          height: 10,
-          type: 'slider',
-          show: false,
-          xAxisIndex: [0],
-          start: 0,
-          end: xData.length > 5 ? 30 : 100,
-          top: 0,
-        },
-        {
-          type: 'inside',
-          xAxisIndex: [0],
-          start: 50,
-          end: 100,
-        },
-      ],
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: { // 坐标轴指示器，坐标轴触发有效
-          type: 'shadow', // 默认为直线，可选为：'line' | 'shadow'
-        },
-      },
-      legend: {
-        show: true,
-        left: 'center',
-        top: 10,
-        data: ['同比', '环比'],
-        textStyle: { // ----图例内容样式
-          color: '#FFFFFF', // ---所有图例的字体颜色
-          // backgroundColor:'black',  //---所有图例的字体背景色
-        },
-      },
-      grid: {
-        // show: false, // ---是否显示直角坐标系网格
-        top: '15%', // 等价于 y: '16%'
-        left: '3%',
-        bottom: '20', // ---相对位置，top\bottom\left\right
-        right: '4%',
-        containLabel: true, // ---grid 区域是否包含坐标轴的刻度标签
-      },
-      xAxis: {
-        type: 'category',
-        boundaryGap: false,
-        data: xData, // ['离点断线', '关灯控制', '全红控制', '黄闪控制', '本地多时段', '本地感应', '中心多时段', '勤务控制'],
-        axisLabel: {
-          show: true,
-          textStyle: {
-            color: '#5dbaf7', // 更改坐标轴文字颜色
-            fontSize: 12, // 更改坐标轴文字大小
-          },
-          interval: 0,
-          formatter(value) {
-            let ret = ''
-            const maxLength = 10 // 每项显示文字个数
-            const valLength = value.length // X轴类目项的文字个数
-            const rowN = Math.ceil(valLength / maxLength) // 类目项需要换行的行数
-            if (rowN > 1) { // 如果类目项的文字大于3
-              for (let i = 0; i < rowN; i++) {
-                let temp = '' // 每次截取的字符串
-                const start = i * maxLength // 开始截取的位置
-                const end = start + maxLength // 结束截取的位置
-                temp = `${value.substring(start, end)}\n`
-                ret += temp // 凭借最终的字符串
-              }
-              return ret
-            }
-            return value
-          },
-        },
-        axisTick: {
-          alignWithLabel: true,
-        },
-        axisLine: {
-          // show: true,
-          lineStyle: {
-            color: '#1C385F', // 轴的颜色
-          },
-        },
-      },
-      yAxis: [
-        {
-          type: 'value',
-          name: '同比',
-          splitLine: { // ---grid 区域中的分隔线
-            show: true, // ---是否显示，'category'类目轴不显示，此时我的X轴为类目轴，splitLine属性是无意义的
-            lineStyle: {
-              color: ['#2A4065'],
-              width: 1,
-              type: 'solid',
-            },
-          },
-          axisLabel: {
-            show: true,
-            textStyle: {
-              color: '#5dbaf7', // 更改坐标轴文字颜色
-              fontSize: 13, // 更改坐标轴文字大小
-            },
-          },
-          axisLine: {
-            lineStyle: {
-              color: '#1C385F', // 轴的颜色
-            },
-          },
-        },
-        {
-          type: 'value',
-          name: '环比',
-          position: 'right',
-          splitLine: { // ---grid 区域中的分隔线
-            show: true, // ---是否显示，'category'类目轴不显示，此时我的X轴为类目轴，splitLine属性是无意义的
-            lineStyle: {
-              color: ['#2A4065'],
-              width: 1,
-              type: 'solid',
-            },
-          },
-          axisLabel: {
-            show: true,
-            textStyle: {
-              color: '#5dbaf7', // 更改坐标轴文字颜色
-              fontSize: 13, // 更改坐标轴文字大小
-            },
-          },
-          axisLine: {
-            lineStyle: {
-              color: '#1C385F', // 轴的颜色
-            },
-          },
-        },
-      ],
-      series: [
-        
-        {
-          name: '同比',
-          type: 'line',
-          symbol: 'none',
-          smooth: true,
-          data: [3, 7, 5, 2, 6], // [60, 80, 120, 160, 120, 100, 60, 40],
-          itemStyle: {
-            color: '#9257AE',
-          },
-          areaStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                offset: 0,
-                color: '#9257AE'
-              }, {
-                offset: 1,
-                color: '#031334'
-              }])
-            }
-          },
-        },
-        {
-          name: '环比',
-          type: 'line',
-          symbol: 'none',
-          smooth: true,
-          data: [6, 2, 5, 3, 7], // [60, 80, 120, 160, 120, 100, 60, 40],
-          itemStyle: {
-            color: '#FFAE5E',
-          },
-          areaStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                offset: 0,
-                color: '#FFAE5E'
-              }, {
-                offset: 1,
-                color: '#031334'
-              }])
-            }
-          },
-        },
-      ],
-    }
-    chartsBox.setOption(options, true)
-  }
   testRenderCharts = (chartsBox) => {
     const options = {
+      title: {
+        text: '近24小时路况趋势',
+        textStyle: {
+          color: '#6B9BF5',
+        }
+      },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -235,7 +50,7 @@ class Graph extends React.Component {
         containLabel: true, // ---grid 区域是否包含坐标轴的刻度标签
       },
       legend: {
-        data: ['蒸发量', '降水量', '平均温度'],
+        data: ['拥堵状态', '平均时速'],
         textStyle: { // ----图例内容样式
           color: '#FFFFFF', // ---所有图例的字体颜色
           // backgroundColor:'black',  //---所有图例的字体背景色
@@ -244,7 +59,7 @@ class Graph extends React.Component {
       xAxis: [
         {
           type: 'category',
-          data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+          data: ['00:00', '02:00', '04:00', '06:00', '08:00'],
           axisPointer: {
             type: 'shadow'
           },
@@ -289,15 +104,15 @@ class Graph extends React.Component {
           type: 'value',
           name: '',
           min: 0,
-          max: 250,
-          interval: 50,
+          max: 600,
+          interval: 100,
           axisLabel: {
             show: true,
             textStyle: {
               color: '#5dbaf7', // 更改坐标轴文字颜色
               fontSize: 13, // 更改坐标轴文字大小
             },
-            formatter: '{value} ml'
+            formatter: '{value}'
           },
           splitLine: { // ---grid 区域中的分隔线
             show: true, // ---是否显示，'category'类目轴不显示，此时我的X轴为类目轴，splitLine属性是无意义的
@@ -317,15 +132,15 @@ class Graph extends React.Component {
           type: 'value',
           name: '',
           min: 0,
-          max: 25,
-          interval: 5,
+          max: 60,
+          interval: 10,
           axisLabel: {
             show: true,
             textStyle: {
               color: '#5dbaf7', // 更改坐标轴文字颜色
               fontSize: 13, // 更改坐标轴文字大小
             },
-            formatter: '{value} °C'
+            formatter: '{value}'
           },
           splitLine: { // ---grid 区域中的分隔线
             show: true, // ---是否显示，'category'类目轴不显示，此时我的X轴为类目轴，splitLine属性是无意义的
@@ -344,10 +159,11 @@ class Graph extends React.Component {
       ],
       series: [
         {
-          name: '蒸发量',
+          name: '拥堵状态',
           type: 'line',
+          symbol: 'none',
           smooth: true,
-          data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
+          data: [100,300,600,200,500],
           itemStyle: {
             color: '#9257AE',
           },
@@ -364,10 +180,12 @@ class Graph extends React.Component {
           },
         },
         {
-          name: '降水量',
+          name: '平均时速',
           type: 'line',
           smooth: true,
-          data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
+          symbol: 'none',
+          data: [50,30,20,60,25],
+          yAxisIndex: 1,
           itemStyle: {
             color: '#FFAE5E',
           },

@@ -38,17 +38,17 @@ code {
 .scrollBar::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb {
   /*滚动条里面小方块*/
   border-radius: 10px;
-  box-shadow: inset 0 0 5px rgba(0, 234, 255, 0.2);
-  -webkit-box-shadow: inset 0 0 5px rgba(0, 234, 255, 0.2);
-  background: #00eaff;
+  box-shadow: inset 0 0 5px rgba(6,88,188, 0.2);
+  -webkit-box-shadow: inset 0 0 5px rgba(6,88,188, 0.2);
+  background: #0658BC;
 }
 
 .scrollBar::-webkit-scrollbar-track, ::-webkit-scrollbar-track {
   /*滚动条里面轨道*/
-  box-shadow: inset 0 0 5px rgba(0, 234, 255, 0.2);
-  -webkit-box-shadow: inset 0 0 5px rgba(0, 234, 255, 0.2);
+  box-shadow: inset 0 0 5px rgba(4,38,81, 0.2);
+  -webkit-box-shadow: inset 0 0 5px rgba(4,38,81, 0.2);
   border-radius: 10px;
-  background: #1d67ac;
+  background: #042550;
 }
 
 #root {

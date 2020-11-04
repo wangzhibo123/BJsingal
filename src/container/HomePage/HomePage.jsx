@@ -24,6 +24,9 @@ class Homepage extends Component {
       offline: '0',
       online: '0',
       pointlist: null,
+      nodeSimulation: [0, 0, 0, 0],
+      interNum: [0, 0, 0, 0],
+      simulationPlanNum: [0, 0, 0, 0],
     }
     this.trafficTimer = null
     this.mapPopup = null
@@ -58,7 +61,7 @@ class Homepage extends Component {
     this.map.trafficLayer(true)
     this.trafficTimer = setTimeout(() => {
       this.addTrafficLayer()
-    }, 5 * 1000)
+    }, 10 * 1000)
   }
   // 地图点位
   getMapPoints = () => {
@@ -68,6 +71,30 @@ class Homepage extends Component {
       if (code === '1') {
         this.pointLists = pointlist
         this.setState({ errline, offline, online, pointlist })
+        let num = 0
+        let numTwo = 0
+        let numThree = 0
+        this.timeOne = setInterval(() => {
+          if (num >= online) { clearInterval(this.timeOne) }
+          const nodeSimulation = ('000' + num).slice(-4).split('')
+          this.setState({ nodeSimulation }, () => {
+            num += 1
+          })
+        }, 0)
+        this.timeTwo = setInterval(() => {
+          if (numTwo >= (errline + offline + online)) { clearInterval(this.timeTwo) }
+          const interNum = ('000' + numTwo).slice(-4).split('')
+          this.setState({ interNum }, () => {
+            numTwo += 1
+          })
+        }, 0)
+        this.timeThree = setInterval(() => {
+          if (numThree >= offline) { clearInterval(this.timeThree) }
+          const simulationPlanNum = ('000' + numThree).slice(-4).split('')
+          this.setState({ simulationPlanNum }, () => {
+            numThree += 1
+          })
+        }, 0)
       }
     })
   }
@@ -282,7 +309,10 @@ class Homepage extends Component {
     })
   }
   render() {
-    const { mainHomePage, congestionList, repairRateList, singalStatus, cloudSource, oprationData, faultData, areaMsgList } = this.state
+    const {
+      mainHomePage, congestionList, repairRateList, singalStatus, cloudSource, oprationData, faultData, areaMsgList,
+      nodeSimulation, interNum, simulationPlanNum,
+    } = this.state
     return (
       <div className="homepageWrapper">
         <div className="container">
@@ -438,9 +468,7 @@ class Homepage extends Component {
                           <span>信号点位</span>
                         </div>
                         <div className="infoValue">
-                          <span className="infoNum">3</span>
-                          <span className="infoNum">3</span>
-                          <span className="infoNum">3</span>
+                          {interNum.map((item, index) => <span className="infoNum" key={'trar' + item + index}>{item}</span>)}
                         </div>
                       </div>
                       <div className="info">
@@ -449,9 +477,7 @@ class Homepage extends Component {
                           <span>接入点位</span>
                         </div>
                         <div className="infoValue">
-                          <span className="infoNum">5</span>
-                          <span className="infoNum">3</span>
-                          <span className="infoNum">3</span>
+                          {nodeSimulation.map((item, index) => <span className="infoNum" key={'trar' + item + index}>{item}</span>)}
                         </div>
                       </div>
                       <div className="info">
@@ -460,9 +486,7 @@ class Homepage extends Component {
                           <span>运行点位</span>
                         </div>
                         <div className="infoValue">
-                          <span className="infoNum">2</span>
-                          <span className="infoNum">3</span>
-                          <span className="infoNum">3</span>
+                          {simulationPlanNum.map((item, index) => <span className="infoNum" key={'trar' + item + index}>{item}</span>)}
                         </div>
                       </div>
                     </div>
@@ -500,6 +524,18 @@ class Homepage extends Component {
             !mainHomePage &&
             <div className="contentCenter">
               <div id="mapContainer" className="map-container" style={{ height: 'calc(100% - 5px)' }}></div>
+              <div className="mapLegend">
+                <div className="legendBox">
+                  <div className="legendItem">点位</div>
+                  <div className="legendItem">路况</div>
+                  <div className="legendItem">视频</div>
+                </div>
+                <div className="pointStatus">
+                  <div className="statusItem">在线</div>
+                  <div className="statusItem">离线</div>
+                  <div className="statusItem">故障</div>
+                </div>
+              </div>
             </div>
           }
         </div>

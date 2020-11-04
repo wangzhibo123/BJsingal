@@ -19,6 +19,9 @@ class branchHome extends Component {
       oprationData: null,
       faultData: null,
       controlStatus: null,
+      nodeSimulation: [0, 0, 0, 0],
+      interNum: [0, 0, 0, 0],
+      simulationPlanNum: [0, 0, 0, 0],
     }
     this.trafficTimer = null
     this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
@@ -81,6 +84,30 @@ class branchHome extends Component {
         this.pointLists = pointlist
         this.setState({ errline, offline, online, pointlist })
         this.addMarker(this.pointLists)
+        let num = 0
+        let numTwo = 0
+        let numThree = 0
+        this.timeOne = setInterval(() => {
+          if (num >= online) { clearInterval(this.timeOne) }
+          const nodeSimulation = ('000' + num).slice(-4).split('')
+          this.setState({ nodeSimulation }, () => {
+            num += 1
+          })
+        }, 0)
+        this.timeTwo = setInterval(() => {
+          if (numTwo >= (errline + offline + online)) { clearInterval(this.timeTwo) }
+          const interNum = ('000' + numTwo).slice(-4).split('')
+          this.setState({ interNum }, () => {
+            numTwo += 1
+          })
+        }, 0)
+        this.timeThree = setInterval(() => {
+          if (numThree >= offline) { clearInterval(this.timeThree) }
+          const simulationPlanNum = ('000' + numThree).slice(-4).split('')
+          this.setState({ simulationPlanNum }, () => {
+            numThree += 1
+          })
+        }, 0)
       }
     })
   }
@@ -181,7 +208,10 @@ class branchHome extends Component {
     })
   }
   render() {
-    const { mainHomePage, congestionList, controlCount, singalStatus, oprationData, faultData, controlStatus } = this.state
+    const {
+      mainHomePage, congestionList, controlCount, singalStatus, oprationData, faultData, controlStatus,
+      nodeSimulation, interNum, simulationPlanNum,
+    } = this.state
     return (
       <div className="branchHomeWrapper">
         <div className="container">
@@ -320,9 +350,7 @@ class branchHome extends Component {
                           <span>信号点位</span>
                         </div>
                         <div className="infoValue">
-                          <span className="infoNum">3</span>
-                          <span className="infoNum">3</span>
-                          <span className="infoNum">3</span>
+                          {interNum.map((item, index) => <span className="infoNum" key={'trar' + item + index}>{item}</span>)}
                           <i className="numText">处</i>
                         </div>
                       </div>
@@ -332,9 +360,7 @@ class branchHome extends Component {
                           <span>接入点位</span>
                         </div>
                         <div className="infoValue">
-                          <span className="infoNum">5</span>
-                          <span className="infoNum">3</span>
-                          <span className="infoNum">3</span>
+                          {nodeSimulation.map((item, index) => <span className="infoNum" key={'trar' + item + index}>{item}</span>)}
                           <i className="numText">处</i>
                         </div>
                       </div>
@@ -344,9 +370,7 @@ class branchHome extends Component {
                           <span>运行点位</span>
                         </div>
                         <div className="infoValue">
-                          <span className="infoNum">2</span>
-                          <span className="infoNum">3</span>
-                          <span className="infoNum">3</span>
+                          {simulationPlanNum.map((item, index) => <span className="infoNum" key={'trar' + item + index}>{item}</span>)}
                           <i className="numText">处</i>
                         </div>
                       </div>
