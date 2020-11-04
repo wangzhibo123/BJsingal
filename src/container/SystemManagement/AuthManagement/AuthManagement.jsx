@@ -3,6 +3,7 @@ import { Switch, Select, Checkbox, Tree } from 'antd';
 import { CarryOutOutlined, CloseOutlined, CheckOutlined, PlusOutlined } from '@ant-design/icons';
 import styles from '../SystemManagement.module.scss'
 const { Option } = Select
+const { TreeNode } = Tree;
 const treeData = [
   {
     title: '实时监视',
@@ -161,6 +162,17 @@ class AuthManagement extends Component {
         powerOptions: ['查看', '编辑'],
         leftTreeChecked: ['0-0','0-0-0','0-0-1','0-1','0-1-0','0-1-0-0','0-1-0-1','0-1-0-2','0-1-0-3','0-1-0-4','0-1-1','0-1-2','0-1-3','0-3','0-3-0','0-3-1','0-4'],
         rightTreeChecked: ['0-5','0-5-0','0-5-1','0-5-2','0-5-3','0-5-4','0-6','0-7','0-8','0-9'],
+        checkedOptions: {
+          '0-5-0':['0-5-0','0-5-0-edit'],
+          '0-5-1':['0-5-0','0-5-0-edit'],
+          '0-5-2':['0-5-0','0-5-0-edit'],
+          '0-5-3':['0-5-0','0-5-0-edit'],
+          '0-5-4':['0-5-0','0-5-0-edit'],
+          '0-6':['0-5-0','0-6-edit'],
+          '0-7':['0-5-0','0-7-edit'],
+          '0-8':['0-5-0','0-8-edit'],
+          '0-9':['0-5-0','0-9-edit'],
+        },        
     }
   }
   componentDidMount = () => {
@@ -172,6 +184,39 @@ class AuthManagement extends Component {
   onChange = (checkedValues) => {
     console.log('checked = ', checkedValues);
   }
+  onSelect = (keys, event) => {
+    console.log('Trigger Select', keys, event);
+  };
+
+  onExpand = (CheckedData, name) => {
+    console.log('onExpand', CheckedData);
+    // if not set autoExpandParent to false, if children expanded, parent can not collapse.
+    // or, you can remove all expanded children keys.
+    this.setState({
+      [name]:CheckedData
+    });
+  };
+  renderTreeNodes = data =>
+    data.map(item => {
+      if (item.children) {
+        return (
+          <TreeNode title={item.title} key={item.key} dataRef={item}>
+            {this.renderTreeNodes(item.children)}
+          </TreeNode>
+          
+        );
+      }
+      return <TreeNode key={item.key} {...item} title={this.titleRender(item)} />;
+    });
+    titleRender = (item) =>{
+      debugger
+      return <div className={styles.checkBoxStyle}>
+        {item.title}<em/><Checkbox.Group onChange={this.onChange}>
+          <Checkbox value={item.key}>查看</Checkbox>
+          <Checkbox value={item.key + '-edit'}>编辑</Checkbox>
+        </Checkbox.Group>
+      </div>
+    }
   render() {
     const { detachmentData, areaDatas, powerOptions, leftTreeChecked, rightTreeChecked } = this.state
     return (
@@ -281,21 +326,21 @@ class AuthManagement extends Component {
                 <div className={styles.powerBox} style={{alignItems:'flex-start'}}>
                   <div className={styles.powerTreeLeft}>
                     <Tree
-                      showLine={"checked"}
+                      showLine={true}
                       showIcon={false}
-                      defaultExpandedKeys={leftTreeChecked}
-                      onSelect={this.onSelectTree}
-                      treeData={treeData}
-                    />
+                      onExpand={(e) => this.onExpand(e, 'leftTreeChecked')}
+                      expandedKeys={this.state.leftTreeChecked}>
+                      {this.renderTreeNodes(treeData)}
+                    </Tree>
                   </div>
                   <div className={styles.powerTreeLeft}>
                     <Tree
-                      showLine={"checked"}
+                      showLine={true}
                       showIcon={false}
-                      defaultExpandedKeys={rightTreeChecked}
-                      onSelect={this.onSelectTree}
-                      treeData={treeDataR}
-                    />
+                      onExpand={(e) => this.onExpand(e, 'rightTreeChecked')}
+                      expandedKeys={this.state.rightTreeChecked}>
+                      {this.renderTreeNodes(treeDataR)}
+                    </Tree>
                   </div>
                 </div>
               </div>

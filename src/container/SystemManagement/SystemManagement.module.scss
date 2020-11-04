@@ -147,7 +147,7 @@ $bg-color:#1A344F;
               -moz-border-radius: 2px;
               -ms-border-radius: 2px;
               -o-border-radius: 2px;
-}
+            }
           }
         }
         .powerTreeLeft{
@@ -175,7 +175,7 @@ $bg-color:#1A344F;
             }
           }
           :global(.ant-tree .ant-tree-node-content-wrapper.ant-tree-node-selected){
-            background:  rgba(0, 141, 250, 0.2);
+            background: transparent;
           }
           :global(.ant-tree-show-line .ant-tree-indent-unit::before){
             border-right:  1px solid #1890ff;
@@ -186,6 +186,32 @@ $bg-color:#1A344F;
           :global(.anticon svg){
             color:  #1890ff;
             background: rgba(11,35,63, 1);
+          }
+          .checkBoxStyle{
+            >em{
+              display: inline-block;
+              width:50px;
+              height: 1px;
+              background: $bor-color;
+              position: relative;
+              top:-5px;
+              margin: 0 6px;
+            }
+            :global(.ant-checkbox-wrapper){
+              color:#1890ff;
+            }
+            :global(.ant-checkbox-wrapper){
+              color: #1890ff;
+            }
+            :global(.ant-checkbox-inner){
+              background: transparent;
+              border: 1px #31B8CE solid;
+              border-radius: 2px;
+              -webkit-border-radius: 2px;
+              -moz-border-radius: 2px;
+              -ms-border-radius: 2px;
+              -o-border-radius: 2px;
+            }
           }
         }
       }
