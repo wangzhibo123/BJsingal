@@ -23,16 +23,45 @@ $bg-color:#1A344F;
       background: url(../imgs/titbg.png) center 5px no-repeat;
       background-size: 100% 100%;
     }
+    .powerBox{
+      display:flex;
+      justify-content:center;
+      align-items: center;
+      padding:30px 0;
+    }
     .content{
       height: 100%;
-      margin: 20px 50px 0;
+      margin: 20px 10px 0;
       display: flex;
       flex-direction: column;
       position: relative;
+      flex:1;
       .listName{
         font-size:22px;
         padding: 0 0 10px;
         letter-spacing: 5px;
+        display: flex;
+        justify-content: space-between;
+        .searchItem{
+          position: relative;
+          top:10px;
+          font-size: 12px;
+          letter-spacing:0;
+          :global(.ant-select) {
+            font-size: 12px;
+            width: 185px;
+            color: #fff;
+          }
+          :global(.ant-select-selector) {
+              border: none;
+              background-color: $bg-color;
+              line-height: 28px;
+              height: 28px;
+          }
+          :global(.ant-select-arrow) {
+              color: #fff;
+          }
+        }
       }
       .listContent{
         border:1px solid $bor-color;
@@ -46,6 +75,19 @@ $bg-color:#1A344F;
             flex: 1;
             display: inline-block;
             text-align: center;
+            >s{
+              text-decoration: underline;
+              margin: 0 5px;
+              cursor: pointer;
+              color:#1890ff;
+              &:hover{
+                text-decoration: none;
+              }
+            }
+            :global(.anticon-plus){
+              cursor: pointer;
+              padding:10px 30px;
+            }
           }
         }
         .listThead{
@@ -56,6 +98,95 @@ $bg-color:#1A344F;
             background:rgba(11,35,63, .2);
           }
         }
+        .searchItem{
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          padding:15px;
+          >span{
+            flex: 1;
+            display: flex;
+            :global(.ant-select){
+              width:calc(100% - 50px);
+            }
+            :global(.ant-select-multiple .ant-select-selector){
+              border:1px solid $bor-color;
+              background-color: transparent;
+              height:32px;
+              overflow-y: auto;
+            }
+            :global(.ant-select-multiple .ant-select-selection-item){
+              border:1px solid $bor-color;
+              background-color: #1890ff;
+              color:#fff;
+            }
+            :global(.ant-select-multiple .ant-select-selection-item-remove svg){
+              color:#fff;
+              position: relative;
+              top:-1px;
+            }
+            :global(.ant-select-clear){
+              color:#fff;
+              background:transparent;
+              &:hover{
+                color: #1890ff;
+              }
+            }
+          }
+          .alignCenter{
+            justify-content: center;
+            :global(.ant-checkbox-wrapper){
+              color: #1890ff;
+            }
+            :global(.ant-checkbox-inner){
+              background: transparent;
+              border: 1px #31B8CE solid;
+              border-radius: 2px;
+              -webkit-border-radius: 2px;
+              -moz-border-radius: 2px;
+              -ms-border-radius: 2px;
+              -o-border-radius: 2px;
+}
+          }
+        }
+        .powerTreeLeft{
+          width:260px;
+          flex:1;
+          :global(.ant-tree){
+            height:calc(100% - 20px);
+            overflow-y: auto;
+            padding:10px 0 0 10px;
+            background: transparent;
+            color:#1890ff;
+            // border:1px solid $bor-color;
+            border-radius: 2px;
+            -webkit-border-radius: 2px;
+            -moz-border-radius: 2px;
+            -ms-border-radius: 2px;
+            -o-border-radius: 2px;
+          }
+          :global(.ant-tree-show-line .ant-tree-switcher){
+            background:transparent;
+          }
+          :global(.ant-tree .ant-tree-node-content-wrapper){
+            &:hover{
+              background: transparent;
+            }
+          }
+          :global(.ant-tree .ant-tree-node-content-wrapper.ant-tree-node-selected){
+            background:  rgba(0, 141, 250, 0.2);
+          }
+          :global(.ant-tree-show-line .ant-tree-indent-unit::before){
+            border-right:  1px solid #1890ff;
+          }
+          :global(.ant-tree-show-line .ant-tree-indent-unit:first-child::after){
+            border-right:  1px solid #1890ff;
+          }
+          :global(.anticon svg){
+            color:  #1890ff;
+            background: rgba(11,35,63, 1);
+          }
+        }
       }
       // 用户管理
       :global(.ant-tabs-top > .ant-tabs-nav::before){
@@ -64,22 +195,30 @@ $bg-color:#1A344F;
       :global(.ant-tabs){
         color:#fff;
       }
+      :global(.ant-tabs-nav){
+        position: absolute;
+        width: calc(100% - 310px);
+        right: 20px;
+        top:5px;
+      }
       :global(.ant-tabs-tab){
-        font-size:16px;
+        font-size:18px;
+        padding-left: 20px;
+        padding-right: 20px;
       }
       .treeLeft{
         width:260px;
         position: absolute;
-        top:65px;
+        top:20px;
         left:20px;
-        bottom:20px;
+        bottom:0;
         :global(.ant-tree){
-          min-height: 650px;
-          height:100%;
-          padding:10px 0 10px 10px;
+          height:calc(100% - 20px);
+          overflow-y: auto;
+          padding:10px 0 0 10px;
           background: rgba(11,35,63, 1);
           color:#1890ff;
-          border:1px solid #1890ff;
+          border:1px solid $bor-color;
           border-radius: 2px;
           -webkit-border-radius: 2px;
           -moz-border-radius: 2px;
@@ -87,7 +226,7 @@ $bg-color:#1A344F;
           -o-border-radius: 2px;
 }
         :global(.ant-tree-show-line .ant-tree-switcher){
-          background:rgba(11,35,63, 1);
+          background:transparent;
         }
         :global(.ant-tree .ant-tree-node-content-wrapper){
           &:hover{
@@ -98,20 +237,22 @@ $bg-color:#1A344F;
           background:  rgba(0, 141, 250, 0.2);
         }
         :global(.ant-tree-show-line .ant-tree-indent-unit::before){
-          border-right:  1px dashed #1890ff;
+          border-right:  1px solid #1890ff;
         }
         :global(.ant-tree-show-line .ant-tree-indent-unit:first-child::after){
-          border-right:  1px dashed #1890ff;
+          border-right:  1px solid #1890ff;
         }
         :global(.anticon svg){
           color:  #1890ff;
+          background: rgba(11,35,63, 1);
         }
       }
       .listRight{
         position: absolute;
+        top:150px;
         right:20px;
         width:calc(100% - 310px);
-        border:1px solid #1890ff;
+        border:1px solid $bor-color;
         border-radius: 2px;
         -webkit-border-radius: 2px;
         -moz-border-radius: 2px;
@@ -119,7 +260,12 @@ $bg-color:#1A344F;
         -o-border-radius: 2px;
       }
       // 授权管理
-
+      :global(.ant-switch){
+        background-color: gray;
+      }
+      :global(.ant-switch-checked){
+        background-color: yellowgreen;
+      }
       // 运行监控
 
       // 操作日志
@@ -132,10 +278,24 @@ $bg-color:#1A344F;
         .searchItem{
           display: flex;
           justify-content: flex-start;
+          :global(.ant-select) {
+            width: 185px;
+            color: #fff;
+          }
+          :global(.ant-select-selector) {
+              border: none;
+              background-color: $bg-color;
+              line-height: 28px;
+              height: 28px;
+          }
+          :global(.ant-select-arrow) {
+              color: #fff;
+          }
           .searchInput {
-            padding-right:20px;
+            position: relative;
+            padding-left:10px;
             .inputBox {
-                width: 120px;
+                width: 180px;
                 height: 28px;
                 margin:0 5px;
                 padding-left: 5px;
@@ -147,6 +307,13 @@ $bg-color:#1A344F;
                 -ms-border-radius: 2px;
                 -o-border-radius: 2px;
                 background-color: $bg-color;
+            }
+            .searchIcon {
+              position: absolute;
+              top: 5px;
+              right: 10px;
+              font-size: 18px;
+              color: #09A4E7;
             }
           }
           .searchBtn{
@@ -162,6 +329,7 @@ $bg-color:#1A344F;
             -moz-border-radius: 4px;
             -ms-border-radius: 4px;
             -o-border-radius: 4px;
+            margin: 0 5px;
             &:hover{
               background: none;
             }
@@ -203,6 +371,18 @@ $bg-color:#1A344F;
       float: right;
       margin-top: 14px;
       margin-right: 0;
+      :global(.anticon){
+        padding:5px;
+        font-size: 18px;
+        margin-left:3px;
+        cursor: pointer;
+        border:2px #2A7884 solid;
+        border-radius: 2px;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        -ms-border-radius: 2px;
+        -o-border-radius: 2px;
+}
     }
     :global(.ant-pagination-item-link) {
       background-color: transparent;
