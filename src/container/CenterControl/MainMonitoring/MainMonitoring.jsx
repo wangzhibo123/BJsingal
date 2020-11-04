@@ -90,7 +90,9 @@ export default class MainMonitoring extends Component {
       //切换到2D按钮
       modeMainTabTypeD:true,
       //2D到3D
-      modeMainTabD:true
+      modeMainTabD:true,
+      //控制多次渲染起点 终点图标
+      modeMainControlMapSign:true
     };
   }
   componentDidMount() {
@@ -114,6 +116,7 @@ export default class MainMonitoring extends Component {
     await this.getChannelpoint({ lng: 116.39934569026138, lat: 39.90753821453271 })
     await this.getChannelpoint({ lng: 116.38315705392921, lat: 39.907079696277606 })
   }
+
   addMenu = () => {
     const _this = this
     this.map.flyTo({ center: [116.391, 39.911], zoom: this.state.modeMapFlyToZoom, pitch: this.state.modeMapFlyToPitch })
@@ -126,7 +129,7 @@ export default class MainMonitoring extends Component {
       var style = 'background:#fff;color:#000;';
       var html = document.createElement('div');
       var contextmenu = '<div class="context_menu" style="padding:5px 10px;' + style + '">' + '<li id="start" style="cursor:point;">起点</li>' + '<li style="cursor:point;" id="end">终点</li>' + '<li style="cursor:point;" id="channel">途径点</li>' + '<li style="cursor:point;" id="clearmap">清空地图</li>' + '</div>';
-      html.innerHTML = contextmenu;
+      html.innerHTML = contextmenu
       marker = new window.mapabcgl.Marker(html)
         .setLngLat([lnglat.lng, lnglat.lat])
         .setOffset([50, 0])
@@ -151,7 +154,7 @@ export default class MainMonitoring extends Component {
     })
 
     this.getstartpoint = (lnglat) => {
-      console.log(lnglat, '开始')
+      // console.log(lnglat, '开始')
       if (marker) {
         marker.remove();
       }
@@ -164,7 +167,7 @@ export default class MainMonitoring extends Component {
     }
 
     this.getendpoint = (lnglat) => {
-      console.log(lnglat, '结束')
+      // console.log(lnglat, '结束')
       if (marker) {
         marker.remove();
       }
@@ -179,7 +182,7 @@ export default class MainMonitoring extends Component {
     // this.getstartpoint({ lng: 116.39171507191793, lat: 39.910732551600205 })
     // this.getendpoint({ lng: 116.3909904231216, lat: 39.9223143411036 })
     this.getChannelpoint = (lnglat) => {
-      console.log(lnglat, '途经点')
+      // console.log(lnglat, '途经点')
       if (marker) {
         marker.remove();
       }
@@ -323,7 +326,7 @@ export default class MainMonitoring extends Component {
           } else if (type == 2) {
           } else {
             // var str = channel.value ? channel.value + ';' : channel.value;
-            console.log(data.result[0].formatted_address, 'vvv')
+            // console.log(data.result[0].formatted_address, 'vvv')
             // console.log(channel, 'sss')
             roadValue.push(data.result[0].formatted_address)
             _this.setState({
@@ -382,19 +385,8 @@ export default class MainMonitoring extends Component {
       .setLngLat(new window.mapabcgl.LngLat(116.391, 39.911))
       .setHTML(`
       <div style="width: 310px;color: #599FE0; font-size:12px;height: 165px;background:rgba(6,21,65,.5);border: 1px solid #3167AA; ">
-      <div style="height:32px;line-height:32px;text-align: left;padding-left: 20px;"><span style="color:#599FE0">车农庄大街与车公庄北街路口</span></div>
-      <div>
-      <p style="height:32px;margin-bottom:0;line-height:32px;padding-left:40px"><span>路口编号 ：</span>120461</p>
-      <p style="height:32px;margin-bottom:0;line-height:32px;padding-left:40px"><span>所属类型 ：</span>十字路口</p>
-      <p style="height:32px;margin-bottom:0;line-height:32px;padding-left:40px"><span>所属区域 ：</span>西城区</p>
-      <p style="height:32px;margin-bottom:0;line-height:32px;display: flex;align-items: center;justify-content: center;"><span style="
-      padding: 0px 5px;
-      height: 25px;
-      line-height: 25px;
-      color: #EBEFF7;
-      background-color: #094FBA;">加入区域</span></p>
-      </div>
-    </div>`)
+      1111
+      </div>`)
       .addTo(this.map);
   }
   addMarker = () => {
@@ -437,7 +429,6 @@ export default class MainMonitoring extends Component {
         map.removeLayerAndSource('icon');
       };
       this.addMenu()
-
     })
     map.on('click', () => {
       if (this.popup) {
@@ -476,7 +467,8 @@ export default class MainMonitoring extends Component {
       this.setState({
         modeMapFlyToPitch:0,
         modeMainTabD:false,
-        modeMapFlyToZoom:13
+        modeMapFlyToZoom:13,
+        modeMainControlMapSign:false
       },()=>{
         this.addMenu()
       })
@@ -484,7 +476,8 @@ export default class MainMonitoring extends Component {
       this.setState({
         modeMapFlyToPitch:60,
         modeMainTabD:true,
-        modeMapFlyToZoom:15
+        modeMapFlyToZoom:15,
+        modeMainControlMapSign:false
       },()=>{
         this.addMenu()
       })

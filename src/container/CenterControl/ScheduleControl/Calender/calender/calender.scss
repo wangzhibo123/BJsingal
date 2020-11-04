@@ -1,0 +1,130 @@
+.calenderPublicHome{
+    width: 100%;
+    height: 100%;
+    
+    // 头部类
+    .calenderHeaderPublic{
+        width: 100%;
+        height: 35px;
+        display: flex;
+        // 年
+        .calenderHeaderYear{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            padding: 1px;
+            .YearLeftBtn{
+                width: 15%;
+                height: 97%;
+                border: 1px solid #015681;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: #10284A;
+                cursor: pointer;
+            }
+            .YearSelect{
+                width: 75%;
+                .ant-select-selector{
+                    background: #10284A;
+                    border: 1px solid #015681;
+                    color: #fff;
+                    text-indent: 25px;
+                }
+                .ant-select-arrow{
+                    color: #fff;
+                }
+            }
+            .YearRightBtn{
+                width: 15%;
+                height: 97%;
+                border: 1px solid #015681;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: #10284A;
+                cursor: pointer;
+            }
+        }
+        // 月
+        .calenderHeaderMonth{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            padding: 1px;
+            .MonthLeftBtn{
+                width: 15%;
+                height: 97%;
+                border: 1px solid #015681;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: #10284A;
+                cursor: pointer;
+            }
+            .MonthSelect{
+                width: 75%;
+                .ant-select-selector{
+                    background: #10284A;
+                    border: 1px solid #015681;
+                    color: #fff;
+                    text-indent: 25px;   
+                }
+                .ant-select-arrow{
+                    color: #fff;
+                }
+            }
+            .MonthRightBtn{
+                width: 15%;
+                height: 97%;   
+                border: 1px solid #015681;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: #10284A;
+                cursor: pointer;
+            }
+        }
+        .holidayArr{
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1px;
+            .ant-select-selector{
+                background: #10284A;
+                border: 1px solid #015681;
+                color: #fff;
+                text-indent: 25px;
+            }
+            .ant-select-arrow{
+                color: #fff;
+            }
+        }
+        .backDay{
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1px;
+            cursor: pointer;
+            .backToDay{
+                width: 95%;
+                height: 100%;
+                border: 1px solid #015681;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: #10284A;
+            }
+        }
+    }
+    //日期类
+    .calenderContent{
+        width: 100%;
+        height: calc(100% - 37px);
+        margin-top: 5px;
+    }
+}
