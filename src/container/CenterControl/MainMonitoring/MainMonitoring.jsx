@@ -221,7 +221,7 @@ export default class MainMonitoring extends Component {
           destination: destination,
           waypoints: str//途经点
         }, function (data) {
-          if (data.status == 0) {
+          if (data.status === 0) {
             var data = data.result.routes[0].steps, xys = '';
             _this.map.removeLayerAndSource('plan');
             _this.map.removeLayerAndSource('plan1');
@@ -317,13 +317,13 @@ export default class MainMonitoring extends Component {
     let roadValue = []
     function rgeocode(type, location) {
       _this.map.Geocoder({ location: location }, function (data) {
-        if (data.status != '0') {
+        if (data.status !== '0') {
           alert(data.message);
           return
         };
         if (data.result.length > 0) {
-          if (type == 1) {
-          } else if (type == 2) {
+          if (type === 1) {
+          } else if (type === 2) {
           } else {
             // var str = channel.value ? channel.value + ';' : channel.value;
             // console.log(data.result[0].formatted_address, 'vvv')
@@ -339,10 +339,6 @@ export default class MainMonitoring extends Component {
         };
       });
 
-    }
-
-    function trim(str) { //删除左右两端的空格
-      return str.replace(/(^\s*)|(\s*$)/g, "");
     }
 
     function addMarker(img, point, position) {
@@ -400,7 +396,7 @@ export default class MainMonitoring extends Component {
         e.stopPropagation()
         this.ClickMessge()
       })
-      const marker = new window.mapabcgl.Marker(el)
+      new window.mapabcgl.Marker(el)
       //绿色中心点坐标
         .setLngLat([116.391, 39.911])
         .addTo(this.map);

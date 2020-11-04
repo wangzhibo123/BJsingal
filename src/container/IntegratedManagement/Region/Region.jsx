@@ -37,10 +37,7 @@ class Region extends Component {
     axiosInstance.post(this.loadTree).then(res => {
       const { code, treeList } = res.data
       if (code === '1') {
-        console.log(123456)
-        this.setState({
-          treeList,
-        })
+        this.setState({ treeList })
       }
     })
   }
@@ -55,7 +52,7 @@ class Region extends Component {
       el.style.height = '20px'
       el.style.borderRadius = '50%'
       el.style.backgroundColor = 'green'
-      const marker = new window.mapabcgl.Marker(el)
+      new window.mapabcgl.Marker(el)
         .setLngLat([116.391, 39.911])
         .addTo(this.map);
     }
@@ -87,27 +84,9 @@ class Region extends Component {
     })
     this.map = map
   }
-  // renderMap = () => {
-  //   mapConfiger.zoom = 11
-  //   const map = new window.mapabcgl.Map(mapConfiger)
-  //   this.map = map
-  //   map.addControl(new window.mapabcgl.NavigationControl());
-  //   const options = {
-  //     minzoom: 1, // 路况显示的最小级别(1-24)
-  //     maxzoom: 24, // 路况显示的最大级别(1-24)
-  //     type: 'vector', // 路况图层类型:vector(矢量),raster(栅格)
-  //     refresh: 30 * 1000, // 路况图层刷新时间，毫秒
-  //     // before:'roads-symbol-49' 
-  //   };
-  //   map.on('load', () => {
-  //     map.trafficLayer(true, options);
-  //     this.addMarker()
-  //     map.addControl(new window.mapabcgl.NavControl({ showCompass: true, position: 'bottom-right' }));
-  //     map.loadImage('http://map.mapabc.com:35001/mapdemo/apidemos/sourceLinks/img/dir.png', function (error, image) {
-  //       map.addImage('arrowImg', image); // 添加3d指南针
-  //     });
-  //   })
-  // }
+  clickOperationNum = () => {
+
+  }
   handleClick = e => {
     console.log('click ', e);
   }
