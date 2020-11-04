@@ -31,6 +31,7 @@ class InterMonitor extends Component {
       moveUp: null,
       moveDown: null,
       trafficInfoList: null,
+      tendencyName: 'cricle',
     }
     this.confItems = ['基础信息', '信号参数', '一口一档', '交通指标', '时间表控制']
     this.controlItems = [
