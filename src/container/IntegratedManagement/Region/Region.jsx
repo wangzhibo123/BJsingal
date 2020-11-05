@@ -16,7 +16,7 @@ class Region extends Component {
       IsddMessge: true,
       clickNum: '',
       treeList: [],
-      treeListChild: []
+      menuOpenkeys: [],
     }
     this.clickOperation = [
       {
@@ -37,32 +37,30 @@ class Region extends Component {
     this.defaultChildren = []
     this.newChildId = []
   }
+  componentDidMount = () => {
+    this.renderMap()
+    this.getDataList()
+  }
   getDataList = () => {
     axiosInstance.post(this.loadTree).then(res => {
       const { code, treeList } = res.data
       if (code === '1') {
-        this.defaultChildren = treeList.map(() => [])
+        this.treeListDatas = treeList
         this.setState({ treeList, treeListChild: this.defaultChildren })
       }
     })
   }
+  // 获取区域子集
   getLoadChildTree = (id) => {
-    const { treeList } = this.state
-    const IndexTree = treeList.findIndex(item => item.id == id)
     axiosInstance.post(`${this.loadTree}?id=${id}`).then(res => {
-      const { code } = res.data
-      const treeListChilder = res.data.treeList
+      const { code, treeList } = res.data
       if (code === '1') {
-        this.defaultChildren.splice(IndexTree, 1, treeListChilder)
-        this.setState({
-          treeListChild: this.defaultChildren,
-        })
+        const currentArea = this.treeListDatas.find((item) => item.id == id)
+        currentArea.childrens = treeList
+        this.setState({ treeList: this.treeListDatas, menuOpenkeys: [id] })
+        
       }
     })
-  }
-  componentDidMount = () => {
-    this.renderMap()
-    this.getDataList()
   }
   addMarker = () => {
     if (this.map) {
@@ -108,11 +106,16 @@ class Region extends Component {
     console.log('click ', e);
   }
   onOpenChangeSubMenu = (eventKey) => { // SubMenu-ite触发
-    if (eventKey > this.newChildId) {
-      this.newChildId = eventKey
-      const newChildId = eventKey.splice(-1, 1)
-      this.getLoadChildTree(newChildId)
+    if (eventKey.length === 0) {
+      this.setState({ menuOpenkeys: [] })
+    } else {
+      const keys = eventKey.pop()
+      const { menuOpenkeys } = this.state
+      if (eventKey !== menuOpenkeys) {
+        this.getLoadChildTree(keys)
+      }
     }
+    
   }
   handleChange = (value) => {
     console.log(`selected ${value}`);
@@ -124,11 +127,7 @@ class Region extends Component {
   }
   render() {
     const { Option } = Select
-    const { mainHomePage, Istitletops, IsddMessge, treeList, clickNum, treeListChild } = this.state
-    console.log(treeListChild, 'treeListChild')
-    const ChildrenTree = (data) => {
-      return data.map(item => <Menu.Item key={item.id}>{item.unit_name}</Menu.Item>)
-    }
+    const { mainHomePage, treeList, clickNum, menuOpenkeys } = this.state
     return (
       <div className='RegionBox'>
         <div className="iptSearchNavMap">
@@ -171,6 +170,7 @@ class Region extends Component {
               onOpenChange={this.onOpenChangeSubMenu}
               style={{ width: 251, color: '#86b7fa', height: '100%', overflowY: 'auto', fontSize: '16px' }}
               mode="inline"
+              openKeys={menuOpenkeys}
             >
               {
                 treeList && treeList.map((item, index) =>
@@ -179,14 +179,16 @@ class Region extends Component {
                     title={item.sub_district_name}
                   >
                     {
-                      treeListChild[index].length > 0 ? ChildrenTree(treeListChild[index]) : ''
+                      item.childrens &&
+                      item.childrens.map((child) => (
+                        <Menu.Item key={child.id}>{child.unit_name}</Menu.Item>
+                      ))
                     }
                   </SubMenu>
                 )
               }
             </Menu>
           </div>
-
         </div>
         <div className='container'>
           {
