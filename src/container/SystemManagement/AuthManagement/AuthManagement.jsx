@@ -160,19 +160,111 @@ class AuthManagement extends Component {
           '大兴区', '房山区', '门头沟区', '昌平区', '平谷区', '密云区', '怀柔区', '延庆区'
         ],
         powerOptions: ['查看', '编辑'],
-        leftTreeChecked: ['0-0','0-0-0','0-0-1','0-1','0-1-0','0-1-0-0','0-1-0-1','0-1-0-2','0-1-0-3','0-1-0-4','0-1-1','0-1-2','0-1-3','0-3','0-3-0','0-3-1','0-4'],
-        rightTreeChecked: ['0-5','0-5-0','0-5-1','0-5-2','0-5-3','0-5-4','0-6','0-7','0-8','0-9'],
+        leftTreeChecked: ['0-0-0','0-0-1','0-1','0-1-0','0-1-0-0','0-1-0-1','0-1-0-2','0-1-0-3','0-1-0-4','0-1-1','0-1-2','0-1-3','0-3-0','0-3-1','0-4'],
+        rightTreeChecked: ['0-5-0','0-5-1','0-5-2','0-5-3','0-5-4','0-6','0-7','0-8','0-9'],  
+        checkedOptionsResult: null, //选中后数据联动用   
         checkedOptions: {
-          '0-5-0':['0-5-0','0-5-0-edit'],
-          '0-5-1':['0-5-0','0-5-0-edit'],
-          '0-5-2':['0-5-0','0-5-0-edit'],
-          '0-5-3':['0-5-0','0-5-0-edit'],
-          '0-5-4':['0-5-0','0-5-0-edit'],
-          '0-6':['0-5-0','0-6-edit'],
-          '0-7':['0-5-0','0-7-edit'],
-          '0-8':['0-5-0','0-8-edit'],
-          '0-9':['0-5-0','0-9-edit'],
-        },        
+          '0-0-0':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-0-1':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-1':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-1-0':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-1-0-0':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-1-0-1':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-1-0-2':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-1-0-3':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-1-0-4':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-1-1':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-1-2':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-1-3':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-2':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-3-0':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-3-1':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-4':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-5-0':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-5-1':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-5-2':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-5-3':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-5-4':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-6':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-7':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-8':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+          '0-9':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
+        }, //数据源默认值显示              
     }
   }
   componentDidMount = () => {
@@ -181,7 +273,14 @@ class AuthManagement extends Component {
   handleChange = (value) => {
     console.log(`selected ${value}`);
   }
-  onChange = (checkedValues) => {
+  onChange = (checkedValues, key) => {
+    const checkedOptionsResult = []
+    checkedOptionsResult[key] = checkedValues;
+    this.setState({
+      checkedOptionsResult
+    }, () => {
+      console.log('现在的值：',this.state.checkedOptionsResult)
+    })
     console.log('checked = ', checkedValues);
   }
   onSelect = (keys, event) => {
@@ -210,12 +309,14 @@ class AuthManagement extends Component {
     });
     titleRender = (item) =>{
       debugger
-      return <div className={styles.checkBoxStyle}>
-        {item.title}<em/><Checkbox.Group onChange={this.onChange}>
-          <Checkbox value={item.key}>查看</Checkbox>
-          <Checkbox value={item.key + '-edit'}>编辑</Checkbox>
-        </Checkbox.Group>
-      </div>
+      if (this.state.checkedOptions[item.key]) {
+        return <div className={styles.checkBoxStyle}>
+          {item.title}<em/><Checkbox.Group onChange={(v) => this.onChange(v, item.key)} options={this.state.checkedOptions[item.key]} onClick={(e) => {e.stopPropagation()}}>
+            <Checkbox value={this.state.checkedOptions[item.key][0].value}>{this.state.checkedOptions[item.key][0].label}</Checkbox>
+            <Checkbox value={this.state.checkedOptions[item.key][1].value}>{this.state.checkedOptions[item.key][1].label}</Checkbox>
+          </Checkbox.Group>
+        </div>
+      }
     }
   render() {
     const { detachmentData, areaDatas, powerOptions, leftTreeChecked, rightTreeChecked } = this.state
@@ -244,8 +345,8 @@ class AuthManagement extends Component {
                   <span>是否启用</span>
                 </div>
                 {
-                  [1,2,3].map(()=>{
-                    return <div>
+                  [1,2,3].map((item, i)=>{
+                    return <div key={'list'+ i}>
                               <div className={styles.listItem}>
                                 <span>系统管理员</span>
                                 <span>******</span>
