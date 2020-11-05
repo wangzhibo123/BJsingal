@@ -212,6 +212,10 @@ class AuthManagement extends Component {
             { label: '查看', value: 'look' },
             { label: '编辑', value: 'edit' },
           ],
+          '0-2':[
+            { label: '查看', value: 'look' },
+            { label: '编辑', value: 'edit' },
+          ],
           '0-3-0':[
             { label: '查看', value: 'look' },
             { label: '编辑', value: 'edit' },

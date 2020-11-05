@@ -46,7 +46,7 @@ class CustomTree extends React.Component {
       this.state.expendsKey.push(id)
     }
     if (!this.props.rightDownNone) {
-      this.props.visibleShowLeft('', '', false)
+      // this.props.visibleShowLeft('', '', false)
     }
     this.setState({ expendsKey: this.state.expendsKey })
     this.props.getSelectTreeId(id)
