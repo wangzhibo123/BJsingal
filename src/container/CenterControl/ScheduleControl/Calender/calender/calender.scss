@@ -30,10 +30,16 @@
                     background: #10284A;
                     border: 1px solid #015681;
                     color: #fff;
-                    text-indent: 25px;
+                    text-indent: 20px;
                 }
                 .ant-select-arrow{
                     color: #fff;
+                   
+                }
+                .ant-select-selection-item{
+                    font-size: 14px;
+                    font-weight: 700;
+                    line-height: 30px;
                 }
             }
             .YearRightBtn{
@@ -154,9 +160,13 @@
                     height: calc(100% / 6);
                     display: flex;
                     flex-direction: column;
-                   justify-content: center;
-                   align-items: center;
-                   border: 1px solid #015681;
+                    justify-content: center;
+                    align-items: center;
+                    border: 1px solid #015681;
+                    font-size: 14px;
+                    .calenderContentSDay{
+                        font-size: 18px;
+                    }
                 }
             }
         }
