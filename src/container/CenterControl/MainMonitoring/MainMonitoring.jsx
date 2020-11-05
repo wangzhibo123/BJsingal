@@ -466,7 +466,7 @@ export default class MainMonitoring extends Component {
         modeMapFlyToZoom:13,
         modeMainControlMapSign:false
       },()=>{
-        this.addMenu()
+        this.map.flyTo({  zoom: this.state.modeMapFlyToZoom, pitch: this.state.modeMapFlyToPitch })
       })
     }else{
       this.setState({
@@ -475,7 +475,7 @@ export default class MainMonitoring extends Component {
         modeMapFlyToZoom:15,
         modeMainControlMapSign:false
       },()=>{
-        this.addMenu()
+        this.map.flyTo({  zoom: this.state.modeMapFlyToZoom, pitch: this.state.modeMapFlyToPitch })
       })
     }
   }
@@ -694,11 +694,6 @@ export default class MainMonitoring extends Component {
                         </div>
                     </div>
                   </div>
-              
-
-
-
-
               {/* 条状图 */}
               <div className="modeMainMonitorContentStripTwo" style={{position: "absolute",top: "202px",left: "calc((190px - 2px) * 2)"}}>
                       <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#0163DA,#0147CB)", borderRadius: "20px", position: "relative" }}>
@@ -740,7 +735,6 @@ export default class MainMonitoring extends Component {
                         </div>
                     </div>
                   </div>
-
                 {/* 条状图 */}
               <div className="modeMainMonitorContentStripTwo" style={{position: "absolute",top: "202px",left: "calc((190px - 3px) * 3)"}}>
                       <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#0163DA,#0147CB)", borderRadius: "20px", position: "relative" }}>
@@ -782,7 +776,6 @@ export default class MainMonitoring extends Component {
                         </div>
                     </div>
                   </div>
-
                 {/* 条状图 */}
               <div className="modeMainMonitorContentStripTwo" style={{position: "absolute",top: "202px",left: "calc((190px - 4px) * 4)"}}>
                       <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#0163DA,#0147CB)", borderRadius: "20px", position: "relative" }}>
@@ -824,7 +817,6 @@ export default class MainMonitoring extends Component {
                         </div>
                     </div>
                   </div>
-
                   {/* 条状图 */}
               <div className="modeMainMonitorContentStripTwo" style={{position: "absolute",top: "202px",left: "calc((190px - 4px) * 5)"}}>
                       <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#0163DA,#0147CB)", borderRadius: "20px", position: "relative" }}>
@@ -866,7 +858,6 @@ export default class MainMonitoring extends Component {
                         </div>
                     </div>
                     </div>
-
                     {/* 条状图 */}
               <div className="modeMainMonitorContentStripTwo" style={{position: "absolute",top: "202px",left: "calc((190px - 4px) * 6)"}}>
                       <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#0163DA,#0147CB)", borderRadius: "20px", position: "relative" }}>
