@@ -32,10 +32,11 @@ class InterMonitor extends Component {
       moveDown: null,
       trafficInfoList: null,
       tendencyName: 'cricle',
+      interConfigMsg: null,
     }
     this.confItems = ['基础信息', '信号参数', '一口一档', '交通指标', '时间表控制']
     this.controlItems = [
-      { text: '全红控制', img: allred },
+      { text: '全红控制', img: allred, },
       { text: '闪黄控制', img: yellow },
       { text: '中心控制', img: cneter },
       { text: '中心手控', img: hand },
@@ -107,8 +108,11 @@ class InterMonitor extends Component {
       }, 600)
     })
   }
+  handleShowInterConf = (confName) => {
+    this.setState({ interConfigMsg: confName })
+  }
   render() {
-    const { confListLeft, modeIndex, moveLeft, moveRight, moveUp, moveDown, trafficInfoList } = this.state
+    const { confListLeft, modeIndex, moveLeft, moveRight, moveUp, moveDown, trafficInfoList, interConfigMsg } = this.state
     return (
       <div className="interMonitorBox">
         <div className="interMessage">
@@ -119,7 +123,37 @@ class InterMonitor extends Component {
           <div className="interPic">
             <img className={`${moveLeft ? 'slideInLeft' : moveRight ? 'slideInRight' : moveUp ? 'slideInUp' : moveDown ? 'slideInDown' : ''}`} src={test1} alt="" />
           </div>
-          <div className="title">路口监视</div>
+          {
+            !!interConfigMsg &&
+            <div className="interConfMsg">
+              <div className="confMsgBox">
+                <div className="interMsg">
+                  <div className="msgDetails">
+                    <div className="msgItem">路口编号：100267</div>
+                    <div className="msgItem">原始路口名称：无</div>
+                    <div className="msgItem">路口类型：平面十字</div>
+                    <div className="msgItem">路口位置：三环内</div>
+                    <div className="msgItem">所属区域：海淀区</div>
+                    <div className="msgItem" style={{ flex: 1.5 }}>管理单位：海淀区交通支队</div>
+                    <div className="msgItem">经度：100267</div>
+                    <div className="msgItem">纬度：100267</div>
+                  </div>
+                  <div className="msgDetails">
+                    <div className="msgItem" style={{ flex: 1.2 }}>信号控制系统对应路口编号：100267</div>
+                    <div className="msgItem" style={{ flex: 1.5 }}>信号系统路口名称：枣林前街路口</div>
+                    <div className="msgItem">信号机对应路口编号：100267</div>
+                    <div className="msgItem">信号控制系统：scats</div>
+                    <div className="msgItem">是否被带：否</div>
+                    <div className="msgItem">主路口编号：否</div>
+                  </div>
+                </div>
+                <div className="interConlist">
+                  
+                </div>
+              </div>
+            </div>
+          }
+          <div className="title">当前路口-</div>
           <div className="monitorDetails">
             <InterTimeList />
             <div className="roadTrends">
@@ -191,7 +225,7 @@ class InterMonitor extends Component {
               </div>
               <ul className="confUl">
                 {
-                  this.confItems.map(item => (<li className="confLi" key={item}>{item}<span className="innterBorder" /></li>))
+                  this.confItems.map(item => (<li className="confLi" key={item} onClick={() => this.handleShowInterConf(item)}>{item}<span className="innterBorder" /></li>))
                 }
               </ul>
             </div>

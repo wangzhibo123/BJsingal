@@ -64,12 +64,11 @@ class TrunkManagement extends Component {
         name: '切换视图',
       }
     ]
-    this.deleteRoute = '/engine-unified/routeManagement/deleteRoute' // 删除干线信息
-    this.getRouteInfo = '/engine-unified/routeManagement/getRouteInfo' // 加载当前干线信息
-    this.loadRouteTree = '/engine-unified/routeManagement/loadRouteTree' // 干线树
-    this.loadRouteDirection = '/engine-unified/routeManagement/loadRouteDirection' // 干线方向
-    this.loadRouteType = '/engine-unified/routeManagement/loadRouteType' // 干线类型
-
+    this.deleteRoute = '/engine-maintenance/routeManagement/deleteRoute' // 删除干线信息
+    this.getRouteInfo = '/engine-maintenance/routeManagement/getRouteInfo' // 加载当前干线信息
+    this.loadRouteTree = '/engine-maintenance/routeManagement/loadRouteTree' // 干线树
+    this.loadRouteDirection = '/engine-maintenance/routeManagement/loadRouteDirection' // 干线方向
+    this.loadRouteType = '/engine-maintenance/routeManagement/loadRouteType' // 干线类型
     this.saveOrUpdateDistrict = '/engine-unified/routeManagement/saveOrUpdateDistrict' // 新增修改干线信息
   }
   getDataList = () => {

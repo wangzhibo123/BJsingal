@@ -5,6 +5,7 @@ import { EditOutlined, SearchOutlined } from '@ant-design/icons';
 import './Region.scss'
 import mapConfiger from '../../utils/minemapConf'
 import axiosInstance from '../../utils/getInterfaceData'
+import { Children } from 'react';
 const { SubMenu } = Menu;
 class Region extends Component {
   constructor(props) {
@@ -15,29 +16,47 @@ class Region extends Component {
       IsddMessge: true,
       clickNum: '',
       treeList: [],
+      treeListChild: []
     }
     this.clickOperation = [
       {
         id: 1,
-        name: '新增干线',
+        name: '新增区域',
       },
       {
         id: 2,
-        name: '删除干线',
+        name: '删除区域',
       },
       {
         id: 3,
         name: '切换视图',
       }
     ]
-    this.loadTree = '/engine-unified/districtManagement/loadTree' // 区域树
-    this.editDistrictInfo = '/engine-unified/districtManagement/editDistrictInfo' // 加载当前区域信息
+    this.loadTree = '/engine-maintenance/districtManagement/loadSubDistrictTree' // 区域树
+    this.editDistrictInfo = '/engine-maintenance/districtManagement/editSubDistrictInfo' // 加载当前区域信息
+    this.defaultChildren = []
+    this.newChildId = []
   }
   getDataList = () => {
     axiosInstance.post(this.loadTree).then(res => {
       const { code, treeList } = res.data
       if (code === '1') {
-        this.setState({ treeList })
+        this.defaultChildren = treeList.map(() => [])
+        this.setState({ treeList, treeListChild: this.defaultChildren })
+      }
+    })
+  }
+  getLoadChildTree = (id) => {
+    const { treeList } = this.state
+    const IndexTree = treeList.findIndex(item => item.id == id)
+    axiosInstance.post(`${this.loadTree}?id=${id}`).then(res => {
+      const { code } = res.data
+      const treeListChilder = res.data.treeList
+      if (code === '1') {
+        this.defaultChildren.splice(IndexTree, 1, treeListChilder)
+        this.setState({
+          treeListChild: this.defaultChildren,
+        })
       }
     })
   }
@@ -76,10 +95,8 @@ class Region extends Component {
     map.on('load', () => {
       map.trafficLayer(true, options);
       this.addMarker()
-
       window.onbeforeunload = function (e) {
         map.removeLayerAndSource('icon');
-
       };
     })
     this.map = map
@@ -87,8 +104,15 @@ class Region extends Component {
   clickOperationNum = () => {
 
   }
-  handleClick = e => {
+  handleClickMenu = e => { //SubMenu-item触发
     console.log('click ', e);
+  }
+  onOpenChangeSubMenu = (eventKey) => { // SubMenu-ite触发
+    if (eventKey > this.newChildId) {
+      this.newChildId = eventKey
+      const newChildId = eventKey.splice(-1, 1)
+      this.getLoadChildTree(newChildId)
+    }
   }
   handleChange = (value) => {
     console.log(`selected ${value}`);
@@ -100,7 +124,11 @@ class Region extends Component {
   }
   render() {
     const { Option } = Select
-    const { mainHomePage, Istitletops, IsddMessge, treeList, clickNum } = this.state
+    const { mainHomePage, Istitletops, IsddMessge, treeList, clickNum, treeListChild } = this.state
+    console.log(treeListChild, 'treeListChild')
+    const ChildrenTree = (data) => {
+      return data.map(item => <Menu.Item key={item.id}>{item.unit_name}</Menu.Item>)
+    }
     return (
       <div className='RegionBox'>
         <div className="iptSearchNavMap">
@@ -116,35 +144,45 @@ class Region extends Component {
                 onClick={() => this.clickOperationNum(item.id)} key={item.id}>{item.name}</span>)
             }
           </div>
+          <div className="topNavMon">
+            <div className="selectNav">
+              <Select
+                // defaultValue="海淀区"
+                style={{ width: 100, height: 30 }}
+              >
+                {
+                  // stateSelect && stateSelect.map((item, index) => {
+                  //   return (
+                  <Option value={123} style={{ width: 100, height: 30 }} key={555}>下拉</Option>
+                  // )
+                  // })
+                }
+              </Select>
+            </div>
+            <div className="iptSearchNav">
+              <input type="text" placeholder="查询…" className="inptNavMon" />
+              <div className="MagBox">
+                <SearchOutlined />
+              </div>
+            </div>
+          </div>
           <div className='sidebarLeftBox'>
             <Menu
-              onClick={this.handleClick}
+              onOpenChange={this.onOpenChangeSubMenu}
               style={{ width: 251, color: '#86b7fa', height: '100%', overflowY: 'auto', fontSize: '16px' }}
-              // defaultSelectedKeys={['7']}
-              // defaultOpenKeys={['sub2', 'sub3']}
               mode="inline"
-
             >
               {
-                treeList && treeList.map(item =>
+                treeList && treeList.map((item, index) =>
                   <SubMenu
                     key={item.id}
-                    title={item.district_name}
+                    title={item.sub_district_name}
                   >
+                    {
+                      treeListChild[index].length > 0 ? ChildrenTree(treeListChild[index]) : ''
+                    }
                   </SubMenu>
                 )
-                
-                // <SubMenu key={item.id} title={item.district_name}>
-                //   {/* <Menu.Item key="5"></Menu.Item> */}
-                //   {/* <SubMenu key="sub3" title="知春路拥堵应急">
-                //     <Menu.Item key="7">知春路与罗庄东路<EditOutlined /></Menu.Item>
-                //     <Menu.Item key="8">知春路与罗庄中路</Menu.Item>
-                //     <Menu.Item key="9">知春路与罗庄西路</Menu.Item>
-                //     <Menu.Item key="10">知春路与海淀黄庄路</Menu.Item>
-                //   </SubMenu>
-                //   <SubMenu key="sub3-2" title="万泉庄路"></SubMenu> */}
-                // </SubMenu>
-
               }
             </Menu>
           </div>
