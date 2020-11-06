@@ -5,17 +5,20 @@ class GraphPlus extends Component {
   constructor(props) {
     super(props)
     this.state = {}
+    this.xDatas = ['00:00', '04:00', '08:00', '12:00', '14:00']
+    this.series = [1, 2, 3, 4, 5]
   }
   componentDidMount = () => {
     const chartsBox = echarts.init(this.chartsBox)
-    console.log(this.props.chartsDatas)
     if (this.props.chartsDatas) {
       const { xData, datas } = this.props.chartsDatas
       this.renderCharts(chartsBox, xData, datas)
+    } else {
+      this.renderCharts(chartsBox, this.xDatas, this.series)
     }
   }
   renderCharts = (chartsBox, xData, datas) => {
-    const { startColor, endColor } = this.props.colors
+    const { startColor, endColor, lidColor } = this.props.colors
     const options = {
       xAxis: {
         data: xData,
@@ -114,9 +117,9 @@ class GraphPlus extends Component {
         type: 'pictorialBar',
         itemStyle: {
           normal: {
-            color: '#00C5FA',
+            color: lidColor,
             borderWidth: 1,
-            borderColor: '#00C5FA',
+            borderColor: lidColor,
           }
         },
         symbol: 'rect',

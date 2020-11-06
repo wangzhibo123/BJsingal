@@ -14,8 +14,10 @@ import allred from '../imgs/iconR.png'
 import yellow from '../imgs/IconY.png'
 import phasePic from '../imgs/01.png'
 import test1 from '../imgs/test1.png'
+
 import InterTimeList from './InterTimeList/InterTimeList'
 import Graph from './Graph/Graph'
+import InterConfMsg from './InterConfMsg/InterConfMsg'
 
 const { Option } = Select
 class InterMonitor extends Component {
@@ -34,7 +36,10 @@ class InterMonitor extends Component {
       tendencyName: 'cricle',
       interConfigMsg: null,
     }
-    this.confItems = ['基础信息', '信号参数', '一口一档', '交通指标', '时间表控制']
+    this.confItems = [
+      { confname: '基础信息', id: 'interBase' }, { confname: '信号参数', id: 'singalParams' },
+      { confname: '一口一档', id: null }, { confname: '交通指标', id: null }, { confname: '时间表控制', id: null }
+    ]
     this.controlItems = [
       { text: '全红控制', img: allred, },
       { text: '闪黄控制', img: yellow },
@@ -111,6 +116,9 @@ class InterMonitor extends Component {
   handleShowInterConf = (confName) => {
     this.setState({ interConfigMsg: confName })
   }
+  hanldleCloseInterConf = () => {
+    this.setState({ interConfigMsg: null })
+  }
   render() {
     const { confListLeft, modeIndex, moveLeft, moveRight, moveUp, moveDown, trafficInfoList, interConfigMsg } = this.state
     return (
@@ -125,33 +133,7 @@ class InterMonitor extends Component {
           </div>
           {
             !!interConfigMsg &&
-            <div className="interConfMsg">
-              <div className="confMsgBox">
-                <div className="interMsg">
-                  <div className="msgDetails">
-                    <div className="msgItem">路口编号：100267</div>
-                    <div className="msgItem">原始路口名称：无</div>
-                    <div className="msgItem">路口类型：平面十字</div>
-                    <div className="msgItem">路口位置：三环内</div>
-                    <div className="msgItem">所属区域：海淀区</div>
-                    <div className="msgItem" style={{ flex: 1.5 }}>管理单位：海淀区交通支队</div>
-                    <div className="msgItem">经度：100267</div>
-                    <div className="msgItem">纬度：100267</div>
-                  </div>
-                  <div className="msgDetails">
-                    <div className="msgItem" style={{ flex: 1.2 }}>信号控制系统对应路口编号：100267</div>
-                    <div className="msgItem" style={{ flex: 1.5 }}>信号系统路口名称：枣林前街路口</div>
-                    <div className="msgItem">信号机对应路口编号：100267</div>
-                    <div className="msgItem">信号控制系统：scats</div>
-                    <div className="msgItem">是否被带：否</div>
-                    <div className="msgItem">主路口编号：否</div>
-                  </div>
-                </div>
-                <div className="interConlist">
-                  
-                </div>
-              </div>
-            </div>
+            <InterConfMsg closeInterConf={this.hanldleCloseInterConf} configName={interConfigMsg} />
           }
           <div className="title">当前路口-</div>
           <div className="monitorDetails">
@@ -174,7 +156,7 @@ class InterMonitor extends Component {
                     {
                       trafficInfoList &&
                       trafficInfoList.map((item) => (
-                        <div className="listTr">
+                        <div className="listTr" key={item.distriction}>
                           <span className="innterBorder" />
                           <div className="listTd">{item.distriction}路</div>
                           <div className="listTd">{item.jam_dur}</div>
@@ -225,7 +207,9 @@ class InterMonitor extends Component {
               </div>
               <ul className="confUl">
                 {
-                  this.confItems.map(item => (<li className="confLi" key={item} onClick={() => this.handleShowInterConf(item)}>{item}<span className="innterBorder" /></li>))
+                  this.confItems.map(item => (
+                    <li className="confLi" key={item.confname} onClick={() => this.handleShowInterConf(item.id)}>{item.confname}<span className="innterBorder" /></li>
+                  ))
                 }
               </ul>
             </div>
