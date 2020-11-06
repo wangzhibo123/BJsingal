@@ -138,23 +138,23 @@ class MochaItom extends Component {
               <div className="title">设备故障分布图</div>
               <div className="itemContent">
                 <div className="itemShow">
-                  <div  style={{ width: '170px' }}>
+                  <div className="itemDiv">
                   信号机
                   <Progress percent={50.12} size="small" steps={66} />
                   </div>
-                  <div>
+                  <div className="itemDiv">
                   信号灯
                   <Progress percent={40} size="small" steps={66} />
                   </div>
-                  <div>
+                  <div className="itemDiv">
                   网络设备
                   <Progress percent={50} size="small" steps={66} />
                   </div>
-                  <div>
+                  <div className="itemDiv">
                   电源
                   <Progress percent={50} size="small" steps={66} />
                   </div>
-                  <div>
+                  <div className="itemDiv">
                   外设
                   <Progress percent={50} size="small" steps={66} />
                   </div>
