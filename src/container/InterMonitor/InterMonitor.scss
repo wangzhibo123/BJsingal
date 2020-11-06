@@ -108,11 +108,48 @@
             }
         }
         .title {
+            position: relative;
             height: 40px;
-            text-align: center;
+            padding-left: 20px;
             line-height: 40px;
-            font-size: 22px;
-            color: #09A4E7;
+            font-size: 24px;
+            color: #00E5D3;
+        }
+        .interConfMsg {
+            z-index: 3;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .confMsgBox {
+                width: 80%;
+                height: 85%;
+                padding: 15px;
+                background-color: rgba(3, 16, 96, .7);
+                border-radius: 6px;
+                background-image: linear-gradient(0deg, rgba(0, 59, 129, 0), rgba(0, 38, 120, 0.99), rgba(0, 46, 146, 0.02));
+                box-shadow: inset 0 0 10px #13419B;
+                .interMsg {
+                    height: 80px;
+                    border: 1px solid rgba(136, 175, 248, .3);
+                    .msgDetails {
+                        display: flex;
+                        height: 40px;
+                        align-items: center;
+                        color: #88AFF8;
+                        .msgItem {
+                            flex: 1;
+                            text-align: center;
+                            line-height: 40px;
+                        }
+                    }
+                }
+            }
         }
         .monitorDetails {
             position: absolute;

@@ -12,6 +12,8 @@ export default class CalenderPublic extends Component {
             calenderSTermInfo:[0, 21208, 42467, 63836, 85337, 107014, 128867, 150921, 173149, 195551, 218072, 240693, 263343, 285989, 308563, 331033, 353350, 375494, 397447, 419210, 440795, 462224, 483532, 504758],
             calenderNStr1:['日', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'],
             calenderNStr2:['初', '十', '廿', '卅'],
+            calenderSelectYear:["1998","1999","2000","2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020"],
+            calenderSelectMonth:["1","2","3","4","5","6","7","8","9","10","11","12"],
             calenderSolarMonth:[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
             calenderLunarInfo:[0x04bd8, 0x04ae0, 0x0a570, 0x054d5, 0x0d260, 0x0d950, 0x16554, 0x056a0, 0x09ad0, 0x055d2,
                 0x04ae0, 0x0a5b6, 0x0a4d0, 0x0d250, 0x1d255, 0x0b540, 0x0d6a0, 0x0ada2, 0x095b0, 0x14977,
@@ -65,10 +67,12 @@ export default class CalenderPublic extends Component {
             cld:[],
             fat:9,
             mat:9,
+            frontBox:[1,1,1,1,1,1],
+            laterBox:[1,1,1,1,1,1],
         }
     }
     componentDidMount(){
-        this.changeCld(2020,11)
+        this.changeCld(2020,10)
     }
     //返回农历y年的总天数
     lYearDays(y) {
@@ -155,7 +159,6 @@ export default class CalenderPublic extends Component {
             let round=roundLDay*1-10;
             lDay='十'+this.state.calenderNStr1[round]
         }else if(roundLDay==20){
-            console.log(111)
             lDay="二十"
         }else if(20<roundLDay && roundLDay<30){
             let round=roundLDay*1-20
@@ -178,6 +181,9 @@ export default class CalenderPublic extends Component {
         obj.sYear = this.sYear;
         obj.sMonth = this.sMonth;
         obj.sDay = this.sDay;
+        if(this.week==="六"||this.week==="日"){
+            obj.color="#FE6A02"
+        }
         obj.week = this.week;
         obj.lYear = this.lYear;
         obj.lMonth = this.lMonth;
@@ -196,6 +202,7 @@ export default class CalenderPublic extends Component {
     }
     //保存y年m+1月的相关信息
     calendar(y, m) {
+        //做好的数据给cld
         var fat =  0;
         var mat =  0;
         var sDObj, lDObj, lY, lM, lD = 1, lL, lX = 0, tmp1, tmp2;
@@ -221,27 +228,24 @@ export default class CalenderPublic extends Component {
                 if (n == 0) firstLM = lM;
                 lDPOS[n++] = i - lD + 1;
             }
-           let arrList= this.calElement(y, m + 1, i + 1, this.state.calenderNStr1[(i + this.firstWeek) % 7], lY, lM, lD++, lL);
-           arr.push(arrList)
-           
-        //    if ((i + this.firstWeek) % 7 == 0) {
-        //         console.log(i,"i")
-        //         // this[i].color = 'red';  //周日颜色
-        //     }
+            let arrList= this.calElement(y, m + 1, i + 1, this.state.calenderNStr1[(i + this.firstWeek) % 7], lY, lM, lD++, lL);
+            arr.push(arrList)
         }
         //节气
-        tmp1 = this.sTerm(y, m * 2) - 1;
-        tmp2 = this.sTerm(y, m * 2 + 1) - 1;
-        // this[tmp1].solarTerms = this.state.calenderSolarTerm[m * 2];
-        // this[tmp2].solarTerms = this.state.calenderSolarTerm[m * 2 + 1];
-        if ((this.firstWeek + 12) % 7 == 5) {//黑色星期五
-            // this[12].solarFestival += '黑色星期五';
-        }
-        if (y == this.state.tY && m == this.state.tM) {
-            // this[this.state.tD - 1].isToday = true;    //今日
-        }
-        console.log(arr,"arr")
-        return arr
+            //本月第一个节气 日期-1
+            let FirstSolarDate = this.sTerm(y, m * 2) - 1;
+            //本月第二个节气 日期-1
+            let LastSolarDate = this.sTerm(y, m * 2 + 1) - 1;
+            //本月一个节气名称
+            let FirstSolar = this.state.calenderSolarTerm[m * 2];
+            //本月二个节气名称
+            let lastSolar = this.state.calenderSolarTerm[m * 2 + 1];
+            //添加节气名称到数组
+            arr[FirstSolarDate].lunarFestival=FirstSolar;
+            arr[LastSolarDate].lunarFestival=lastSolar;
+            arr.splice(FirstSolarDate,1,arr[FirstSolarDate])
+            arr.splice(LastSolarDate,1,arr[LastSolarDate])
+            return arr
     }
      //用中文显示农历的日期
      cDay(d) {
@@ -271,7 +275,6 @@ export default class CalenderPublic extends Component {
         var p2 =  "";
         var i, sD, s, size;
         var cld = this.calendar (SY, SM);
-        console.log(cld,"cld")
         this.setState({
             cld:cld
         })
@@ -330,6 +333,8 @@ export default class CalenderPublic extends Component {
         //             if (this.state.mat == 0) {
         //                 if ((sD + 1) == 14) { Ssfw = "父亲节"; lObj.innerHTML = "父亲节" }
         //             }
+
+
         //             else if (this.state.mat < 9) {
         //                 if ((sD + 1) == ((7 - this.state.mat) + 15)) { Ssfw = "父亲节"; lObj.innerHTML = "父亲节" }
         //             }
@@ -366,6 +371,7 @@ export default class CalenderPublic extends Component {
 
     render(){
         const {calenderWeek} =this.state;
+        
         return (
             <div className="calenderPublicHome">
                 <div className="calenderHeaderPublic">
@@ -376,15 +382,17 @@ export default class CalenderPublic extends Component {
                         </div>
                         <div className="YearSelect">
                             <Select style={{width:"100%"}} defaultValue="2018">
-                                <Option value="2018">2018年</Option>
-                                <Option value="2019">2019年</Option>
+                                {
+                                    this.state.calenderSelectYear.map((item,index)=>{
+                                        return <Option value={item} key={index}>{item}年</Option>
+                                    })
+                                }
                             </Select>
                         </div>
                         <div className="YearRightBtn">
                         <RightOutlined />
                         </div>
                     </div>
-
                     {/* 月份 */}
                     <div className="calenderHeaderMonth">
                         <div className="MonthLeftBtn">
@@ -392,8 +400,11 @@ export default class CalenderPublic extends Component {
                         </div>
                         <div className="MonthSelect">
                             <Select defaultValue="1" style={{width:"100%"}} >
-                                <Option value="1" name="1">1月</Option>
-                                <Option value="2" name="2">2月</Option>
+                                {
+                                    this.state.calenderSelectMonth.map((item,index)=>{
+                                        return <Option value={item} key={index}>{item}月</Option>
+                                    })
+                                }
                             </Select>
                         </div>
                         <div className="MonthRightBtn">
@@ -417,33 +428,28 @@ export default class CalenderPublic extends Component {
                                 })
                             }
                         </div>
+                        
                         <div className="calenderContentTBody">
-                            <div className="calenderContentTD">
-                            
-                            </div>
-                            <div className="calenderContentTD">
-                                
-                            </div>
-                            <div className="calenderContentTD">
-                                
-                            </div>
-                            <div className="calenderContentTD">
-                                
-                            </div>
-                            <div className="calenderContentTD">
-                                
-                            </div>
-                            <div className="calenderContentTD">
-                                
-                            </div>
+                            {
+                                this.state.frontBox.map((item,index)=>{
+                                    return <div className="calenderContentTD" key={index}>
+                                    </div>
+                                })
+                            }
                             {
                                 this.state.cld&&this.state.cld.map((item,index)=>{
                                     return (
                                         <div className="calenderContentTD" key={index}>
-                                            <div>{item.sDay}</div>
-                                            <div>{item.lDay}</div>
+                                            <div style={item.color?{color:item.color}:{color:"#fff"}} className="calenderContentSDay">{item.sDay}</div>
+                                            <div style={item.lunarFestival?{color:"#FE6A02"}:{color:"#fff"}}>{item.lunarFestival?item.lunarFestival:item.lDay}</div>
                                         </div>
                                     )
+                                })
+                            }
+                            {
+                                this.state.laterBox.map((item,index)=>{
+                                    return <div className="calenderContentTD" key={index}>
+                                    </div>
                                 })
                             }
                         </div>
