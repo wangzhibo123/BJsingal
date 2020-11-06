@@ -27,6 +27,7 @@ class TrunkManagement extends Component {
       clickNum: '',
       rights: -300,
       ismodify: false,
+      menuOpenkeys: [],
       stateSelect: [
         {
           name: "海淀区",
@@ -50,6 +51,7 @@ class TrunkManagement extends Component {
         }
       ],
     }
+    this.defaultChildren = []
     this.clickOperation = [
       {
         id: 1,
@@ -71,22 +73,43 @@ class TrunkManagement extends Component {
     axiosInstance.post(this.loadRouteTree).then(res => {
       const { code, treeList } = res.data
       if (code === '1') {
-        this.setState({
-          treeList,
-        })
+        this.treeListDatas = treeList
+        this.setState({ treeList, treeListChild: this.defaultChildren })
       }
     })
   }
+  // getDataList = () => {
+  //   axiosInstance.post(this.loadRouteTree).then(res => {
+  //     const { code, treeList } = res.data
+  //     if (code === '1') {
+  //       this.setState({
+  //         treeList,
+  //       })
+  //     }
+  //   })
+  // }
+  // 获取干线子集
   getLoadChildTree = (id) => {
     axiosInstance.post(`${this.loadRouteTree}?id=${id}`).then(res => {
       const { code, treeList } = res.data
       if (code === '1') {
-        this.setState({
-          defaultChildren: treeList,
-        })
+        const currentArea = this.treeListDatas.find((item) => item.id === Number(id))
+        currentArea.childrens = treeList
+        this.setState({ treeList: this.treeListDatas, menuOpenkeys: [id] })
+
       }
     })
   }
+  // getLoadChildTree = (id) => {
+  //   axiosInstance.post(`${this.loadRouteTree}?id=${id}`).then(res => {
+  //     const { code, treeList } = res.data
+  //     if (code === '1') {
+  //       this.setState({
+  //         defaultChildren: treeList,
+  //       })
+  //     }
+  //   })
+  // }
   getAddDataList = () => {
     axiosInstance.post(this.loadRouteDirection).then(res => { // 干线方向
       const { code, list } = res.data
@@ -121,45 +144,10 @@ class TrunkManagement extends Component {
       rights: 0,
       isAddEdit: false
     })
-    // const _this = this
-    // let marker, lng, lat
-    // const childrenArr = this.props.data.dcuTreeData
-    // childrenArr.map((data) => {
-    //   data.units && data.units.map((item) => {
-    //     if (childId === item.id) {
-    //       lng = item.lng
-    //       lat = item.lat
-    //       marker = new AMap.Marker({
-    //         position: new AMap.LngLat(item.lng, item.lat),
-    //         offset: new AMap.Pixel(-16, -16),
-    //         content: "<div id='roadKey" + item.id + "'></div>",
-    //       })
-    //       marker.on('click', function () {
-    //         _this.setState({
-    //           roadUnitId: item.id,
-    //           roadInterId: item.interId,
-    //           roadNodeNo: item.nodeId,
-    //         })
-    //         const resultP = Promise.resolve(_this.props.getUnitPop(item.interId))
-    //         resultP.then(() => {
-    //           _this.openInfoWin(_this.map, item, marker, item.interName)
-    //         })
-    //       })
-    //     }
-    //   })
-    // })
-    // if (marker && this.map) {
-    //   this.map.setCenter([lng, lat])
-    //   marker.emit('click', {
-    //     lnglat: this.map.getCenter()
-    //   })
-    // } else {
-    //   message.info('该路口尚未接入')
-    // }
   }
   getismodify = (isShow) => {
     this.setState({
-      ismodify: isShow,
+      ismodify: isShow
     })
   }
   getChangeValue = (e) => {
@@ -506,27 +494,6 @@ class TrunkManagement extends Component {
     })
     this.map = map
   }
-  // renderMap = () => {
-  //   mapConfiger.zoom = 11
-  //   const map = new window.mapabcgl.Map(mapConfiger)
-  //   this.map = map
-  //   map.addControl(new window.mapabcgl.NavigationControl());
-  //   const options = {
-  //     minzoom: 1, // 路况显示的最小级别(1-24)
-  //     maxzoom: 24, // 路况显示的最大级别(1-24)
-  //     type: 'vector', // 路况图层类型:vector(矢量),raster(栅格)
-  //     refresh: 30 * 1000, // 路况图层刷新时间，毫秒
-  //     // before:'roads-symbol-49' 
-  //   };
-  //   map.on('load', () => {
-  //     map.trafficLayer(true, options);
-  //     this.addMarker()
-  //     map.addControl(new window.mapabcgl.NavControl({ showCompass: true, position: 'bottom-right' }));
-  //     map.loadImage('http://map.mapabc.com:35001/mapdemo/apidemos/sourceLinks/img/dir.png', function (error, image) {
-  //       map.addImage('arrowImg', image); // 添加3d指南针
-  //     });
-  //   })
-  // }
   handleClick = e => {
     console.log('click ', e);
   }
@@ -556,9 +523,9 @@ class TrunkManagement extends Component {
       clickNum: id
     })
   }
-  noneAddRoad = () => {
+  noneAddRoad = () => { // 取消添加修改
     this.setState({
-      rights: 0
+      rights: -300
     })
   }
   changeLoadRouteDirection = (e, s) => { // 选择干线方向
@@ -582,11 +549,29 @@ class TrunkManagement extends Component {
       })
     }
   }
+  onOpenChangeSubMenu = (eventKey) => { // SubMenu-ite触发
+    if (eventKey.length === 0) {
+      this.setState({ menuOpenkeys: [] })
+    } else {
+      const keys = eventKey.pop()
+      const { menuOpenkeys } = this.state
+      if (eventKey !== menuOpenkeys) {
+        this.getLoadChildTree(keys)
+      }
+    }
+  }
+  onClickMenuItem = (item) => {
+    console.log(item, 'vvcss')
+    this.setState({
+      rights: 0,
+      isAddEdit: false
+    })
+  }
   render() {
     const { Option } = Select
     const {
       mainHomePage, stateSelect, clickNum, Istitletops, isAddEdit, ismodify, IsddMessge, rights, roadValue,
-      loadRouteDirectionList, loadRouteTypeList, treeList, defaultChildren
+      loadRouteDirectionList, loadRouteTypeList, treeList, defaultChildren, menuOpenkeys
     } = this.state
     return (
       <div className='TrunkManagementBox'>
@@ -726,44 +711,37 @@ class TrunkManagement extends Component {
             </div>
           </div>
           <div className='sidebarLeftBox'>
-            <CustomInterTree
+            <Menu
+              onOpenChange={this.onOpenChangeSubMenu}
+              onClick={this.onClickMenuItem}
+              style={{ width: 251, color: '#86b7fa', height: '100%', overflowY: 'auto', fontSize: '16px' }}
+              mode="inline"
+              openKeys={menuOpenkeys}
+            >
+              {
+                treeList && treeList.map((item, index) =>
+                  <SubMenu
+                    key={item.id}
+                    title={item.route_name}
+                  >
+                    {
+                      item.childrens &&
+                      item.childrens.map((child) => (
+                        <Menu.Item key={child.id}>{child.unit_name}</Menu.Item>
+                      ))
+                    }
+                  </SubMenu>
+                )
+              }
+            </Menu>
+            {/* <CustomInterTree
               {...this.props}
               treeList={treeList}
               defaultChildren={defaultChildren}
               getSelectTreeId={this.getSelectTreeId}
               getSelectChildId={this.getSelectChildId}
               visibleShowLeft={this.visibleShowLeft}
-            />
-            {
-              // <Menu
-              //   onClick={this.handleClick}
-              //   style={{ width: 251, color: '#86b7fa', height: '100%', overflowY: 'auto', fontSize: '16px' }}
-              //   // defaultSelectedKeys={['7']}
-              //   // defaultOpenKeys={['sub2', 'sub3']}
-              //   mode="inline"
-              // >
-              //   {
-              //     treeList && treeList.map(item =>
-              //       <SubMenu
-              //         key={item.id}
-              //         title={item.route_name}
-              //       >
-              //       </SubMenu>
-              //     )
-              //     // <SubMenu key={item.id} title={item.district_name}>
-              //     //   {/* <Menu.Item key="5"></Menu.Item> */}
-              //     //   {/* <SubMenu key="sub3" title="知春路拥堵应急">
-              //     //     <Menu.Item key="7">知春路与罗庄东路<EditOutlined /></Menu.Item>
-              //     //     <Menu.Item key="8">知春路与罗庄中路</Menu.Item>
-              //     //     <Menu.Item key="9">知春路与罗庄西路</Menu.Item>
-              //     //     <Menu.Item key="10">知春路与海淀黄庄路</Menu.Item>
-              //     //   </SubMenu>
-              //     //   <SubMenu key="sub3-2" title="万泉庄路"></SubMenu> */}
-              //     // </SubMenu>
-              //   }
-              // </Menu>
-            }
-
+            /> */}
           </div>
 
         </div>
