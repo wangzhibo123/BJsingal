@@ -65,6 +65,10 @@ $bg-color:#1A344F;
       }
       .listContent{
         border:1px solid $bor-color;
+        .itemBody{
+          height:460px;
+          overflow-y: auto;
+        }
         .listThead, .listItem{
           line-height: 45px;
           border-bottom: 1px solid $bor-color;

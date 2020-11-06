@@ -88,15 +88,19 @@
                         align-items: center;
                     }
                     .itemShow{
-                        width:90%;
+                        widows: 90%;
                         margin:0 auto;
                         color:#46E9F0;
                         font-size:14px;
-                        >div{
+                        .itemDiv{
                             margin: 5px auto;
                             display: inline-block;
                             justify-content: center;
                             align-items: center;
+                            .ant-progress-steps{
+                                position: relative;
+                                display: block;
+                            }
                             .ant-progress-steps-item{
                                 height:14px!important;
                             }
@@ -104,6 +108,9 @@
                                 height:14px!important;
                             }
                             .ant-progress-text{
+                                position: absolute;
+                                top:1px;
+                                right: -30px;
                                 color:#46E9F0;
                             }
                         }

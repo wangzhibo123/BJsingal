@@ -10,7 +10,8 @@ $bor-color: #a5fcff;
         top: 100px;
         // right: -300px;
         width: 300px;
-        height: 100%;
+        height: calc(100% - 100px);
+        overflow-y: auto;
         z-index: 9;
         padding: 15px;
         transition: all 1s;
@@ -75,30 +76,64 @@ $bor-color: #a5fcff;
             .lineBox {
                 height: calc(100% - 170px);
                 overflow-y: auto;
-                .lineBoxer {
-                    display: flex;
-                    .lineBoxLeft {
-                        width: 20px;
-                        background: url("../../imgs/startEndBac.png") no-repeat;
-                        background-size: 100% 100%;
-                    }
-                    .lineBoxRight {
+                .lineBoxRight {
+                    width: 100%;
+                    padding-left: 15px;
+                    > p {
                         width: 100%;
-                        padding-left: 15px;
-                        p {
-                            width: 100%;
+                        height: 55px;
+                        color: #5f9ef2;
+                        display: flex;
+                        margin-bottom: 0;
+                        align-items: center;
+                        justify-content: space-around;
+                        span {
+                            width: 55px;
                             height: 55px;
-                            color: #5f9ef2;
-                            display: flex;
-                            margin-bottom: 0;
-                            align-items: center;
-                            .inputBox {
+                        }
+                        .inputBox {
+                            width: 195px;
+                            height: 30px;
+                            outline: none;
+                            border: 1px solid #1c59ce;
+                            background-color: #18346a;
+                            padding-left: 5px;
+                        }
+                    }
+                    .roadBox {
+                        height: 100%;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        .roadBoxLeft {
+                            width: 5px;
+                            height: 35px;
+                            margin-left: 18px;
+                            background-color: #1DF249;
+                            border-radius: 2px;
+                        }
+                        .roadBoxRight {
+                            width: 195px;
+                            p {
                                 width: 100%;
-                                height: 30px;
-                                outline: none;
-                                border: 1px solid #1c59ce;
-                                background-color: #18346a;
-                                padding-left: 5px;
+                                height: 55px;
+                                color: #5f9ef2;
+                                display: flex;
+                                margin-bottom: 0;
+                                align-items: center;
+                                justify-content: space-around;
+                                span {
+                                    width: 55px;
+                                    height: 55px;
+                                }
+                                .inputBox {
+                                    width: 195px;
+                                    height: 30px;
+                                    outline: none;
+                                    border: 1px solid #1c59ce;
+                                    background-color: #18346a;
+                                    padding-left: 5px;
+                                }
                             }
                         }
                     }
@@ -252,7 +287,7 @@ $bor-color: #a5fcff;
         top: 100px;
         left: 10px;
         width: 300px;
-        height: 100%;
+        height: calc(100% - 100px);
         z-index: 9;
         padding: 15px;
         background: linear-gradient(to bottom, rgba(1, 17, 50, 0.8), rgba(5, 38, 89, 0.6));
@@ -260,15 +295,15 @@ $bor-color: #a5fcff;
             height: 32px;
             width: 100%;
             display: flex;
-            justify-content: space-between;
             cursor: pointer;
             span {
                 color: #4b6cba;
-                width: 32%;
+                width: 100px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 background-color: rgba(10, 37, 90, 0.8);
+                margin-right: 15px;
             }
             .active {
                 color: white;

@@ -268,13 +268,29 @@ class AuthManagement extends Component {
     }
   }
   componentDidMount = () => {
-    
+    this.initPower()
+  }
+  // 初始化权限：回显角色权限或未设置的空权限
+  initPower = () => {
+    const indexArr = this.state.leftTreeChecked.concat(this.state.rightTreeChecked) //集合tree的所有下标
+    const checkedOptionsResult = JSON.parse(JSON.stringify(this.state.checkedOptions))
+    for (let i = 0; i< indexArr.length; i++) {
+      if (i % 2 === 0) {
+        checkedOptionsResult[indexArr[i]] = ['look']
+      } else {
+        checkedOptionsResult[indexArr[i]] = ['edit']
+      }
+    }
+    console.log(JSON.stringify(checkedOptionsResult))
+    this.setState({
+      checkedOptionsResult
+    })
   }
   handleChange = (value) => {
     console.log(`selected ${value}`);
   }
   onChange = (checkedValues, key) => {
-    const checkedOptionsResult = []
+    const checkedOptionsResult = JSON.parse(JSON.stringify(this.state.checkedOptionsResult))
     checkedOptionsResult[key] = checkedValues;
     this.setState({
       checkedOptionsResult
@@ -311,7 +327,7 @@ class AuthManagement extends Component {
       debugger
       if (this.state.checkedOptions[item.key]) {
         return <div className={styles.checkBoxStyle}>
-          {item.title}<em/><Checkbox.Group onChange={(v) => this.onChange(v, item.key)} options={this.state.checkedOptions[item.key]} onClick={(e) => {e.stopPropagation()}}>
+          {item.title}<em/><Checkbox.Group onChange={(v) => this.onChange(v, item.key)} options={this.state.checkedOptions[item.key]} defaultValue={this.state.checkedOptionsResult ? this.state.checkedOptionsResult[item.key] : []} onClick={(e) => {e.stopPropagation()}}>
             <Checkbox value={this.state.checkedOptions[item.key][0].value}>{this.state.checkedOptions[item.key][0].label}</Checkbox>
             <Checkbox value={this.state.checkedOptions[item.key][1].value}>{this.state.checkedOptions[item.key][1].label}</Checkbox>
           </Checkbox.Group>
@@ -344,9 +360,10 @@ class AuthManagement extends Component {
                   <span>操作</span>
                   <span>是否启用</span>
                 </div>
+                <div className={styles.itemBody} style={{height:'690px'}}>
                 {
                   [1,2,3].map((item, i)=>{
-                    return <div key={'list'+ i}>
+                    return <div key={'list'+ i}> 
                               <div className={styles.listItem}>
                                 <span>系统管理员</span>
                                 <span>******</span>
@@ -395,6 +412,7 @@ class AuthManagement extends Component {
                           </div>
                   })
                 }
+                </div>
                 <div className={styles.listItem}><span><PlusOutlined title='加载更多' /></span></div>
                 </div>
             </div>

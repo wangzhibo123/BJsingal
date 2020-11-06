@@ -1,19 +1,387 @@
 $ft_color: #dcdde2;
 $bor-color: #a5fcff;
-.PlancontrolPageWrapper {
+.IntersectionBox {
     position: relative;
     width: 100%;
     height: 100%;
     background-color: #021027;
+    .sildeRight {
+        position: fixed;
+        top: 100px;
+        // right: -300px;
+        width: 300px;
+        height: calc(100% - 100px);
+        overflow-y: auto;
+        z-index: 9;
+        padding: 15px;
+        transition: all 1s;
+        background: rgba(5, 32, 87, 0.7);
+        .slideRightBoxAdd {
+            height: 100%;
+            width: 100%;
+            .addMainLine {
+                height: 60px;
+                display: flex;
+                .newLine {
+                    font-size: 18px;
+                    width: 160px;
+                    line-height: 60px;
+                }
+                .operationLine {
+                    width: 110px;
+                    font-size: 12px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-around;
+                    > span {
+                        width: 50px;
+                        height: 30px;
+                        text-align: center;
+                        cursor: pointer;
+                        border-radius: 3px;
+                        line-height: 30px;
+                        background-color: #18459b;
+                    }
+                }
+            }
+            > p,
+            .divs {
+                height: 55px;
+                color: #5f9ef2;
+                display: flex;
+                align-items: center;
+                margin-bottom: 0;
+                > span {
+                    width: 75px;
+                }
+                .inputBox {
+                    flex: 1;
+                    height: 30px;
+                    outline: none;
+                    color: #5f9ef2;
+                    border: 1px solid #1c59ce;
+                    background-color: #18346a;
+                    padding-left: 5px;
+                }
+                .ant-select-selector {
+                    color: #5f9ef2;
+                    border: 1px solid #1c59ce;
+                    background-color: #18346a;
+                    padding-left: 5px;
+                }
+                .ant-select-arrow {
+                    color: #fff;
+                }
+            }
+            .lineBox {
+                height: calc(100% - 170px);
+                overflow-y: auto;
+                .lineBoxRight {
+                    width: 100%;
+                    padding-left: 15px;
+                    > p {
+                        width: 100%;
+                        height: 55px;
+                        color: #5f9ef2;
+                        display: flex;
+                        margin-bottom: 0;
+                        align-items: center;
+                        justify-content: space-around;
+                        span {
+                            width: 55px;
+                            height: 55px;
+                        }
+                        .inputBox {
+                            width: 195px;
+                            height: 30px;
+                            outline: none;
+                            border: 1px solid #1c59ce;
+                            background-color: #18346a;
+                            padding-left: 5px;
+                        }
+                    }
+                    .roadBox {
+                        height: 100%;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        .roadBoxLeft {
+                            width: 5px;
+                            height: 35px;
+                            margin-left: 18px;
+                            background-color: #1DF249;
+                            border-radius: 2px;
+                        }
+                        .roadBoxRight {
+                            width: 195px;
+                            p {
+                                width: 100%;
+                                height: 55px;
+                                color: #5f9ef2;
+                                display: flex;
+                                margin-bottom: 0;
+                                align-items: center;
+                                justify-content: space-around;
+                                span {
+                                    width: 55px;
+                                    height: 55px;
+                                }
+                                .inputBox {
+                                    width: 195px;
+                                    height: 30px;
+                                    outline: none;
+                                    border: 1px solid #1c59ce;
+                                    background-color: #18346a;
+                                    padding-left: 5px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .slideRightBoxEdit {
+            height: 100%;
+            width: 100%;
+            .addMainLine {
+                height: 60px;
+                display: flex;
+                .newLine {
+                    font-size: 18px;
+                    width: 160px;
+                    line-height: 60px;
+                }
+                .operationLine {
+                    width: 110px;
+                    font-size: 12px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-around;
+                    span {
+                        width: 50px;
+                        height: 30px;
+                        text-align: center;
+                        cursor: pointer;
+                        border-radius: 3px;
+                        line-height: 30px;
+                        background-color: #18459b;
+                    }
+                }
+                .operationLineAdd {
+                    width: 110px;
+                    font-size: 12px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-around;
+                    span {
+                        width: 50px;
+                        height: 30px;
+                        text-align: center;
+                        cursor: pointer;
+                        border-radius: 3px;
+                        line-height: 30px;
+                        background-color: #18459b;
+                    }
+                }
+            }
+            > p {
+                height: 25px;
+                color: #5f9ef2;
+                padding-left: 15px;
+                display: flex;
+                align-items: center;
+                margin-bottom: 0;
+                span {
+                    width: 75px;
+                }
+                .inputBox {
+                    flex: 1;
+                    height: 30px;
+                    outline: none;
+                    border: 1px solid #1c59ce;
+                    background-color: #18346a;
+                    padding-left: 5px;
+                }
+            }
+            .lineBox {
+                height: calc(100% - 170px);
+                overflow-y: auto;
+                display: flex;
+                .lineBoxLeft {
+                    width: 50px;
+                    height: 100%;
+                }
+                .lineBoxRight {
+                    width: 100%;
+                    padding-left: 15px;
+                    .streetBox {
+                        height: 55px;
+                        margin-bottom: 5px;
+                        p {
+                            margin-bottom: 0;
+                        }
+                        .street {
+                            height: 20px;
+                            span {
+                                display: inline-block;
+                                width: 20px;
+                                color: #15e94f;
+                                &:nth-child(2) {
+                                    color: #0570ad;
+                                    cursor: pointer;
+                                }
+                            }
+                        }
+                        .intersection {
+                            height: 35px;
+                            line-height: 35px;
+                            display: flex;
+                            align-items: center;
+                            span {
+                                color: #02bde3;
+                                margin-left: 20px;
+                                padding: 0px 5px;
+                                height: 16px;
+                                line-height: 16px;
+                                background-color: #0668c2;
+                                border-radius: 5px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .iptSearchNavMap {
+        width: 220px;
+        height: 35px;
+        position: absolute;
+        top: 100px;
+        left: 320px;
+        z-index: 9;
+        .inptNavMon {
+            width: 90%;
+            height: 100%;
+            background: #0a255e;
+            border: none;
+            margin-left: 5px;
+            padding-left: 7px;
+            outline: none;
+            border-radius: 4px;
+        }
+        .MagBox {
+            width: 20%;
+            height: 100%;
+            background: #0a255e;
+            position: absolute;
+            right: 0;
+            top: 0;
+            color: skyblue;
+            text-align: center;
+            line-height: 30px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    }
     .sidebarLeft {
         position: fixed;
         top: 100px;
         left: 10px;
         width: 300px;
-        height: 100%;
+        height: calc(100% - 100px);
         z-index: 9;
         padding: 15px;
         background: linear-gradient(to bottom, rgba(1, 17, 50, 0.8), rgba(5, 38, 89, 0.6));
+        .tabLeft {
+            height: 32px;
+            width: 100%;
+            display: flex;
+            cursor: pointer;
+            span {
+                color: #4b6cba;
+                width: 100px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: rgba(10, 37, 90, 0.8);
+                margin-right: 15px;
+            }
+            .active {
+                color: white;
+                background-color: #0a3987;
+            }
+        }
+        .topNavMon {
+            width: 100%;
+            height: 30px;
+            display: flex;
+            margin-top: 10px;
+
+            .selectNav {
+                flex: 4;
+                select {
+                    width: 90%;
+                    height: 30px;
+                    background: #0a255e;
+                    margin-left: 5px;
+                    text-indent: 5px;
+                    cursor: pointer;
+                }
+
+                .ant-select {
+                    width: 85px;
+                    color: #fff;
+                }
+
+                .ant-select-selector {
+                    border: none;
+                    background-color: #0a2967;
+                }
+
+                .ant-select-arrow {
+                    color: #fff;
+                }
+            }
+
+            .iptSearchNav {
+                flex: 6;
+                padding-left: 5px;
+                position: relative;
+                .inptNavMon {
+                    width: 90%;
+                    height: 100%;
+                    background: #0a255e;
+                    border: none;
+                    margin-left: 5px;
+                    padding-left: 7px;
+                    outline: none;
+                    border-radius: 4px;
+                }
+                .MagBox {
+                    width: 20%;
+                    height: 100%;
+                    background: #0a255e;
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                    color: skyblue;
+                    text-align: center;
+                    line-height: 30px;
+                    font-size: 18px;
+                    cursor: pointer;
+                }
+            }
+        }
+        .sidebarLeftBox {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            .anticon {
+                position: absolute;
+                top: 15px;
+                right: -6px;
+            }
+        }
     }
     .container {
         position: absolute;
@@ -75,6 +443,57 @@ $bor-color: #a5fcff;
 
             .context_menu li:hover {
                 color: #22a9ff;
+            }
+            .mapabcgl-popup-content {
+                padding: 0;
+                background-color: transparent;
+                .mapabcgl-popup-close-button {
+                    right: 10px;
+                    top: 8px;
+                    font-size: 26px;
+                    color: #62bbff;
+                }
+                .infoWindow {
+                    width: 400px;
+                    height: 225px;
+                    background: rgba(3, 16, 96, 0.8);
+                    background-image: linear-gradient(to bottom, rgba(3, 38, 120, .8), rgba(0, 59, 129, .8), rgba(3, 38, 120, .8));
+                    font-size: 14px;
+                    color: #62bbff;
+                    border-radius: 4px;
+                    box-shadow: inset 0 0 10px rgba(62, 112, 255, .8);
+                    .infotitle {
+                        height: 40px;
+                        line-height: 40px;
+                        padding-left: 20px;
+                    }
+                    .interMessage {
+                        display: flex;
+                        flex-wrap: wrap;
+                        padding-left: 20px;
+                        justify-content: space-between;
+                        .message {
+                            width: 180px;
+                            height: 35px;
+                            text-align: left;
+                            line-height: 35px;
+                        }
+                    }
+                    .interDetails {
+                        height: 40px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        .monitorBtn {
+                            width: 80px;
+                            height: 28px;
+                            text-align: center;
+                            line-height: 28px;
+                            background-color: rgba(98, 187, 255, .4);
+                            cursor: pointer;
+                        }
+                    }
+                }
             }
             .centerMain {
                 flex: 1;
