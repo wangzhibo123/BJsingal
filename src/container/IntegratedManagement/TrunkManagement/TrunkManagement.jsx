@@ -56,10 +56,6 @@ class TrunkManagement extends Component {
         name: '新增干线',
       },
       {
-        id: 2,
-        name: '删除干线',
-      },
-      {
         id: 3,
         name: '切换视图',
       }
@@ -121,6 +117,10 @@ class TrunkManagement extends Component {
   }
   // 获取子id, 路口id
   getSelectChildId = (childId) => {
+    this.setState({
+      rights: 0,
+      isAddEdit: false
+    })
     // const _this = this
     // let marker, lng, lat
     // const childrenArr = this.props.data.dcuTreeData
@@ -551,17 +551,14 @@ class TrunkManagement extends Component {
         zoom: 14,
         pitch: 60
       })
-      this.setState({
-        rights: 0,
-        isAddEdit: false
-      })
-    } else {
-      this.setState({
-        rights: -300
-      })
     }
     this.setState({
       clickNum: id
+    })
+  }
+  noneAddRoad = () => {
+    this.setState({
+      rights: 0
     })
   }
   changeLoadRouteDirection = (e, s) => { // 选择干线方向
@@ -591,7 +588,6 @@ class TrunkManagement extends Component {
       mainHomePage, stateSelect, clickNum, Istitletops, isAddEdit, ismodify, IsddMessge, rights, roadValue,
       loadRouteDirectionList, loadRouteTypeList, treeList, defaultChildren
     } = this.state
-    console.log(treeList, 'sss')
     return (
       <div className='TrunkManagementBox'>
         <div className='sildeRight' style={{ right: `${rights}px` }}>
@@ -600,7 +596,7 @@ class TrunkManagement extends Component {
               <div className="slideRightBoxAdd">
                 <div className='addMainLine'>
                   <div className='newLine'>新增干线</div>
-                  <div className='operationLine'><span>保存</span><span>取消</span></div>
+                  <div className='operationLine'><span>保存</span><span onClick={this.noneAddRoad}>取消</span></div>
                 </div>
                 <p><span>干线名称：</span><input type="text" className='inputBox' placeholder="干线名称" /></p>
                 <p><span>干线编号：</span><input type="text" className='inputBox' placeholder="干线编号" /></p>
@@ -636,23 +632,26 @@ class TrunkManagement extends Component {
                   </Select>
                 </div>
                 <div className='lineBox'>
-                  <div className='lineBoxer'>
-                    <div className="lineBoxLeft"></div>
-                    <div className="lineBoxRight">
-                      {/* document.getElementById('startInp').value = '';
+                  <div className="lineBoxRight">
+                    {/* document.getElementById('startInp').value = '';
                     document.getElementById('endInp').value = '';
                     document.getElementById('channelInp').value = ''; */}
-                      <p><input type="text" className='inputBox' id='startInp' /></p>
-                      {
-                        roadValue && roadValue.map((item, index) => {
-                          return (
-                            <p key={item + index}><input type="text" onChange={this.getChangeValue} className='inputBox' id='channelInp' value={item} /></p>
-                          )
-                        })
-                      }
-                      {/*  <p><input type="text" className='inputBox' /></p> */}
-                      <p><input type="text" className='inputBox' id='endInp' /></p>
-                    </div>
+                    <p><span></span><input type="text" className='inputBox' id='startInp' /></p>
+                    {
+                      roadValue && roadValue.map((item, index) => {
+                        return (
+                          <div className='roadBox' key={item + index}>
+                            <div className="roadBoxLeft">
+                            </div>
+                            <div className="roadBoxRight">
+                              <p><input type="text" onChange={this.getChangeValue} className='inputBox' id='channelInp' value={item} /></p>
+                            </div>
+                          </div>
+                        )
+                      })
+                    }
+                    {/*  <p><input type="text" className='inputBox' /></p> */}
+                    <p><span></span><input type="text" className='inputBox' id='endInp' /></p>
                   </div>
                 </div>
               </div>
