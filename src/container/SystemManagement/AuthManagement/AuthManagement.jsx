@@ -324,7 +324,6 @@ class AuthManagement extends Component {
       return <TreeNode key={item.key} {...item} title={this.titleRender(item)} />;
     });
     titleRender = (item) =>{
-      debugger
       if (this.state.checkedOptions[item.key]) {
         return <div className={styles.checkBoxStyle}>
           {item.title}<em/><Checkbox.Group onChange={(v) => this.onChange(v, item.key)} options={this.state.checkedOptions[item.key]} defaultValue={this.state.checkedOptionsResult ? this.state.checkedOptionsResult[item.key] : []} onClick={(e) => {e.stopPropagation()}}>
