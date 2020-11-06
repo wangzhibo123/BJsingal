@@ -529,116 +529,129 @@ class UserManagement extends Component {
                     <span>编辑时间</span>
                     <span>操 作</span>
                   </div>
-                  <div className={styles.listItem}>
-                    <span>北京市交通管理局</span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span><s>编辑</s></span>
+                  <div className={styles.itemBody}>
+                    <div className={styles.listItem}>
+                      <span>北京市交通管理局</span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span><s>编辑</s></span>
+                    </div>
+                    <div className={styles.listItem}>
+                      <span></span>
+                      <span>科信处</span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span><s>编辑</s></span>
+                    </div>
+                    <div className={styles.listItem}>
+                      <span></span>
+                      <span></span>
+                      <span>控制科</span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span><s>编辑</s></span>
+                    </div>
+                    <div className={styles.listItem}>
+                      <span></span>
+                      <span></span>
+                      <span>检测科</span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span><s>编辑</s></span>
+                    </div>
+                    <div className={styles.listItem}>
+                      <span></span>
+                      <span></span>
+                      <span>通信科</span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span><s>编辑</s></span>
+                    </div>
+                    <div className={styles.listItem}>
+                      <span></span>
+                      <span>东城交通支队</span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span><s>编辑</s></span>
+                    </div>
+                    <div className={styles.listItem}>
+                      <span></span>
+                      <span>东城交通支队</span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span><s>编辑</s></span>
+                    </div>
+                    <div className={styles.listItem}>
+                      <span></span>
+                      <span>西城交通支队</span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span><s>编辑</s></span>
+                    </div>
+                    <div className={styles.listItem}>
+                      <span></span>
+                      <span>朝阳交通支队</span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span><s>编辑</s></span>
+                    </div>
+                    <div className={styles.listItem}>
+                      <span></span>
+                      <span>海淀交通支队</span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span><s>编辑</s></span>
+                    </div> 
+                    <div className={styles.listItem}>
+                      <span></span>
+                      <span>海淀交通支队</span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span><s>编辑</s></span>
+                    </div> 
                   </div>
-                  <div className={styles.listItem}>
-                    <span></span>
-                    <span>科信处</span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span><s>编辑</s></span>
-                  </div>
-                  <div className={styles.listItem}>
-                    <span></span>
-                    <span></span>
-                    <span>控制科</span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span><s>编辑</s></span>
-                  </div>
-                  <div className={styles.listItem}>
-                    <span></span>
-                    <span></span>
-                    <span>检测科</span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span><s>编辑</s></span>
-                  </div>
-                  <div className={styles.listItem}>
-                    <span></span>
-                    <span></span>
-                    <span>通信科</span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span><s>编辑</s></span>
-                  </div>
-                  <div className={styles.listItem}>
-                    <span></span>
-                    <span>东城交通支队</span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span><s>编辑</s></span>
-                  </div>
-                  <div className={styles.listItem}>
-                    <span></span>
-                    <span>东城交通支队</span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span><s>编辑</s></span>
-                  </div>
-                  <div className={styles.listItem}>
-                    <span></span>
-                    <span>西城交通支队</span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span><s>编辑</s></span>
-                  </div>
-                  <div className={styles.listItem}>
-                    <span></span>
-                    <span>朝阳交通支队</span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span><s>编辑</s></span>
-                  </div>
-                  <div className={styles.listItem}>
-                    <span></span>
-                    <span>海淀交通支队</span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span><s>编辑</s></span>
-                  </div> 
                   <div className={styles.listItem}>
                     <span><PlusOutlined title='加载更多' /></span>
                   </div>                  
