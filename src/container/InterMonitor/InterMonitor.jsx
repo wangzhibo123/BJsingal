@@ -4,7 +4,6 @@ import {
   SearchOutlined, DoubleLeftOutlined, DoubleRightOutlined, CaretUpOutlined, CaretDownOutlined, LeftCircleOutlined,
   RightCircleOutlined, UpCircleOutlined, DownCircleOutlined,
 } from '@ant-design/icons'
-import 'animate.css'
 import './InterMonitor.scss'
 
 import axiosInstance from '../utils/getInterfaceData'
@@ -165,27 +164,6 @@ class InterMonitor extends Component {
                         </div>
                       ))
                     }
-                    <div className="listTr">
-                      <span className="innterBorder" />
-                      <div className="listTd">南路</div>
-                      <div className="listTd">32</div>
-                      <div className="listTd">35km/h</div>
-                      <div className="listTd">1.8</div>
-                    </div>
-                    <div className="listTr">
-                      <span className="innterBorder" />
-                      <div className="listTd">东路</div>
-                      <div className="listTd">38</div>
-                      <div className="listTd">34km/h</div>
-                      <div className="listTd">1.7</div>
-                    </div>
-                    <div className="listTr">
-                      <span className="innterBorder" />
-                      <div className="listTd">西路</div>
-                      <div className="listTd">27</div>
-                      <div className="listTd">40km/h</div>
-                      <div className="listTd">1.1</div>
-                    </div>
                   </div>
                 </div>
             </div>

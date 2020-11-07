@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { Select } from 'antd'
 import './ChannelTable.scss'
 
-import left from '../../../imgs/left.png'
-import right from '../../../imgs/right.png'
+import left from '../../../../imgs/left.png'
+import right from '../../../../imgs/right.png'
 
 const { Option } = Select
 class ChannelTable extends Component {

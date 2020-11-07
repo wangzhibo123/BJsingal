@@ -18,12 +18,19 @@ import bottomright from '../../imgs/bottomright.png'
 import singal from '../../imgs/singal.png'
 import videoIcon from '../../imgs/videoicon.png'
 
-import ChannelTable from './ChannelTable/ChannelTable'
-import InterRelation from './InterRelation/InterRelation'
-import SingalMsg from './SingalMsg/SingalMsg'
-import LightGroup from './LightGroup/LightGroup'
-import Detector from './Detector/Detector'
-import VideoMsg from './VideoMsg/VideoMsg'
+import ChannelTable from './BaseMessage/ChannelTable/ChannelTable'
+import InterRelation from './BaseMessage/InterRelation/InterRelation'
+import SingalMsg from './BaseMessage/SingalMsg/SingalMsg'
+import LightGroup from './BaseMessage/LightGroup/LightGroup'
+import Detector from './BaseMessage/Detector/Detector'
+import VideoMsg from './BaseMessage/VideoMsg/VideoMsg'
+
+import SingalParams from './SingalParams/SIngalParams'
+import PhaseMsg from './SingalParams/PhaseMsg/PhaseMsg'
+import StageMsg from './SingalParams/StageMsg/StageMsg'
+import TimePlan from './SingalParams/TimePlan/TimePlan'
+import DispathPlan from './SingalParams/DetectorPlan/DetectorPlan'
+import DayPlan from './SingalParams/DayPlan/DayPlan'
 
 class InterConfMsg extends Component {
   constructor(props) {
@@ -32,23 +39,24 @@ class InterConfMsg extends Component {
       isUpload: false,
       currentConf: '',
       currentItem: 'canalization',
+      currentParams: 'phasemsg',
       configName: null,
     }
     this.baseConfList = [
-      { confName: '渠化信息', id: 'canalization' },
-      { confName: '车道信息', id: 'channel' },
-      { confName: '路口关系', id: 'inter' },
-      { confName: '信号机', id: 'singal' },
-      { confName: '灯组', id: 'lightGroup' },
-      { confName: '检测器', id: 'detector' },
-      { confName: '视频', id: 'video' },
+      { confName: '渠化信息', id: 'canalization', compos: null },
+      { confName: '车道信息', id: 'channel', compos: ChannelTable },
+      { confName: '路口关系', id: 'inter', compos: InterRelation },
+      { confName: '信号机', id: 'singal', compos: SingalMsg },
+      { confName: '灯组', id: 'lightGroup', compos: LightGroup },
+      { confName: '检测器', id: 'detector', compos: Detector },
+      { confName: '视频', id: 'video', compos: VideoMsg },
     ]
     this.singalParams = [
-      { confName: '相位信息', id: 'phasemsg' },
-      { confName: '阶段信息', id: 'stagemsg' },
-      { confName: '配时方案', id: 'timeplan' },
-      { confName: '日计划', id: 'dayplan' },
-      { confName: '调度方案', id: 'dispathplan' },
+      { confName: '相位信息', id: 'phasemsg', compos: PhaseMsg },
+      { confName: '阶段信息', id: 'stagemsg', compos: StageMsg },
+      { confName: '配时方案', id: 'timeplan', compos: TimePlan },
+      { confName: '日计划', id: 'dayplan', compos: DayPlan },
+      { confName: '调度方案', id: 'dispathplan', compos: DispathPlan },
     ]
     this.dirPic = [
       { pic: left }, { pic: right }, { pic: straight }, { pic: round }
@@ -67,14 +75,14 @@ class InterConfMsg extends Component {
       this.setState({ configName })
     }
   }
-  handleBaseItemChange = (currentItem) => {
-    this.setState({ currentItem })
+  handleBaseItemChange = (currentItem, stateName) => {
+    this.setState({ [stateName]: currentItem })
   }
   handleUploadInterPic = () => {
     this.setState({ isUpload: true })
   }
   render() {
-    const { isUpload, currentItem, configName } = this.state
+    const { isUpload, currentItem, configName, currentParams } = this.state
     return (
       <div className="interConfMsg">
         <div className="confMsgBox">
@@ -104,13 +112,13 @@ class InterConfMsg extends Component {
             {
               configName === 'interBase' &&
               this.baseConfList.map((item) => (
-                <div className={`baseItem ${currentItem === item.id ? 'activeItem' : ''}`} key={item.id} onClick={() => this.handleBaseItemChange(item.id)}>{item.confName}</div>
+                <div className={`baseItem ${currentItem === item.id ? 'activeItem' : ''}`} key={item.id} onClick={() => this.handleBaseItemChange(item.id, 'currentItem')}>{item.confName}</div>
               ))
             }
             {
               configName === 'singalParams' &&
               this.singalParams.map((item) => (
-                <div className={`baseItem ${currentItem === item.id ? 'activeItem' : ''}`} key={item.id} onClick={() => this.handleBaseItemChange(item.id)}>{item.confName}</div>
+                <div className={`baseItem ${currentParams === item.id ? 'activeItem' : ''}`} key={item.id} onClick={() => this.handleBaseItemChange(item.id, 'currentParams')}>{item.confName}</div>
               ))
             }
           </div>
@@ -205,8 +213,15 @@ class InterConfMsg extends Component {
                     </div>
                   </div>
               }
-
             </div>
+          }
+          {
+            configName === 'singalParams' &&
+            <SingalParams paramsName={currentParams} renderComponent={(prams) => {
+              const ItemParams = this.singalParams.find(item => item.id === prams)
+              const ItemComponent = ItemParams.compos
+              return <ItemComponent />
+            }} />
           }
         </div>
       </div>
