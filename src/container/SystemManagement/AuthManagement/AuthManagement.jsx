@@ -281,7 +281,6 @@ class AuthManagement extends Component {
         checkedOptionsResult[indexArr[i]] = ['edit']
       }
     }
-    console.log(JSON.stringify(checkedOptionsResult))
     this.setState({
       checkedOptionsResult
     })
@@ -311,7 +310,7 @@ class AuthManagement extends Component {
       [name]:CheckedData
     });
   };
-  renderTreeNodes = data =>
+  renderTreeNodes = data => 
     data.map(item => {
       if (item.children) {
         return (
@@ -323,11 +322,11 @@ class AuthManagement extends Component {
       }
       return <TreeNode key={item.key} {...item} title={this.titleRender(item)} />;
     });
+  
     titleRender = (item) =>{
-      debugger
       if (this.state.checkedOptions[item.key]) {
         return <div className={styles.checkBoxStyle}>
-          {item.title}<em/><Checkbox.Group onChange={(v) => this.onChange(v, item.key)} options={this.state.checkedOptions[item.key]} defaultValue={this.state.checkedOptionsResult ? this.state.checkedOptionsResult[item.key] : []} onClick={(e) => {e.stopPropagation()}}>
+          {item.title}<em/><Checkbox.Group onChange={(v) => this.onChange(v, item.key)} options={this.state.checkedOptions[item.key]} defaultValue={this.state.checkedOptionsResult && this.state.checkedOptionsResult[item.key] } onClick={(e) => {e.stopPropagation()}}>
             <Checkbox value={this.state.checkedOptions[item.key][0].value}>{this.state.checkedOptions[item.key][0].label}</Checkbox>
             <Checkbox value={this.state.checkedOptions[item.key][1].value}>{this.state.checkedOptions[item.key][1].label}</Checkbox>
           </Checkbox.Group>
@@ -444,15 +443,18 @@ class AuthManagement extends Component {
                 </div>
                 <div className={styles.powerBox} style={{alignItems:'flex-start'}}>
                   <div className={styles.powerTreeLeft}>
+                    { this.state.checkedOptionsResult && 
                     <Tree
                       showLine={true}
                       showIcon={false}
                       onExpand={(e) => this.onExpand(e, 'leftTreeChecked')}
                       expandedKeys={this.state.leftTreeChecked}>
                       {this.renderTreeNodes(treeData)}
-                    </Tree>
+                    </Tree> 
+                    }
                   </div>
                   <div className={styles.powerTreeLeft}>
+                  { this.state.checkedOptionsResult && 
                     <Tree
                       showLine={true}
                       showIcon={false}
@@ -460,6 +462,7 @@ class AuthManagement extends Component {
                       expandedKeys={this.state.rightTreeChecked}>
                       {this.renderTreeNodes(treeDataR)}
                     </Tree>
+                  }
                   </div>
                 </div>
               </div>

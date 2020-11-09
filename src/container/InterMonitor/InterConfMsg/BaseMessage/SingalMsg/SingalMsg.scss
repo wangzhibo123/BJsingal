@@ -1,0 +1,28 @@
+.sinalMsgWrapper {
+    padding: 20px;
+    .singalMsgList {
+        padding: 15px;
+        border: 1px solid rgba(136, 175, 248, .2);
+        .singalItems {
+            height: 30px;
+            display: flex;
+            align-items: center;
+            .itemsNmae {
+                flex: 0 150px;
+                padding-right: 10px;
+                text-align: right;
+            }
+            .itemsVal {
+                flex: 1;
+                .inputVal {
+                    width: 100%;
+                    height: 25px;
+                    padding-left: 35px;
+                    background-color: transparent;
+                    border: 1px solid #1D3065;
+                    outline: none;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,92 @@
+.singalParamsBox {
+    height: calc(100% - 120px);
+    .paramsTable {
+        height: 100%;
+        position: relative;
+        padding-top: 30px;
+        .addBtn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            color:#40E7FF;
+            cursor: pointer;
+        }
+        .paramsThead, .paramsTr {
+            height: 40px;
+            display: flex;
+            .paramsTd, .paramsTh {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                .editBtn {
+                    margin: 0 5px;
+                    cursor: pointer;
+                    color: #40E7FF;
+                }
+                .arrowsIcon {
+                    display: inline-block;
+                    height: 40px;
+                    line-height: 35px;
+                    font-size: 35px;
+                    color: #3C5F79;
+                }
+                .ant-select-selector {
+                    height: 28px;
+                    background-color: transparent;
+                    border-color: rgba(136, 175, 248, .4);
+                    border-radius: 4px;
+                    box-shadow: none;
+                }
+                .ant-select-selection-item {
+                    line-height: 26px;
+                    color: #fff;
+                }
+                .ant-select-arrow {
+                    color: #fff;
+                }
+            }
+            .paramsTd:first-child {
+                border-left: 1px solid rgba(136, 175, 248, .3);
+            }
+            .paramsTd:last-child {
+                border-right: 1px solid rgba(136, 175, 248, .3);
+            }
+        }
+        .paramsThead {
+            background: rgba(6, 45, 116, 0.5);
+            border: 1px solid rgba(136, 175, 248, .7);
+            .dayPlanNo {
+                flex: 0 120px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .paramsThBox {
+                flex: 1;
+                display: flex;
+            }
+        }
+        .paramsTbody {
+            height: calc(100% - 70px);
+            overflow-y: auto;
+            .paramsTrBox {
+                display: flex;
+                .dayPlanNo {
+                    flex: 0 120px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-left: 1px solid rgba(136, 175, 248, .3);
+                    border-bottom: 1px solid rgba(136, 175, 248, .3);
+                }
+                .paramsTrItem {
+                    flex: 1;
+                }
+            }
+        }
+        .paramsTr {
+            border-bottom: 1px solid rgba(136, 175, 248, .3);
+        }
+    }
+}
