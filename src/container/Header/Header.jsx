@@ -22,7 +22,15 @@ class Header extends Component {
       },
       { name: '效果评价', id: '0-5', children: [{ name: '路口评价', id: '1-5', path: '/inter' }, { name: '干线评价', id: '2-5', path: '/artery' }, { name: '区域评价', id: '3-5', path: '/area' }] },
       {
-        name: '运维管理', id: '0-6',children: [], path: '/MochaItom'},
+        name: '运维管理', id: '0-6',children: [], path: '/MochaItom'
+      },
+      {
+        name: '视频应用', id: '0-9', children: [], path: ''
+      },
+      {
+        name: '课题专题', id: '0-10',
+        children: [{ name: '公交优先', id: '1-10', path: '' }, { name: '快速路控制', id: '2-10', path: '' }, { name: '智能网联', id: '3-10', path: '' }]
+      },
       {
         name: '综合管理', id: '0-7',
         children: [{ name: '路口管理', id: '1-6', path: '/intersection' }, { name: '区域管理', id: '2-6', path: '/region' },{id:'3-6',name:'干线管理',path:'/trunkManagement'}, { name: '信号参数管理', id: '4-6', path: '/signalParameters' }]
@@ -30,7 +38,7 @@ class Header extends Component {
       {
         name: '系统管理', id: '0-8',
         children: [{ name: '用户管理', id: '1-8', path: '/UserManagement' }, { name: '授权管理', id: '2-8', path: '/AuthManagement' }, { name: '运行监控', id: '3-8', path: '/OperationMonitoring' }, { name: '操作日志', id: '4-8', path: 'OperationLog' }]
-      },
+      },      
     ]
   }
   handleEnterNav = (currentNav) => {
@@ -56,7 +64,7 @@ class Header extends Component {
           <div className="navItem">
             {
               this.navItems.map((item, index) => {
-                if (index < 4) {
+                if (index < 5) {
                   return (
                     <div className="nav" key={item.id} onMouseEnter={() => { this.handleEnterNav(item) }} onMouseLeave={this.handleLeaveNav} onClick={() => { this.handleNavClick(item) }}>
                       {item.name}
@@ -84,7 +92,7 @@ class Header extends Component {
           <div className="navItem itemRight">
             {
               this.navItems.map((item, index) => {
-                if (index > 3) {
+                if (index > 4) {
                   return (
                     <div className="nav" key={item.id} onMouseEnter={() => { this.handleEnterNav(item) }} onMouseLeave={this.handleLeaveNav} onClick={() => { this.handleNavClick(item) }}>
                       {item.name}
