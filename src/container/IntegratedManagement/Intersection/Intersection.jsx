@@ -332,7 +332,7 @@ class Intersection extends Component {
                 <div className='addMainLine'>
                   <div className='newLine'>西湖南大街详情</div>
                   {
-                    !ismodify ? <div className='operationLine'><span>删除</span><span onClick={() => this.getismodify(true)}>编辑</span></div> : <div className='operationLineAdd'><span>保存</span><span onClick={() => this.getismodify(false)}>取消</span></div>
+                    !ismodify ? <div className='operationLine'><span>删除</span><span onClick={() => this.getismodify(true)}>编辑</span></div> : <div className='operationLineAdd'><span>保存</span><span>取消</span></div>
                   }
                 </div>
                 <p>路口名称：<span>0001</span></p>
