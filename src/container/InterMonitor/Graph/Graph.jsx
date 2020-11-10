@@ -104,8 +104,8 @@ class Graph extends React.Component {
           type: 'value',
           name: '',
           min: 0,
-          max: 600,
-          interval: 100,
+          max: 20,
+          interval: 2,
           axisLabel: {
             show: true,
             textStyle: {
@@ -132,7 +132,7 @@ class Graph extends React.Component {
           type: 'value',
           name: '',
           min: 0,
-          max: 60,
+          max: 100,
           interval: 10,
           axisLabel: {
             show: true,
@@ -163,7 +163,7 @@ class Graph extends React.Component {
           type: 'line',
           symbol: 'none',
           smooth: true,
-          data: [100,300,600,200,500],
+          data: [1,5,8,4,3],
           itemStyle: {
             color: '#9257AE',
           },
