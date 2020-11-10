@@ -29,7 +29,7 @@ class Header extends Component {
       },
       {
         name: '课题专题', id: '0-10',
-        children: [{ name: '公交优先', id: '1-10', path: '' }, { name: '快速路控制', id: '2-10', path: '' }, { name: '智能网联', id: '3-10', path: '' }]
+        children: [{ name: '公交优先', id: '1-10', path: '/busPriority' }, { name: '快速路控制', id: '2-10', path: '/expresswayControl' }, { name: '智能网联', id: '3-10', path: '/intellectNetwork' }]
       },
       {
         name: '综合管理', id: '0-7',

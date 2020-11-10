@@ -1,0 +1,427 @@
+$ft_color: #dcdde2;
+$bor-color: #a5fcff;
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; }
+input[type="number"]{ -moz-appearance: textfield; }
+.ant-modal{
+    height:100%;
+}
+.ant-modal-header{
+    background:#051B44;
+    border-bottom: 1px  rgba(5, 38, 89, 1) solid;
+    .ant-modal-title{
+        color:#00E7F1;
+    }
+    font-size:18px;
+}
+.ant-modal-content{
+    background: linear-gradient(to bottom, rgba(1, 17, 50, 0.8), rgba(5, 38, 89, 0.6));
+    color:#00E7F1;
+    height:calc(100% - 40px);
+    margin:20px 0;
+    .modalBox{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        width:100%;
+        height: 100%;
+        .greenWrapper {
+            z-index: 13;
+            height: calc(100% - 40px);
+            padding-bottom: 25px;
+            .greenWave {
+                padding-bottom: 15px;
+                height: 525px;
+                width: 100%;
+                border-bottom: 1px solid #3D839D;
+            }
+        }
+        .modalSearch, .modalContent{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            flex-wrap: wrap;
+            .itemContent{
+                flex:1;
+            }
+            .chartsItem {
+                padding: 0 5px;
+                margin: 2px;
+                min-width: 33%;
+                flex: 1;
+                background: #051B44;
+                .itemTitle {
+                    position: relative;
+                    padding: 5px 0 0 5px;
+                    font-size: 15px;
+                    color: #25B8D4;
+                    .chartsRoom {
+                        position: absolute;
+                        top: 5px;
+                        right: 5px;
+                        transition: all .2s;
+                        cursor: pointer;
+                        &:hover {
+                            font-size: 20px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.ant-modal-close-x{
+    color:#00E7F1;
+    & svg:hover{
+        transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transition:  all .5s;
+        -webkit-transition:  all .5s;
+        -moz-transition:  all .5s;
+        -ms-transition:  all .5s;
+        -o-transition:  all .5s;
+    }
+}
+.ant-modal-footer{
+    display: none;
+}
+.interContainer {
+    position: fixed;
+    top:0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    z-index: 1001;
+    .zoomChartsBox {
+        z-index: 1;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0, .5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .zoomBox {
+            width: 90%;
+            padding: 10px 0;
+            margin-top: -50px;
+            border-radius: 5px;
+            background: linear-gradient(to bottom, rgba(29, 64, 113, 0.9), rgba(21, 46, 83, 0.9));
+            .itemTitle {
+                position: relative;
+                padding-left: 10px;
+                font-size: 16px;
+                color: #25B8D4;
+                .chartsRoom {
+                    position: absolute;
+                    top: 0;
+                    right: 10px;
+                    transition: all .2s;
+                    cursor: pointer;
+                    &:hover {
+                        font-size: 20px;
+                    }
+                }
+            }
+        }
+    }
+  }
+.specialTopicBox {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #021027;
+    .sidebarLeft,.sidebarRight {
+        position: fixed;
+        top: 82px;
+        left: 0;
+        width: 300px;
+        height: calc(100% - 82px);
+        z-index: 9;
+        padding: 15px;
+        background: linear-gradient(to bottom, rgba(1, 17, 50, 0.8), rgba(5, 38, 89, 0.6));
+        .iconDirection{
+            line-height: 80px;
+            height:80px;
+            width: 20px;
+            position: absolute;
+            top:50%;
+            right:-20px;
+            background: rgba(1, 17, 50, 0.8);
+            border-left:none;
+            transform:translate(0,-50%) ;
+            -webkit-transform:translate(0,-50%) ;
+            -moz-transform:translate(0,-50%) ;
+            -ms-transform:translate(0,-50%) ;
+            -o-transform:translate(0,-50%) ;
+            cursor: pointer;
+            span{
+                pointer-events:none;
+            }
+        }
+        .asideItem {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            .signaContainer_right_bom {
+                height: 240px;
+                display: flex;
+                background-color: rgba(2, 24, 61, 0.7);
+                flex-direction: column;
+                .signaRB_top {
+                  height: 40px;
+                  display: flex;
+                  div {
+                    flex: 1;
+                    font-size: 16px;
+                    background-color: #062551;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    cursor: pointer;
+                    margin: 0 1px;
+                    border: 1px solid #0f3358;
+                  }
+                }
+                .signaRB_bom {
+                  flex: 1;
+                }
+              }
+            .itemContent {
+                flex: 1;
+                font-size: 12px;
+                overflow-y: auto;
+                .leftTit{
+                    font-size: 20px;
+                }
+                .interSearch {
+                  width:100%;
+                  padding:20px 0;
+                  display: flex;
+                  justify-content:center;
+                  align-items: center;
+                  background: rgba(1, 17, 50, 0.8);
+                  .ant-select {
+                      width: 85px;
+                      color: #fff;
+                  }
+                  .ant-select-selector {
+                      border: none;
+                      background-color: #0A2967;
+                  }
+                  .ant-select-arrow {
+                      color: #fff;
+                  }
+                  .searchInput {
+                      position: relative;
+                      .inputBox {
+                          width: 180px;
+                          height: 32px;
+                          margin-left: 10px;
+                          padding-left: 5px;
+                          border: none;
+                          outline: none;
+                          border-radius: 4px;
+                          background-color: #0A2967;
+                      }
+                      .searchIcon {
+                          position: absolute;
+                          top: 7px;
+                          right: 5px;
+                          font-size: 18px;
+                          color: #09A4E7;
+                      }
+                  }
+                }
+                .runRate {
+                    height: 100%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+            }
+            
+        }
+    }
+    .sidebarRight{
+        width:330px;
+        top:70px;
+        right:0;
+        bottom:0;
+        left: unset;
+        background: unset;
+        padding:0;
+        display: flex;
+        flex-direction: column;
+        .asideItem {
+            flex: 1;
+            min-height: 260px;
+            display: flex;
+            flex-direction: column;
+            .title {
+                height: 18px;
+                text-align: center;
+                line-height: 17px;
+                background: url(../imgs/smalltit.png) center 5px no-repeat;
+                background-size: 100% 100%;
+            }
+            .itemContent {
+                flex: 1;
+                font-size: 12px;
+                overflow-y: auto;
+                .faultRate {
+                    display: flex;
+                    flex-direction: column;
+                    padding: 10px;
+                    font-size: 13px;
+                    height: 100%;
+                }
+                .holdRate, .runRate {
+                    height: 100%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+            }
+        }
+    
+    }
+    .container {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: calc(100% - 70px);
+        .contentCenter {
+            width: calc(100% - 340px);
+            height: calc(100% - 10px);
+            flex-direction: column;
+            position: relative;
+            .title {
+                height: 20px;
+                text-align: center;
+                line-height: 19px;
+                background: url("../imgs/smalltit.png") center 5px no-repeat;
+                background-size: 100% 100%;
+                position: absolute;
+                left:0;
+                right:0;
+                top:0;
+                z-index: 1;
+            }
+            .map-container{
+                position: absolute;
+                top:12px;
+                left:0;
+                right:0;
+            }
+            .mapabcgl-ctrl-top-right {
+                display: none;
+            }
+            .driveInfo {
+                width: auto;
+                height: auto;
+                background: #fff;
+                color: #333;
+                font-size: 12px;
+                padding: 15px 20px 7px 7px;
+            }
+
+            .driveInfo li {
+                margin-bottom: 8px;
+            }
+
+            .driveInfo li span {
+                width: 160px;
+                display: inline-block;
+                text-align: right;
+                font-weight: 500;
+                vertical-align: middle;
+            }
+
+            .driveInfo li input,
+            .driveInfo li textarea {
+                width: 180px;
+                font-size: 12px;
+                padding-left: 5px;
+                color: #333;
+            }
+
+            .driveInfo li textarea {
+                vertical-align: top;
+                font-family: Arial;
+            }
+
+            .context_menu li {
+                cursor: pointer;
+            }
+
+            .context_menu li:hover {
+                color: #22a9ff;
+            }
+            
+        }
+    }
+}
+.menuBox{
+    width:100%;
+    height: 100%;
+    padding:0 15px;
+    // background: linear-gradient(to bottom, rgba(1, 17, 50, 0.8), rgba(5, 38, 89, 0.6));
+    .ant-menu {
+      font-size: 16px;
+      color: white;
+      border-right: none;
+      background-color: transparent;
+    }
+    .ant-menu-submenu-inline > .ant-menu-submenu-title .ant-menu-submenu-arrow::after {
+        background-image: -webkit-gradient(
+            linear,
+            left top,
+            right top,
+            from(rgba(134, 183, 250, 0.85)),
+            to(rgba(134, 183, 250, 0.85))
+        );
+    }
+    .ant-menu-submenu-inline > .ant-menu-submenu-title .ant-menu-submenu-arrow::before {
+        background-image: -webkit-gradient(
+            linear,
+            left top,
+            right top,
+            from(rgba(134, 183, 250, 0.85)),
+            to(rgba(134, 183, 250, 0.85))
+        );
+    }
+    .ant-menu-submenu-active{
+      background: linear-gradient(90deg, rgba(52, 92, 167, 0.02), rgba(16, 68, 175, 0.99), rgba(52, 92, 167, 0));
+    }
+    .ant-menu-item-selected {
+        background: linear-gradient(to right, rgba(1, 17, 50, 0.8), rgba(21, 63, 149, 0.8), rgba(5, 38, 89, 0.6));
+    }
+    .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+        background: linear-gradient(to right, rgba(1, 17, 50, 0.8), rgba(21, 63, 149, 0.8), rgba(5, 38, 89, 0.6));
+    }
+    .ant-menu-item {
+        position: relative;
+        width: 100%;
+        padding-right: 20px;
+        padding-left: 65px !important;
+    }
+    .anticon {
+        position: absolute;
+        top: 15px;
+        right: -6px;
+    }
+  }
+  .ant-menu-inline{
+    border-right:none;
+  }
