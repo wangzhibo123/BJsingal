@@ -57,7 +57,7 @@ class Graph extends React.Component {
         show: true,
         left: 'right',
         top: 10,
-        data: ['今日', '同比', '环比'],
+        data: ['今日', '昨日同比', '上周环比'],
         textStyle: { // ----图例内容样式
           color: '#FFFFFF', // ---所有图例的字体颜色
           // backgroundColor:'black',  //---所有图例的字体背景色
@@ -156,7 +156,7 @@ class Graph extends React.Component {
           },
         },
         {
-          name: '同比',
+          name: '昨日同比',
           type: 'line',
           symbol: 'none',
           smooth: true,
@@ -177,7 +177,7 @@ class Graph extends React.Component {
           },
         },
         {
-          name: '环比',
+          name: '上周环比',
           type: 'line',
           symbol: 'none',
           smooth: true,

@@ -14,13 +14,28 @@
     font-style: normal;
     text-align: center;
 }
+.ant-select-dropdown {
+    background-color:  rgba(12,74,131, .6);
+    .ant-select-item {
+        color: #fff;
+        &:hover {
+            background-color: rgba(0, 141, 250, 0.5);
+        }
+    }
+    .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+        background-color: rgba(0, 141, 250, 0.5);
+    }
+}
+.ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+    background-color: transparent;
+}
 .homepageWrapper {
     position: relative;
     width: 100%;
     height: 100%;
     background: url(../imgs/sysbg.png) center center no-repeat;
     background-size: cover;
-    
+    background-color: #000;
     .container {
         position: absolute;
         left: 0;
@@ -236,12 +251,26 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            .interSearchBox {
+                z-index: 1;
+                position: absolute;
+                top: 20px;
+                left: 0;
+                .ant-select-selector {
+                    background-color: rgba(12,74,131, .6);
+                    border: 1px solid #0E6ABF;
+                    color: #fff;
+                }
+                .ant-select-arrow {
+                    color: #fff;
+                }
+            }
+            
             .mapLegend {
                 position: absolute;
                 bottom: 5px;
                 right: 0;
-                height: 60px;
-                padding: 0 10px;
+                height: 30px;
                 display: flex;
                 flex-direction: column;
                 background-color: rgba(12,74,131, .6);
@@ -256,12 +285,71 @@
                         height: 30px;
                         text-align: center;
                         line-height: 30px;
+                        .pointIcon {
+                            display: inline-block;
+                            width: 8px;
+                            height: 8px;
+                            border-radius: 50%;
+                        }
+                        .onlineColor {
+                            background-color: #01FA00;
+                        }
+                        .offlineColor {
+                            background-color: #D7C19C;
+                        }
+                        .faultColor {
+                            background-color: #FF0200;
+                        }
                     }
                     .legendItem {
                         width: 80px;
                         height: 28px;
-                        text-align: center;
-                        line-height: 28px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        .legenIcon {
+                            display: inline-block;
+                            width: 20px;
+                            height: 20px;
+                            margin-right: 5px;
+                        }
+                        .coverage {
+                            background: url(../imgs/coverage.png) center center no-repeat;
+                            background-size: 100% 100%;
+                        }
+                        .condition {
+                            width: 10px;
+                            background: url(../imgs/condition.png) center center no-repeat;
+                            background-size: 100% 100%;
+                        }
+                        .minitor {
+                            width: 20px;
+                            height: 10px;
+                            background: url(../imgs/moni.png) center center no-repeat;
+                            background-size: 100% 100%;
+                        }
+                    }
+                }
+                .singalModeBox {
+                    width: 180px;
+                    padding: 5px 10px;
+                    background-color: rgba(12,74,131, .6);
+                    border: 1px solid #0E6ABF;
+                    margin: 10px 0 0 -1px;
+                    .ant-checkbox-wrapper {
+                        font-size: 13px;
+                        color: #fff;
+                        .ant-checkbox-inner {
+                            width: 14px;
+                            height: 14px;
+                            background-color: transparent;
+                            border-color: #00A0E9;
+                        }
+                    }
+                    .checkMsg {
+                        height: 25px;
+                        display: flex;
+                        align-items: center;
                     }
                 }
             }

@@ -74,7 +74,7 @@ $bor-color: #a5fcff;
                 }
             }
             .lineBox {
-                height: calc(100% - 170px);
+                height: calc(100% - 325px);
                 overflow-y: auto;
                 .lineBoxRight {
                     width: 100%;
@@ -99,6 +99,21 @@ $bor-color: #a5fcff;
                             background-color: #18346a;
                             padding-left: 5px;
                         }
+                        &:first-child {
+                            span {
+                                background: url("../../imgs/startRoad.png") no-repeat;
+                                background-size: contain;
+                                background-position: center;
+                            }
+                        }
+                        &:last-child {
+                            span {
+                                transform: rotate(180deg);
+                                background: url("../../imgs/endRoad.png") no-repeat;
+                                background-size: contain;
+                                background-position: center;
+                            }
+                        }
                     }
                     .roadBox {
                         height: 100%;
@@ -108,8 +123,8 @@ $bor-color: #a5fcff;
                         .roadBoxLeft {
                             width: 5px;
                             height: 35px;
-                            margin-left: 18px;
-                            background-color: #1DF249;
+                            margin-left: 25px;
+                            background-color: #1df249;
                             border-radius: 2px;
                         }
                         .roadBoxRight {
