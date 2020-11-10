@@ -73,8 +73,13 @@ export default class MainMonitoring extends Component {
           ]
         }
       ],
+      //地图默认中心点
+      defaultCenterPoint:[116.391, 39.911],
+      //地图靠近中心点的倍率
       modeMapFlyToPitch:60,
+      //地图缩放倍率
       modeMapFlyToZoom:15,
+      //展示开关
       modeNavShow: true,
       modeMapShow: true,
       modeMainMonitor: false,
@@ -105,21 +110,24 @@ export default class MainMonitoring extends Component {
       modeNavShow: true,
       modeMapShow: true,
       modeMainMonitor: false,
-      modeMainTabShow: true
+      modeMainTabShow: true,
+      modeMainTabTypeD:true
     },()=>{
       this.renderMap()
     })
   }
   intersectionRenderin = async () => {
-    await this.getstartpoint({ lng: 116.38251572176512, lat: 39.90708534816005 })
+    //默认起始点坐标
+    await this.getstartpoint({ lng: 116.38251572176511, lat: 39.90708534816005 })
+    //默认终止点坐标
     await this.getendpoint({ lng: 116.41149060058893, lat: 39.90803874332477 })
-    await this.getChannelpoint({ lng: 116.39934569026138, lat: 39.90753821453271 })
-    await this.getChannelpoint({ lng: 116.38315705392921, lat: 39.907079696277606 })
+    //默认途径点坐标
+    // await this.getChannelpoint({ lng: 116.39934569026138, lat: 39.90753821453271 })
+    // await this.getChannelpoint({ lng: 116.38315705392921, lat: 39.907079696277606 })
   }
-
   addMenu = () => {
     const _this = this
-    this.map.flyTo({ center: [116.391, 39.911], zoom: this.state.modeMapFlyToZoom, pitch: this.state.modeMapFlyToPitch })
+    this.map.flyTo({ center: this.state.defaultCenterPoint, zoom: this.state.modeMapFlyToZoom, pitch: this.state.modeMapFlyToPitch })
     var marker = '', startmarker = '', endmarker = '', channelmarker = [];
     this.map.on('contextmenu', function (item) {
       if (marker) {
@@ -152,7 +160,6 @@ export default class MainMonitoring extends Component {
       })
       // 初始话渲染路口
     })
-
     this.getstartpoint = (lnglat) => {
       // console.log(lnglat, '开始')
       if (marker) {
@@ -165,7 +172,6 @@ export default class MainMonitoring extends Component {
       plan()
       startmarker.on('dragend', plan);
     }
-
     this.getendpoint = (lnglat) => {
       // console.log(lnglat, '结束')
       if (marker) {
@@ -197,7 +203,6 @@ export default class MainMonitoring extends Component {
       plan();
       pointMarker.on('dragend', plan);
     }
-
     function plan() {
       var str = '';
       // channelName = '';
@@ -215,13 +220,13 @@ export default class MainMonitoring extends Component {
       if (startmarker && endmarker) {
         var origin = startmarker.getLngLat().lng + ',' + startmarker.getLngLat().lat;
         var destination = endmarker.getLngLat().lng + ',' + endmarker.getLngLat().lat;
-
         _this.map.Driving({
           origin: origin,
           destination: destination,
           waypoints: str//途经点
         }, function (data) {
-          if (data.status === 0) {
+          console.log(data,"data")
+          if (data.status == 0) {
             var data = data.result.routes[0].steps, xys = '';
             _this.map.removeLayerAndSource('plan');
             _this.map.removeLayerAndSource('plan1');
@@ -245,7 +250,6 @@ export default class MainMonitoring extends Component {
         })
       }
     }
-
     function addplanline(lines, id, color) {
       var geojson = {
         "type": "FeatureCollection",
@@ -257,8 +261,6 @@ export default class MainMonitoring extends Component {
           }
         }]
       };
-
-
       _this.map.addLayer({
         "id": id,
         "type": "line",
@@ -289,7 +291,7 @@ export default class MainMonitoring extends Component {
         }
       });
     }
-
+    //清除地图
     function clearMap() {
       if (marker) {
         marker.remove();
@@ -309,10 +311,8 @@ export default class MainMonitoring extends Component {
         }
         channelmarker = []
       }
-
       _this.map.removeLayerAndSource('plan');
       _this.map.removeLayerAndSource('plan1');
-      
     }
     let roadValue = []
     function rgeocode(type, location) {
@@ -338,9 +338,7 @@ export default class MainMonitoring extends Component {
           }
         };
       });
-
     }
-
     function addMarker(img, point, position) {
       var marker = '', html = ''
       html = document.createElement('div');
@@ -354,7 +352,6 @@ export default class MainMonitoring extends Component {
         .setOffset([0, -20])
         .addTo(_this.map);
       return marker;
-
     };
     function addMarkerpoint(img, point, position) {
       var marker = '', html = ''
@@ -367,7 +364,6 @@ export default class MainMonitoring extends Component {
       return marker;
     };
   }
-  
   ClickMessge = () => {
     var popupOption = {
       closeOnClick: false,
@@ -378,14 +374,15 @@ export default class MainMonitoring extends Component {
     // <img width="36px" height="36px" src="${}" />
     //控制绿点弹出框
     this.popup = new window.mapabcgl.Popup(popupOption)
-      .setLngLat(new window.mapabcgl.LngLat(116.391, 39.911))
+      .setLngLat(new window.mapabcgl.LngLat(116.39155, 39.911))
       .setHTML(`
-      <div style="width: 310px;color: #599FE0; font-size:12px;height: 165px;background:rgba(6,21,65,.5);border: 1px solid #3167AA; ">
+      <div style="width: 210px;color: #599FE0; font-size:12px;height: 165px;border: 1px solid #3167AA;">
       1111
       </div>`)
       .addTo(this.map);
   }
   addMarker = () => {
+    console.log(this.map,"map")
     if (this.map) {
       const el = document.createElement('div')
       el.style.width = '20px'
@@ -404,7 +401,7 @@ export default class MainMonitoring extends Component {
   }
   gettitletops = (isShow) => {
     this.setState({
-      Istitletops: isShow,      
+      Istitletops: isShow,
     })
   }
   renderMap = () => {
@@ -414,7 +411,7 @@ export default class MainMonitoring extends Component {
     const options = {
       minzoom: 1, // 路况显示的最小级别(1-24)
       maxzoom: 24, // 路况显示的最大级别(1-24)
-      type: 'raster', // 路况图层类型:vector(矢量),raster(栅格)
+      type: 'vector', // 路况图层类型:vector(矢量),raster(栅格)
       refresh: 30 * 1000, // 路况图层刷新时间，毫秒
       // before:'roads-symbol-49'
     };
@@ -433,6 +430,7 @@ export default class MainMonitoring extends Component {
     })
     this.map = map
   }
+  //东西南北 按钮的 控制
   modeMainEBtn=()=>{
     this.setState({
       modeMainEStyle:true,
@@ -457,6 +455,7 @@ export default class MainMonitoring extends Component {
       modeMainNStyle:true
     })
   }
+
   //2D,3D切换
   flyTo2D=()=>{
     if(this.state.modeMainTabD){
@@ -484,14 +483,11 @@ export default class MainMonitoring extends Component {
     return (
       <div className="mainMon">
         {
+          //左侧导航页面渲染
           modeNavShow && <div className="NavMon">
             <div className="topNavMon">
               <div className="selectNav">
-                <Select
-                  defaultValue="海淀区"
-                  style={{ width: 100,height:30 }}
-                  size="middle"      
-                >
+                <Select defaultValue="海淀区" style={{ width: 100,height:30 }} size="middle">
                   {
                     this.state.stateSelect.map((item, index) => {
                       return (
@@ -509,54 +505,38 @@ export default class MainMonitoring extends Component {
               </div>
             </div>
             <div className="listNav">
-            <Menu
-            onClick={this.handleClick}
-            style={{ width: 251, color: '#86b7fa', height: '100%', overflowY: 'auto',overflowX:"hidden", fontSize: '16px' }}
-            // defaultSelectedKeys={['7']}
-            // defaultOpenKeys={['sub2', 'sub3']}
-            mode="inline"
-          >
-            <SubMenu key="sub2" title="海淀区">
-              {/* <Menu.Item key="5"></Menu.Item> */}
-              <SubMenu key="sub3" title="知春路拥堵应急">
-                <Menu.Item key="7">知春路与罗庄东路<EditOutlined /></Menu.Item>
-                <Menu.Item key="8">知春路与罗庄中路</Menu.Item>
-                <Menu.Item key="9">知春路与罗庄西路</Menu.Item>
-                <Menu.Item key="10">知春路与海淀黄庄路</Menu.Item>
-              </SubMenu>
-              <SubMenu key="sub3-2" title="万泉庄路"></SubMenu>
-            </SubMenu>
-            <SubMenu
-              key="sub4"
-              title="房山区"
-            >
-              {/* <Menu.Item key="1-2-9">Option 9</Menu.Item> */}
-            </SubMenu>
-            <SubMenu
-              key="sub5"
-              title="通州区"
-            >
-            </SubMenu>
-            <SubMenu
-              key="sub6"
-              title="门头沟区"
-            >
-            </SubMenu>
-            <SubMenu
-              key="sub7"
-              title="中关村东路"
-            >
-            </SubMenu>
+            <Menu onClick={this.handleClick} style={{ width: 251, color: '#86b7fa', height: '100%', overflowY: 'auto',overflowX:"hidden", fontSize: '16px' }}  mode="inline">
+                <SubMenu key="sub2" title="海淀区">
+                  {/* <Menu.Item key="5"></Menu.Item> */}
+                  <SubMenu key="sub3" title="知春路拥堵应急">
+                    <Menu.Item key="7">知春路与罗庄东路<EditOutlined /></Menu.Item>
+                    <Menu.Item key="8">知春路与罗庄中路</Menu.Item>
+                    <Menu.Item key="9">知春路与罗庄西路</Menu.Item>
+                    <Menu.Item key="10">知春路与海淀黄庄路</Menu.Item>
+                  </SubMenu>
+                  <SubMenu key="sub3-2" title="万泉庄路"></SubMenu>
+                </SubMenu>
+                <SubMenu key="sub4" title="房山区">
+                    {/* <Menu.Item key="1-2-9">Option 9</Menu.Item> */}
+                </SubMenu>
+                <SubMenu key="sub5" title="通州区">
+                </SubMenu>
+                <SubMenu key="sub6" title="门头沟区">
+                </SubMenu>
+                <SubMenu key="sub7" title="中关村东路">
+                </SubMenu>
           </Menu>
             </div>
           </div>
         }
         {
+          //地图显示
           modeMapShow && <div className="mapContent">
             <div id="mapContainer" className="map-container"></div>
           </div>
         }
         {
+          //模式切换后页面渲染
           modeMainMonitor && <div className="modeMainMonitorHome">
             <div className="modeMainSlidMode">
               <div className="modeMainSlidHeadMode">
@@ -832,7 +812,6 @@ export default class MainMonitoring extends Component {
                         </div>
                     </div>
                     <div className="modeMainMonitorContentball">
-                        
                     </div>
                     <div className="modeMainMonitorContentList">
                         <div className="modeMainMonitorContentListTop">
@@ -899,26 +878,27 @@ export default class MainMonitoring extends Component {
                         </div>
                     </div>
                   </div>
-
                   </div>
                 </div>
-
             </div>
           </div>
         }
         {
+          //模式切换按钮
           modeMainTabShow && <div className="modeSwitchBtn">
             <div className="modeTab" onClick={() => {
               this.setState({
                 modeNavShow: false,
                 modeMapShow: false,
                 modeMainMonitor: true,
-                modeMainTabShow: false
+                modeMainTabShow: false,
+                modeMainTabTypeD:false
               })
             }}>模式切换</div>
           </div>
         }
         {
+          //2D 3D 按钮
           modeMainTabTypeD&&<div style={{width:"50px",height:'50px',background:'rgba(32, 120, 195,.6)',color:"#fff",position:"absolute",right:"30px",bottom:"45px",textAlign:"center",cursor:'pointer',borderRadius:"5px",lineHeight:"50px",fontWeight:700}}>
             <div style={{fontSize:'17px'}} onClick={this.flyTo2D}>{modeMainTabD?"2D":"3D"}</div>
           </div>
