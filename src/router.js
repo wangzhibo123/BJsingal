@@ -35,6 +35,9 @@ const RegionOpt = loadable(() => import("./container/SingalOpt/OfficeOpt/RegionO
 const Inter = loadable(() => import("./container/Evaluate/Inter/Inter"), { LoadingComponent: LoadingPage })
 const Artery = loadable(() => import("./container/Evaluate/Artery/Artery"), { LoadingComponent: LoadingPage })
 const Area = loadable(() => import("./container/Evaluate/Area/Area"), { LoadingComponent: LoadingPage })
+const BusPriority = loadable(() => import("./container/SpecialTopic/BusPriority"), { LoadingComponent: LoadingPage })
+// const ExpresswayControl = loadable(() => import("./container/SpecialTopic/ExpresswayControl"), { LoadingComponent: LoadingPage })
+// const IntellectNetwork = loadable(() => import("./container/SpecialTopic/IntellectNetwork"), { LoadingComponent: LoadingPage })
 const Parent = () => (
   <React.Fragment>
     <Route path="*" component={Header} />
@@ -61,6 +64,9 @@ const Parent = () => (
     <Route exact path="/inter" component={Inter} />
     <Route exact path="/artery" component={Artery} />
     <Route exact path="/area" component={Area} />
+    <Route exact path="/busPriority" component={BusPriority} />
+    {/* <Route exact path="/expresswayControl" component={ExpresswayControl} />
+    <Route exact path="/intellectNetwork" component={IntellectNetwork} /> */}
   </React.Fragment>
 )
 export default function BasicRouter() {
