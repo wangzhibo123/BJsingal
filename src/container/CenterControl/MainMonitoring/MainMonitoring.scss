@@ -114,6 +114,7 @@
                 background: rgba(4,24,56,0);
                 border: none;
                 color: rgb(134, 183, 250);
+                
             }
              .ant-menu-submenu-arrow::before {
                 background-image: -webkit-gradient(linear, left top, right top, from(rgba(134, 183, 250, 0.85)), to(rgba(134, 183, 250, 0.85)));
@@ -135,6 +136,23 @@
         .mapContainer{
             width: 100%;
             height: 100%;
+        }
+        .mapabcgl-popup-content{
+            background-color:rgba(18, 38, 142,.44);
+            font-size: 24px;
+            border: 1px solid #3661E9;
+        }
+        .mapabcgl-popup-anchor-top .mapabcgl-popup-tip {
+            -webkit-align-self: center;
+            align-self: center;
+            border-top: none;
+            border-bottom-color: #132992;
+        }
+        .mapabcgl-popup-anchor-bottom .mapabcgl-popup-tip {
+            -webkit-align-self: center;
+            align-self: center;
+            border-bottom: none;
+            border-top-color:  #132992;
         }
     }
     .modeSwitchBtn{

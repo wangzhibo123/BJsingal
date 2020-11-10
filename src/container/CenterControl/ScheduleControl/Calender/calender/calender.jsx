@@ -1,7 +1,7 @@
 import React ,{Component} from "react";
 import "./calender.scss"
 import {Select} from "antd"
-import {LeftOutlined,RightOutlined, SolutionOutlined} from "@ant-design/icons"
+import {LeftOutlined,RightOutlined} from "@ant-design/icons"
 const {Option} =Select
 export default class CalenderPublic extends Component {
     constructor(props){
@@ -12,8 +12,12 @@ export default class CalenderPublic extends Component {
             calenderSTermInfo:[0, 21208, 42467, 63836, 85337, 107014, 128867, 150921, 173149, 195551, 218072, 240693, 263343, 285989, 308563, 331033, 353350, 375494, 397447, 419210, 440795, 462224, 483532, 504758],
             calenderNStr1:['日', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'],
             calenderNStr2:['初', '十', '廿', '卅'],
-            calenderSelectYear:["1998","1999","2000","2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020"],
+            calenderSelectYear:["1998","1999","2000","2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"],
             calenderSelectMonth:["1","2","3","4","5","6","7","8","9","10","11","12"],
+            //公历节日
+            calenderSFtv:["0101 元旦","0214 情人节","0308 妇女节","0312 植树节", "0315 消费者权益日","0401 愚人节","0501 劳动节","0504 青年节","0512 护士节","0601 儿童节","0701 建党节","0801 建军节", "0910 教师节","0928 孔子诞辰","1001 国庆节", "1006 老人节","1024 联合国日","1224 平安夜","1225 圣诞节"],
+            //农历节日
+            calenderLFtv:[ "0101 春节","0115 元宵节","0505 端午节","0707 七夕情人节","0715 中元节","0815 中秋节","0909 重阳节","1208 腊八节","1224 小年"],
             calenderSolarMonth:[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
             calenderLunarInfo:[0x04bd8, 0x04ae0, 0x0a570, 0x054d5, 0x0d260, 0x0d950, 0x16554, 0x056a0, 0x09ad0, 0x055d2,
                 0x04ae0, 0x0a5b6, 0x0a4d0, 0x0d250, 0x1d255, 0x0b540, 0x0d6a0, 0x0ada2, 0x095b0, 0x14977,
@@ -30,36 +34,6 @@ export default class CalenderPublic extends Component {
                 0x07954, 0x06aa0, 0x0ad50, 0x05b52, 0x04b60, 0x0a6e6, 0x0a4e0, 0x0d260, 0x0ea65, 0x0d530,
                 0x05aa0, 0x076a3, 0x096d0, 0x04bd7, 0x04ad0, 0x0a4d0, 0x1d0b6, 0x0d250, 0x0d520, 0x0dd45,
                 0x0b5a0, 0x056d0, 0x055b2, 0x049b0, 0x0a577, 0x0a4b0, 0x0aa50, 0x1b255, 0x06d20, 0x0ada0],
-            //公历节日
-            calenderSFtv:["0101 元旦",
-            "0214 情人节",
-            "0308 妇女节",
-            "0312 植树节",
-            "0315 消费者权益日",
-            "0401 愚人节",
-            "0501 劳动节",
-            "0504 青年节",
-            "0512 护士节",
-            "0601 儿童节",
-            "0701 建党节",
-            "0801 建军节",
-            "0910 教师节",
-            "0928 孔子诞辰",
-            "1001 国庆节",
-            "1006 老人节",
-            "1024 联合国日",
-            "1224 平安夜",
-            "1225 圣诞节"],
-            //农历节日
-            calenderLFtv:[ "0101 春节",
-            "0115 元宵节",
-            "0505 端午节",
-            "0707 七夕情人节",
-            "0715 中元节",
-            "0815 中秋节",
-            "0909 重阳节",
-            "1208 腊八节",
-            "1224 小年"],
             eve:0,
             tY:new Date().getFullYear(),
             tM:new Date().getMonth(),
@@ -67,7 +41,9 @@ export default class CalenderPublic extends Component {
             cld:[],
             fat:9,
             mat:9,
+            //日历前端占位盒子数组
             frontBox:[1,1,1,1,1,1],
+            //日历后端占位盒子数组
             laterBox:[1,1,1,1,1,1],
             //内置表格比例开关
             tableSizeSwitch:true
@@ -217,7 +193,6 @@ export default class CalenderPublic extends Component {
         var offDate = new Date((31556925974.7 * (y - 1900) + this.state.calenderSTermInfo[n] * 60000) + Date.UTC(1900, 0, 6, 2, 5));
         return (offDate.getUTCDate())
     }
-
     //计算格子数
     CountTheCells(frontGrid,LaterGrid){
         let newFrontArray=[];
@@ -243,12 +218,12 @@ export default class CalenderPublic extends Component {
         var n = 0;
         var firstLM = 0;
         var arr=[];
-        sDObj = new Date(y, m, 1);    //当月第一天的日期
+        sDObj = new Date(y, m, 1);          //当月第一天的日期
           //当月最后一天的日期
-        this.length = this.solarDays(y, m);    //公历当月天数   31
+        this.length = this.solarDays(y, m);  //公历当月天数   31
         sLObj=new Date(y,m,this.length);  
         this.firstWeek = sDObj.getDay();    //公历当月1日星期几
-        this.lastWeek=sLObj.getDay();          //公历当月最后一天星期几
+        this.lastWeek=sLObj.getDay();       //公历当月最后一天星期几
         if(this.firstWeek===0){
             this.firstWeek=7
         }else if(this.lastWeek===0){
@@ -435,6 +410,11 @@ export default class CalenderPublic extends Component {
     subYearTime(){
         console.log("--")
     }
+    //返回今天
+    backToDay(){
+        // this.changeCld(this.state.tY,this.state.tM)
+        console.log("返回今天")
+    }
     render(){
         const {calenderWeek} =this.state;
         return (
@@ -479,7 +459,7 @@ export default class CalenderPublic extends Component {
                     {/* 放假安排 */}
                     <div className="holidayArr"><Select style={{width:'95%', height:"95%"}} value="放假安排"><Option>放假安排</Option></Select></div>
                     {/* 返回今天 */}
-                    <div className="backDay"><div className="backToDay" title="返回今天">返回今天</div></div>
+                    <div className="backDay"><div className="backToDay" title="返回今天" onClick={this.backToDay}>返回今天</div></div>
                 </div>
                 {/* 日期类 */}
                 <div className="calenderContent">
