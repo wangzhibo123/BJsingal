@@ -51,7 +51,7 @@ class SignalParameters extends Component {
       <div className={styles.timingWrapper}>
         <div className={styles.timingcontainer}>
           <div className={styles.titles}></div>
-          <div className={styles.title}>信号参数管理</div>
+          <div className={styles.title}>设备管理</div>
           <div className={styles.searchBox}>
             <div><span>关键字</span><Input onChange={this.changeFont} placeholder="" /></div>
             <div><span>所属区域</span><Input onChange={this.changeRegion} placeholder="" /></div>
