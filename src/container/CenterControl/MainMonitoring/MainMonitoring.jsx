@@ -74,7 +74,9 @@ export default class MainMonitoring extends Component {
         }
       ],
       //地图默认中心点
-      defaultCenterPoint:[116.391, 39.911],
+      defaultCenterPoint:[116.396, 39.9075],
+      //路口节点
+      intersectioNodes:[{latitude:116.387,longitude:39.9072},{latitude:116.393,longitude:39.9074},{latitude:116.396,longitude:39.9075},{latitude:116.399,longitude:39.9075},{latitude:116.403,longitude:39.9078}],
       //地图靠近中心点的倍率
       modeMapFlyToPitch:60,
       //地图缩放倍率
@@ -364,39 +366,53 @@ export default class MainMonitoring extends Component {
       return marker;
     };
   }
-  ClickMessge = () => {
+  ClickMessge = (index) => {
+    const {intersectioNodes} = this.state;
     var popupOption = {
-      closeOnClick: false,
+      closeOnClick: true,
       closeButton: true,
       // anchor: "bottom-left",
-      offset: [-20, -10]
-    }
+      offset: [0, 5]
+    } 
     // <img width="36px" height="36px" src="${}" />
     //控制绿点弹出框
     this.popup = new window.mapabcgl.Popup(popupOption)
-      .setLngLat(new window.mapabcgl.LngLat(116.39155, 39.911))
+      .setLngLat(new window.mapabcgl.LngLat(intersectioNodes[index].latitude, intersectioNodes[index].longitude))
       .setHTML(`
-      <div style="width: 210px;color: #599FE0; font-size:12px;height: 165px;border: 1px solid #3167AA;">
-      1111
+      <div style="width: 74px;color: #fff; font-size:12px;height: 483px;display:flex;flex-direction: column;">
+          <div style="flex:1;">
+            <div></div>
+            <div>开启手动</div>
+          </div>
+          <div style="flex:1;">1</div>
+          <div style="flex:1;">1</div>
+          <div style="flex:1;">1</div>
+          <div style="flex:1;">1</div>
+          <div style="flex:1;">1</div>
+          <div style="flex:1;">1</div>
+          <div style="flex:1;"></div>
       </div>`)
       .addTo(this.map);
   }
   addMarker = () => {
-    console.log(this.map,"map")
     if (this.map) {
-      const el = document.createElement('div')
-      el.style.width = '20px'
-      el.style.height = '20px'
-      el.style.borderRadius = '50%'
-      el.style.backgroundColor = 'green'
-      el.addEventListener('click', (e) => {
-        e.stopPropagation()
-        this.ClickMessge()
+      let {intersectioNodes} =this.state;
+      intersectioNodes.map((item,index)=>{
+        const el = document.createElement('div')
+        el.style.width = '20px'
+        el.style.height = '20px'
+        el.style.borderRadius = '50%'
+        el.style.backgroundColor = '#21F7FE'
+        el.style.cursor="pointer"
+        el.addEventListener('click', (e) => {
+          e.stopPropagation()
+          this.ClickMessge(index)
+        })
+        new window.mapabcgl.Marker(el)
+        //绿色中心点坐标
+          .setLngLat([item.latitude, item.longitude])
+          .addTo(this.map);
       })
-      new window.mapabcgl.Marker(el)
-      //绿色中心点坐标
-        .setLngLat([116.391, 39.911])
-        .addTo(this.map);
     }
   }
   gettitletops = (isShow) => {
