@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import { Menu, Select } from 'antd'
 import { EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
+import $ from 'jquery'
 import './TrunkManagement.scss'
 import mapConfiger from '../../utils/minemapConf'
 // import messageBac from '../../imgs/messageBac.png'
@@ -62,6 +63,7 @@ class TrunkManagement extends Component {
         name: '切换视图',
       }
     ]
+    this.getPointAll = '/engine-maintenance/unit/getPointAll'
     this.deleteRoute = '/engine-maintenance/routeManagement/deleteRoute' // 删除干线信息
     this.getRouteInfo = '/engine-maintenance/routeManagement/getRouteInfo' // 加载当前干线信息
     this.loadRouteTree = '/engine-maintenance/routeManagement/loadRouteTree' // 干线树
@@ -111,6 +113,12 @@ class TrunkManagement extends Component {
   //   })
   // }
   getAddDataList = () => {
+    axiosInstance.post(this.getPointAll).then(res => {
+      const { code, list } = res.data
+      if (code === '1') {
+        this.addMarker(list)
+      }
+    })
     axiosInstance.post(this.loadRouteDirection).then(res => { // 干线方向
       const { code, list } = res.data
       if (code === '1') {
@@ -423,49 +431,99 @@ class TrunkManagement extends Component {
   componentDidMount = () => {
     this.renderMap()
     this.getDataList()
+    this.getAddDataList()
   }
-  ClickMessge = () => {
-    var popupOption = {
+  addInfoWindow = (marker) => {
+    if (this.mapPopup) {
+      this.mapPopup.remove()
+    }
+    this.map.addControl(new window.mapabcgl.NavigationControl())
+    const popupOption = {
       closeOnClick: false,
       closeButton: true,
-      // anchor: "bottom-left",
-      offset: [-20, -10]
+      offset: [0, 0]
     }
-    // <img width="36px" height="36px" src="${}" />
-    this.popup = new window.mapabcgl.Popup(popupOption)
-      .setLngLat(new window.mapabcgl.LngLat(116.391, 39.911))
-      .setHTML(`
-      <div style="width: 310px;color: #599FE0; font-size:12px;height: 165px;background:rgba(6,21,65,.5);border: 1px solid #3167AA; ">
-      <div style="height:32px;line-height:32px;text-align: left;padding-left: 20px;"><span style="color:#599FE0">车农庄大街与车公庄北街路口</span></div>
-      <div>
-      <p style="height:32px;margin-bottom:0;line-height:32px;padding-left:40px"><span>路口编号 ：</span>120461</p>
-      <p style="height:32px;margin-bottom:0;line-height:32px;padding-left:40px"><span>所属类型 ：</span>十字路口</p>
-      <p style="height:32px;margin-bottom:0;line-height:32px;padding-left:40px"><span>所属区域 ：</span>西城区</p>
-      <p style="height:32px;margin-bottom:0;line-height:32px;display: flex;align-items: center;justify-content: center;"><span style="
-      padding: 0px 5px;
-      height: 25px;
-      line-height: 25px;
-      color: #EBEFF7;
-      background-color: #094FBA;">加入区域</span></p>
-      </div>
-    </div>`)
-      .addTo(this.map);
+    this.mapPopup = new window.mapabcgl.Popup(popupOption)
+      .setLngLat(new window.mapabcgl.LngLat(marker.longitude, marker.latitude))
+      .setHTML(this.getInfoWindowHtml(marker))
+      .addTo(this.map)
+    $('.mapabcgl-popup')[0].style.maxWidth = '1000px'
   }
-  addMarker = () => {
-    if (this.map) {
+  getInfoWindowHtml = (interMsg) => {
+    return `
+      <div class="infoWindow">
+        <div class="infotitle">${interMsg.unit_name}</div>
+        <div class="interMessage">
+          <div class="message">设备类型：信号灯</div>
+          <div class="message">所属城区：${interMsg.district_name}</div>
+          <div class="message">控制状态：${interMsg.control_state}</div>
+          <div class="message">信号系统：${interMsg.signal_system_code}</div>
+          <div class="message">信号机IP：${interMsg.signal_ip}</div>
+          <div class="message">设备状态：${interMsg.alarm_state}</div>
+          <div class="message">运行阶段：${interMsg.stage_code}</div>
+        </div>
+        <div class="interDetails"><div class="monitorBtn">路口检测</div></div>
+      </div>
+    `
+  }
+  // ClickMessge = () => {
+  //   var popupOption = {
+  //     closeOnClick: false,
+  //     closeButton: true,
+  //     // anchor: "bottom-left",
+  //     offset: [-20, -10]
+  //   }
+  //   // <img width="36px" height="36px" src="${}" />
+  //   this.popup = new window.mapabcgl.Popup(popupOption)
+  //     .setLngLat(new window.mapabcgl.LngLat(116.391, 39.911))
+  //     .setHTML(`
+  //     <div style="width: 310px;color: #599FE0; font-size:12px;height: 165px;background:rgba(6,21,65,.5);border: 1px solid #3167AA; ">
+  //     <div style="height:32px;line-height:32px;text-align: left;padding-left: 20px;"><span style="color:#599FE0">车农庄大街与车公庄北街路口</span></div>
+  //     <div>
+  //     <p style="height:32px;margin-bottom:0;line-height:32px;padding-left:40px"><span>路口编号 ：</span>120461</p>
+  //     <p style="height:32px;margin-bottom:0;line-height:32px;padding-left:40px"><span>所属类型 ：</span>十字路口</p>
+  //     <p style="height:32px;margin-bottom:0;line-height:32px;padding-left:40px"><span>所属区域 ：</span>西城区</p>
+  //     <p style="height:32px;margin-bottom:0;line-height:32px;display: flex;align-items: center;justify-content: center;"><span style="
+  //     padding: 0px 5px;
+  //     height: 25px;
+  //     line-height: 25px;
+  //     color: #EBEFF7;
+  //     background-color: #094FBA;">加入区域</span></p>
+  //     </div>
+  //   </div>`)
+  //     .addTo(this.map);
+  // }
+  addMarker = (mapMaker) => {
+    const currentThis = this
+    this.markers = []
+    mapMaker && mapMaker.forEach(item => {
       const el = document.createElement('div')
       el.style.width = '20px'
       el.style.height = '20px'
       el.style.borderRadius = '50%'
       el.style.backgroundColor = 'green'
-      el.addEventListener('click', (e) => {
-        e.stopPropagation()
-        this.ClickMessge()
-      })
-      const marker = new window.mapabcgl.Marker(el)
-        .setLngLat([116.391, 39.911])
-        .addTo(this.map);
-    }
+      el.style.cursor = 'pointer'
+      el.addEventListener('click', function (e) {
+        currentThis.addInfoWindow(item)
+      });
+      new window.mapabcgl.Marker(el)
+        .setLngLat([item.longitude, item.latitude])
+        .addTo(this.map)
+    })
+    // if (this.map) {
+    //   const el = document.createElement('div')
+    //   el.style.width = '20px'
+    //   el.style.height = '20px'
+    //   el.style.borderRadius = '50%'
+    //   el.style.backgroundColor = 'green'
+    //   el.addEventListener('click', (e) => {
+    //     e.stopPropagation()
+    //     this.ClickMessge()
+    //   })
+    //   const marker = new window.mapabcgl.Marker(el)
+    //     .setLngLat([116.391, 39.911])
+    //     .addTo(this.map);
+    // }
   }
   renderMap = () => {
     mapConfiger.zoom = 11
@@ -507,7 +565,6 @@ class TrunkManagement extends Component {
   // }
   clickOperationNum = (id) => {
     if (id === 1) {
-      this.getAddDataList()
       this.setState({
         rights: 0,
         isAddEdit: true,

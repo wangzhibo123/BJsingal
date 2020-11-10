@@ -102,7 +102,7 @@ $bor-color: #a5fcff;
                         &:first-child {
                             span {
                                 background: url("../../imgs/startRoad.png") no-repeat;
-                                background-size: contain;
+                                background-size: 35%;
                                 background-position: center;
                             }
                         }
@@ -110,7 +110,7 @@ $bor-color: #a5fcff;
                             span {
                                 transform: rotate(180deg);
                                 background: url("../../imgs/endRoad.png") no-repeat;
-                                background-size: contain;
+                                background-size: 35%;
                                 background-position: center;
                             }
                         }
