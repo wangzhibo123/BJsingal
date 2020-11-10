@@ -16,7 +16,7 @@ const HomePage = loadable(() => import('./container/HomePage/HomePage'), { Loadi
 const BranchHome = loadable(() => import('./container/HomePage/branchHome'), { LoadingComponent: LoadingPage })
 const PlancontrolPage = loadable(() => import('./container/PlancontrolPage/PlancontrolPage'), { LoadingComponent: LoadingPage })
 const InterMonitor = loadable(() => import('./container/InterMonitor/InterMonitor'), { LoadingComponent: LoadingPage })
-const LineMon = loadable(() => import("./container/CenterControl/MainMonitoring/MainMonitoring"), { LoadingComponent: LoadingPage })
+const MainMon = loadable(() => import("./container/CenterControl/MainMonitoring/MainMonitoring"), { LoadingComponent: LoadingPage })
 const AreaMon = loadable(() => import("./container/CenterControl/AreaMonitoring/AreaMonitoring"), { LoadingComponent: LoadingPage })
 const TimeControl = loadable(() => import("./container/CenterControl/ScheduleControl/ScheduleControl"), { LoadingComponent: LoadingPage })
 const Intersection = loadable(() => import("./container/IntegratedManagement/Intersection/Intersection"), { LoadingComponent: LoadingPage })
@@ -35,12 +35,15 @@ const RegionOpt = loadable(() => import("./container/SingalOpt/OfficeOpt/RegionO
 const Inter = loadable(() => import("./container/Evaluate/Inter/Inter"), { LoadingComponent: LoadingPage })
 const Artery = loadable(() => import("./container/Evaluate/Artery/Artery"), { LoadingComponent: LoadingPage })
 const Area = loadable(() => import("./container/Evaluate/Area/Area"), { LoadingComponent: LoadingPage })
+const BusPriority = loadable(() => import("./container/SpecialTopic/BusPriority"), { LoadingComponent: LoadingPage })
+// const ExpresswayControl = loadable(() => import("./container/SpecialTopic/ExpresswayControl"), { LoadingComponent: LoadingPage })
+// const IntellectNetwork = loadable(() => import("./container/SpecialTopic/IntellectNetwork"), { LoadingComponent: LoadingPage })
 const Parent = () => (
   <React.Fragment>
     <Route path="*" component={Header} />
     <Route exact path="/home" component={HomePage} />
     <Route exact path="/branchhome" component={BranchHome} />
-    <Route path="/lineMon" component={LineMon} />
+    <Route path="/mainMon" component={MainMon} />
     <Route path="/areaMon" component={AreaMon} />
     <Route path="/timeControl" component={TimeControl} />
     <Route exact path="/plancontrolpage" component={PlancontrolPage} />
@@ -61,6 +64,9 @@ const Parent = () => (
     <Route exact path="/inter" component={Inter} />
     <Route exact path="/artery" component={Artery} />
     <Route exact path="/area" component={Area} />
+    <Route exact path="/busPriority" component={BusPriority} />
+    {/* <Route exact path="/expresswayControl" component={ExpresswayControl} />
+    <Route exact path="/intellectNetwork" component={IntellectNetwork} /> */}
   </React.Fragment>
 )
 export default function BasicRouter() {

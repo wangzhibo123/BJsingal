@@ -34,17 +34,20 @@ export default class AreaMonitoring extends Component {
         }
       ],
       //切换按钮
-      modeAreaTabShow:true,
+      modeAreaTabShow:false,
       //地图
       modeAreaMapShow:true,
       //左侧侧边栏
       modeAreaContentShow:true,
       //第二页面
-      modeSequenceChartShow:false
+      modeSequenceChartShow:false,
+      //切换到2D按钮
+      modeMainTabTypeD:true,
+      //2D到3D
+      modeMainTabD:true,
     };
   }
   componentDidMount() {
-    console.log(11)
     this.state.modeAreaMapShow&&this.renderMap();
   }
 
@@ -58,7 +61,6 @@ export default class AreaMonitoring extends Component {
       const marker = new window.mapabcgl.Marker(el)
         .setLngLat([116.391, 39.911])
         .addTo(this.map);
-      console.log(marker);
     }
   };
   renderMap = () => {
@@ -98,8 +100,30 @@ export default class AreaMonitoring extends Component {
   onSearch(val) {
     console.log('search:', val);
   }
+  //2D,3D切换
+  flyTo2D=()=>{
+    if(this.state.modeMainTabD){
+      this.setState({
+        modeMapFlyToPitch:0,
+        modeMainTabD:false,
+        modeMapFlyToZoom:13,
+        modeMainControlMapSign:false
+      },()=>{
+        this.map.flyTo({  zoom: this.state.modeMapFlyToZoom, pitch: this.state.modeMapFlyToPitch })
+      })
+    }else{
+      this.setState({
+        modeMapFlyToPitch:60,
+        modeMainTabD:true,
+        modeMapFlyToZoom:15,
+        modeMainControlMapSign:false
+      },()=>{
+        this.map.flyTo({  zoom: this.state.modeMapFlyToZoom, pitch: this.state.modeMapFlyToPitch })
+      })
+    }
+  }
   render() {
-    const {modeAreaTabShow,modeAreaMapShow,modeAreaContentShow,modeSequenceChartShow} =this.state;
+    const {modeAreaTabShow,modeAreaMapShow,modeAreaContentShow,modeSequenceChartShow,modeMainTabTypeD,modeMainTabD} =this.state;
     return (
       <div className="AreaMon">
         {
@@ -113,10 +137,7 @@ export default class AreaMonitoring extends Component {
           </div>
           <div className="topNavMon">
             <div className="selectNav">
-              <Select
-                defaultValue="海淀区"
-                style={{ width: 100, height: 30 }}
-              >
+              <Select defaultValue="海淀区" style={{ width: 100, height: 30 }}>
                 {
                   this.state.stateSelect.map((item, index) => {
                     return (
@@ -133,15 +154,8 @@ export default class AreaMonitoring extends Component {
               </div>
             </div>
           </div>
-
           <div className="listNav">
-          <Menu
-            onClick={this.handleClick}
-            style={{ width: 251, color: '#86b7fa', height: '100%', overflowY: 'auto',overflowX:"hidden", fontSize: '16px' }}
-            // defaultSelectedKeys={['7']}
-            // defaultOpenKeys={['sub2', 'sub3']}
-            mode="inline"
-          >
+          <Menu onClick={this.handleClick} style={{ width: 251, color: '#86b7fa', height: '100%', overflowY: 'auto',overflowX:"hidden", fontSize: '16px' }} mode="inline">
             <SubMenu key="sub2" title="海淀区">
               {/* <Menu.Item key="5"></Menu.Item> */}
               <SubMenu key="sub3" title="知春路拥堵应急">
@@ -253,6 +267,11 @@ export default class AreaMonitoring extends Component {
                     <ModeSequenceChartShowChart></ModeSequenceChartShowChart>
               </div>
               </div>
+          </div>
+        }
+        {
+          modeMainTabTypeD&&<div style={{width:"50px",height:'50px',background:'rgba(32, 120, 195,.6)',color:"#fff",position:"absolute",right:"30px",bottom:"45px",textAlign:"center",cursor:'pointer',borderRadius:"5px",lineHeight:"50px",fontWeight:700}}>
+            <div style={{fontSize:'17px'}} onClick={this.flyTo2D}>{modeMainTabD?"2D":"3D"}</div>
           </div>
         }
       </div>
