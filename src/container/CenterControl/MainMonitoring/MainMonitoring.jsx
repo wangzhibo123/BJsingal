@@ -370,27 +370,27 @@ export default class MainMonitoring extends Component {
     const {intersectioNodes} = this.state;
     var popupOption = {
       closeOnClick: true,
-      closeButton: true,
+      closeButton: false,
       // anchor: "bottom-left",
-      offset: [0, 5]
+      offset: [0, 15]
     } 
     // <img width="36px" height="36px" src="${}" />
     //控制绿点弹出框
     this.popup = new window.mapabcgl.Popup(popupOption)
       .setLngLat(new window.mapabcgl.LngLat(intersectioNodes[index].latitude, intersectioNodes[index].longitude))
       .setHTML(`
-      <div style="width: 74px;color: #fff; font-size:12px;height: 483px;display:flex;flex-direction: column;">
-          <div style="flex:1;">
-            <div></div>
+      <div style="width: 74px;color: #fff; font-size:12px;height: 486px;display:flex;flex-direction: column;">
+          <div style="flex:1;display:flex;flex-direction: column;justify-content: center;align-items: center;">
+            <div className="switch"></div>
             <div>开启手动</div>
           </div>
-          <div style="flex:1;">1</div>
-          <div style="flex:1;">1</div>
-          <div style="flex:1;">1</div>
-          <div style="flex:1;">1</div>
-          <div style="flex:1;">1</div>
-          <div style="flex:1;">1</div>
-          <div style="flex:1;"></div>
+          <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  red;z-index:2"><img src=${rightUpLeftDown} alt=""/></div>
+          <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${leftRightPng} alt=""/></div>
+          <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upDownPng} alt=""/></div>
+          <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upLeftUp} alt=""/></div>
+          <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upLeftDownRight} alt=""/></div>
+          <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${yellow} alt=""/></div>
+          <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${red} alt=""/></div>
       </div>`)
       .addTo(this.map);
   }
