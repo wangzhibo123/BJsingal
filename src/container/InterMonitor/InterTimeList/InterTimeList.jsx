@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Select } from 'antd'
 import { CloseOutlined } from '@ant-design/icons'
+import axiosInstance from '../../utils/getInterfaceData'
 import './InterTimeList.scss'
 
 const { Option } = Select
@@ -9,9 +10,22 @@ class InterTimeList extends Component {
     super(props)
     this.state = {
       showTimeDetails: false,
+      timeTableData: null,
     }
+    this.timeTableUrl = '/engine-unified/unit/getTimeTableById?unit_id=1'
   }
-  componentDidMount = () => { }
+  componentDidMount = () => {
+    this.getTimeTableDatas()
+  }
+  // 时间表信息
+  getTimeTableDatas = () => {
+    axiosInstance.post(this.timeTableUrl).then((res) => {
+      const { code, list } = res.data
+      if (code === '1') {
+        this.setState({ timeTableData: list })
+      }
+    })
+  }
   handleTimeDetails = () => {
     this.setState({ showTimeDetails: true })
   }
@@ -19,7 +33,7 @@ class InterTimeList extends Component {
     this.setState({ showTimeDetails: false })
   }
   render() {
-    const { showTimeDetails } = this.state
+    const { showTimeDetails, timeTableData } = this.state
     return (
       <div className="timeList">
         <div className="titles">时间表</div>
@@ -30,29 +44,18 @@ class InterTimeList extends Component {
             <div className="listTd">方案说明</div>
             <div className="listTd">周期</div>
           </div>
-          <div className="listTr">
-            <span className="innterBorder" />
-            <div className="listTd">07:00</div>
-            <div className="listTd">早高峰</div>
-            <div className="listTd">90</div>
-          </div>
-          <div className="listTr" onClick={this.handleTimeDetails}>
-            <span className="innterBorder" />
-            <div className="listTd">09:00</div>
-            <div className="listTd">上午方案</div>
-            <div className="listTd">70</div>
-          </div>
-          <div className="listTr">
-            <span className="innterBorder" />
-            <div className="listTd">12:00</div>
-            <div className="listTd">下午方案</div>
-            <div className="listTd">80</div>
-          </div>
-          <div className="listTr">
-            <span className="innterBorder" />
-            <div className="listTd">17:00</div>
-            <div className="listTd">晚高峰</div>
-            <div className="listTd">90</div>
+          <div className="listTbody">
+            {
+              timeTableData &&
+              timeTableData.map((item) => (
+                <div className="listTr" key={item.planno} onClick={this.handleTimeDetails}>
+                  <span className="innterBorder" />
+                  <div className="listTd">{item.starttime}</div>
+                  <div className="listTd">{item.planname}</div>
+                  <div className="listTd">{item.cyclelen}</div>
+                </div>
+              ))
+            }
           </div>
         </div>
         {

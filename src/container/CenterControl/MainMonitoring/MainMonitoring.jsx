@@ -20,61 +20,14 @@ export default class MainMonitoring extends Component {
     super(props);
     this.state = {
       stateSelect: [
-        {
-          name: "海淀区",
-          id: "1",
-          children: [{
-            name: "西二旗",
-            id: "1_1"
-          },
-          {
-            name: "西直门",
-            id: "1_2"
-          },
-          {
-            name: "东直门",
-            id: "1_3"
-          }]
-        },
-        {
-          name: "朝阳区",
-          id: "2",
-          children: [{
-            name: "奥林匹克",
-            id: "2_1"
-          },
-          {
-            name: "欢乐谷",
-            id: "2_2"
-          }]
-        },
-        {
-          name: "上地",
-          id: "3",
-          children: [{
-            name: "华联",
-            id: "3_1"
-          }, {
-            name: "中关村",
-            id: "3_2"
-          }]
-        },
-        {
-          name: "三里屯",
-          id: "4",
-          children: [
-            {
-              name: "太里古",
-              id: "4_1"
-            }, {
-              name: "乾坤大厦",
-              id: "4_2"
-            }
-          ]
-        }
-      ],
+        {name: "海淀区",id: "1",children: [{name: "西二旗",id: "1_1"},{name: "西直门",id: "1_2"},{name: "东直门",id: "1_3"}]},
+        {name: "朝阳区",id: "2",children: [{name: "奥林匹克",id: "2_1"},{name: "欢乐谷",id: "2_2"}]},
+        {name: "上地",id: "3",children: [{name: "华联",id: "3_1"}, {name: "中关村",id: "3_2"}]},
+        {name: "三里屯", id: "4",children: [{name: "太里古",id: "4_1"}, {name: "乾坤大厦",id: "4_2"}]}],
       //地图默认中心点
-      defaultCenterPoint:[116.391, 39.911],
+      defaultCenterPoint:[116.396, 39.9075],
+      //路口节点
+      intersectioNodes:[{latitude:116.383,longitude:39.9072},{latitude:116.389,longitude:39.9074},{latitude:116.396,longitude:39.9075},{latitude:116.402,longitude:39.9075},{latitude:116.409,longitude:39.9078}],
       //地图靠近中心点的倍率
       modeMapFlyToPitch:60,
       //地图缩放倍率
@@ -364,46 +317,68 @@ export default class MainMonitoring extends Component {
       return marker;
     };
   }
-  ClickMessge = () => {
+  ClickMessge = (index) => {
+    const {intersectioNodes} = this.state;
     var popupOption = {
-      closeOnClick: false,
-      closeButton: true,
+      closeOnClick: true,
+      closeButton: false,
       // anchor: "bottom-left",
-      offset: [-20, -10]
+      offset: [0, 15]
     }
     // <img width="36px" height="36px" src="${}" />
     //控制绿点弹出框
     this.popup = new window.mapabcgl.Popup(popupOption)
-      .setLngLat(new window.mapabcgl.LngLat(116.39155, 39.911))
+      .setLngLat(new window.mapabcgl.LngLat(intersectioNodes[index].latitude, intersectioNodes[index].longitude))
       .setHTML(`
-      <div style="width: 210px;color: #599FE0; font-size:12px;height: 165px;border: 1px solid #3167AA;">
-      1111
+      <div style="width: 74px;color: #fff; font-size:12px;height: 486px;display:flex;flex-direction: column;">
+          <div style="flex:1;display:flex;flex-direction: column;justify-content: center;align-items: center;">
+            <div className="switch"> 
+              <button type="button" role="switch" aria-checked="true" class="antd-switch ant-switch-checked" ant-click-animating="false">
+                  <div class="ant-switch-handle"></div>
+                  <span class="ant-switch-inner"></span>
+              </button>
+            </div>
+            <div>开启手动</div>
+          </div>
+          <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  red;z-index:2"><img src=${rightUpLeftDown} alt=""/></div>
+          <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${leftRightPng} alt=""/></div>
+          <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upDownPng} alt=""/></div>
+          <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upLeftUp} alt=""/></div>
+          <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upLeftDownRight} alt=""/></div>
+          <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${yellow} alt=""/></div>
+          <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${red} alt=""/></div>
       </div>`)
       .addTo(this.map);
   }
+  //地图中心点
   addMarker = () => {
-    console.log(this.map,"map")
     if (this.map) {
-      const el = document.createElement('div')
-      el.style.width = '20px'
-      el.style.height = '20px'
-      el.style.borderRadius = '50%'
-      el.style.backgroundColor = 'green'
-      el.addEventListener('click', (e) => {
-        e.stopPropagation()
-        this.ClickMessge()
+      let {intersectioNodes} =this.state;
+      intersectioNodes.map((item,index)=>{
+        const el = document.createElement('div')
+        el.style.width = '20px'
+        el.style.height = '20px'
+        el.style.borderRadius = '50%'
+        el.style.backgroundColor = '#21F7FE'
+        el.style.cursor="pointer"
+        el.addEventListener('click', (e) => {
+          e.stopPropagation()
+          this.ClickMessge(index)
+        })
+        new window.mapabcgl.Marker(el)
+        //绿色中心点坐标
+          .setLngLat([item.latitude, item.longitude])
+          .addTo(this.map);
       })
-      new window.mapabcgl.Marker(el)
-      //绿色中心点坐标
-        .setLngLat([116.391, 39.911])
-        .addTo(this.map);
     }
   }
+
   gettitletops = (isShow) => {
     this.setState({
       Istitletops: isShow,
     })
   }
+  //地图渲染
   renderMap = () => {
     mapConfiger.zoom = 11
     const map = new window.mapabcgl.Map(mapConfiger)
