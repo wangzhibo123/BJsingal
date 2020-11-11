@@ -122,8 +122,8 @@ export default class Calender extends Component {
                                         <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#00A0EA" }}></td>
                                         <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td>
                                         <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td>
+                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#F9B552" }}></td>
+                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#F9B552"}}></td>
                                     </tr>
                                     <tr style={{ height: 30, textAlign: "center" }}>
                                         <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>4</td>
@@ -167,11 +167,11 @@ export default class Calender extends Component {
                                     </tr>
                                     <tr style={{ height: 30, textAlign: "center" }}>
                                         <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}>8</td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td>
-                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td>
+                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#00A0EA"}}></td>
+                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#00A0EA" }}></td>
+                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#00A0EA" }}></td>
+                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#00A0EA" }}></td>
+                                        <td style={{ border: "1px solid #015681", verticalAlign: "middle", background: "#00A0EA" }}></td>
                                         <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td>
                                         <td style={{ border: "1px solid #015681", verticalAlign: "middle" }}></td>
                                     </tr>
