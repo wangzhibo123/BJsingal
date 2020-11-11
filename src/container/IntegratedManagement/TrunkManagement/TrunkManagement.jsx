@@ -640,6 +640,12 @@ class TrunkManagement extends Component {
                   <div className='newLine'>新增干线</div>
                   <div className='operationLine'><span>保存</span><span onClick={this.noneAddRoad}>取消</span></div>
                 </div>
+                <div className="slideRightBoxAddBox">
+                
+                </div>
+                <div className="slideRightBoxEditBox">
+
+                </div>
                 <p><span>干线名称：</span><input type="text" className='inputBox' placeholder="干线名称" /></p>
                 <p><span>干线编号：</span><input type="text" className='inputBox' placeholder="干线编号" /></p>
                 <div className='divs'><span>干线方向：</span>
@@ -709,23 +715,28 @@ class TrunkManagement extends Component {
                 <p>干线长度：<span>7.3公里</span></p>
                 <p>干线方向：<span>西向东</span></p>
                 <div className='lineBox'>
-                  <div className="lineBoxLeft"></div>
-                  <div className="lineBoxRight">
-                    <div className='streetBox'>
-                      <p className='street'><span>01</span>西长安街与西单北大街{ismodify ? <DeleteOutlined /> : ''}</p>
-                      <p className='intersection'><span>十字路口</span><span>西城区</span></p>
+                  <div className='lineBoxer'>
+                    <div className='lineBoxer_item'>
+                      <span></span>
+                      <div className='streetBox'>
+                        <p className='street'><span>01</span>西长安街与西单北大街{ismodify ? <DeleteOutlined /> : ''}</p>
+                        <p className='intersection'><span>十字路口</span><span>西城区</span></p>
+                      </div>
                     </div>
-                    <div className='streetBox'>
-                      <p className='street'><span>01</span>西长安街与西单北大街{ismodify ? <DeleteOutlined /> : ''}</p>
-                      <p className='intersection'><span>十字路口</span><span>西城区</span></p>
+                    <div className='lineBoxer_itemP'>
+                      <div className='streetBoxLeft'>
+                      </div>
+                      <div className='streetBox'>
+                        <p className='street'><span>01</span>西长安街与西单北大街{ismodify ? <DeleteOutlined /> : ''}</p>
+                        <p className='intersection'><span>十字路口</span><span>西城区</span></p>
+                      </div>
                     </div>
-                    <div className='streetBox'>
-                      <p className='street'><span>01</span>西长安街与西单北大街{ismodify ? <DeleteOutlined /> : ''}</p>
-                      <p className='intersection'><span>十字路口</span><span>西城区</span></p>
-                    </div>
-                    <div className='streetBox'>
-                      <p className='street'><span>01</span>西长安街与西单北大街{ismodify ? <DeleteOutlined /> : ''}</p>
-                      <p className='intersection'><span>十字路口</span><span>西城区</span></p>
+                    <div className='lineBoxer_item'>
+                      <span></span>
+                      <div className='streetBox'>
+                        <p className='street'><span>01</span>西长安街与西单北大街{ismodify ? <DeleteOutlined /> : ''}</p>
+                        <p className='intersection'><span>十字路口</span><span>西城区</span></p>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -53,6 +53,7 @@ class InterMonitor extends Component {
   componentDidMount = () => {
     this.getControlMode()
     this.getTrafficInfo()
+    this.getRoadTrend()
   }
   // 路口信息
   getInterInfo = () => {

@@ -219,46 +219,76 @@ $bor-color: #a5fcff;
                 }
             }
             .lineBox {
-                height: calc(100% - 170px);
+                height: calc(100% - 150px);
                 overflow-y: auto;
-                display: flex;
-                .lineBoxLeft {
-                    width: 50px;
-                    height: 100%;
-                }
-                .lineBoxRight {
-                    width: 100%;
-                    padding-left: 15px;
-                    .streetBox {
-                        height: 55px;
-                        p {
-                            margin-bottom: 0;
+                .lineBoxer {
+                    display: flex;
+                    flex-direction: column;
+                    .lineBoxer_item,
+                    .lineBoxer_itemP {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        > span {
+                            width: 55px;
+                            height: 55px;
                         }
-                        .street {
-                            height: 20px;
-                            span {
-                                display: inline-block;
-                                width: 20px;
-                                color: #15e94f;
-                                &:nth-child(2) {
-                                    color: #0570ad;
-                                    cursor: pointer;
+                        > .streetBoxLeft {
+                            width: 5px;
+                            height: 35px;
+                            margin-left: 25px;
+                            background-color: #1df249;
+                            border-radius: 2px;
+                        }
+                        .streetBox {
+                            width: 215px;
+                            height: 55px;
+                            padding-left: 15px;
+                            p {
+                                margin-bottom: 0;
+                            }
+                            .street {
+                                height: 20px;
+                                span {
+                                    display: inline-block;
+                                    width: 20px;
+                                    color: #15e94f;
+                                    &:nth-child(2) {
+                                        color: #0570ad;
+                                        cursor: pointer;
+                                    }
+                                }
+                            }
+                            .intersection {
+                                height: 35px;
+                                line-height: 35px;
+                                display: flex;
+                                align-items: center;
+                                span {
+                                    color: #02bde3;
+                                    margin-left: 20px;
+                                    padding: 0px 5px;
+                                    height: 16px;
+                                    line-height: 16px;
+                                    background-color: #0668c2;
+                                    border-radius: 5px;
                                 }
                             }
                         }
-                        .intersection {
-                            height: 35px;
-                            line-height: 35px;
-                            display: flex;
-                            align-items: center;
-                            span {
-                                color: #02bde3;
-                                margin-left: 20px;
-                                padding: 0px 5px;
-                                height: 16px;
-                                line-height: 16px;
-                                background-color: #0668c2;
-                                border-radius: 5px;
+                    }
+                    .lineBoxer_item {
+                        &:first-child {
+                            >span {
+                                background: url("../../imgs/startRoad.png") no-repeat;
+                                background-size: 35%;
+                                background-position: center;
+                            }
+                        }
+                        &:last-child {
+                            >span {
+                                background: url("../../imgs/endRoad.png") no-repeat;
+                                background-size: 35%;
+                                background-position: center;
                             }
                         }
                     }

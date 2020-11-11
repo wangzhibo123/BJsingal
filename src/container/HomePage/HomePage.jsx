@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Checkbox, Select } from 'antd'
 import echarts from 'echarts'
 import $ from 'jquery'
 import './HomePage.scss'
@@ -8,6 +9,7 @@ import Graph from './Graph/Graph'
 import mapConfiger from '../utils/minemapConf'
 import axiosInstance from '../utils/getInterfaceData'
 
+const { Option } = Select
 class Homepage extends Component {
   constructor(props) {
     super(props)
@@ -40,6 +42,8 @@ class Homepage extends Component {
     this.faultUrl = '/engine-unified/index/getFaultStatistics?user_id=1'
     this.areaList = '/engine-unified/index/getRealTimeMonitoring?user_id=1'
     this.pointLists = '/engine-unified/index/getPointByFault?user_id=1'
+    this.controlMode = ['时间表控制', '感应控制', '平台优化控制', '中心手动控制', '路口手动控制']
+    this.singalType = ['西门子', '海信', '易华录', '千方', '中兴']
   }
   componentDidMount = () => {
     // this.renderChartsMap()
@@ -221,6 +225,7 @@ class Homepage extends Component {
         el.style.borderRadius = '50%'
         el.style.backgroundColor = 'green'
         el.style.cursor = 'pointer'
+        el.id = 'marker' + item.unit_code
         el.addEventListener('click',function(e){
           currentThis.addInfoWindow(item) 
         });
@@ -238,13 +243,14 @@ class Homepage extends Component {
     const popupOption = {
       closeOnClick: false,
       closeButton: true,
+      maxWidth: '1000px',
       offset: [0,0]
     }
     this.mapPopup = new window.mapabcgl.Popup(popupOption)
       .setLngLat( new window.mapabcgl.LngLat(marker.longitude, marker.latitude))
       .setHTML(this.getInfoWindowHtml(marker))
       .addTo(this.map)
-    $('.mapabcgl-popup')[0].style.maxWidth = '1000px'
+    // $('.mapabcgl-popup')[0].style.maxWidth = '1000px'
   }
   renderChartsMap = () => {
     const geoJson = require('./beijing.json')
@@ -308,10 +314,17 @@ class Homepage extends Component {
       this.renderMap()
     })
   }
+  // 路口搜索
+  handleInterSearch = (value, options) => {
+    console.log(value, options)
+    const { key, lng, lat } = options
+    this.map.panTo([lng, lat])
+    $('#marker' + key).trigger('click')
+  }
   render() {
     const {
       mainHomePage, congestionList, repairRateList, singalStatus, cloudSource, oprationData, faultData, areaMsgList,
-      nodeSimulation, interNum, simulationPlanNum,
+      nodeSimulation, interNum, simulationPlanNum, pointlist
     } = this.state
     return (
       <div className="homepageWrapper">
@@ -523,17 +536,52 @@ class Homepage extends Component {
           {
             !mainHomePage &&
             <div className="contentCenter">
+              <div className="title">实时监控</div>
+              <div className="interSearchBox">
+                <Select
+                  showSearch
+                  style={{ width: 200 }}
+                  placeholder="路口查询"
+                  onChange={this.handleInterSearch}
+                  dropdownClassName="searchList"
+                >
+                  {
+                    pointlist &&
+                    pointlist.map((item) => (
+                      <Option key={item.unit_code} value={item.unit_name} lng={item.longitude} lat={item.latitude}>{item.unit_name}</Option>
+                    ))
+                  }
+                </Select>
+              </div>
               <div id="mapContainer" className="map-container" style={{ height: 'calc(100% - 5px)' }}></div>
               <div className="mapLegend">
-                <div className="legendBox">
-                  <div className="legendItem">点位</div>
-                  <div className="legendItem">路况</div>
-                  <div className="legendItem">视频</div>
-                </div>
                 <div className="pointStatus">
-                  <div className="statusItem">在线</div>
-                  <div className="statusItem">离线</div>
-                  <div className="statusItem">故障</div>
+                  <div className="statusItem"><span className="pointIcon onlineColor"></span> 在线</div>
+                  <div className="statusItem"><span className="pointIcon offlineColor"></span> 离线</div>
+                  <div className="statusItem"><span className="pointIcon faultColor"></span> 故障</div>
+                </div>
+              </div>
+              <div className="mapLegend" style={{ top: '20px' }}>
+                <div className="legendBox">
+                  <div className="legendItem"><span className="legenIcon coverage"></span> 图层</div>
+                  <div className="legendItem"><span className="legenIcon condition"></span> 路况</div>
+                  <div className="legendItem"><span className="legenIcon minitor"></span> 监控</div>
+                </div>
+                <div className="singalModeBox">
+                  <div className="checkMsg"><Checkbox>控制模式</Checkbox></div>
+                  <ul style={{ paddingLeft: '20px' }}>
+                    {
+                      this.controlMode.map((item) => (<li key={item} className="checkMsg"><Checkbox>{item}</Checkbox></li>))
+                    }
+                    <li className="checkMsg"><Checkbox>其他</Checkbox></li>
+                  </ul>
+                  <div className="checkMsg"><Checkbox>型号类型</Checkbox></div>
+                  <ul style={{ paddingLeft: '20px' }}>
+                    {
+                      this.singalType.map((item) => (<li key={item} className="checkMsg"><Checkbox>{item}</Checkbox></li>))
+                    }
+                    <li className="checkMsg"><Checkbox>其他</Checkbox></li>
+                  </ul>
                 </div>
               </div>
             </div>
