@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 //引入依赖
-import 'video.js/dist/video-js.css'
-import 'videojs-flash'
-import videojs from 'video.js'
+// import 'video.js/dist/video-js.css'
+// import 'videojs-flash'
+// import videojs from 'video.js'
 import styles from './VideoApp.scss'
 const url = [
     {
@@ -20,23 +20,23 @@ class VideoApp extends Component{
   }
 //组件挂载完成之后初始化播放控件
   componentDidMount(){
-  const videoJsOptions = {
-          autoplay: true,
-          controls: true,
-          sources: [{
-            src: 'rtmp://58.200.131.2:1935/livetv/hunantv',
-            type: 'rtmp/flv'
-          }]
-        }
-      this.player = videojs('my-video', videoJsOptions , function onPlayerReady() { //(id或者refs获取节点，options，回调函数)
-          videojs.log('Your player is ready!');
-          // In this context, `this` is the player that was created by Video.js.
-          this.play();
-          // How about an event listener?
-          this.on('ended', function() {
-            videojs.log('Awww...over so soon?!');
-          });
-        }); 
+//   const videoJsOptions = {
+//           autoplay: true,
+//           controls: true,
+//           sources: [{
+//             src: 'rtmp://58.200.131.2:1935/livetv/hunantv',
+//             type: 'rtmp/flv'
+//           }]
+//         }
+//       this.player = videojs('my-video', videoJsOptions , function onPlayerReady() { //(id或者refs获取节点，options，回调函数)
+//           videojs.log('Your player is ready!');
+//           // In this context, `this` is the player that was created by Video.js.
+//           this.play();
+//           // How about an event listener?
+//           this.on('ended', function() {
+//             videojs.log('Awww...over so soon?!');
+//           });
+//         }); 
   }
 
   handleClick(item){
@@ -52,23 +52,24 @@ class VideoApp extends Component{
           this.player.play();
   }
   render(){
-      let li = {
-          background: "cadetblue",
-          padding: "11px",
-          width: "fit-content",
-          marginBottom:"5px",
-          cursor:"pointer"
-      }
-      let playing = {
-          background: "rgb(141, 182, 28)",
-          padding: "11px",
-          width: "fit-content",
-          marginBottom:"5px",
-          cursor:"pointer"
-      }
-      return(
-          <div className="VideoAppBox">
-            <div>rtmp 视频流Demo</div>
+    //   let li = {
+    //       background: "cadetblue",
+    //       padding: "11px",
+    //       width: "fit-content",
+    //       marginBottom:"5px",
+    //       cursor:"pointer"
+    //   }
+    //   let playing = {
+    //       background: "rgb(141, 182, 28)",
+    //       padding: "11px",
+    //       width: "fit-content",
+    //       marginBottom:"5px",
+    //       cursor:"pointer"
+    //   }
+    return(
+       <div className="VideoAppBox">
+        视频流开发中...
+            {/* <div>rtmp 视频流Demo</div>
               <div>
                   <ul style={{marginTop:'-100px'}}>
                   {
@@ -81,7 +82,7 @@ class VideoApp extends Component{
                   </ul>
                   <video style={{width:"50vw",height:"50vh",margin:"0 auto"}} id="my-video" className="video-js vjs-default-skin">
                   </video>
-              </div>
+              </div> */} 
           </div>   
       )
   }

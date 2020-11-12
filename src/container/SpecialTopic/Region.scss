@@ -2,6 +2,22 @@ $ft_color: #dcdde2;
 $bor-color: #a5fcff;
 input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; }
 input[type="number"]{ -moz-appearance: textfield; }
+@keyframes rotateDeg {
+    0% {
+        transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(-360deg);
+        -webkit-transform: rotate(-360deg);
+        -moz-transform: rotate(-360deg);
+        -ms-transform: rotate(-360deg);
+        -o-transform: rotate(-360deg);
+    }
+}
 .ant-modal{
     height:100%;
 }
@@ -564,6 +580,7 @@ input[type="number"]{ -moz-appearance: textfield; }
 }
 // 路口监控 > 详情
 .detailPopBox{
+    padding:0 20px 0;
     position: absolute;
     top:0;
     right:0;
@@ -581,27 +598,185 @@ input[type="number"]{ -moz-appearance: textfield; }
         cursor: pointer;
         background: url(../imgs/iconBack.png) no-repeat;
     }
+    .sidebarRight{
+        width:486px;
+        right:20px;
+        .itemContent {
+            flex: 1;
+            font-size: 12px;
+            overflow-y: auto;
+            .faultRate {
+                justify-content: space-between;
+                flex-direction: unset!important;
+                flex-wrap: nowrap;
+                align-items: flex-start;
+                .leftMenu{
+                    width:35px;
+                    height: auto;
+                    line-height: 1.2;
+                    font-size:16px;
+                    font-weight: bold;
+                    color: #6DB6DF;
+                    word-wrap: break-word;
+                    height: auto;
+                    padding:10px 5px;
+                    text-align: center;
+                    background: #02325D;
+                }
+                .rightMenuContent{
+                    width: calc(100% - 40px);
+                    .itemLine{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        line-height: 55px;
+                        background: url(../imgs/interTitBottomBg.png) no-repeat center bottom;
+                        color:#fff;
+                        >span{
+                            flex: 1;
+                            font-size: 16px;
+                            font-weight: bold;
+                            text-align: center;
+                        }
+                    }
+                    .itemLine:nth-child(odd){
+                        color:#6DB6DF;
+                    }
+                }
+            }
+        }
+        // interTitBottomBg.png
+    }
     .leftCenter{
-        width: calc(100% - 340px);
+        width: calc(100% - 501px);
+        height: 100%;
+        display: flex;
         flex-direction: column;
         position: relative;
         .detailPopName{
             padding-left:20px;
             font-size:26px;
-            line-height: 80px;
+            line-height: 70px;
             color:#ffffff;
         }
-        .title {
-            height: 20px;
-            text-align: center;
-            line-height: 19px;
-            background: url("../imgs/smalltit.png") center 5px no-repeat;
-            background-size: 100% 100%;
-            position: absolute;
-            left:0;
-            right:0;
-            top:70px;
-            z-index: 1;
+        .roadInterBox{
+            flex:2;
+            flex-direction: column;
+            position: relative;
+            .title {
+                width:100%;
+                height: 20px;
+                text-align: center;
+                line-height: 19px;
+                background: url("../imgs/smalltit.png") center 5px no-repeat;
+                background-size: 100% 100%;
+            }
+            .roadInterBg{
+                width:100%;
+                height: calc(100% - 20px);
+                background:url(../imgs/popBg.png) no-repeat center center;
+                background-size: contain;
+                position: relative;
+                > em {
+                    width:109px;
+                    height:109px;
+                    text-align: center;
+                    background:url(../imgs/timeBgText.png) no-repeat;
+                    position: absolute;
+                    top:50%;
+                    left:50%;
+                    transform: translate(-50%,-50%);
+                    -webkit-transform: translate(-50%,-50%);
+                    -moz-transform: translate(-50%,-50%);
+                    -ms-transform: translate(-50%,-50%);
+                    -o-transform: translate(-50%,-50%);
+                    > i{
+                        width:109px;
+                        line-height: 109px;
+                        font-size: 28px;
+                        font-weight: bold;
+                        color: #fff;
+                        position: absolute;
+                        top:0;
+                        right:0;
+                        bottom:0;
+                        left:0;
+                        z-index: 1; 
+                    }                   
+                }
+                > em::after{
+                    width:99px;
+                    height:99px;
+                    display: inline-block;
+                    content: '';
+                    position: absolute;
+                    top:5px;
+                    left:5px;
+                    background: #051431;
+                    border-radius: 100%;
+                    -webkit-border-radius: 100%;
+                    -moz-border-radius: 100%;
+                    -ms-border-radius: 100%;
+                    -o-border-radius: 100%;
+                    z-index: 0;
+                }
+                > em::before{
+                    width:114px;
+                    height:114px;
+                    display: inline-block;
+                    content: '';
+                    background: url(../imgs/timeCircle.png) no-repeat right center;
+                    position: absolute;
+                    top:-3px;
+                    left:-3px;
+                    animation: rotateDeg 1s infinite;
+                    -webkit-animation: rotateDeg 1s infinite;
+                }
+            }
+            .controlBtnBox{
+                position: absolute;
+                right:0;
+                bottom:20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                > span{
+                    width: 100px;
+                    height: 28px;
+                    text-align: center;
+                    line-height: 28px;
+                    background:url(../imgs/kuang.png) no-repeat;
+                    background-size: 100% 100%;
+                    cursor: pointer;
+                    user-select: none;
+                    margin-left:15px;
+                }
+            }
+        }
+        .roadLineChartsBox{
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            .chartsItem{
+                width:49.5%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                margin-top: -8px;
+                .titleCharts {
+                    width: 100%;
+                    height: 20px;
+                    text-align: center;
+                    line-height: 19px;
+                    background: url("../imgs/smalltit.png") center 5px no-repeat;
+                    background-size: 100% 100%;
+                }
+                .chartsBox{
+                    width: 100%;
+                    height: calc(100% - 20px);
+                }
+            }
         }
     }
 }
