@@ -22,26 +22,28 @@ class Homepage extends Component {
       oprationData: null,
       faultData: null,
       areaMsgList: null,
-      errline: '0',
-      offline: '0',
-      online: '0',
+      errline: [0, 0, 0, 0],
+      offline: [0, 0, 0, 0],
+      online: [0, 0, 0, 0],
+      allNum: [0, 0, 0, 0],
       pointlist: null,
       nodeSimulation: [0, 0, 0, 0],
       interNum: [0, 0, 0, 0],
       simulationPlanNum: [0, 0, 0, 0],
     }
+    this.interMarkers = []
     this.trafficTimer = null
     this.mapPopup = null
     this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
     this.rateColors = ['#FF0000', '#FF7800', '#FFD800', '#0CB424']
-    this.congestionUrl = '/engine-unified/index/getCongestionRanking?user_id=1'
-    this.repairRateUrl = '/engine-unified/index/getFailureRepairRate?user_id=1'
-    this.staticUrl = '/engine-unified/index/getRealtimeStatistics?user_id=1'
-    this.cloudUrl = '/engine-unified/index/getCloudResourceUtilization?user_id=1'
-    this.oprationUrl = '/engine-unified/index/getOperatingEfficiency?user_id=1'
-    this.faultUrl = '/engine-unified/index/getFaultStatistics?user_id=1'
-    this.areaList = '/engine-unified/index/getRealTimeMonitoring?user_id=1'
-    this.pointLists = '/engine-unified/index/getPointByFault?user_id=1'
+    this.congestionUrl = '/engine-monitor/index/getCongestionRanking?user_id=1'
+    this.repairRateUrl = '/engine-monitor/index/getFailureRepairRate?user_id=1'
+    this.staticUrl = '/engine-monitor/index/getRealtimeStatistics?user_id=1'
+    this.cloudUrl = '/engine-monitor/index/getCloudResourceUtilization?user_id=1'
+    this.oprationUrl = '/engine-monitor/index/getOperatingEfficiency?user_id=1'
+    this.faultUrl = '/engine-monitor/index/getFaultStatistics?user_id=1'
+    this.areaList = '/engine-monitor/index/getRealTimeMonitoring?user_id=1'
+    this.pointLists = '/engine-monitor/index/getPointByFault?user_id=1'
     this.controlMode = ['时间表控制', '感应控制', '平台优化控制', '中心手动控制', '路口手动控制']
     this.singalType = ['西门子', '海信', '易华录', '千方', '中兴']
   }
@@ -74,31 +76,37 @@ class Homepage extends Component {
       const { code, errline, offline, online, pointlist } = res.data
       if (code === '1') {
         this.pointLists = pointlist
-        this.setState({ errline, offline, online, pointlist })
-        let num = 0
-        let numTwo = 0
-        let numThree = 0
-        this.timeOne = setInterval(() => {
-          if (num >= online) { clearInterval(this.timeOne) }
-          const nodeSimulation = ('000' + num).slice(-4).split('')
-          this.setState({ nodeSimulation }, () => {
-            num += 1
-          })
-        }, 0)
-        this.timeTwo = setInterval(() => {
-          if (numTwo >= (errline + offline + online)) { clearInterval(this.timeTwo) }
-          const interNum = ('000' + numTwo).slice(-4).split('')
-          this.setState({ interNum }, () => {
-            numTwo += 1
-          })
-        }, 0)
-        this.timeThree = setInterval(() => {
-          if (numThree >= offline) { clearInterval(this.timeThree) }
-          const simulationPlanNum = ('000' + numThree).slice(-4).split('')
-          this.setState({ simulationPlanNum }, () => {
-            numThree += 1
-          })
-        }, 0)
+        this.setState({
+          errline,
+          offline: ('000' + offline).slice(-4).split(''),
+          online: ('000' + online).slice(-4).split(''),
+          allNum: ('000' + (errline + offline + online)).slice(-4).split(''),
+          pointlist
+        })
+        // let num = 0
+        // let numTwo = parseInt(pointlist.length / 2)
+        // let numThree = 0
+        // this.timeOne = setInterval(() => {
+        //   if (num >= online) { clearInterval(this.timeOne) }
+        //   const nodeSimulation = ('000' + num).slice(-4).split('')
+        //   this.setState({ nodeSimulation }, () => {
+        //     num += 1
+        //   })
+        // }, 0)
+        // this.timeTwo = setInterval(() => {
+        //   if (numTwo >= (errline + offline + online)) { clearInterval(this.timeTwo) }
+        //   const interNum = ('000' + numTwo).slice(-4).split('')
+        //   this.setState({ interNum }, () => {
+        //     numTwo += 1
+        //   })
+        // }, 0)
+        // this.timeThree = setInterval(() => {
+        //   if (numThree >= offline) { clearInterval(this.timeThree) }
+        //   const simulationPlanNum = ('000' + numThree).slice(-4).split('')
+        //   this.setState({ simulationPlanNum }, () => {
+        //     numThree += 1
+        //   })
+        // }, 0)
       }
     })
   }
@@ -214,11 +222,14 @@ class Homepage extends Component {
       </div>
     `
   }
-  addMarker = (points) => {
+  addMarker = (points, zoomVal) => {
+    this.removeMarkers()
     if (this.map) {
       const currentThis = this
       this.markers = []
-      points.forEach((item, index) => {
+      const interList = zoomVal < 13 ? points.filter(item => item.unit_grade <= 4) : points
+      console.log(interList)
+      interList.forEach((item, index) => {
         const el = document.createElement('div')
         el.style.width = '20px'
         el.style.height = '20px'
@@ -227,12 +238,24 @@ class Homepage extends Component {
         el.style.cursor = 'pointer'
         el.id = 'marker' + item.unit_code
         el.addEventListener('click',function(e){
-          currentThis.addInfoWindow(item) 
+          currentThis.addInfoWindow(item)
         });
-        new window.mapabcgl.Marker(el)
+        if (isNaN(item.longitude) || isNaN(item.latitude)) {
+          console.log(index)
+        }
+        const marker = new window.mapabcgl.Marker(el)
           .setLngLat([item.longitude, item.latitude])
-          .addTo(this.map)
+        .addTo(this.map)
+        this.interMarkers.push(marker)
       })
+    }
+  }
+  removeMarkers = () => {
+    if (this.interMarkers.length) {
+      this.interMarkers.forEach((item) => {
+        item.remove()
+      })
+      this.interMarkers = []
     }
   }
   addInfoWindow = (marker) => {
@@ -303,12 +326,22 @@ class Homepage extends Component {
     this.map.addControl(new window.mapabcgl.NavigationControl());
     this.map.on('load', () => {
       this.addTrafficLayer()
-      this.addMarker(this.pointLists)
+      this.addMarker(this.pointLists, 8)
+    })
+    this.map.on('zoom', () => {
+      if (this.zoomTimer) {
+        clearTimeout(this.zoomTimer)
+        this.zoomTimer = null
+      }
+      this.zoomTimer = setTimeout(() => {
+        const zoomLev = Math.round(this.map.getZoom())
+        this.addMarker(this.pointLists, zoomLev)
+      }, 700)
     })
   }
   randomData = () => {  
     return Math.round(Math.random()*500);  
-  } 
+  }
   handleCutMap = () => {
     this.setState({ mainHomePage: false }, () => {
       this.renderMap()
@@ -324,7 +357,7 @@ class Homepage extends Component {
   render() {
     const {
       mainHomePage, congestionList, repairRateList, singalStatus, cloudSource, oprationData, faultData, areaMsgList,
-      nodeSimulation, interNum, simulationPlanNum, pointlist
+      allNum, errline, offline, online, pointlist
     } = this.state
     return (
       <div className="homepageWrapper">
@@ -481,7 +514,10 @@ class Homepage extends Component {
                           <span>信号点位</span>
                         </div>
                         <div className="infoValue">
-                          {interNum.map((item, index) => <span className="infoNum" key={'trar' + item + index}>{item}</span>)}
+                          {/* {interNum.map((item, index) => <span className="infoNum" key={'trar' + item + index}>{item}</span>)} */}
+                          {
+                            allNum.map((item, index) => <span className="infoNum" key={index}>{item}</span>)
+                          }
                         </div>
                       </div>
                       <div className="info">
@@ -490,7 +526,9 @@ class Homepage extends Component {
                           <span>接入点位</span>
                         </div>
                         <div className="infoValue">
-                          {nodeSimulation.map((item, index) => <span className="infoNum" key={'trar' + item + index}>{item}</span>)}
+                          {
+                            online.map((item, index) => <span className="infoNum" key={index}>{item}</span>)
+                          }
                         </div>
                       </div>
                       <div className="info">
@@ -499,7 +537,9 @@ class Homepage extends Component {
                           <span>运行点位</span>
                         </div>
                         <div className="infoValue">
-                          {simulationPlanNum.map((item, index) => <span className="infoNum" key={'trar' + item + index}>{item}</span>)}
+                          {
+                            offline.map((item, index) => <span className="infoNum" key={index}>{item}</span>)
+                          }
                         </div>
                       </div>
                     </div>
