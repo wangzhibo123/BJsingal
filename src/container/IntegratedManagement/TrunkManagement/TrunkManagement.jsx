@@ -1,7 +1,7 @@
 /* eslint-disable no-redeclare */
 /* eslint-disable eqeqeq */
 import React, { Component } from 'react'
-import { Menu, Select } from 'antd'
+import { Menu, Select, Modal } from 'antd'
 import { EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import $ from 'jquery'
 import './TrunkManagement.scss'
@@ -28,6 +28,7 @@ class TrunkManagement extends Component {
       rights: -300,
       ismodify: false,
       menuOpenkeys: [],
+      treeListChild: [],
       stateSelect: [
         {
           name: "海淀区",
@@ -52,13 +53,14 @@ class TrunkManagement extends Component {
       ],
       route_name: '',
       route_code: '',
-      route_direction: [],
+      route_direction: '',
       route_directionvalue: '',
       route_miles: '',
-      route_type: [],
+      route_type: '',
       route_typevalue: '',
       detail: '',
-
+      roadtitle: '路口信息',
+      deleteConfirm: false,
       // 添加和修改
 
     }
@@ -106,11 +108,39 @@ class TrunkManagement extends Component {
   getLoadChildTree = (id) => {
     axiosInstance.post(`${this.loadRouteTree}?id=${id}`).then(res => {
       const { code, treeList } = res.data
+      let treeListTwo = treeList
+      console.log(treeList, 'vssksnf')
       if (code === '1') {
         const currentArea = this.treeListDatas.find((item) => item.id === Number(id))
         currentArea.childrens = treeList
-        this.setState({ treeList: this.treeListDatas, menuOpenkeys: [id] })
-
+        this.setState({
+          treeList: this.treeListDatas,
+          treeListChild: treeList,
+          menuOpenkeys: [id],
+          rights: 0,
+          isAddEdit: false,
+          ismodify: true,
+          roadtitle: '干线信息',
+        },
+          () => {
+            if (treeList.length >= 3) {
+              const start = treeListTwo.shift()
+              const end = treeListTwo.pop()
+              // console.log(treeListTwo, 'vssss')
+              this.getstartpoint({ lng: start.longitude, lat: start.latitude })
+              treeListTwo.forEach(item => {
+                this.getChannelpoint({ lng: item.longitude, lat: item.latitude })
+              })
+              this.getendpoint({ lng: end.longitude, lat: end.latitude })
+            } else if (treeList.length === 2) {
+              const start = treeList.shift()
+              const end = treeList.pop()
+              this.getstartpoint({ lng: start.longitude, lat: start.latitude })
+              this.getendpoint({ lng: end.longitude, lat: end.latitude })
+            } else {
+              this.clearMap();
+            }
+          })
       }
     })
   }
@@ -154,17 +184,17 @@ class TrunkManagement extends Component {
     })
   }
 
-  // 从子集获取区域id和index 请求路口
-  getSelectTreeId = (id) => {
-    this.getLoadChildTree(id)
-  }
+  // // 从子集获取区域id和index 请求路口
+  // getSelectTreeId = (id) => {
+  //   this.getLoadChildTree(id)
+  // }
   // 获取子id, 路口id
-  getSelectChildId = (childId) => {
-    this.setState({
-      rights: 0,
-      isAddEdit: false
-    })
-  }
+  // getSelectChildId = (childId) => {
+  //   this.setState({
+  //     rights: 0,
+  //     isAddEdit: false
+  //   })
+  // }
   getismodify = (isShow) => {
     this.setState({
       ismodify: isShow
@@ -173,12 +203,9 @@ class TrunkManagement extends Component {
   getChangeValue = (e) => {
     console.log(e)
   }
-  intersectionRenderin = async () => {
-    await this.getstartpoint({ lng: 116.38251572176512, lat: 39.90708534816005 })
-    await this.getendpoint({ lng: 116.41149060058893, lat: 39.90803874332477 })
-    await this.getChannelpoint({ lng: 116.39934569026138, lat: 39.90753821453271 })
-    await this.getChannelpoint({ lng: 116.38315705392921, lat: 39.907079696277606 })
-  }
+  // intersectionRenderin = async () => {
+
+  // }
   addMenu = () => {
     const _this = this
     // this.map.flyTo({ center: [116.391, 39.911], zoom: 14, pitch: 60 })
@@ -192,8 +219,8 @@ class TrunkManagement extends Component {
       var style = 'background:#fff;color:#000;';
       var html = document.createElement('div');
       var contextmenu = `<div class="context_menu" style="padding:5px 10px;${style}">
-        <li id="start" style="cursor:point;">起点</li>
-        <li style="cursor:point;" id="end">终点</li>
+        ${_this.addRoadLine ? '<li id="start" style="cursor:point;">起点</li>' : ''}
+        ${_this.addRoadLine ? '<li style="cursor:point;" id="end">终点</li>' : ''}
         ${_this.addRoadLine ? '<li style="cursor: point" id="channel" > 途径点</li >' : ''}
         <li style="cursor:point;" id="clearmap">清空地图</li>
         </div > `
@@ -202,20 +229,21 @@ class TrunkManagement extends Component {
         .setLngLat([lnglat.lng, lnglat.lat])
         .setOffset([30, 0])
         .addTo(_this.map);
-      var start = document.getElementById('start');
-      var end = document.getElementById('end');
       var clear = document.getElementById('clearmap');
-      start.addEventListener('click', function (e) {
-        _this.getstartpoint(lnglat);
-      })
-      end.addEventListener('click', function (e) {
-        _this.getendpoint(lnglat)
-      })
+
       clear.addEventListener('click', function (e) {
-        clearMap();
+        _this.clearMap();
       })
       if (_this.addRoadLine) {
+        var start = document.getElementById('start');
+        var end = document.getElementById('end');
         const channel = document.getElementById('channel');
+        start.addEventListener('click', function (e) {
+          _this.getstartpoint(lnglat);
+        })
+        end.addEventListener('click', function (e) {
+          _this.getendpoint(lnglat)
+        })
         channel.addEventListener('click', function (e) {
           _this.getChannelpoint(lnglat)
         })
@@ -362,7 +390,7 @@ class TrunkManagement extends Component {
       });
     }
 
-    function clearMap() {
+    this.clearMap = () => {
       if (marker) {
         marker.remove();
         marker = ''
@@ -384,38 +412,41 @@ class TrunkManagement extends Component {
 
       _this.map.removeLayerAndSource('plan');
       _this.map.removeLayerAndSource('plan1');
-      document.getElementById('startInp').value = '';
-      document.getElementById('endInp').value = '';
-      document.getElementById('channelInp').value = '';
+      // document.getElementById('startInp').value = '';
+      // document.getElementById('endInp').value = '';
+      // document.getElementById('channelInp').value = '';
     }
     let roadValue = []
     function rgeocode(type, location) {
       var start = document.getElementById('startInp');
       var end = document.getElementById('endInp');
       var channel = document.getElementById('channelInp');
+      console.log(start, end, channel)
       _this.map.Geocoder({ location: location }, function (data) {
         if (data.status != '0') {
           alert(data.message);
           return
         };
-        if (data.result.length > 0) {
-          if (type == 1) {
-            start.value = data.result[0].formatted_address;
-          } else if (type == 2) {
-            end.value = data.result[0].formatted_address;
-          } else {
-            // var str = channel.value ? channel.value + ';' : channel.value;
-            console.log(data.result[0].formatted_address, 'vvv')
-            // console.log(channel, 'sss')
-            roadValue.push(data.result[0].formatted_address)
-            _this.setState({
-              roadValue
-            })
-            // console.log(str, channel, data, 'vvvvvXR')
-            // channel.value = trim(channel.value) + data.result[0].formatted_address + ';';
-            // channel.value = trim(channel.value)
-          }
-        };
+        if (_this.isAddEdit) {
+          if (data.result.length > 0) {
+            if (type == 1) {
+              start.value = data.result[0].formatted_address;
+            } else if (type == 2) {
+              end.value = data.result[0].formatted_address;
+            } else {
+              // var str = channel.value ? channel.value + ';' : channel.value;
+              console.log(data.result[0].formatted_address, 'vvv')
+              // console.log(channel, 'sss')
+              roadValue.push(data.result[0].formatted_address)
+              _this.setState({
+                roadValue
+              })
+              // console.log(str, channel, data, 'vvvvvXR')
+              // channel.value = trim(channel.value) + data.result[0].formatted_address + ';';
+              // channel.value = trim(channel.value)
+            }
+          };
+        }
       });
 
     }
@@ -562,6 +593,16 @@ class TrunkManagement extends Component {
       refresh: 30 * 1000, // 路况图层刷新时间，毫秒
       // before:'roads-symbol-49'
     };
+    map.on('zoom', () => {
+      if (this.zoomTimer) {
+        clearTimeout(this.zoomTimer)
+        this.zoomTimer = null
+      }
+      this.zoomTimer = setTimeout(() => {
+        const zoomLev = Math.round(this.map.getZoom())
+        this.getAddDataList()
+      }, 700)
+    })
     map.on('load', () => {
       map.trafficLayer(true, options);
       this.addMarker()
@@ -569,7 +610,6 @@ class TrunkManagement extends Component {
         map.removeLayerAndSource('icon');
       };
       this.addMenu()
-
     })
     map.on('click', () => {
       if (this.popup) {
@@ -588,9 +628,13 @@ class TrunkManagement extends Component {
   // }
   clickOperationNum = (id) => {
     if (id === 1) {
+      this.clearMap();
+      this.isAddEdit = true
       this.setState({
         rights: 0,
         isAddEdit: true,
+        ismodify: false,
+        roadtitle: '新增干线',
       })
     } else if (id === 3) {
       this.map.flyTo({
@@ -630,6 +674,8 @@ class TrunkManagement extends Component {
     }
   }
   onOpenChangeSubMenu = (eventKey) => { // SubMenu-ite触发
+    this.isAddEdit = false
+    this.clearMap();
     if (eventKey.length === 0) {
       this.setState({ menuOpenkeys: [] })
     } else {
@@ -640,135 +686,277 @@ class TrunkManagement extends Component {
       }
     }
   }
-  onClickMenuItem = (item) => {
-    console.log(item, 'vvcss')
+  onOpeSubMenu = (e, SubMenuItem) => {
+    this.isAddEdit = false
+    this.roaddId = SubMenuItem.id
+    const { loadRouteDirectionList, loadRouteTypeList } = this.state
+    const route_direction = loadRouteDirectionList && loadRouteDirectionList.find(item => item.c_code === SubMenuItem.route_direction).code_name
+    const route_type = loadRouteTypeList && loadRouteTypeList.find(item => item.c_code === SubMenuItem.route_type).code_name
     this.setState({
-      rights: 0,
-      isAddEdit: false
+      route_name: SubMenuItem.route_name,
+      route_code: SubMenuItem.route_code,
+      route_direction: SubMenuItem.route_direction,
+      route_directionvalue: route_direction,
+      route_miles: SubMenuItem.route_miles,
+      route_type: SubMenuItem.route_type,
+      route_typevalue: route_type,
+      detail: SubMenuItem.detail,
+      isAddEdit: false,
     })
+  }
+  onClickMenuItem = (event) => {
+    // const { data_item } = event.item.props
+    // console.log(event, data_item, 'vvcss')
+    // this.roaddId = data_item.id
+    // const { UnitPosition, UnitType, UnitDistrict, UnitGroup } = this.state
+    // this.setState({
+    //   route_name: data_item.unit_name,
+    //   route_code: '',
+    //   route_direction: [],
+    //   route_directionvalue: '',
+    //   route_miles: '',
+    //   route_type: [],
+    //   route_typevalue: '',
+    //   detail: '',
+    //   rights: 0,
+    //   isAddEdit: false,
+    //   ismodify: true,
+    //   roadtitle: '干线信息',
+    // })
+  }
+  // 显示提示框
+  deleteList() {
+    this.setState({
+      deleteConfirm: true,
+    })
+  }
+  getismodify = (isShowName) => { // 添加编辑
+    // this.showName = isShowName // 编辑
+    // this.mapaddOnclick = true
+    // this.setState({
+    //   ismodify: false,
+    //   isAddEdit: true,
+    //   roadtitle: '路口修改',
+    // })
+  }
+  // 确定删除
+  deleteOks = () => {
+    // axiosInstance.post(`${this.deleteUnitInfo}/${this.roaddId}`).then(res => {// 管理单位 this.deleteUnitInfo
+    //   // console.log(res.data, '删除')
+    //   const { code, result } = res.data
+    //   if (code === '1') {
+    //     this.setState({
+    //       deleteConfirm: false,
+    //       rights: -300,
+    //       menuOpenkeys: [],
+    //     })
+    //     message.info(result)
+    //     this.getDataList()
+    //   }
+    // })
+  }
+  changeLoadRouteDirection = (e, options) => { // 添加修改input selecct
+    if (options) {
+      const { addeditname, intername, children } = options.props
+      // console.log(intername, children, e)
+      this.setState({
+        [addeditname]: children,
+        [intername]: e,
+      })
+    } else {
+      const { value } = e.target
+      const nameInput = e.target.getAttribute('intername')
+      this.setState({
+        [nameInput]: value,
+      })
+    }
+  }
+  handclickAddEdit = () => {// 添加或修改路口按钮
+    // this.mapaddOnclick = false
+    // const {
+    //   unit_code,
+    //   unit_type_code,
+    //   unit_position,
+    //   district_id,
+    //   user_group_id,
+    //   longitude,
+    //   latitude,
+    //   signal_sys_unit_id,
+    //   signal_system_code,
+    //   signal_unit_id,
+    //   minor_unit_number,
+    //   be_taken,
+    //   unit_name,
+    //   unit_name_signal_sys,
+    //   main_unit_id,
+    //   unit_name_old,
+    // } = this.state
+    // let addroadData = {
+    //   be_taken,
+    //   district_id,
+    //   latitude,
+    //   longitude,
+    //   main_unit_id,
+    //   minor_unit_number,
+    //   signal_sys_unit_id,
+    //   signal_system_code,
+    //   signal_unit_id,
+    //   unit_code,
+    //   unit_name,
+    //   unit_name_old,
+    //   unit_name_signal_sys,
+    //   unit_position,
+    //   unit_type_code,
+    //   user_group_id,
+    //   id: '',
+    // }
+    // if (this.showName === 'edit') {
+    //   addroadData.id = JSON.stringify(this.roaddId)
+    // }
+    // // console.log(addroadData, '查看内容')
+    // axiosInstance.post(this.saveOrUpdateUnitInfo, addroadData).then(res => {// 路口位置
+    //   // console.log(res.data, '路口添加 修改')
+    //   const { code, result } = res.data
+    //   if (code === '1') {
+    //     if (result === '操作失败') {
+    //       message.info(result)
+    //     } else {
+    //       this.setState({
+    //         rights: -300,
+    //         menuOpenkeys: [],
+    //       })
+    //       message.info(result)
+    //     }
+
+    //   }
+    //   this.getDataList()
+    //   this.initializationState()
+    // })
+
   }
   render() {
     const { Option } = Select
     const {
       mainHomePage, stateSelect, clickNum, Istitletops, isAddEdit, ismodify, IsddMessge, rights, roadValue,
-      loadRouteDirectionList, loadRouteTypeList, treeList, menuOpenkeys,
-      route_name,route_code,route_directionvalue,route_miles,route_typevalue,detail,
+      loadRouteDirectionList, loadRouteTypeList, treeList, menuOpenkeys, deleteConfirm, treeListChild,
+      route_name, route_code, route_directionvalue, route_miles, route_typevalue, detail, roadtitle
     } = this.state
     return (
       <div className='TrunkManagementBox'>
         <div className='sildeRight' style={{ right: `${rights}px` }}>
-          {
-            isAddEdit ?
-              <div className="slideRightBoxAdd">
-                <div className='addMainLine'>
-                  <div className='newLine'>新增干线</div>
-                  <div className='operationLine'><span>保存</span><span onClick={this.noneAddRoad}>取消</span></div>
-                </div>
+          <div className="slideRightBoxAdd">
+            <div className='addMainLine'>
+              <div className='newLine'>{roadtitle}</div>
+              {
+                ismodify ?
+                  <div className='operationLine'>
+                    {/* <span onClick={() => this.deleteList()} >删除</span><span onClick={() => this.getismodify('edit')}>编辑</span> */}
+                    <span onClick={() => this.deleteList()} >删除</span><span onClick={this.noneAddRoad}>取消</span>
+                  </div>
+                  :
+                  <div className='operationLine'>
+                    <span onClick={this.handclickAddEdit}>保存</span><span onClick={this.noneAddRoad}>取消</span>
+                  </div>
+              }
+            </div>
+            {
+              isAddEdit ?
                 <div className="slideRightBoxAddBox">
-
-                </div>
-                <div className="slideRightBoxEditBox">
-
-                </div>
-                <p><span>干线名称：</span><input value={route_name} intername='route_name' type="text" className='inputBox' placeholder="干线名称" /></p>
-                <p><span>干线编号：</span><input value={route_code} intername='route_code' type="text" className='inputBox' placeholder="干线编号" /></p>
-                <div className='divs'><span>干线方向：</span>
-                  <Select
-                    // defaultValue="海淀区"
-                    value={route_directionvalue}
-                    style={{ width: 195, height: 30 }}
-                    onChange={this.changeLoadRouteDirection}
-                  >
-                    {
-                      loadRouteDirectionList && loadRouteDirectionList.map((item) => {
-                        return (
-                          <Option addeditname='route_directionvalue' intername='route_direction' value={item.c_code} style={{ width: 195, height: 30 }} key={item.id}>{item.code_name}</Option>
-                        )
-                      })
-                    }
-                  </Select>
-                </div>
-                <p><span>干线长度：</span><input value={route_miles} intername='route_miles' type="text" className='inputBox' placeholder="干线编号" /></p>
-                <div className='divs'><span>干线类型：</span>
-                  <Select
-                    // defaultValue="海淀区"
-                    value={route_typevalue}
-                    style={{ width: 195, height: 30 }}
-                    onChange={this.changeLoadRouteType}
-                  >
-                    {
-                      loadRouteTypeList && loadRouteTypeList.map((item) => {
-                        return (
-                          <Option addeditname='route_typevalue' intername='route_type' value={item.c_code} style={{ width: 193, height: 30 }} key={item.id}>{item.code_name}</Option>
-                        )
-                      })
-                    }
-                  </Select>
-                </div>
-                <p><span>干线描述：</span><input value={detail} onChange={this.changeLoadRouteDirection} type="text" className='inputBox' placeholder="干线编号" /></p>
-                <div className='lineBox'>
-                  <div className="lineBoxRight">
-                    {/* document.getElementById('startInp').value = '';
-                    document.getElementById('endInp').value = '';
-                    document.getElementById('channelInp').value = ''; */}
-                    <p><span></span><input type="text" className='inputBox' id='startInp' /></p>
-                    {
-                      roadValue && roadValue.map((item, index) => {
-                        return (
-                          <div className='roadBox' key={item + index}>
-                            <div className="roadBoxLeft">
+                  <p><span>干线名称：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className='inputBox' placeholder="干线名称" /></p>
+                  <p><span>干线编号：</span><input onChange={this.changeLoadRouteDirection} value={route_code} intername='route_code' type="text" className='inputBox' placeholder="干线编号" /></p>
+                  <div className='divs'><span>干线方向：</span>
+                    <Select
+                      // defaultValue="海淀区"
+                      value={route_directionvalue}
+                      style={{ width: 195, height: 30 }}
+                      onChange={this.changeLoadRouteDirection}
+                    >
+                      {
+                        loadRouteDirectionList && loadRouteDirectionList.map((item) => {
+                          return (
+                            <Option addeditname='route_directionvalue' intername='route_direction' value={item.c_code} style={{ width: 195, height: 30 }} key={item.id}>{item.code_name}</Option>
+                          )
+                        })
+                      }
+                    </Select>
+                  </div>
+                  <p><span>干线长度：</span><input onChange={this.changeLoadRouteDirection} value={route_miles} intername='route_miles' type="text" className='inputBox' placeholder="干线编号" /></p>
+                  <div className='divs'><span>干线类型：</span>
+                    <Select
+                      // defaultValue="海淀区"
+                      value={route_typevalue}
+                      style={{ width: 195, height: 30 }}
+                      onChange={this.changeLoadRouteType}
+                    >
+                      {
+                        loadRouteTypeList && loadRouteTypeList.map((item) => {
+                          return (
+                            <Option addeditname='route_typevalue' intername='route_type' value={item.c_code} style={{ width: 193, height: 30 }} key={item.id}>{item.code_name}</Option>
+                          )
+                        })
+                      }
+                    </Select>
+                  </div>
+                  <p><span>干线描述：</span><input onChange={this.changeLoadRouteDirection} value={detail} onChange={this.changeLoadRouteDirection} type="text" className='inputBox' placeholder="干线编号" /></p>
+                  <div className='lineBox'>
+                    <div className="lineBoxRight">
+                      <p><span></span><input type="text" className='inputBox' id='startInp' /></p>
+                      {
+                        roadValue && roadValue.map((item, index) => {
+                          return (
+                            <div className='roadBox' key={item + index}>
+                              <div className="roadBoxLeft">
+                              </div>
+                              <div className="roadBoxRight">
+                                <p><input type="text" onChange={this.getChangeValue} className='inputBox' id='channelInp' value={item} /></p>
+                              </div>
                             </div>
-                            <div className="roadBoxRight">
-                              <p><input type="text" onChange={this.getChangeValue} className='inputBox' id='channelInp' value={item} /></p>
+                          )
+                        })
+                      }
+                      {/*  <p><input type="text" className='inputBox' /></p> */}
+                      <p><span></span><input type="text" className='inputBox' id='endInp' /></p>
+                    </div>
+                  </div>
+                </div>
+                :
+                <div className="slideRightBoxEditBox">
+                  <p>干线名称：<span>{route_name}</span></p>
+                  <p>干线编号：<span>{route_code}</span></p>
+                  <p>干线方向：<span>{route_directionvalue}</span></p>
+                  <p>干线长度：<span>{route_miles}</span></p>
+                  <p>干线类型：<span>{route_typevalue}</span></p>
+                  <p>干线描述：<span>{detail}</span></p>
+                  <div className='lineBox'>
+                    <div className='lineBoxer'>
+                      {
+                        treeListChild && treeListChild.map((item, index) =>
+                          <div key={item.id} className='lineBoxer_item'>
+                            <span></span>
+                            <div className='streetBox'>
+                              <p className='street'><span>{index < 9 ? ('0' + (index + 1)) : index}</span>{item.unit_name}{ismodify ? <DeleteOutlined /> : ''}</p>
+                              <div className='intersectionBox'>
+                                <p className='intersection'><span>{item.unit_name_old}</span><span>{item.district_name}</span></p>
+                              </div>
+
                             </div>
                           </div>
                         )
-                      })
-                    }
-                    {/*  <p><input type="text" className='inputBox' /></p> */}
-                    <p><span></span><input type="text" className='inputBox' id='endInp' /></p>
+                      }
+                    </div>
                   </div>
                 </div>
-              </div>
-              :
+            }
+          </div>
+          {/* :
               <div className='slideRightBoxEdit'>
-                <div className='addMainLine'>
-                  <div className='newLine'>长安街干线详情</div>
-                  {
-                    !ismodify ? <div className='operationLine'><span>删除</span><span onClick={() => this.getismodify(true)}>编辑</span></div> : <div className='operationLineAdd'><span>保存</span><span onClick={() => this.getismodify(false)}>取消</span></div>
-                  }
-                </div>
-                <p>干线编号：<span>0001</span></p>
-                <p>干线长度：<span>7.3公里</span></p>
-                <p>干线方向：<span>西向东</span></p>
-                <div className='lineBox'>
-                  <div className='lineBoxer'>
-                    <div className='lineBoxer_item'>
-                      <span></span>
-                      <div className='streetBox'>
-                        <p className='street'><span>01</span>西长安街与西单北大街{ismodify ? <DeleteOutlined /> : ''}</p>
-                        <p className='intersection'><span>十字路口</span><span>西城区</span></p>
-                      </div>
-                    </div>
-                    <div className='lineBoxer_itemP'>
-                      <div className='streetBoxLeft'>
-                      </div>
-                      <div className='streetBox'>
-                        <p className='street'><span>01</span>西长安街与西单北大街{ismodify ? <DeleteOutlined /> : ''}</p>
-                        <p className='intersection'><span>十字路口</span><span>西城区</span></p>
-                      </div>
-                    </div>
-                    <div className='lineBoxer_item'>
-                      <span></span>
-                      <div className='streetBox'>
-                        <p className='street'><span>01</span>西长安街与西单北大街{ismodify ? <DeleteOutlined /> : ''}</p>
-                        <p className='intersection'><span>十字路口</span><span>西城区</span></p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-          }
+            <div className='addMainLine'>
+              <div className='newLine'>长安街干线详情</div>
+              {
+                !ismodify ? <div className='operationLine'><span>删除</span><span onClick={() => this.getismodify(true)}>编辑</span></div> : <div className='operationLineAdd'><span>保存</span><span onClick={() => this.getismodify(false)}>取消</span></div>
+              }
+            </div>
+          </div> */}
         </div>
         <div className="iptSearchNavMap">
           <input type="text" placeholder="查询…" className="inptNavMon" />
@@ -817,7 +1005,9 @@ class TrunkManagement extends Component {
                 treeList && treeList.map((item, index) =>
                   <SubMenu
                     key={item.id}
+                    onTitleClick={(e) => this.onOpeSubMenu(e, item)}
                     title={item.route_name}
+                    data_item={item}
                   >
                     {
                       item.childrens &&
@@ -841,6 +1031,12 @@ class TrunkManagement extends Component {
             </div>
           }
         </div>
+        <Modal
+          title="确定删除?"
+          visible={deleteConfirm}
+          onOk={this.deleteOks}
+          onCancel={this.deleteCancel}
+        />
       </div >
     )
   }

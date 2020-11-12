@@ -79,75 +79,7 @@ $bor-color: #a5fcff;
                 }
             }
         }
-        .slideRightBoxEdit {
-            height: 100%;
-            width: 100%;
-            .addMainLine {
-                height: 60px;
-                display: flex;
-                .newLine {
-                    font-size: 18px;
-                    width: 160px;
-                    line-height: 60px;
-                }
-                .operationLine {
-                    width: 110px;
-                    font-size: 12px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-around;
-                    span {
-                        width: 50px;
-                        height: 30px;
-                        text-align: center;
-                        cursor: pointer;
-                        border-radius: 3px;
-                        line-height: 30px;
-                        background-color: #18459b;
-                    }
-                }
-                .operationLineAdd {
-                    width: 110px;
-                    font-size: 12px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-around;
-                    span {
-                        width: 50px;
-                        height: 30px;
-                        text-align: center;
-                        cursor: pointer;
-                        border-radius: 3px;
-                        line-height: 30px;
-                        background-color: #18459b;
-                    }
-                }
-            }
-            .roadDetailBox {
-                height: calc(100% - 60px);
-                overflow-y: auto;
-                padding-right: 5px;
-                p {
-                    height: 25px;
-                    color: #5f9ef2;
-                    padding-left: 15px;
-                    display: flex;
-                    align-items: center;
-                    margin-bottom: 5px;
-                    span {
-                        width: 75px;
-                    }
-                    .inputBox {
-                        flex: 1;
-                        height: 30px;
-                        outline: none;
-                        border: 1px solid #1c59ce;
-                        background-color: #18346a;
-                        padding-left: 5px;
-                    }
-                }
-            }
-        }
+
     }
     .iptSearchNavMap {
         width: 220px;
