@@ -7,6 +7,7 @@ import iconLeftBus from '../imgs/iconLeftBBus.png'
 import iconRightBus from '../imgs/iconRightBBus.png'
 import mapConfiger from '../utils/minemapConf'
 import Graph from './Graph/Graph'
+import GraphSingle from './GraphSingle/GraphSingle'
 import Histogram from './Histogram/Histogram'
 import Pie from './Pie/Pie'
 const { SubMenu } = Menu;
@@ -14,7 +15,7 @@ const lineData = [
   [116.33625304425573,39.976441853446744],
   [116.33878504956658,39.976441853446744],
   [116.34399926389074,39.976441853446744]
-]
+] 
 class BusPriority extends Component {
   constructor(props) {
     super(props)
@@ -22,6 +23,57 @@ class BusPriority extends Component {
       mainHomePage: false,
       cloudSource: null,
       roadInterFlag: false, // 路口的显示隐藏状态
+      timeNum: 30,
+      priorityReqName:['申请次数'],
+      priorityReqDatas:[
+        {'x_name':'00:00','y_amount':3},
+        {'x_name':'02:00','y_amount':7},
+        {'x_name':'04:00','y_amount':5},
+        {'x_name':'06:00','y_amount':6},
+        {'x_name':'08:00','y_amount':12},
+      ],
+      prioritySucName:['优先次数'],
+      prioritySucDatas:[
+        {'x_name':'00:00','y_amount':12},
+        {'x_name':'02:00','y_amount':4},
+        {'x_name':'04:00','y_amount':2},
+        {'x_name':'06:00','y_amount':8},
+        {'x_name':'08:00','y_amount':20},
+      ],
+      flowName:['上行进口','下行进口'],
+      flowDatas:[
+        [
+          {'x_name':'00:00','y_amount':12},
+          {'x_name':'02:00','y_amount':4},
+          {'x_name':'04:00','y_amount':2},
+          {'x_name':'06:00','y_amount':8},
+          {'x_name':'08:00','y_amount':20},
+        ],
+        [
+          {'x_name':'00:00','y_amount':3},
+          {'x_name':'02:00','y_amount':7},
+          {'x_name':'04:00','y_amount':5},
+          {'x_name':'06:00','y_amount':6},
+          {'x_name':'08:00','y_amount':12},
+        ]
+      ],
+      statisticsName:['今日','昨日'],
+      statisticsDatas:[
+        [
+          {'x_name':'00:00','y_amount':12},
+          {'x_name':'02:00','y_amount':4},
+          {'x_name':'04:00','y_amount':2},
+          {'x_name':'06:00','y_amount':8},
+          {'x_name':'08:00','y_amount':20},
+        ],
+        [
+          {'x_name':'00:00','y_amount':3},
+          {'x_name':'02:00','y_amount':7},
+          {'x_name':'04:00','y_amount':5},
+          {'x_name':'06:00','y_amount':6},
+          {'x_name':'08:00','y_amount':12},
+        ]
+      ],
     }
     this.mapPopup = null
   }
@@ -43,6 +95,30 @@ class BusPriority extends Component {
     setTimeout(() => {
       this.drawLine(lineData)
     }, 500)
+  }
+  timeCountdown = (timeNum) => {
+    if (this.state.roadInterFlag) {
+      setTimeout( () => {
+        timeNum--
+        this.setState({
+          timeNum
+        },() => {
+          if (this.state.timeNum !== 0) {
+            this.timeCountdown(this.state.timeNum)
+          } else {
+            this.setState({
+              timeNum: 30
+            }, () => {
+              this.timeCountdown(this.state.timeNum)
+            })
+          }
+        })
+      },1000)
+    }else{
+      this.setState({
+        timeNum: 30
+      })
+    }
   }
   addBus = (points, degs) => {
     this.addMarker()
@@ -86,6 +162,8 @@ class BusPriority extends Component {
     this.setState({
       roadInterFlag: !this.state.roadInterFlag
     })
+    this.renderPopLayerMap(this.returnCenterLnglat(lineData[0],lineData[lineData.length - 1]))
+    this.timeCountdown(this.state.timeNum)
   }
   getInfoWindowHtml = (itemData) => {
     return `
@@ -120,6 +198,19 @@ class BusPriority extends Component {
         .setLngLat(this.returnCenterLnglat(lineData[0],lineData[lineData.length - 1]))
         .addTo(this.map);
     }
+  }
+  renderPopLayerMap = (centerPoint) => {
+    const styleUrl = process.env.NODE_ENV === 'development' ? 'mapabc://style/mapabc80' : 'mapabc://style/mapabc80'
+    const mineMapConf = {
+      container: 'mapPopContainer',
+      style: styleUrl,
+      center: centerPoint,
+      zoom: 16,
+      pitch: 0,
+      maxZoom: 17,
+      minZoom: 3,
+    }
+    new window.mapabcgl.Map(mineMapConf)
   }
   renderMap = () => {
     mapConfiger.zoom = 11
@@ -222,7 +313,7 @@ class BusPriority extends Component {
 
   render() {
     const { Option } = Select
-    const { mainHomePage, cloudSource, roadInterFlag } = this.state
+    const { mainHomePage, cloudSource, roadInterFlag, timeNum, priorityReqName, priorityReqDatas, prioritySucName, prioritySucDatas, flowName, flowDatas,statisticsName, statisticsDatas } = this.state
     return (
       <div className='specialTopicBox'>
         <div className='sidebarLeft'>
@@ -263,7 +354,7 @@ class BusPriority extends Component {
             <div className="title">公交优先统计次数</div>
             <div className="itemContent">
               <div className="faultRate">
-                <Graph />
+                <Graph chartsName={statisticsName} chartsDatas={statisticsDatas} />
               </div>
             </div>
           </div>
@@ -310,27 +401,73 @@ class BusPriority extends Component {
               <i title='返回' onClick={this.showHide} />
               <div className='leftCenter'>
                 <div className='detailPopName'>XXX路与XXX路口</div>
-                <div className='title'>实时监控</div>
+                <div className='roadInterBox'>
+                  <div className='title'>实时监控</div>
+                  <div className='roadInterBg'>
+                    <em><i>{timeNum}s</i></em>
+                    <div className='controlBtnBox'>
+                      <span>实时请求</span>
+                      <span>编 辑</span>
+                    </div>
+                  </div>
+                </div>
+                <div className='roadLineChartsBox'>
+                  <div className='chartsItem'>
+                    <div className='titleCharts'>优先请求曲线图</div>
+                    <div className='chartsBox'>
+                      <GraphSingle chartsName={priorityReqName} chartsDatas={priorityReqDatas} />
+                    </div>
+                  </div>
+                  <div className='chartsItem'>
+                    <div className='titleCharts'>优先成功曲线图</div>
+                    <div className='chartsBox'>
+                      <GraphSingle chartsName={prioritySucName} chartsDatas={prioritySucDatas} />
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className='sidebarRight'>
                 <div className="asideItem">
                   <div className="title">路口信息</div>
                   <div className="itemContent">
                     <div className="faultRate">
+                      <div className="leftMenu">洞山路路口信息</div>
+                      <div className="rightMenuContent">
+                        <div className="itemLine">
+                          <span>路口编号</span>
+                          <span>路口名称</span>
+                          <span>所属路线</span>
+                        </div>
+                        <div className="itemLine">
+                          <span>102</span>
+                          <span>丽江路</span>
+                          <span>科力</span>
+                        </div>
+                        <div className="itemLine">
+                          <span>信息系统</span>
+                          <span>检测车次</span>
+                          <span>优先请求车次</span>
+                        </div>
+                        <div className="itemLine">
+                          <span>廊道</span>
+                          <span>1025次</span>
+                          <span>25次</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div className="asideItem">
                   <div className="title">路口子区监视</div>
                   <div className="itemContent">
-                    <div className="faultRate">
-                    </div>
+                    <div id="mapPopContainer" className="faultRate" />
                   </div>
                 </div>
                 <div className="asideItem">
                   <div className="title">公交流量曲线图</div>
                   <div className="itemContent">
                     <div className="faultRate">
+                     <Graph chartsName={flowName} chartsDatas={flowDatas} symbolFlag='circle' />
                     </div>
                   </div>
                 </div>
