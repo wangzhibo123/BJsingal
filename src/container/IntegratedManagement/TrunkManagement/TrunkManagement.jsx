@@ -24,7 +24,6 @@ class TrunkManagement extends Component {
       treeList: [],
       loadRouteDirectionList: [],
       loadRouteTypeList: [],
-      defaultChildren: [],
       clickNum: '',
       rights: -300,
       ismodify: false,
@@ -51,6 +50,17 @@ class TrunkManagement extends Component {
           children: []
         }
       ],
+      route_name: '',
+      route_code: '',
+      route_direction: [],
+      route_directionvalue: '',
+      route_miles: '',
+      route_type: [],
+      route_typevalue: '',
+      detail: '',
+
+      // 添加和修改
+
     }
     this.defaultChildren = []
     this.clickOperation = [
@@ -63,13 +73,15 @@ class TrunkManagement extends Component {
         name: '切换视图',
       }
     ]
-    this.getPointAll = '/engine-maintenance/unit/getPointAll'
+    this.getPointAll = '/engine-maintenance/unitInfo/getPointAll'
     this.deleteRoute = '/engine-maintenance/routeManagement/deleteRoute' // 删除干线信息
     this.getRouteInfo = '/engine-maintenance/routeManagement/getRouteInfo' // 加载当前干线信息
     this.loadRouteTree = '/engine-maintenance/routeManagement/loadRouteTree' // 干线树
     this.loadRouteDirection = '/engine-maintenance/routeManagement/loadRouteDirection' // 干线方向
     this.loadRouteType = '/engine-maintenance/routeManagement/loadRouteType' // 干线类型
     this.saveOrUpdateDistrict = '/engine-unified/routeManagement/saveOrUpdateDistrict' // 新增修改干线信息
+    this.addMainLine = false
+    this.addRoadLine = false
   }
   getDataList = () => {
     axiosInstance.post(this.loadRouteTree).then(res => {
@@ -172,13 +184,19 @@ class TrunkManagement extends Component {
     // this.map.flyTo({ center: [116.391, 39.911], zoom: 14, pitch: 60 })
     var marker = '', startmarker = '', endmarker = '', channelmarker = [];
     this.map.on('contextmenu', function (item) {
+      console.log(654321, _this.addRoadLine)
       if (marker) {
         marker.remove();
       }
       var lnglat = item.lngLat;
       var style = 'background:#fff;color:#000;';
       var html = document.createElement('div');
-      var contextmenu = '<div class="context_menu" style="padding:5px 10px;' + style + '">' + '<li id="start" style="cursor:point;">起点</li>' + '<li style="cursor:point;" id="end">终点</li>' + '<li style="cursor:point;" id="channel">途径点</li>' + '<li style="cursor:point;" id="clearmap">清空地图</li>' + '</div>';
+      var contextmenu = `<div class="context_menu" style="padding:5px 10px;${style}">
+        <li id="start" style="cursor:point;">起点</li>
+        <li style="cursor:point;" id="end">终点</li>
+        ${_this.addRoadLine ? '<li style="cursor: point" id="channel" > 途径点</li >' : ''}
+        <li style="cursor:point;" id="clearmap">清空地图</li>
+        </div > `
       html.innerHTML = contextmenu;
       marker = new window.mapabcgl.Marker(html)
         .setLngLat([lnglat.lng, lnglat.lat])
@@ -186,7 +204,6 @@ class TrunkManagement extends Component {
         .addTo(_this.map);
       var start = document.getElementById('start');
       var end = document.getElementById('end');
-      var channel = document.getElementById('channel');
       var clear = document.getElementById('clearmap');
       start.addEventListener('click', function (e) {
         _this.getstartpoint(lnglat);
@@ -194,17 +211,21 @@ class TrunkManagement extends Component {
       end.addEventListener('click', function (e) {
         _this.getendpoint(lnglat)
       })
-      channel.addEventListener('click', function (e) {
-        _this.getChannelpoint(lnglat)
-      })
       clear.addEventListener('click', function (e) {
         clearMap();
       })
+      if (_this.addRoadLine) {
+        const channel = document.getElementById('channel');
+        channel.addEventListener('click', function (e) {
+          _this.getChannelpoint(lnglat)
+        })
+      }
       // 初始话渲染路口
     })
 
     this.getstartpoint = (lnglat) => {
       console.log(lnglat, '开始')
+      this.addMainLine = true
       if (marker) {
         marker.remove();
       }
@@ -218,6 +239,7 @@ class TrunkManagement extends Component {
 
     this.getendpoint = (lnglat) => {
       console.log(lnglat, '结束')
+      this.addMainLine = false
       if (marker) {
         marker.remove();
       }
@@ -463,8 +485,8 @@ class TrunkManagement extends Component {
           <div class="message">运行阶段：${interMsg.stage_code}</div>
         </div>
         <div class="interDetails"><div class="monitorBtn">路口检测</div></div>
-      </div>
-    `
+      </div >
+  `
   }
   // ClickMessge = () => {
   //   var popupOption = {
@@ -505,6 +527,10 @@ class TrunkManagement extends Component {
       el.style.cursor = 'pointer'
       el.addEventListener('click', function (e) {
         currentThis.addInfoWindow(item)
+      });
+      el.addEventListener('contextmenu', function (e) {
+        currentThis.addRoadLine = true
+        currentThis.unitArr += item.id
       });
       new window.mapabcgl.Marker(el)
         .setLngLat([item.longitude, item.latitude])
@@ -551,9 +577,6 @@ class TrunkManagement extends Component {
       }
     })
     this.map = map
-  }
-  handleClick = e => {
-    console.log('click ', e);
   }
   handleChange = (value) => {
     console.log(`selected ${value}`);
@@ -628,7 +651,8 @@ class TrunkManagement extends Component {
     const { Option } = Select
     const {
       mainHomePage, stateSelect, clickNum, Istitletops, isAddEdit, ismodify, IsddMessge, rights, roadValue,
-      loadRouteDirectionList, loadRouteTypeList, treeList, defaultChildren, menuOpenkeys
+      loadRouteDirectionList, loadRouteTypeList, treeList, menuOpenkeys,
+      route_name,route_code,route_directionvalue,route_miles,route_typevalue,detail,
     } = this.state
     return (
       <div className='TrunkManagementBox'>
@@ -641,44 +665,47 @@ class TrunkManagement extends Component {
                   <div className='operationLine'><span>保存</span><span onClick={this.noneAddRoad}>取消</span></div>
                 </div>
                 <div className="slideRightBoxAddBox">
-                
+
                 </div>
                 <div className="slideRightBoxEditBox">
 
                 </div>
-                <p><span>干线名称：</span><input type="text" className='inputBox' placeholder="干线名称" /></p>
-                <p><span>干线编号：</span><input type="text" className='inputBox' placeholder="干线编号" /></p>
+                <p><span>干线名称：</span><input value={route_name} intername='route_name' type="text" className='inputBox' placeholder="干线名称" /></p>
+                <p><span>干线编号：</span><input value={route_code} intername='route_code' type="text" className='inputBox' placeholder="干线编号" /></p>
                 <div className='divs'><span>干线方向：</span>
                   <Select
                     // defaultValue="海淀区"
+                    value={route_directionvalue}
                     style={{ width: 195, height: 30 }}
                     onChange={this.changeLoadRouteDirection}
                   >
                     {
                       loadRouteDirectionList && loadRouteDirectionList.map((item) => {
                         return (
-                          <Option value={item.c_code} style={{ width: 195, height: 30 }} key={item.id}>{item.code_name}</Option>
+                          <Option addeditname='route_directionvalue' intername='route_direction' value={item.c_code} style={{ width: 195, height: 30 }} key={item.id}>{item.code_name}</Option>
                         )
                       })
                     }
                   </Select>
                 </div>
-                <p><span>干线长度：</span><input type="text" className='inputBox' placeholder="干线编号" /></p>
+                <p><span>干线长度：</span><input value={route_miles} intername='route_miles' type="text" className='inputBox' placeholder="干线编号" /></p>
                 <div className='divs'><span>干线类型：</span>
                   <Select
                     // defaultValue="海淀区"
+                    value={route_typevalue}
                     style={{ width: 195, height: 30 }}
                     onChange={this.changeLoadRouteType}
                   >
                     {
                       loadRouteTypeList && loadRouteTypeList.map((item) => {
                         return (
-                          <Option value={item.c_code} style={{ width: 193, height: 30 }} key={item.id}>{item.code_name}</Option>
+                          <Option addeditname='route_typevalue' intername='route_type' value={item.c_code} style={{ width: 193, height: 30 }} key={item.id}>{item.code_name}</Option>
                         )
                       })
                     }
                   </Select>
                 </div>
+                <p><span>干线描述：</span><input value={detail} onChange={this.changeLoadRouteDirection} type="text" className='inputBox' placeholder="干线编号" /></p>
                 <div className='lineBox'>
                   <div className="lineBoxRight">
                     {/* document.getElementById('startInp').value = '';
@@ -802,14 +829,6 @@ class TrunkManagement extends Component {
                 )
               }
             </Menu>
-            {/* <CustomInterTree
-              {...this.props}
-              treeList={treeList}
-              defaultChildren={defaultChildren}
-              getSelectTreeId={this.getSelectTreeId}
-              getSelectChildId={this.getSelectChildId}
-              visibleShowLeft={this.visibleShowLeft}
-            /> */}
           </div>
 
         </div>

@@ -343,6 +343,7 @@ $bor-color: #a5fcff;
             }
             .mapabcgl-popup-content {
                 padding: 0;
+                min-width: 400px;
                 background-color: transparent;
                 .mapabcgl-popup-close-button {
                     right: 10px;
