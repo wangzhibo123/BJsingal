@@ -62,15 +62,15 @@ class Intersection extends Component {
       }
     ]
 
-    this.getPointAll = '/engine-maintenance/unit/getPointAll' // 加载所有点位
+    this.getPointAll = '/engine-maintenance/unitInfo/getPointAll' // 加载所有点位
     this.loadTree = '/engine-maintenance/districtManagement/loadTree' // 路口管理树
     this.editDistrictInfo = '/engine-maintenance/districtManagement/editSubDistrictInfo' // 加载当前区域信息
-    this.deleteUnitInfo = '/engine-maintenance/unit/deleteUnitInfo' // 删除路口信息
-    this.getUnitDistrict = '/engine-maintenance/unit/getUnitDistrict' // 所属区域
-    this.getUnitGroup = '/engine-maintenance/unit/getUnitGroup' // 管理单位
-    this.getUnitPosition = '/engine-maintenance/unit/getUnitPosition' // 路口位置
-    this.getUnitType = '/engine-maintenance/unit/getUnitType' // 路口类型
-    this.saveOrUpdateUnitInfo = '/engine-maintenance/unit/saveOrUpdateUnitInfo' // 新增修改路口信息
+    this.deleteUnitInfo = '/engine-maintenance/unitInfo/deleteUnitInfo' // 删除路口信息
+    this.getUnitDistrict = '/engine-maintenance/unitInfo/getUnitDistrict' // 所属区域
+    this.getUnitGroup = '/engine-maintenance/unitInfo/getUnitGroup' // 管理单位
+    this.getUnitPosition = '/engine-maintenance/unitInfo/getUnitPosition' // 路口位置
+    this.getUnitType = '/engine-maintenance/unitInfo/getUnitType' // 路口类型
+    this.saveOrUpdateUnitInfo = '/engine-maintenance/unitInfo/saveOrUpdateUnitInfo' // 新增修改路口信息
     this.defaultChildren = []
     this.newChildId = []
     this.showName = 'add'
@@ -80,6 +80,7 @@ class Intersection extends Component {
     this.renderMap()
     this.getDataList()
     this.addRoadList()
+    this.addMarkerData()
   }
   getDataList = () => {
     axiosInstance.post(this.loadTree).then(res => {
@@ -131,27 +132,44 @@ class Intersection extends Component {
     axiosInstance.post(this.getPointAll).then(res => {
       const { code, list } = res.data
       if (code === '1') {
-        this.addMarker(list)
+        this.pointLists = list
+        this.addMarker(this.pointLists, 8)
       }
     })
   }
-  addMarker = (mapMaker) => {
-    const currentThis = this
-    this.markers = []
-    mapMaker && mapMaker.forEach(item => {
-      const el = document.createElement('div')
-      el.style.width = '20px'
-      el.style.height = '20px'
-      el.style.borderRadius = '50%'
-      el.style.backgroundColor = 'green'
-      el.style.cursor = 'pointer'
-      el.addEventListener('click', function (e) {
-        currentThis.addInfoWindow(item)
-      });
-      new window.mapabcgl.Marker(el)
-        .setLngLat([item.longitude, item.latitude])
-        .addTo(this.map)
-    })
+  addMarker = (points, zoomVal) => {
+    this.removeMarkers()
+    if (this.map) {
+      const currentThis = this
+      this.markers = []
+      const interList = zoomVal < 13 ? points.filter(item => item.unit_grade <= 4) : points
+      // console.log(interList)
+      interList && interList.forEach((item, index) => {
+        const el = document.createElement('div')
+        el.style.width = '20px'
+        el.style.height = '20px'
+        el.style.borderRadius = '50%'
+        el.style.backgroundColor = 'green'
+        el.style.cursor = 'pointer'
+        el.id = 'marker' + item.unit_code
+        el.addEventListener('click', function (e) {
+          currentThis.addInfoWindow(item)
+        });
+        el.addEventListener('contextmenu', function (e) {
+          currentThis.addRoadLine = true
+          // 新增干线时添加路线
+          currentThis.unitArr += item.id + ','
+
+        });
+        if (isNaN(item.longitude) || isNaN(item.latitude)) {
+          console.log(index)
+        }
+        const marker = new window.mapabcgl.Marker(el)
+          .setLngLat([item.longitude, item.latitude])
+          .addTo(this.map)
+        this.interMarkers.push(marker)
+      })
+    }
   }
   addInfoWindow = (marker) => {
     if (this.mapPopup) {
@@ -199,10 +217,20 @@ class Intersection extends Component {
       minzoom: 1, // 路况显示的最小级别(1-24)
       maxzoom: 24, // 路况显示的最大级别(1-24)
       type: 'vector', // 路况图层类型:vector(矢量),raster(栅格)
-      refresh: 30 * 1000, // 路况图层刷新时间，毫秒
+      // refresh: 30 * 1000, // 路况图层刷新时间，毫秒
       // before:'roads-symbol-49'
     };
     // map.poiClick(true);
+    map.on('zoom', () => {
+      if (this.zoomTimer) {
+        clearTimeout(this.zoomTimer)
+        this.zoomTimer = null
+      }
+      this.zoomTimer = setTimeout(() => {
+        const zoomLev = Math.round(this.map.getZoom())
+        this.addMarker(this.pointLists, zoomLev)
+      }, 700)
+    })
     map.on('click', (e) => {
       console.log(this.mapaddOnclick, e.lngLat.lng.toFixed(6))
       if (this.mapaddOnclick) {
@@ -216,7 +244,6 @@ class Intersection extends Component {
     });
     map.on('load', () => {
       map.trafficLayer(true, options);
-      this.addMarkerData()
       window.onbeforeunload = function (e) {
         map.removeLayerAndSource('icon');
       };
@@ -230,6 +257,7 @@ class Intersection extends Component {
       this.initializationState()
       this.setState({
         rights: 0,
+        roadtitle: '新增路口',
         isAddEdit: true,
         ismodify: false,
       })
@@ -333,6 +361,7 @@ class Intersection extends Component {
       roaddistrict_id,
       roaduser_group_id,
       roadbe_taken,
+      roadtitle: '路口信息',
     })
   }
   delectRoad = () => { // 点击删除路口
@@ -413,7 +442,7 @@ class Intersection extends Component {
     })
 
   }
-  changeLoadRouteDirection = (e, options) => { // 选择干线方向
+  changeLoadRouteDirection = (e, options) => { // 添加修改input selecct
     if (options) {
       const { addeditname, intername, children } = options.props
       // console.log(intername, children, e)
@@ -438,6 +467,7 @@ class Intersection extends Component {
     this.setState({
       ismodify: false,
       isAddEdit: true,
+      roadtitle: '路口修改',
     })
   }
   // 显示提示框
@@ -456,7 +486,7 @@ class Intersection extends Component {
           deleteConfirm: false,
           rights: -300,
           menuOpenkeys: [],
-        })  
+        })
         message.info(result)
         this.getDataList()
       }
@@ -476,18 +506,14 @@ class Intersection extends Component {
       signal_sys_unit_id, signal_unit_id, minor_unit_number, be_taken, unit_name, deleteConfirm,
       UnitPosition, UnitType, UnitGroup, UnitDistrict, signal_system_code,
       unit_name_signal_sys, main_unit_id, unit_name_old,
-      roadposition, roadunit_type_code, roaddistrict_id, roaduser_group_id, roadbe_taken
+      roadposition, roadunit_type_code, roaddistrict_id, roaduser_group_id, roadbe_taken, roadtitle
     } = this.state
     return (
       <div className='IntersectionBox'>
         <div className='sildeRight' style={{ right: `${rights}px` }}>
           <div className="slideRightBoxAdd">
-            {/* <div className='addMainLine'>
-                  <div className='newLine'>新增路口</div>
-                  <div className='operationLine'><span>保存</span><span onClick={this.noneAddRoad}>取消</span></div>
-                </div> */}
             <div className='addMainLine'>
-              <div className='newLine'>西湖南大街详情</div>
+              <div className='newLine'>{roadtitle}</div>
               {
                 ismodify ?
                   <div className='operationLine'>
