@@ -25,7 +25,7 @@ class Header extends Component {
         name: '运维管理', id: '0-6',children: [], path: '/MochaItom'
       },
       {
-        name: '视频应用', id: '0-9', children: [], path: ''
+        name: '视频应用', id: '0-9', children: [], path: '/videoApp'
       },
       {
         name: '课题专题', id: '0-10',
