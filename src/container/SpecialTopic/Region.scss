@@ -320,7 +320,7 @@ input[type="number"]{ -moz-appearance: textfield; }
         height: calc(100% - 70px);
         .contentCenter {
             width: calc(100% - 340px);
-            height: calc(100% - 70px);
+            height: 100%;
             flex-direction: column;
             position: relative;
             .title {
@@ -339,7 +339,7 @@ input[type="number"]{ -moz-appearance: textfield; }
                 width:320px;
                 position: absolute;
                 right:8px;
-                bottom:0;
+                bottom:10px;
                 background-color: rgba(12, 74, 131, 0.6);
                 border: 1px solid #0E6ABF;
                 border-radius: 2px;
@@ -634,7 +634,7 @@ input[type="number"]{ -moz-appearance: textfield; }
                         color:#fff;
                         >span{
                             flex: 1;
-                            font-size: 16px;
+                            font-size: 15px;
                             font-weight: bold;
                             text-align: center;
                         }

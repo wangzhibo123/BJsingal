@@ -37,8 +37,8 @@ const Artery = loadable(() => import("./container/Evaluate/Artery/Artery"), { Lo
 const Area = loadable(() => import("./container/Evaluate/Area/Area"), { LoadingComponent: LoadingPage })
 const VideoApp = loadable(() => import("./container/VideoApp/VideoApp"), { LoadingComponent: LoadingPage })
 const BusPriority = loadable(() => import("./container/SpecialTopic/BusPriority"), { LoadingComponent: LoadingPage })
-// const ExpresswayControl = loadable(() => import("./container/SpecialTopic/ExpresswayControl"), { LoadingComponent: LoadingPage })
-// const IntellectNetwork = loadable(() => import("./container/SpecialTopic/IntellectNetwork"), { LoadingComponent: LoadingPage })
+const ExpresswayControl = loadable(() => import("./container/SpecialTopic/ExpresswayControl"), { LoadingComponent: LoadingPage })
+const IntellectNetwork = loadable(() => import("./container/SpecialTopic/IntellectNetwork"), { LoadingComponent: LoadingPage })
 const Parent = () => (
   <React.Fragment>
     <Route path="*" component={Header} />
@@ -67,8 +67,8 @@ const Parent = () => (
     <Route exact path="/area" component={Area} />
     <Route exact path="/videoApp" component={VideoApp} />
     <Route exact path="/busPriority" component={BusPriority} />
-    {/* <Route exact path="/expresswayControl" component={ExpresswayControl} />
-    <Route exact path="/intellectNetwork" component={IntellectNetwork} /> */}
+    <Route exact path="/expresswayControl" component={ExpresswayControl} />
+    <Route exact path="/intellectNetwork" component={IntellectNetwork} />
   </React.Fragment>
 )
 export default function BasicRouter() {
