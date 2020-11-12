@@ -22,7 +22,6 @@
         width: 300px;
         height: calc(100% - 80px);
         background: linear-gradient(to bottom, rgba(1, 17, 50, 0.8), rgba(5, 38, 89, 0.6));
-    
         .areaMonNum {
             width: 100%;
             height: 30px;
@@ -132,7 +131,7 @@
         bottom: 0;
         width: 100%;
         height: calc(100% - 60px);
-        background-color: #031A3E;
+        background-color: rgba(12, 74, 131, 0.6);
         .mapContainer{
             width: 100%;
             height: 100%;
@@ -141,6 +140,7 @@
             background-color:rgba(18, 38, 142,.44);
             font-size: 24px;
             border: 1px solid #3661E9;
+            padding: 0;
         }
         .mapabcgl-popup-anchor-top .mapabcgl-popup-tip {
             -webkit-align-self: center;
@@ -153,6 +153,73 @@
             align-self: center;
             border-bottom: none;
             border-top-color:  #132992;
+        }
+        .ant-switch {
+            margin: 0;
+            padding: 0;
+            color: rgba(0, 0, 0, 0.85);
+            font-size: 14px;
+            font-variant: tabular-nums;
+            line-height: 1.5715;
+            list-style: none;
+            -webkit-font-feature-settings: 'tnum';
+            font-feature-settings: 'tnum', "tnum";
+            position: relative;
+            display: inline-block;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            min-width: 44px;
+            height: 22px;
+            line-height: 22px;
+            vertical-align: middle;
+            background-color: rgba(0, 0, 0, 0.25);
+            border: 0;
+            border-radius: 100px;
+            cursor: pointer;
+            -webkit-transition: all 0.2s;
+            transition: all 0.2s;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .ant-switch-checked .ant-switch-handle {
+            left: calc(100% - 18px - 2px);
+        }
+        
+        .ant-switch-handle::before {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: #fff;
+            border-radius: 9px;
+            -webkit-box-shadow: 0 2px 4px 0 rgba(0, 35, 11, 0.2);
+            box-shadow: 0 2px 4px 0 rgba(0, 35, 11, 0.2);
+            -webkit-transition: all 0.2s ease-in-out;
+            transition: all 0.2s ease-in-out;
+            content: '';
+        }
+        .ant-switch-handle {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            -webkit-transition: all 0.2s ease-in-out;
+            transition: all 0.2s ease-in-out;
+        }
+        .ant-switch-checked .ant-switch-inner {
+            margin: 0 25px 0 7px;
+        }
+        .ant-switch-inner {
+            display: block;
+            margin: 0 7px 0 25px;
+            color: #fff;
+            font-size: 12px;
+            -webkit-transition: margin 0.2s;
+            transition: margin 0.2s;
         }
     }
     .modeSwitchBtn{
@@ -437,7 +504,7 @@
                                 height: calc(100% - 87px);
                                 // border: 2px solid rgba(39,74,196,1);
                                 // box-shadow: inset 1px 1px 2px 2px rgba(39,74,196,1);
-                                background: rgba(16,36,139,1);
+                                background: rgba(16,36,139,.6);
                                 .modeMainMonitorContentListTable{
                                     width: 100%;
                                     height: 100%;
@@ -544,7 +611,7 @@
                                 height: calc(100% - 87px);
                                 // border: 2px solid rgba(39,74,196,1);
                                 // box-shadow: inset 1px 1px 2px 2px rgba(39,74,196,1);
-                                background: rgba(16,36,139,1);
+                                background: rgba(16,36,139,.6);
                                 .modeMainMonitorContentListTable{
                                     width: 100%;
                                     height: 100%;

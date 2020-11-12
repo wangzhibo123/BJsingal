@@ -11,28 +11,7 @@ export default class AreaMonitoring extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      stateSelect: [
-        {
-          name: "海淀区",
-          id: "1",
-          children: []
-        },
-        {
-          name: "朝阳区",
-          id: "2",
-          children: []
-        },
-        {
-          name: "上地",
-          id: "3",
-          children: []
-        },
-        {
-          name: "三里屯",
-          id: "4",
-          children: []
-        }
-      ],
+      stateSelect: [{name: "海淀区",id: "1",children: []},{name: "朝阳区",id: "2",children: []},{name: "上地",id: "3",children: []},{name: "三里屯",id: "4",children: []}],
       //切换按钮
       modeAreaTabShow:false,
       //地图
@@ -50,7 +29,6 @@ export default class AreaMonitoring extends Component {
   componentDidMount() {
     this.state.modeAreaMapShow&&this.renderMap();
   }
-
   addMarker = () => {
     if (this.map) {
       const el = document.createElement("div");

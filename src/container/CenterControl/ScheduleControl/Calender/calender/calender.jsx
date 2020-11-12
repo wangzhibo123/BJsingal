@@ -473,7 +473,6 @@ export default class CalenderPublic extends Component {
                                 })
                             }
                         </div>
-                        
                         <div className="calenderContentTBody">
                             {
                                 this.state.frontBox.map((item,index)=>{
@@ -484,7 +483,6 @@ export default class CalenderPublic extends Component {
                             {
                                 
                                 this.state.cld&&this.state.cld.map((item,index)=>{
-                                    
                                     return (
                                         <div className="calenderContentTD" key={index} style={this.state.tableSizeSwitch?{height:"calc(100% / 6)"}:{height:"calc(100% / 5)"}}>
                                             <div style={item.color?{color:item.color}:{color:"#fff"}} className="calenderContentSDay">{item.sDay}</div>

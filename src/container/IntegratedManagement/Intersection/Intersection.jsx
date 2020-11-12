@@ -448,14 +448,18 @@ class Intersection extends Component {
   }
   // 确定删除
   deleteOks = () => {
-    axiosInstance.post(`${this.getUnitGroup}/${this.roaddId}`).then(res => {// 管理单位 this.deleteUnitInfo
-      console.log(res.data, '删除')
-      // const { code, list } = res.data
-      // if (code === '1') {
-      //   this.setState({
-      //     UnitGroup: list
-      //   })
-      // }
+    axiosInstance.post(`${this.deleteUnitInfo}/${this.roaddId}`).then(res => {// 管理单位 this.deleteUnitInfo
+      // console.log(res.data, '删除')
+      const { code, result } = res.data
+      if (code === '1') {
+        this.setState({
+          deleteConfirm: false,
+          rights: -300,
+          menuOpenkeys: [],
+        })  
+        message.info(result)
+        this.getDataList()
+      }
     })
   }
   // 取消删除
@@ -500,7 +504,7 @@ class Intersection extends Component {
                 <div className='slideRightBoxAddBox'>
                   <p><span>路口名称：</span><input value={unit_name} intername='unit_name' onChange={this.changeLoadRouteDirection} type="text" className='inputBox' placeholder="区域名称" /></p>
                   <p><span>路口编号：</span><input value={unit_code} intername='unit_code' onChange={this.changeLoadRouteDirection} type="text" className='inputBox' placeholder="区域编号" /></p>
-                  <p><span>原始路口名称：</span><input value={unit_name_old} intername='unit_name_old' onChange={this.changeLoadRouteDirection} type="text" className='inputBox' placeholder="区域编号" /></p>
+                  <p><span>原始路口名称：</span><input value={unit_name_old} intername='unit_name_old' onChange={this.changeLoadRouteDirection} type="text" className='inputBox' placeholder="原始路口名称" /></p>
                   <div className='divs'><span>路口位置：</span>
                     <Select
                       value={roadposition}
