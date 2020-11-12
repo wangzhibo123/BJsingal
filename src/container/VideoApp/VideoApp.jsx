@@ -82,7 +82,7 @@ class VideoApp extends Component{
                   </ul>
                   <video style={{width:"50vw",height:"50vh",margin:"0 auto"}} id="my-video" className="video-js vjs-default-skin">
                   </video>
-              </div> */}
+              </div> */} 
           </div>   
       )
   }
