@@ -45,15 +45,16 @@ class InterMonitor extends Component {
       { text: '中心控制', img: cneter },
       { text: '中心手控', img: hand },
     ]
-    this.modeUrl = '/engine-unified/unit/getControlModeById?unit_id=1'
-    this.trafficUrl = '/engine-unified/unit/getRealtimeTrafficById?unit_id=1'
-    this.trendUrl = '/engine-unified/unit/getRoadTrendById?unit_id=1'
-    this.messageUrl = '/engine-unified/unit/getUnitInfoById?unit_id=1'
+    this.modeUrl = '/engine-monitor/unitMontitor/getControlModeById?unit_id=1'
+    this.trafficUrl = '/engine-monitor/unitMontitor/getRealtimeTrafficById?unit_id=1'
+    this.trendUrl = '/engine-monitor/unitMontitor/getRoadTrendById?unit_id=1'
+    this.messageUrl = '/engine-monitor/unitMontitor/getUnitInfoById?unit_id=1'
   }
   componentDidMount = () => {
     this.getControlMode()
     this.getTrafficInfo()
     this.getRoadTrend()
+    this.getInterInfo()
   }
   // 路口信息
   getInterInfo = () => {

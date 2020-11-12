@@ -12,7 +12,7 @@ class InterTimeList extends Component {
       showTimeDetails: false,
       timeTableData: null,
     }
-    this.timeTableUrl = '/engine-unified/unit/getTimeTableById?unit_id=1'
+    this.timeTableUrl = '/engine-monitor/unitMontitor/getTimeTableById?unit_id=1'
   }
   componentDidMount = () => {
     this.getTimeTableDatas()
