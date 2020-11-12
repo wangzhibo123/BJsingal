@@ -80,6 +80,7 @@ class Intersection extends Component {
     this.renderMap()
     this.getDataList()
     this.addRoadList()
+    this.addMarkerData()
   }
   getDataList = () => {
     axiosInstance.post(this.loadTree).then(res => {
@@ -131,27 +132,44 @@ class Intersection extends Component {
     axiosInstance.post(this.getPointAll).then(res => {
       const { code, list } = res.data
       if (code === '1') {
-        this.addMarker(list)
+        this.pointLists = list
+        this.addMarker(this.pointLists, 8)
       }
     })
   }
-  addMarker = (mapMaker) => {
-    const currentThis = this
-    this.markers = []
-    mapMaker && mapMaker.forEach(item => {
-      const el = document.createElement('div')
-      el.style.width = '20px'
-      el.style.height = '20px'
-      el.style.borderRadius = '50%'
-      el.style.backgroundColor = 'green'
-      el.style.cursor = 'pointer'
-      el.addEventListener('click', function (e) {
-        currentThis.addInfoWindow(item)
-      });
-      new window.mapabcgl.Marker(el)
-        .setLngLat([item.longitude, item.latitude])
-        .addTo(this.map)
-    })
+  addMarker = (points, zoomVal) => {
+    this.removeMarkers()
+    if (this.map) {
+      const currentThis = this
+      this.markers = []
+      const interList = zoomVal < 13 ? points.filter(item => item.unit_grade <= 4) : points
+      // console.log(interList)
+      interList && interList.forEach((item, index) => {
+        const el = document.createElement('div')
+        el.style.width = '20px'
+        el.style.height = '20px'
+        el.style.borderRadius = '50%'
+        el.style.backgroundColor = 'green'
+        el.style.cursor = 'pointer'
+        el.id = 'marker' + item.unit_code
+        el.addEventListener('click', function (e) {
+          currentThis.addInfoWindow(item)
+        });
+        el.addEventListener('contextmenu', function (e) {
+          currentThis.addRoadLine = true
+          // 新增干线时添加路线
+          currentThis.unitArr += item.id + ','
+
+        });
+        if (isNaN(item.longitude) || isNaN(item.latitude)) {
+          console.log(index)
+        }
+        const marker = new window.mapabcgl.Marker(el)
+          .setLngLat([item.longitude, item.latitude])
+          .addTo(this.map)
+        this.interMarkers.push(marker)
+      })
+    }
   }
   addInfoWindow = (marker) => {
     if (this.mapPopup) {
@@ -210,7 +228,7 @@ class Intersection extends Component {
       }
       this.zoomTimer = setTimeout(() => {
         const zoomLev = Math.round(this.map.getZoom())
-        this.addMarkerData()
+        this.addMarker(this.pointLists, zoomLev)
       }, 700)
     })
     map.on('click', (e) => {
@@ -226,7 +244,6 @@ class Intersection extends Component {
     });
     map.on('load', () => {
       map.trafficLayer(true, options);
-      this.addMarkerData()
       window.onbeforeunload = function (e) {
         map.removeLayerAndSource('icon');
       };

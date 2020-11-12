@@ -21,6 +21,7 @@ class TrunkManagement extends Component {
       IsddMessge: true,
       isAddEdit: true,
       roadValue: [],
+      roadValueId: [],
       treeList: [],
       loadRouteDirectionList: [],
       loadRouteTypeList: [],
@@ -84,6 +85,8 @@ class TrunkManagement extends Component {
     this.saveOrUpdateDistrict = '/engine-unified/routeManagement/saveOrUpdateDistrict' // 新增修改干线信息
     this.addMainLine = false
     this.addRoadLine = false
+    this.interMarkers = []
+    this.unitArr = ''
   }
   getDataList = () => {
     axiosInstance.post(this.loadRouteTree).then(res => {
@@ -158,7 +161,8 @@ class TrunkManagement extends Component {
     axiosInstance.post(this.getPointAll).then(res => {
       const { code, list } = res.data
       if (code === '1') {
-        this.addMarker(list)
+        this.pointLists = list
+        this.addMarker(this.pointLists, 8)
       }
     })
     axiosInstance.post(this.loadRouteDirection).then(res => { // 干线方向
@@ -211,7 +215,7 @@ class TrunkManagement extends Component {
     // this.map.flyTo({ center: [116.391, 39.911], zoom: 14, pitch: 60 })
     var marker = '', startmarker = '', endmarker = '', channelmarker = [];
     this.map.on('contextmenu', function (item) {
-      console.log(654321, _this.addRoadLine)
+      // console.log(654321, _this.addRoadLine)
       if (marker) {
         marker.remove();
       }
@@ -239,12 +243,20 @@ class TrunkManagement extends Component {
         var end = document.getElementById('end');
         const channel = document.getElementById('channel');
         start.addEventListener('click', function (e) {
+          // console.log(_this.isAddEdi, _this.unitArr, 'vvvssssee')
+          // // if (this.isAddEdit) {
+          // _this.unitArr += _this.roaddIds + ',' // 添加途经点
+          // }
           _this.getstartpoint(lnglat);
         })
         end.addEventListener('click', function (e) {
+          // console.log(_this.isAddEdi, _this.unitArr, 'vvvssssee')
+          // _this.unitArr += _this.roaddIds + ','  // 添加途经点
           _this.getendpoint(lnglat)
         })
         channel.addEventListener('click', function (e) {
+          // console.log(_this.isAddEdi, _this.unitArr, 'vvvssssee')
+          // _this.unitArr += _this.roaddIds + ',' // 添加途经点
           _this.getChannelpoint(lnglat)
         })
       }
@@ -546,41 +558,47 @@ class TrunkManagement extends Component {
   //   </div>`)
   //     .addTo(this.map);
   // }
-  addMarker = (mapMaker) => {
-    const currentThis = this
-    this.markers = []
-    mapMaker && mapMaker.forEach(item => {
-      const el = document.createElement('div')
-      el.style.width = '20px'
-      el.style.height = '20px'
-      el.style.borderRadius = '50%'
-      el.style.backgroundColor = 'green'
-      el.style.cursor = 'pointer'
-      el.addEventListener('click', function (e) {
-        currentThis.addInfoWindow(item)
-      });
-      el.addEventListener('contextmenu', function (e) {
-        currentThis.addRoadLine = true
-        currentThis.unitArr += item.id
-      });
-      new window.mapabcgl.Marker(el)
-        .setLngLat([item.longitude, item.latitude])
-        .addTo(this.map)
-    })
-    // if (this.map) {
-    //   const el = document.createElement('div')
-    //   el.style.width = '20px'
-    //   el.style.height = '20px'
-    //   el.style.borderRadius = '50%'
-    //   el.style.backgroundColor = 'green'
-    //   el.addEventListener('click', (e) => {
-    //     e.stopPropagation()
-    //     this.ClickMessge()
-    //   })
-    //   const marker = new window.mapabcgl.Marker(el)
-    //     .setLngLat([116.391, 39.911])
-    //     .addTo(this.map);
-    // }
+  addMarker = (points, zoomVal) => {
+    this.removeMarkers()
+    if (this.map) {
+      const currentThis = this
+      this.markers = []
+      const interList = zoomVal < 13 ? points.filter(item => item.unit_grade <= 4) : points
+      // console.log(interList)
+      interList && interList.forEach((item, index) => {
+        const el = document.createElement('div')
+        el.style.width = '20px'
+        el.style.height = '20px'
+        el.style.borderRadius = '50%'
+        el.style.backgroundColor = 'green'
+        el.style.cursor = 'pointer'
+        el.id = 'marker' + item.unit_code
+        el.addEventListener('click', function (e) {
+          currentThis.addInfoWindow(item)
+        });
+        el.addEventListener('contextmenu', function (e) {
+          currentThis.addRoadLine = true
+          // 新增干线时添加路线
+          currentThis.unitArr += item.id + ','
+
+        });
+        if (isNaN(item.longitude) || isNaN(item.latitude)) {
+          console.log(index)
+        }
+        const marker = new window.mapabcgl.Marker(el)
+          .setLngLat([item.longitude, item.latitude])
+          .addTo(this.map)
+        this.interMarkers.push(marker)
+      })
+    }
+  }
+  removeMarkers = () => {
+    if (this.interMarkers.length) {
+      this.interMarkers.forEach((item) => {
+        item.remove()
+      })
+      this.interMarkers = []
+    }
   }
   renderMap = () => {
     mapConfiger.zoom = 11
@@ -600,12 +618,11 @@ class TrunkManagement extends Component {
       }
       this.zoomTimer = setTimeout(() => {
         const zoomLev = Math.round(this.map.getZoom())
-        this.getAddDataList()
+        this.addMarker(this.pointLists, zoomLev)
       }, 700)
     })
     map.on('load', () => {
       map.trafficLayer(true, options);
-      this.addMarker()
       window.onbeforeunload = function (e) {
         map.removeLayerAndSource('icon');
       };
@@ -634,6 +651,14 @@ class TrunkManagement extends Component {
         rights: 0,
         isAddEdit: true,
         ismodify: false,
+        route_name: '',
+        route_code: '',
+        route_direction: '',
+        route_directionvalue: '',
+        route_miles: '',
+        route_type: '',
+        route_typevalue: '',
+        detail: '',
         roadtitle: '新增干线',
       })
     } else if (id === 3) {
@@ -675,6 +700,7 @@ class TrunkManagement extends Component {
   }
   onOpenChangeSubMenu = (eventKey) => { // SubMenu-ite触发
     this.isAddEdit = false
+    this.unitArr = ''
     this.clearMap();
     if (eventKey.length === 0) {
       this.setState({ menuOpenkeys: [] })
@@ -772,183 +798,157 @@ class TrunkManagement extends Component {
     }
   }
   handclickAddEdit = () => {// 添加或修改路口按钮
-    // this.mapaddOnclick = false
-    // const {
-    //   unit_code,
-    //   unit_type_code,
-    //   unit_position,
-    //   district_id,
-    //   user_group_id,
-    //   longitude,
-    //   latitude,
-    //   signal_sys_unit_id,
-    //   signal_system_code,
-    //   signal_unit_id,
-    //   minor_unit_number,
-    //   be_taken,
-    //   unit_name,
-    //   unit_name_signal_sys,
-    //   main_unit_id,
-    //   unit_name_old,
-    // } = this.state
-    // let addroadData = {
-    //   be_taken,
-    //   district_id,
-    //   latitude,
-    //   longitude,
-    //   main_unit_id,
-    //   minor_unit_number,
-    //   signal_sys_unit_id,
-    //   signal_system_code,
-    //   signal_unit_id,
-    //   unit_code,
-    //   unit_name,
-    //   unit_name_old,
-    //   unit_name_signal_sys,
-    //   unit_position,
-    //   unit_type_code,
-    //   user_group_id,
-    //   id: '',
-    // }
-    // if (this.showName === 'edit') {
-    //   addroadData.id = JSON.stringify(this.roaddId)
-    // }
-    // // console.log(addroadData, '查看内容')
-    // axiosInstance.post(this.saveOrUpdateUnitInfo, addroadData).then(res => {// 路口位置
-    //   // console.log(res.data, '路口添加 修改')
-    //   const { code, result } = res.data
-    //   if (code === '1') {
-    //     if (result === '操作失败') {
-    //       message.info(result)
-    //     } else {
-    //       this.setState({
-    //         rights: -300,
-    //         menuOpenkeys: [],
-    //       })
-    //       message.info(result)
-    //     }
-
-    //   }
-    //   this.getDataList()
-    //   this.initializationState()
-    // })
-
-  }
-  render() {
-    const { Option } = Select
     const {
-      mainHomePage, stateSelect, clickNum, Istitletops, isAddEdit, ismodify, IsddMessge, rights, roadValue,
-      loadRouteDirectionList, loadRouteTypeList, treeList, menuOpenkeys, deleteConfirm, treeListChild,
-      route_name, route_code, route_directionvalue, route_miles, route_typevalue, detail, roadtitle
+      route_name,
+      route_code,
+      route_direction,
+      route_miles,
+      route_type,
+      detail,
     } = this.state
-    return (
-      <div className='TrunkManagementBox'>
-        <div className='sildeRight' style={{ right: `${rights}px` }}>
-          <div className="slideRightBoxAdd">
-            <div className='addMainLine'>
-              <div className='newLine'>{roadtitle}</div>
-              {
-                ismodify ?
-                  <div className='operationLine'>
-                    {/* <span onClick={() => this.deleteList()} >删除</span><span onClick={() => this.getismodify('edit')}>编辑</span> */}
-                    <span onClick={() => this.deleteList()} >删除</span><span onClick={this.noneAddRoad}>取消</span>
-                  </div>
-                  :
-                  <div className='operationLine'>
-                    <span onClick={this.handclickAddEdit}>保存</span><span onClick={this.noneAddRoad}>取消</span>
-                  </div>
-              }
-            </div>
+    console.log(this.unitArr, 'vvvv')
+    const addobjs = {
+      route_name,
+      route_code,
+      route_direction,
+      route_miles,
+      route_type,
+      detail,
+      unitArr: this.unitArr
+    }
+    axiosInstance.post(this.saveOrUpdateDistrict, addobjs).then(res => { // 干线
+      console.log(res.data, '路口添加 修改')
+      const { code, result } = res.data
+      if (code === '1') {
+        // if (result === '操作失败') {
+        //   message.info(result)
+      } else {
+        // this.setState({
+        //   rights: -300,
+        //   menuOpenkeys: [],
+        // })
+        // message.info(result)
+      }
+      // this.getDataList()
+      // this.initializationState()
+    })
+
+}
+render() {
+  const { Option } = Select
+  const {
+    mainHomePage, stateSelect, clickNum, Istitletops, isAddEdit, ismodify, IsddMessge, rights, roadValue,
+    loadRouteDirectionList, loadRouteTypeList, treeList, menuOpenkeys, deleteConfirm, treeListChild,
+    route_name, route_code, route_directionvalue, route_miles, route_typevalue, detail, roadtitle
+  } = this.state
+  return (
+    <div className='TrunkManagementBox'>
+      <div className='sildeRight' style={{ right: `${rights}px` }}>
+        <div className="slideRightBoxAdd">
+          <div className='addMainLine'>
+            <div className='newLine'>{roadtitle}</div>
             {
-              isAddEdit ?
-                <div className="slideRightBoxAddBox">
-                  <p><span>干线名称：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className='inputBox' placeholder="干线名称" /></p>
-                  <p><span>干线编号：</span><input onChange={this.changeLoadRouteDirection} value={route_code} intername='route_code' type="text" className='inputBox' placeholder="干线编号" /></p>
-                  <div className='divs'><span>干线方向：</span>
-                    <Select
-                      // defaultValue="海淀区"
-                      value={route_directionvalue}
-                      style={{ width: 195, height: 30 }}
-                      onChange={this.changeLoadRouteDirection}
-                    >
-                      {
-                        loadRouteDirectionList && loadRouteDirectionList.map((item) => {
-                          return (
-                            <Option addeditname='route_directionvalue' intername='route_direction' value={item.c_code} style={{ width: 195, height: 30 }} key={item.id}>{item.code_name}</Option>
-                          )
-                        })
-                      }
-                    </Select>
-                  </div>
-                  <p><span>干线长度：</span><input onChange={this.changeLoadRouteDirection} value={route_miles} intername='route_miles' type="text" className='inputBox' placeholder="干线编号" /></p>
-                  <div className='divs'><span>干线类型：</span>
-                    <Select
-                      // defaultValue="海淀区"
-                      value={route_typevalue}
-                      style={{ width: 195, height: 30 }}
-                      onChange={this.changeLoadRouteType}
-                    >
-                      {
-                        loadRouteTypeList && loadRouteTypeList.map((item) => {
-                          return (
-                            <Option addeditname='route_typevalue' intername='route_type' value={item.c_code} style={{ width: 193, height: 30 }} key={item.id}>{item.code_name}</Option>
-                          )
-                        })
-                      }
-                    </Select>
-                  </div>
-                  <p><span>干线描述：</span><input onChange={this.changeLoadRouteDirection} value={detail} onChange={this.changeLoadRouteDirection} type="text" className='inputBox' placeholder="干线编号" /></p>
-                  <div className='lineBox'>
-                    <div className="lineBoxRight">
-                      <p><span></span><input type="text" className='inputBox' id='startInp' /></p>
-                      {
-                        roadValue && roadValue.map((item, index) => {
-                          return (
-                            <div className='roadBox' key={item + index}>
-                              <div className="roadBoxLeft">
-                              </div>
-                              <div className="roadBoxRight">
-                                <p><input type="text" onChange={this.getChangeValue} className='inputBox' id='channelInp' value={item} /></p>
-                              </div>
-                            </div>
-                          )
-                        })
-                      }
-                      {/*  <p><input type="text" className='inputBox' /></p> */}
-                      <p><span></span><input type="text" className='inputBox' id='endInp' /></p>
-                    </div>
-                  </div>
+              ismodify ?
+                <div className='operationLine'>
+                  {/* <span onClick={() => this.deleteList()} >删除</span><span onClick={() => this.getismodify('edit')}>编辑</span> */}
+                  <span onClick={() => this.deleteList()} >删除</span><span onClick={this.noneAddRoad}>取消</span>
                 </div>
                 :
-                <div className="slideRightBoxEditBox">
-                  <p>干线名称：<span>{route_name}</span></p>
-                  <p>干线编号：<span>{route_code}</span></p>
-                  <p>干线方向：<span>{route_directionvalue}</span></p>
-                  <p>干线长度：<span>{route_miles}</span></p>
-                  <p>干线类型：<span>{route_typevalue}</span></p>
-                  <p>干线描述：<span>{detail}</span></p>
-                  <div className='lineBox'>
-                    <div className='lineBoxer'>
-                      {
-                        treeListChild && treeListChild.map((item, index) =>
-                          <div key={item.id} className='lineBoxer_item'>
-                            <span></span>
-                            <div className='streetBox'>
-                              <p className='street'><span>{index < 9 ? ('0' + (index + 1)) : index}</span>{item.unit_name}{ismodify ? <DeleteOutlined /> : ''}</p>
-                              <div className='intersectionBox'>
-                                <p className='intersection'><span>{item.unit_name_old}</span><span>{item.district_name}</span></p>
-                              </div>
-
-                            </div>
-                          </div>
-                        )
-                      }
-                    </div>
-                  </div>
+                <div className='operationLine'>
+                  <span onClick={this.handclickAddEdit}>保存</span><span onClick={this.noneAddRoad}>取消</span>
                 </div>
             }
           </div>
-          {/* :
+          {
+            isAddEdit ?
+              <div className="slideRightBoxAddBox">
+                <p><span>干线名称：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className='inputBox' placeholder="干线名称" /></p>
+                <p><span>干线编号：</span><input onChange={this.changeLoadRouteDirection} value={route_code} intername='route_code' type="text" className='inputBox' placeholder="干线编号" /></p>
+                <div className='divs'><span>干线方向：</span>
+                  <Select
+                    // defaultValue="海淀区"
+                    value={route_directionvalue}
+                    style={{ width: 195, height: 30 }}
+                    onChange={this.changeLoadRouteDirection}
+                  >
+                    {
+                      loadRouteDirectionList && loadRouteDirectionList.map((item) => {
+                        return (
+                          <Option addeditname='route_directionvalue' intername='route_direction' value={item.c_code} style={{ width: 195, height: 30 }} key={item.id}>{item.code_name}</Option>
+                        )
+                      })
+                    }
+                  </Select>
+                </div>
+                <p><span>干线长度：</span><input onChange={this.changeLoadRouteDirection} value={route_miles} intername='route_miles' type="text" className='inputBox' placeholder="干线编号" /></p>
+                <div className='divs'><span>干线类型：</span>
+                  <Select
+                    // defaultValue="海淀区"
+                    value={route_typevalue}
+                    style={{ width: 195, height: 30 }}
+                    onChange={this.changeLoadRouteDirection}
+                  >
+                    {
+                      loadRouteTypeList && loadRouteTypeList.map((item) => {
+                        return (
+                          <Option addeditname='route_typevalue' intername='route_type' value={item.c_code} style={{ width: 193, height: 30 }} key={item.id}>{item.code_name}</Option>
+                        )
+                      })
+                    }
+                  </Select>
+                </div>
+                <p><span>干线描述：</span><input onChange={this.changeLoadRouteDirection} intername='detail' value={detail} type="text" className='inputBox' placeholder="干线描述" /></p>
+                <div className='lineBox'>
+                  <div className="lineBoxRight">
+                    <p><span></span><input type="text" className='inputBox' id='startInp' /></p>
+                    {
+                      roadValue && roadValue.map((item, index) => {
+                        return (
+                          <div className='roadBox' key={item + index}>
+                            <div className="roadBoxLeft">
+                            </div>
+                            <div className="roadBoxRight">
+                              <p><input type="text" onChange={this.getChangeValue} className='inputBox' id='channelInp' value={item} /></p>
+                            </div>
+                          </div>
+                        )
+                      })
+                    }
+                    {/*  <p><input type="text" className='inputBox' /></p> */}
+                    <p><span></span><input type="text" className='inputBox' id='endInp' /></p>
+                  </div>
+                </div>
+              </div>
+              :
+              <div className="slideRightBoxEditBox">
+                <p>干线名称：<span>{route_name}</span></p>
+                <p>干线编号：<span>{route_code}</span></p>
+                <p>干线方向：<span>{route_directionvalue}</span></p>
+                <p>干线长度：<span>{route_miles}</span></p>
+                <p>干线类型：<span>{route_typevalue}</span></p>
+                <p>干线描述：<span>{detail}</span></p>
+                <div className='lineBox'>
+                  <div className='lineBoxer'>
+                    {
+                      treeListChild && treeListChild.map((item, index) =>
+                        <div key={item.id} className='lineBoxer_item'>
+                          <span></span>
+                          <div className='streetBox'>
+                            <p className='street'><span>{index < 9 ? ('0' + (index + 1)) : index}</span>{item.unit_name}{ismodify ? <DeleteOutlined /> : ''}</p>
+                            <div className='intersectionBox'>
+                              <p className='intersection'><span>{item.unit_name_old}</span><span>{item.district_name}</span></p>
+                            </div>
+
+                          </div>
+                        </div>
+                      )
+                    }
+                  </div>
+                </div>
+              </div>
+          }
+        </div>
+        {/* :
               <div className='slideRightBoxEdit'>
             <div className='addMainLine'>
               <div className='newLine'>长安街干线详情</div>
@@ -957,89 +957,89 @@ class TrunkManagement extends Component {
               }
             </div>
           </div> */}
+      </div>
+      <div className="iptSearchNavMap">
+        <input type="text" placeholder="查询…" className="inptNavMon" />
+        <div className="MagBox">
+          <SearchOutlined />
         </div>
-        <div className="iptSearchNavMap">
-          <input type="text" placeholder="查询…" className="inptNavMon" />
-          <div className="MagBox">
-            <SearchOutlined />
-          </div>
-        </div>
-        <div className='sidebarLeft'>
-          <div className='tabLeft'>
-            {
-              this.clickOperation.map(item => <span className={clickNum === item.id ? 'active' : ''}
-                onClick={() => this.clickOperationNum(item.id)} key={item.id}>{item.name}</span>)
-            }
-          </div>
-          <div className="topNavMon">
-            <div className="selectNav">
-              <Select
-                // defaultValue="海淀区"
-                style={{ width: 100, height: 30 }}
-              >
-                {
-                  stateSelect && stateSelect.map((item, index) => {
-                    return (
-                      <Option value={index} style={{ width: 100, height: 30 }} key={index}>{item.name}</Option>
-                    )
-                  })
-                }
-              </Select>
-            </div>
-            <div className="iptSearchNav">
-              <input type="text" placeholder="查询…" className="inptNavMon" />
-              <div className="MagBox">
-                <SearchOutlined />
-              </div>
-            </div>
-          </div>
-          <div className='sidebarLeftBox'>
-            <Menu
-              onOpenChange={this.onOpenChangeSubMenu}
-              onClick={this.onClickMenuItem}
-              style={{ width: 251, color: '#86b7fa', height: '100%', overflowY: 'auto', fontSize: '16px' }}
-              mode="inline"
-              openKeys={menuOpenkeys}
-            >
-              {
-                treeList && treeList.map((item, index) =>
-                  <SubMenu
-                    key={item.id}
-                    onTitleClick={(e) => this.onOpeSubMenu(e, item)}
-                    title={item.route_name}
-                    data_item={item}
-                  >
-                    {
-                      item.childrens &&
-                      item.childrens.map((child) => (
-                        <Menu.Item key={child.id}>{child.unit_name}</Menu.Item>
-                      ))
-                    }
-                  </SubMenu>
-                )
-              }
-            </Menu>
-          </div>
-
-        </div>
-        <div className='container'>
+      </div>
+      <div className='sidebarLeft'>
+        <div className='tabLeft'>
           {
-            !mainHomePage &&
-            <div className='contentCenter'>
-              <div className='title'>干线管理</div>
-              <div id="mapContainer" className="map-container" style={{ height: 'calc(100% - 5px)' }}></div>
-            </div>
+            this.clickOperation.map(item => <span className={clickNum === item.id ? 'active' : ''}
+              onClick={() => this.clickOperationNum(item.id)} key={item.id}>{item.name}</span>)
           }
         </div>
-        <Modal
-          title="确定删除?"
-          visible={deleteConfirm}
-          onOk={this.deleteOks}
-          onCancel={this.deleteCancel}
-        />
-      </div >
-    )
-  }
+        <div className="topNavMon">
+          <div className="selectNav">
+            <Select
+              // defaultValue="海淀区"
+              style={{ width: 100, height: 30 }}
+            >
+              {
+                stateSelect && stateSelect.map((item, index) => {
+                  return (
+                    <Option value={index} style={{ width: 100, height: 30 }} key={index}>{item.name}</Option>
+                  )
+                })
+              }
+            </Select>
+          </div>
+          <div className="iptSearchNav">
+            <input type="text" placeholder="查询…" className="inptNavMon" />
+            <div className="MagBox">
+              <SearchOutlined />
+            </div>
+          </div>
+        </div>
+        <div className='sidebarLeftBox'>
+          <Menu
+            onOpenChange={this.onOpenChangeSubMenu}
+            onClick={this.onClickMenuItem}
+            style={{ width: 251, color: '#86b7fa', height: '100%', overflowY: 'auto', fontSize: '16px' }}
+            mode="inline"
+            openKeys={menuOpenkeys}
+          >
+            {
+              treeList && treeList.map((item, index) =>
+                <SubMenu
+                  key={item.id}
+                  onTitleClick={(e) => this.onOpeSubMenu(e, item)}
+                  title={item.route_name}
+                  data_item={item}
+                >
+                  {
+                    item.childrens &&
+                    item.childrens.map((child) => (
+                      <Menu.Item key={child.id}>{child.unit_name}</Menu.Item>
+                    ))
+                  }
+                </SubMenu>
+              )
+            }
+          </Menu>
+        </div>
+
+      </div>
+      <div className='container'>
+        {
+          !mainHomePage &&
+          <div className='contentCenter'>
+            <div className='title'>干线管理</div>
+            <div id="mapContainer" className="map-container" style={{ height: 'calc(100% - 5px)' }}></div>
+          </div>
+        }
+      </div>
+      <Modal
+        title="确定删除?"
+        visible={deleteConfirm}
+        onOk={this.deleteOks}
+        onCancel={this.deleteCancel}
+      />
+    </div >
+  )
+}
 }
 
 export default TrunkManagement
