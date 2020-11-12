@@ -1,40 +1,34 @@
 import React from 'react'
 import echarts from 'echarts'
 
-class Graph extends React.Component {
+class GraphSingle extends React.Component {
   constructor(props) {
     super(props)
     this.state = {}
     this.xDatas = ['00:00', '04:00', '08:00', '12:00', '14:00']
-    this.series = [
-      [3, 7, 5, 2, 6],
-      [6, 2, 5, 3, 7]
-    ]
-    this.chartsName = ['legend标题1','legend标题2']
-    this.symbolFlag = 'none'
+    this.series = [1, 2, 3, 4, 5]
+    this.chartsName = ['legend标题']
   }
   componentDidMount = () => {
     const chartsBox = echarts.init(this.chartsBox)
-    const { chartsName, chartsDatas, symbolFlag } = this.props
+    const { chartsName, chartsDatas } = this.props
     if (chartsDatas) {
       const xData = []
-      const seriseData = [[],[]]
-      for (let i = 0; i < chartsDatas.length; i++){
-        chartsDatas[i].forEach((item) => {
-          if (i === 0) { xData.push(item.x_name) }          
-          seriseData[i].push(item.y_amount)
-        })
-      }
-      this.renderCharts(chartsBox, xData, seriseData, chartsName, symbolFlag)
+      const seriseData = []
+      chartsDatas.forEach((item) => {
+        xData.push(item.x_name)
+        seriseData.push(item.y_amount)
+      })
+      this.renderCharts(chartsBox, xData, seriseData, chartsName)
     } else {
-      this.renderCharts(chartsBox, this.xDatas, this.series, this.chartsName, this.symbolFlag)
+      this.renderCharts(chartsBox, this.xDatas, this.series, this.chartsName)
     }
   }
-  renderCharts = (chartsBox, xData, seriesData, chartsName, symbolFlag) => {
+  renderCharts = (chartsBox, xData, seriesData, chartsName) => {
     const options = {
       color: ['#3398DB'],
       title: {
-        show: false,
+        show: false, // 不显示
         text: '实时信号控制状态',
         padding: [5, 0, 0, 20],
         textStyle: {
@@ -146,37 +140,16 @@ class Graph extends React.Component {
             },
           },
         },
-        {
-          type: 'value',
-          position: 'right',
-          splitLine: { // ---grid 区域中的分隔线
-            show: true, // ---是否显示，'category'类目轴不显示，此时我的X轴为类目轴，splitLine属性是无意义的
-            lineStyle: {
-              color: ['#2A4065'],
-              width: 1,
-              type: 'solid',
-            },
-          },
-          axisLabel: {
-            show: true,
-            textStyle: {
-              color: '#5dbaf7', // 更改坐标轴文字颜色
-              fontSize: 13, // 更改坐标轴文字大小
-            },
-          },
-          axisLine: {
-            lineStyle: {
-              color: '#1C385F', // 轴的颜色
-            },
-          },
-        },
       ],
       series: [
+        
         {
           name: chartsName[0],
           type: 'line',
+          smooth: true,
+          data: seriesData, // [60, 80, 120, 160, 120, 100, 60, 40],
           showSymbol: true,//是否默认展示圆点
-          symbol: symbolFlag,     //设定为实心点
+          symbol: 'circle',     //设定为实心点
           symbolSize: 10,   //设定实心点的大小
           itemStyle: {
             normal: {
@@ -185,11 +158,6 @@ class Graph extends React.Component {
                 color: "#4AE5FA", //改变折线颜色
               },
             },
-          },
-          smooth: true,
-          data: seriesData[0], // [60, 80, 120, 160, 120, 100, 60, 40],
-          itemStyle: {
-            color: '#9257AE',
           },
           areaStyle: {
             normal: {
@@ -202,38 +170,7 @@ class Graph extends React.Component {
               }])
             }
           },
-        },
-        {
-          name: chartsName[1],
-          type: 'line',
-          showSymbol: true,//是否默认展示圆点
-          symbol: symbolFlag,     //设定为实心点
-          symbolSize: 10,   //设定实心点的大小
-          itemStyle: {
-            normal: {
-              color: "#9257AE", //改变折线点的颜色
-              lineStyle: {
-                color: "#4AE5FA", //改变折线颜色
-              },
-            },
-          },
-          smooth: true,
-          data: seriesData[1], // [60, 80, 120, 160, 120, 100, 60, 40],
-          itemStyle: {
-            color: '#FFAE5E',
-          },
-          areaStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                offset: 0,
-                color: '#FFAE5E'
-              }, {
-                offset: 1,
-                color: '#031334'
-              }])
-            }
-          },
-        },
+        }
       ],
     }
     chartsBox.setOption(options, true)
@@ -246,4 +183,4 @@ class Graph extends React.Component {
   }
 }
 
-export default Graph
+export default GraphSingle
