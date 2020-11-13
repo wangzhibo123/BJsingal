@@ -113,7 +113,6 @@
                 background: rgba(4,24,56,0);
                 border: none;
                 color: rgb(134, 183, 250);
-                
             }
              .ant-menu-submenu-arrow::before {
                 background-image: -webkit-gradient(linear, left top, right top, from(rgba(134, 183, 250, 0.85)), to(rgba(134, 183, 250, 0.85)));
@@ -146,7 +145,7 @@
             -webkit-align-self: center;
             align-self: center;
             border-top: none;
-            border-bottom-color: #132992;
+            border-bottom-color: #3661E9;
         }
         .mapabcgl-popup-anchor-bottom .mapabcgl-popup-tip {
             -webkit-align-self: center;
@@ -186,7 +185,6 @@
         .ant-switch-checked .ant-switch-handle {
             left: calc(100% - 18px - 2px);
         }
-        
         .ant-switch-handle::before {
             position: absolute;
             top: 0;
@@ -201,6 +199,9 @@
             transition: all 0.2s ease-in-out;
             content: '';
         }
+        .code-box-demo .ant-switch {
+            margin-bottom: 8px;
+        }   
         .ant-switch-handle {
             position: absolute;
             top: 2px;
@@ -209,6 +210,9 @@
             height: 18px;
             -webkit-transition: all 0.2s ease-in-out;
             transition: all 0.2s ease-in-out;
+        }
+        .ant-switch-checked {
+            background-color: #1890ff;
         }
         .ant-switch-checked .ant-switch-inner {
             margin: 0 25px 0 7px;
@@ -220,6 +224,9 @@
             font-size: 12px;
             -webkit-transition: margin 0.2s;
             transition: margin 0.2s;
+        }
+        button, select {
+            text-transform: none;
         }
     }
     .modeSwitchBtn{
@@ -467,7 +474,7 @@
                             position: absolute;
                             left: -5px;
                             top: 188px;
-                            background: url(../../imgs/ballOne.jpg) center no-repeat;
+                            background: url(../../imgs/ballP.png) center no-repeat;
                             background-size: 100% 100%;
                         }
                         .modeMainMonitorContentList{
@@ -574,7 +581,7 @@
                             position: absolute;
                             left: -5px;
                             top: 188px;
-                            background: url(../../imgs/ballTwo.jpg) center no-repeat;
+                            background: url(../../imgs/ballG.png) center no-repeat;
                             background-size: 100% 100%;
                         }
                         .modeMainMonitorContentList{
