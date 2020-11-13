@@ -33,6 +33,7 @@ class InterMonitor extends Component {
       moveDown: null,
       trafficInfoList: null,
       interConfigMsg: null,
+      trendChartsData: null,
     }
     this.confItems = [
       { confname: '基础信息', id: 'interBase' }, { confname: '信号参数', id: 'singalParams' },
@@ -44,10 +45,10 @@ class InterMonitor extends Component {
       { text: '中心控制', img: cneter },
       { text: '中心手控', img: hand },
     ]
-    this.modeUrl = '/engine-monitor/unitMontitor/getControlModeById?unit_id=1'
-    this.trafficUrl = '/engine-monitor/unitMontitor/getRealtimeTrafficById?unit_id=1'
-    this.trendUrl = '/engine-monitor/unitMontitor/getRoadTrendById?unit_id=1'
-    this.messageUrl = '/engine-monitor/unitMontitor/getUnitInfoById?unit_id=1'
+    this.modeUrl = '/control-application-front/unitMontitor/getControlModeById?unit_id=1'
+    this.trafficUrl = '/control-application-front/unitMontitor/getRealtimeTrafficById?unit_id=1'
+    this.trendUrl = '/control-application-front/unitMontitor/getRoadTrendById?unit_id=1'
+    this.messageUrl = '/control-application-front/unitMontitor/getUnitInfoById?unit_id=1'
   }
   componentDidMount = () => {
     this.getControlMode()
@@ -78,10 +79,19 @@ class InterMonitor extends Component {
       }
     })
   }
-  // 路况趋势
+  // 24小时路况趋势
   getRoadTrend = () => {
     axiosInstance.post(this.trendUrl).then((res) => {
-      console.log(res)
+      const { code, list } = res.data
+      if (code === '1' && list.length) {
+        const jamdurArr = list.map(item => item.jamdur)
+        const speedArr = list.map(item => item.speed)
+        const timeArr = list.map(item => item.time)
+        const trendCharts = { jamdurArr, speedArr, timeArr }
+        this.setState({ trendChartsData: trendCharts })
+      } else {
+        this.setState({ trendChartsData: null })
+      }
     })
   }
   handleModifyConf = () => {
@@ -120,7 +130,7 @@ class InterMonitor extends Component {
     this.setState({ interConfigMsg: null })
   }
   render() {
-    const { confListLeft, modeIndex, moveLeft, moveRight, moveUp, moveDown, trafficInfoList, interConfigMsg } = this.state
+    const { confListLeft, modeIndex, moveLeft, moveRight, moveUp, moveDown, trafficInfoList, interConfigMsg, trendChartsData } = this.state
     return (
       <div className="interMonitorBox">
         <div className="interMessage">
@@ -139,7 +149,10 @@ class InterMonitor extends Component {
           <div className="monitorDetails">
             <InterTimeList />
             <div className="roadTrends">
-              <Graph />
+              {
+                trendChartsData &&
+                <Graph chartsDatas={trendChartsData} />
+              }
             </div>
             {/* <Example /> */}
             <div className="conditionList">
