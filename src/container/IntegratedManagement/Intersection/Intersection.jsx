@@ -62,19 +62,20 @@ class Intersection extends Component {
       }
     ]
 
-    this.getPointAll = '/engine-maintenance/unitInfo/getPointAll' // 加载所有点位
-    this.loadTree = '/engine-maintenance/districtManagement/loadTree' // 路口管理树
-    this.editDistrictInfo = '/engine-maintenance/districtManagement/editSubDistrictInfo' // 加载当前区域信息
-    this.deleteUnitInfo = '/engine-maintenance/unitInfo/deleteUnitInfo' // 删除路口信息
-    this.getUnitDistrict = '/engine-maintenance/unitInfo/getUnitDistrict' // 所属区域
-    this.getUnitGroup = '/engine-maintenance/unitInfo/getUnitGroup' // 管理单位
-    this.getUnitPosition = '/engine-maintenance/unitInfo/getUnitPosition' // 路口位置
-    this.getUnitType = '/engine-maintenance/unitInfo/getUnitType' // 路口类型
-    this.saveOrUpdateUnitInfo = '/engine-maintenance/unitInfo/saveOrUpdateUnitInfo' // 新增修改路口信息
+    this.getPointAll = '/control-application-front/unitMontitor/getPointAll' // 加载所有点位
+    this.loadTree = '/control-application-front/districtManagement/loadTree' // 路口管理树
+    this.editDistrictInfo = '/control-application-front/districtManagement/editSubDistrictInfo' // 加载当前区域信息
+    this.deleteUnitInfo = '/control-application-front/unitInfo/deleteUnitInfo' // 删除路口信息
+    this.getUnitDistrict = '/control-application-front/unitInfo/getUnitDistrict' // 所属区域
+    this.getUnitGroup = '/control-application-front/unitInfo/getUnitGroup' // 管理单位
+    this.getUnitPosition = '/control-application-front/unitInfo/getUnitPosition' // 路口位置
+    this.getUnitType = '/control-application-front/unitInfo/getUnitType' // 路口类型
+    this.saveOrUpdateUnitInfo = '/control-application-front/unitInfo/saveOrUpdateUnitInfo' // 新增修改路口信息
     this.defaultChildren = []
     this.newChildId = []
     this.showName = 'add'
     this.mapaddOnclick = false
+    this.interMarkers = []
   }
   componentDidMount = () => {
     this.renderMap()
@@ -169,6 +170,14 @@ class Intersection extends Component {
           .addTo(this.map)
         this.interMarkers.push(marker)
       })
+    }
+  }
+  removeMarkers = () => {
+    if (this.interMarkers.length) {
+      this.interMarkers.forEach((item) => {
+        item.remove()
+      })
+      this.interMarkers = []
     }
   }
   addInfoWindow = (marker) => {

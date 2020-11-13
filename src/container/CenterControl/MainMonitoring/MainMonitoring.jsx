@@ -9,6 +9,8 @@ import upLeftUp from "../../imgs/11.png"
 import rightUpLeftDown from "../../imgs/02.png"
 import startPng from '../../imgs/start.png'
 import endPng from '../../imgs/end.png'
+import bascButton from "../../imgs/bascButton.png"
+import bascUpDown from "../../imgs/bascUpDown.png"
 
 import mapConfiger from "../../utils/minemapConf";
 import { EditOutlined,SearchOutlined, CompassOutlined } from "@ant-design/icons";
@@ -24,10 +26,10 @@ export default class MainMonitoring extends Component {
         {name: "朝阳区",id: "2",children: [{name: "奥林匹克",id: "2_1"},{name: "欢乐谷",id: "2_2"}]},
         {name: "上地",id: "3",children: [{name: "华联",id: "3_1"}, {name: "中关村",id: "3_2"}]},
         {name: "三里屯", id: "4",children: [{name: "太里古",id: "4_1"}, {name: "乾坤大厦",id: "4_2"}]}],
+      //路口节点
+      intersectioNodes:[{latitude:116.383,longitude:39.9071},{latitude:116.389,longitude:39.90721},{latitude:116.396,longitude:39.9074},{latitude:116.402,longitude:39.9077},{latitude:116.409,longitude:39.90793}],
       //地图默认中心点
       defaultCenterPoint:[116.396, 39.9075],
-      //路口节点
-      intersectioNodes:[{latitude:116.383,longitude:39.9072},{latitude:116.389,longitude:39.9074},{latitude:116.396,longitude:39.9075},{latitude:116.402,longitude:39.9075},{latitude:116.409,longitude:39.9078}],
       //地图靠近中心点的倍率
       modeMapFlyToPitch:60,
       //地图缩放倍率
@@ -50,13 +52,13 @@ export default class MainMonitoring extends Component {
       //2D到3D
       modeMainTabD:true,
       //控制多次渲染起点 终点图标
-      modeMainControlMapSign:true
+      modeMainControlMapSign:true,
+      //点击中心点渲染多次处理
+      clickCenterRenders:false
     };
   }
   componentDidMount() {
     this.state.modeMapShow&&this.renderMap();
-  }
-  onChange(checked) {
   }
   modeTabToMapPage=()=>{
     this.setState({
@@ -71,7 +73,7 @@ export default class MainMonitoring extends Component {
   }
   intersectionRenderin = async () => {
     //默认起始点坐标
-    await this.getstartpoint({ lng: 116.38251572176511, lat: 39.90708534816005 })
+    await this.getstartpoint({ lng: 116.38151572176511, lat: 39.90708534816005 })
     //默认终止点坐标
     await this.getendpoint({ lng: 116.41149060058893, lat: 39.90803874332477 })
     //默认途径点坐标
@@ -278,16 +280,10 @@ export default class MainMonitoring extends Component {
           if (type === 1) {
           } else if (type === 2) {
           } else {
-            // var str = channel.value ? channel.value + ';' : channel.value;
-            // console.log(data.result[0].formatted_address, 'vvv')
-            // console.log(channel, 'sss')
             roadValue.push(data.result[0].formatted_address)
             _this.setState({
               roadValue
             })
-            // console.log(str, channel, data, 'vvvvvXR')
-            // channel.value = trim(channel.value) + data.result[0].formatted_address + ';';
-            // channel.value = trim(channel.value)
           }
         };
       });
@@ -323,18 +319,20 @@ export default class MainMonitoring extends Component {
       closeOnClick: true,
       closeButton: false,
       // anchor: "bottom-left",
-      offset: [0, 15]
+      offset: [0, 25]
     }
-    // <img width="36px" height="36px" src="${}" />
+    this.state.clickCenterRenders ? this.setState({clickCenterRenders:false}) : this.setState({clickCenterRenders:true})
     //控制绿点弹出框
-    this.popup = new window.mapabcgl.Popup(popupOption)
+    if(this.state.clickCenterRenders){
+      this.popup = new window.mapabcgl.Popup(popupOption)
       .setLngLat(new window.mapabcgl.LngLat(intersectioNodes[index].latitude, intersectioNodes[index].longitude))
       .setHTML(`
       <div style="width: 74px;color: #fff; font-size:12px;height: 486px;display:flex;flex-direction: column;">
           <div style="flex:1;display:flex;flex-direction: column;justify-content: center;align-items: center;">
             <div className="switch"> 
-              <button type="button" role="switch" aria-checked="true" class="antd-switch ant-switch-checked" ant-click-animating="false">
-                  <div class="ant-switch-handle"></div>
+              <button type="button" role="switch" aria-checked="true" class="ant-switch ant-switch-checked" ant-click-animating="false" style="background:"#4A62E7">
+                  <div class="ant-switch-handle">
+                  </div>
                   <span class="ant-switch-inner"></span>
               </button>
             </div>
@@ -349,6 +347,7 @@ export default class MainMonitoring extends Component {
           <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${red} alt=""/></div>
       </div>`)
       .addTo(this.map);
+    }
   }
   //地图中心点
   addMarker = () => {
@@ -356,15 +355,22 @@ export default class MainMonitoring extends Component {
       let {intersectioNodes} =this.state;
       intersectioNodes.map((item,index)=>{
         const el = document.createElement('div')
-        el.style.width = '20px'
-        el.style.height = '20px'
-        el.style.borderRadius = '50%'
-        el.style.backgroundColor = '#21F7FE'
+        el.style.width = '56px'
+        el.style.height = '40px'
+        // el.style.borderRadius = '50%'
+        el.style.backgroundImage = `url(${bascButton})`
+        el.style.backgroundSize="100% 100%"
         el.style.cursor="pointer"
         el.addEventListener('click', (e) => {
           e.stopPropagation()
           this.ClickMessge(index)
+          this.setState({clickCenterRenders:1})
         })
+        const al=document.createElement("div");
+        el.appendChild(al)
+        al.style.width = '118px'
+        al.style.height = '137px'
+        al.style.backgroundImage=`url(${bascUpDown})`
         new window.mapabcgl.Marker(el)
         //绿色中心点坐标
           .setLngLat([item.latitude, item.longitude])
@@ -372,7 +378,6 @@ export default class MainMonitoring extends Component {
       })
     }
   }
-
   gettitletops = (isShow) => {
     this.setState({
       Istitletops: isShow,
@@ -398,7 +403,9 @@ export default class MainMonitoring extends Component {
       };
       this.addMenu()
     })
+    //清除弹框
     map.on('click', () => {
+      this.setState({clickCenterRenders:false})
       if (this.popup) {
         this.popup.remove()
       }
@@ -453,6 +460,7 @@ export default class MainMonitoring extends Component {
       })
     }
   }
+  
   render() {
     const { modeNavShow, modeMapShow, modeMainMonitor, modeMainTabShow ,modeMainEStyle,modeMainWStyle,modeMainSStyle,modeMainNStyle,modeMainTabTypeD,modeMainTabD} = this.state;
     return (
@@ -512,7 +520,7 @@ export default class MainMonitoring extends Component {
         }
         {
           //模式切换后页面渲染
-          modeMainMonitor && <div className="modeMainMonitorHome">
+          modeMainMonitor && <div className="modeMainMonitorHome">  
             <div className="modeMainSlidMode">
               <div className="modeMainSlidHeadMode">
                 <div className="modeMainIptHome">
