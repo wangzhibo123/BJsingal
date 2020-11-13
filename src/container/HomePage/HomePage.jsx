@@ -222,7 +222,7 @@ class Homepage extends Component {
       </div>
     `
   }
-  addMarker = (points, zoomVal) => {
+  addMarker = (points, zoomVal = 8) => {
     this.removeMarkers()
     if (this.map) {
       const currentThis = this
@@ -313,7 +313,7 @@ class Homepage extends Component {
           emphasis: {
               show: false
           }
-        },  
+        },
         data:[]  //数据
       }]  
     }
@@ -326,7 +326,7 @@ class Homepage extends Component {
     this.map.addControl(new window.mapabcgl.NavigationControl());
     this.map.on('load', () => {
       this.addTrafficLayer()
-      this.addMarker(this.pointLists, 8)
+      this.addMarker(this.pointLists)
     })
     this.map.on('zoom', () => {
       if (this.zoomTimer) {
