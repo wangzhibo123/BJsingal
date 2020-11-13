@@ -1,7 +1,7 @@
 /* eslint-disable no-redeclare */
 /* eslint-disable eqeqeq */
 import React, { Component } from 'react'
-import { Menu, Select, Modal } from 'antd'
+import { Menu, Select, Modal, message } from 'antd'
 import { EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import $ from 'jquery'
 import './TrunkManagement.scss'
@@ -21,6 +21,7 @@ class TrunkManagement extends Component {
       IsddMessge: true,
       isAddEdit: true,
       roadValue: [],
+      roadValueId: [],
       treeList: [],
       loadRouteDirectionList: [],
       loadRouteTypeList: [],
@@ -75,15 +76,18 @@ class TrunkManagement extends Component {
         name: '切换视图',
       }
     ]
-    this.getPointAll = '/engine-maintenance/unitInfo/getPointAll'
-    this.deleteRoute = '/engine-maintenance/routeManagement/deleteRoute' // 删除干线信息
-    this.getRouteInfo = '/engine-maintenance/routeManagement/getRouteInfo' // 加载当前干线信息
-    this.loadRouteTree = '/engine-maintenance/routeManagement/loadRouteTree' // 干线树
-    this.loadRouteDirection = '/engine-maintenance/routeManagement/loadRouteDirection' // 干线方向
-    this.loadRouteType = '/engine-maintenance/routeManagement/loadRouteType' // 干线类型
-    this.saveOrUpdateDistrict = '/engine-unified/routeManagement/saveOrUpdateDistrict' // 新增修改干线信息
+    this.getPointAll = '/control-application-front/unitMontitor/getPointAll' // 获取所有点位
+    this.deleteRoute = '/control-application-front/routeManagement/deleteRoute' // 删除干线信息
+    this.getRouteInfo = '/control-application-front/routeManagement/getRouteInfo' // 加载当前干线信息
+    this.loadRouteTree = '/control-application-front/routeManagement/loadRouteTree' // 干线树
+    this.loadRouteDirection = '/control-application-front/routeManagement/loadRouteDirection' // 干线方向
+    this.loadRouteType = '/control-application-front/routeManagement/loadRouteType' // 干线类型
+    this.saveOrUpdateDistrict = '/control-application-front/routeManagement/saveOrUpdateRoute' // 新增修改干线信息
     this.addMainLine = false
     this.addRoadLine = false
+    this.interMarkers = []
+    this.unitArr = ''
+    this.showName = 'add'
   }
   getDataList = () => {
     axiosInstance.post(this.loadRouteTree).then(res => {
@@ -108,8 +112,7 @@ class TrunkManagement extends Component {
   getLoadChildTree = (id) => {
     axiosInstance.post(`${this.loadRouteTree}?id=${id}`).then(res => {
       const { code, treeList } = res.data
-      let treeListTwo = treeList
-      console.log(treeList, 'vssksnf')
+      // console.log(treeList, 'vssksnf')
       if (code === '1') {
         const currentArea = this.treeListDatas.find((item) => item.id === Number(id))
         currentArea.childrens = treeList
@@ -124,19 +127,18 @@ class TrunkManagement extends Component {
         },
           () => {
             if (treeList.length >= 3) {
-              const start = treeListTwo.shift()
-              const end = treeListTwo.pop()
+              const end = treeList.length
+              const treeListTwo = treeList.slice(1, end - 1)
               // console.log(treeListTwo, 'vssss')
-              this.getstartpoint({ lng: start.longitude, lat: start.latitude })
+              this.getstartpoint({ lng: treeList[0].longitude, lat: treeList[0].latitude })
               treeListTwo.forEach(item => {
                 this.getChannelpoint({ lng: item.longitude, lat: item.latitude })
               })
-              this.getendpoint({ lng: end.longitude, lat: end.latitude })
+              this.getendpoint({ lng: treeList[end - 1].longitude, lat: treeList[end - 1].latitude })
             } else if (treeList.length === 2) {
-              const start = treeList.shift()
-              const end = treeList.pop()
-              this.getstartpoint({ lng: start.longitude, lat: start.latitude })
-              this.getendpoint({ lng: end.longitude, lat: end.latitude })
+              const end = treeList.length
+              this.getstartpoint({ lng: treeList[0].longitude, lat: treeList[0].latitude })
+              this.getendpoint({ lng: treeList[end - 1].longitude, lat: treeList[end - 1].latitude })
             } else {
               this.clearMap();
             }
@@ -158,7 +160,8 @@ class TrunkManagement extends Component {
     axiosInstance.post(this.getPointAll).then(res => {
       const { code, list } = res.data
       if (code === '1') {
-        this.addMarker(list)
+        this.pointLists = list
+        this.addMarker(this.pointLists, 8)
       }
     })
     axiosInstance.post(this.loadRouteDirection).then(res => { // 干线方向
@@ -195,11 +198,6 @@ class TrunkManagement extends Component {
   //     isAddEdit: false
   //   })
   // }
-  getismodify = (isShow) => {
-    this.setState({
-      ismodify: isShow
-    })
-  }
   getChangeValue = (e) => {
     console.log(e)
   }
@@ -211,7 +209,7 @@ class TrunkManagement extends Component {
     // this.map.flyTo({ center: [116.391, 39.911], zoom: 14, pitch: 60 })
     var marker = '', startmarker = '', endmarker = '', channelmarker = [];
     this.map.on('contextmenu', function (item) {
-      console.log(654321, _this.addRoadLine)
+      // console.log(654321, _this.addRoadLine)
       if (marker) {
         marker.remove();
       }
@@ -239,12 +237,20 @@ class TrunkManagement extends Component {
         var end = document.getElementById('end');
         const channel = document.getElementById('channel');
         start.addEventListener('click', function (e) {
+          // console.log(_this.isAddEdi, _this.unitArr, 'vvvssssee')
+          // // if (this.isAddEdit) {
+          // _this.unitArr += _this.roaddIds + ',' // 添加途经点
+          // }
           _this.getstartpoint(lnglat);
         })
         end.addEventListener('click', function (e) {
+          // console.log(_this.isAddEdi, _this.unitArr, 'vvvssssee')
+          // _this.unitArr += _this.roaddIds + ','  // 添加途经点
           _this.getendpoint(lnglat)
         })
         channel.addEventListener('click', function (e) {
+          // console.log(_this.isAddEdi, _this.unitArr, 'vvvssssee')
+          // _this.unitArr += _this.roaddIds + ',' // 添加途经点
           _this.getChannelpoint(lnglat)
         })
       }
@@ -546,41 +552,47 @@ class TrunkManagement extends Component {
   //   </div>`)
   //     .addTo(this.map);
   // }
-  addMarker = (mapMaker) => {
-    const currentThis = this
-    this.markers = []
-    mapMaker && mapMaker.forEach(item => {
-      const el = document.createElement('div')
-      el.style.width = '20px'
-      el.style.height = '20px'
-      el.style.borderRadius = '50%'
-      el.style.backgroundColor = 'green'
-      el.style.cursor = 'pointer'
-      el.addEventListener('click', function (e) {
-        currentThis.addInfoWindow(item)
-      });
-      el.addEventListener('contextmenu', function (e) {
-        currentThis.addRoadLine = true
-        currentThis.unitArr += item.id
-      });
-      new window.mapabcgl.Marker(el)
-        .setLngLat([item.longitude, item.latitude])
-        .addTo(this.map)
-    })
-    // if (this.map) {
-    //   const el = document.createElement('div')
-    //   el.style.width = '20px'
-    //   el.style.height = '20px'
-    //   el.style.borderRadius = '50%'
-    //   el.style.backgroundColor = 'green'
-    //   el.addEventListener('click', (e) => {
-    //     e.stopPropagation()
-    //     this.ClickMessge()
-    //   })
-    //   const marker = new window.mapabcgl.Marker(el)
-    //     .setLngLat([116.391, 39.911])
-    //     .addTo(this.map);
-    // }
+  addMarker = (points, zoomVal) => {
+    this.removeMarkers()
+    if (this.map) {
+      const currentThis = this
+      this.markers = []
+      const interList = zoomVal < 13 ? points.filter(item => item.unit_grade <= 4) : points
+      // console.log(interList)
+      interList && interList.forEach((item, index) => {
+        const el = document.createElement('div')
+        el.style.width = '20px'
+        el.style.height = '20px'
+        el.style.borderRadius = '50%'
+        el.style.backgroundColor = 'green'
+        el.style.cursor = 'pointer'
+        el.id = 'marker' + item.unit_code
+        el.addEventListener('click', function (e) {
+          currentThis.addInfoWindow(item)
+        });
+        el.addEventListener('contextmenu', function (e) {
+          currentThis.addRoadLine = true
+          // 新增干线时添加路线
+          currentThis.unitArr += item.id + ','
+
+        });
+        if (isNaN(item.longitude) || isNaN(item.latitude)) {
+          console.log(index)
+        }
+        const marker = new window.mapabcgl.Marker(el)
+          .setLngLat([item.longitude, item.latitude])
+          .addTo(this.map)
+        this.interMarkers.push(marker)
+      })
+    }
+  }
+  removeMarkers = () => {
+    if (this.interMarkers.length) {
+      this.interMarkers.forEach((item) => {
+        item.remove()
+      })
+      this.interMarkers = []
+    }
   }
   renderMap = () => {
     mapConfiger.zoom = 11
@@ -600,12 +612,11 @@ class TrunkManagement extends Component {
       }
       this.zoomTimer = setTimeout(() => {
         const zoomLev = Math.round(this.map.getZoom())
-        this.getAddDataList()
+        this.addMarker(this.pointLists, zoomLev)
       }, 700)
     })
     map.on('load', () => {
       map.trafficLayer(true, options);
-      this.addMarker()
       window.onbeforeunload = function (e) {
         map.removeLayerAndSource('icon');
       };
@@ -626,16 +637,35 @@ class TrunkManagement extends Component {
 
   //   })
   // }
+
+  initializationState = () => { // 新增修改变量初始化
+    this.setState({
+      route_name: '',
+      route_code: '',
+      route_direction: '',
+      route_directionvalue: '',
+      route_miles: '',
+      route_type: '',
+      route_typevalue: '',
+      detail: '',
+    })
+  }
   clickOperationNum = (id) => {
     if (id === 1) {
-      this.clearMap();
-      this.isAddEdit = true
+      if (this.map) {
+        this.clearMap();
+      }
+      this.initializationState()
       this.setState({
         rights: 0,
         isAddEdit: true,
         ismodify: false,
         roadtitle: '新增干线',
       })
+      this.showName = 'add'
+      this.unitArr = ''
+      this.isAddEdit = true
+
     } else if (id === 3) {
       this.map.flyTo({
         // center: [116.391, 39.911], 
@@ -675,7 +705,10 @@ class TrunkManagement extends Component {
   }
   onOpenChangeSubMenu = (eventKey) => { // SubMenu-ite触发
     this.isAddEdit = false
-    this.clearMap();
+    this.unitArr = ''
+    if (this.map) {
+      this.clearMap();
+    }
     if (eventKey.length === 0) {
       this.setState({ menuOpenkeys: [] })
     } else {
@@ -689,6 +722,7 @@ class TrunkManagement extends Component {
   onOpeSubMenu = (e, SubMenuItem) => {
     this.isAddEdit = false
     this.roaddId = SubMenuItem.id
+    console.log(SubMenuItem, '回显数据')
     const { loadRouteDirectionList, loadRouteTypeList } = this.state
     const route_direction = loadRouteDirectionList && loadRouteDirectionList.find(item => item.c_code === SubMenuItem.route_direction).code_name
     const route_type = loadRouteTypeList && loadRouteTypeList.find(item => item.c_code === SubMenuItem.route_type).code_name
@@ -730,30 +764,42 @@ class TrunkManagement extends Component {
       deleteConfirm: true,
     })
   }
-  getismodify = (isShowName) => { // 添加编辑
-    // this.showName = isShowName // 编辑
-    // this.mapaddOnclick = true
-    // this.setState({
-    //   ismodify: false,
-    //   isAddEdit: true,
-    //   roadtitle: '路口修改',
-    // })
+  getismodify = (isShowName) => {
+    this.showName = isShowName // 编辑
+    const { treeListChild } = this.state
+    treeListChild.forEach(item => {
+      this.unitArr += item.id + ','
+    })
+    const roadValue = treeListChild.slice(1, treeListChild.length - 1)
+    // console.log(treeListChild, roadValue, 'dfksfjsdkjfk')
+    this.setState({
+      ismodify: false,
+      isAddEdit: true,
+      roadtitle: '干线修改',
+      roadValue: roadValue,
+    }, () => {
+      // var start = document.getElementById('startInp ');
+      // var end = document.getElementById('endInp');
+      // start.value = treeListChild[0].unit_name
+      // end.value = treeListChild[treeListChild.length - 1].unit_name
+    })
   }
   // 确定删除
   deleteOks = () => {
-    // axiosInstance.post(`${this.deleteUnitInfo}/${this.roaddId}`).then(res => {// 管理单位 this.deleteUnitInfo
-    //   // console.log(res.data, '删除')
-    //   const { code, result } = res.data
-    //   if (code === '1') {
-    //     this.setState({
-    //       deleteConfirm: false,
-    //       rights: -300,
-    //       menuOpenkeys: [],
-    //     })
-    //     message.info(result)
-    //     this.getDataList()
-    //   }
-    // })
+    axiosInstance.post(`${this.deleteRoute}/${this.roaddId}`).then(res => {// 管理单位 this.deleteUnitInfo
+      // console.log(res.data, '删除')
+      const { code, result } = res.data
+      if (code === '1') {
+        this.setState({
+          deleteConfirm: false,
+          rights: -300,
+          menuOpenkeys: [],
+        })
+        message.info(result)
+        this.getDataList()
+        this.clearMap();
+      }
+    })
   }
   changeLoadRouteDirection = (e, options) => { // 添加修改input selecct
     if (options) {
@@ -771,68 +817,63 @@ class TrunkManagement extends Component {
       })
     }
   }
+  FormData = (adj) => {
+    let str = ''
+    for (const key in adj) {
+      str += `${key}=${adj[key]}&`
+    }
+    return str
+  }
   handclickAddEdit = () => {// 添加或修改路口按钮
-    // this.mapaddOnclick = false
-    // const {
-    //   unit_code,
-    //   unit_type_code,
-    //   unit_position,
-    //   district_id,
-    //   user_group_id,
-    //   longitude,
-    //   latitude,
-    //   signal_sys_unit_id,
-    //   signal_system_code,
-    //   signal_unit_id,
-    //   minor_unit_number,
-    //   be_taken,
-    //   unit_name,
-    //   unit_name_signal_sys,
-    //   main_unit_id,
-    //   unit_name_old,
-    // } = this.state
-    // let addroadData = {
-    //   be_taken,
-    //   district_id,
-    //   latitude,
-    //   longitude,
-    //   main_unit_id,
-    //   minor_unit_number,
-    //   signal_sys_unit_id,
-    //   signal_system_code,
-    //   signal_unit_id,
-    //   unit_code,
-    //   unit_name,
-    //   unit_name_old,
-    //   unit_name_signal_sys,
-    //   unit_position,
-    //   unit_type_code,
-    //   user_group_id,
-    //   id: '',
-    // }
-    // if (this.showName === 'edit') {
-    //   addroadData.id = JSON.stringify(this.roaddId)
-    // }
-    // // console.log(addroadData, '查看内容')
-    // axiosInstance.post(this.saveOrUpdateUnitInfo, addroadData).then(res => {// 路口位置
-    //   // console.log(res.data, '路口添加 修改')
-    //   const { code, result } = res.data
-    //   if (code === '1') {
-    //     if (result === '操作失败') {
-    //       message.info(result)
-    //     } else {
-    //       this.setState({
-    //         rights: -300,
-    //         menuOpenkeys: [],
-    //       })
-    //       message.info(result)
-    //     }
+    const {
+      route_name,
+      route_code,
+      route_direction,
+      route_miles,
+      route_type,
+      detail,
+    } = this.state
+    const addobjs = {
+      route_name,
+      route_code,
+      route_direction: JSON.stringify(route_direction),
+      route_miles,
+      route_type: JSON.stringify(route_type),
+      detail,
+      unitArr: this.unitArr,
+      id: '',
+    }
+    if (this.showName === 'edit') {
+      addobjs.id = JSON.stringify(this.roaddId)
+    }
+    axiosInstance.post(`${this.saveOrUpdateDistrict}?${this.FormData(addobjs)}`,).then(res => { // 干线
+      const { code, result } = res.data
+      if (code === '1') {
+        this.setState({
+          rights: -300,
+          menuOpenkeys: [],
+        })
+        message.info(result)
+        this.getDataList()
+        this.initializationState()
+        this.clearMap();
+      } else {
+        // this.setState({
+        //   rights: -300,
+        //   menuOpenkeys: [],
+        // })
+        // message.info(result)
+      }
+      // this.getDataList()
+      // this.initializationState()
+    })
 
-    //   }
-    //   this.getDataList()
-    //   this.initializationState()
-    // })
-
+  }
+  // 取消删除
+  deleteCancel = () => {
+    this.setState({
+      deleteConfirm: false,
+    })
   }
   render() {
     const { Option } = Select
@@ -850,8 +891,7 @@ class TrunkManagement extends Component {
               {
                 ismodify ?
                   <div className='operationLine'>
-                    {/* <span onClick={() => this.deleteList()} >删除</span><span onClick={() => this.getismodify('edit')}>编辑</span> */}
-                    <span onClick={() => this.deleteList()} >删除</span><span onClick={this.noneAddRoad}>取消</span>
+                    <span onClick={() => this.deleteList()} >删除</span><span onClick={() => this.getismodify('edit')}>编辑</span>
                   </div>
                   :
                   <div className='operationLine'>
@@ -880,13 +920,13 @@ class TrunkManagement extends Component {
                       }
                     </Select>
                   </div>
-                  <p><span>干线长度：</span><input onChange={this.changeLoadRouteDirection} value={route_miles} intername='route_miles' type="text" className='inputBox' placeholder="干线编号" /></p>
+                  <p><span>干线长度：</span><input onChange={this.changeLoadRouteDirection} value={route_miles} intername='route_miles' type="text" className='inputBox' placeholder="干线长度" /></p>
                   <div className='divs'><span>干线类型：</span>
                     <Select
                       // defaultValue="海淀区"
                       value={route_typevalue}
                       style={{ width: 195, height: 30 }}
-                      onChange={this.changeLoadRouteType}
+                      onChange={this.changeLoadRouteDirection}
                     >
                       {
                         loadRouteTypeList && loadRouteTypeList.map((item) => {
@@ -897,22 +937,35 @@ class TrunkManagement extends Component {
                       }
                     </Select>
                   </div>
-                  <p><span>干线描述：</span><input onChange={this.changeLoadRouteDirection} value={detail} onChange={this.changeLoadRouteDirection} type="text" className='inputBox' placeholder="干线编号" /></p>
+                  <p><span>干线描述：</span><input onChange={this.changeLoadRouteDirection} intername='detail' value={detail} type="text" className='inputBox' placeholder="干线描述" /></p>
                   <div className='lineBox'>
                     <div className="lineBoxRight">
                       <p><span></span><input type="text" className='inputBox' id='startInp' /></p>
                       {
-                        roadValue && roadValue.map((item, index) => {
-                          return (
-                            <div className='roadBox' key={item + index}>
-                              <div className="roadBoxLeft">
+                        typeof (roadValue[0]) == 'object' ?
+                          roadValue && roadValue.map((item, index) => {
+                            return (
+                              <div className='roadBox' key={item + index}>
+                                <div className="roadBoxLeft">
+                                </div>
+                                <div className="roadBoxRight">
+                                  <p><input type="text" onChange={this.getChangeValue} className='inputBox' id='channelInp' value={item.unit_name} /></p>
+                                </div>
                               </div>
-                              <div className="roadBoxRight">
-                                <p><input type="text" onChange={this.getChangeValue} className='inputBox' id='channelInp' value={item} /></p>
+                            )
+                          }) :
+                          roadValue && roadValue.map((item, index) => {
+                            console.log(item, index, 'vsvsvsv')
+                            return (
+                              <div className='roadBox' key={item + index}>
+                                <div className="roadBoxLeft">
+                                </div>
+                                <div className="roadBoxRight">
+                                  <p><input type="text" onChange={this.getChangeValue} className='inputBox' value={item} /></p>
+                                </div>
                               </div>
-                            </div>
-                          )
-                        })
+                            )
+                          })
                       }
                       {/*  <p><input type="text" className='inputBox' /></p> */}
                       <p><span></span><input type="text" className='inputBox' id='endInp' /></p>
@@ -936,9 +989,8 @@ class TrunkManagement extends Component {
                             <div className='streetBox'>
                               <p className='street'><span>{index < 9 ? ('0' + (index + 1)) : index}</span>{item.unit_name}{ismodify ? <DeleteOutlined /> : ''}</p>
                               <div className='intersectionBox'>
-                                <p className='intersection'><span>{item.unit_name_old}</span><span>{item.district_name}</span></p>
+                                <p className='intersection'><span>{item.unit_name}</span><span>{item.district_name}</span></p>
                               </div>
-
                             </div>
                           </div>
                         )

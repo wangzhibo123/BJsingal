@@ -62,24 +62,26 @@ class Intersection extends Component {
       }
     ]
 
-    this.getPointAll = '/engine-maintenance/unitInfo/getPointAll' // 加载所有点位
-    this.loadTree = '/engine-maintenance/districtManagement/loadTree' // 路口管理树
-    this.editDistrictInfo = '/engine-maintenance/districtManagement/editSubDistrictInfo' // 加载当前区域信息
-    this.deleteUnitInfo = '/engine-maintenance/unitInfo/deleteUnitInfo' // 删除路口信息
-    this.getUnitDistrict = '/engine-maintenance/unitInfo/getUnitDistrict' // 所属区域
-    this.getUnitGroup = '/engine-maintenance/unitInfo/getUnitGroup' // 管理单位
-    this.getUnitPosition = '/engine-maintenance/unitInfo/getUnitPosition' // 路口位置
-    this.getUnitType = '/engine-maintenance/unitInfo/getUnitType' // 路口类型
-    this.saveOrUpdateUnitInfo = '/engine-maintenance/unitInfo/saveOrUpdateUnitInfo' // 新增修改路口信息
+    this.getPointAll = '/control-application-front/unitMontitor/getPointAll' // 加载所有点位
+    this.loadTree = '/control-application-front/districtManagement/loadTree' // 路口管理树
+    this.editDistrictInfo = '/control-application-front/districtManagement/editSubDistrictInfo' // 加载当前区域信息
+    this.deleteUnitInfo = '/control-application-front/unitInfo/deleteUnitInfo' // 删除路口信息
+    this.getUnitDistrict = '/control-application-front/unitInfo/getUnitDistrict' // 所属区域
+    this.getUnitGroup = '/control-application-front/unitInfo/getUnitGroup' // 管理单位
+    this.getUnitPosition = '/control-application-front/unitInfo/getUnitPosition' // 路口位置
+    this.getUnitType = '/control-application-front/unitInfo/getUnitType' // 路口类型
+    this.saveOrUpdateUnitInfo = '/control-application-front/unitInfo/saveOrUpdateUnitInfo' // 新增修改路口信息
     this.defaultChildren = []
     this.newChildId = []
     this.showName = 'add'
     this.mapaddOnclick = false
+    this.interMarkers = []
   }
   componentDidMount = () => {
     this.renderMap()
     this.getDataList()
     this.addRoadList()
+    this.addMarkerData()
   }
   getDataList = () => {
     axiosInstance.post(this.loadTree).then(res => {
@@ -131,27 +133,52 @@ class Intersection extends Component {
     axiosInstance.post(this.getPointAll).then(res => {
       const { code, list } = res.data
       if (code === '1') {
-        this.addMarker(list)
+        this.pointLists = list
+        this.addMarker(this.pointLists, 8)
       }
     })
   }
-  addMarker = (mapMaker) => {
-    const currentThis = this
-    this.markers = []
-    mapMaker && mapMaker.forEach(item => {
-      const el = document.createElement('div')
-      el.style.width = '20px'
-      el.style.height = '20px'
-      el.style.borderRadius = '50%'
-      el.style.backgroundColor = 'green'
-      el.style.cursor = 'pointer'
-      el.addEventListener('click', function (e) {
-        currentThis.addInfoWindow(item)
-      });
-      new window.mapabcgl.Marker(el)
-        .setLngLat([item.longitude, item.latitude])
-        .addTo(this.map)
-    })
+  addMarker = (points, zoomVal) => {
+    this.removeMarkers()
+    if (this.map) {
+      const currentThis = this
+      this.markers = []
+      const interList = zoomVal < 13 ? points.filter(item => item.unit_grade <= 4) : points
+      // console.log(interList)
+      interList && interList.forEach((item, index) => {
+        const el = document.createElement('div')
+        el.style.width = '20px'
+        el.style.height = '20px'
+        el.style.borderRadius = '50%'
+        el.style.backgroundColor = 'green'
+        el.style.cursor = 'pointer'
+        el.id = 'marker' + item.unit_code
+        el.addEventListener('click', function (e) {
+          currentThis.addInfoWindow(item)
+        });
+        el.addEventListener('contextmenu', function (e) {
+          currentThis.addRoadLine = true
+          // 新增干线时添加路线
+          currentThis.unitArr += item.id + ','
+
+        });
+        if (isNaN(item.longitude) || isNaN(item.latitude)) {
+          console.log(index)
+        }
+        const marker = new window.mapabcgl.Marker(el)
+          .setLngLat([item.longitude, item.latitude])
+          .addTo(this.map)
+        this.interMarkers.push(marker)
+      })
+    }
+  }
+  removeMarkers = () => {
+    if (this.interMarkers.length) {
+      this.interMarkers.forEach((item) => {
+        item.remove()
+      })
+      this.interMarkers = []
+    }
   }
   addInfoWindow = (marker) => {
     if (this.mapPopup) {
@@ -210,7 +237,7 @@ class Intersection extends Component {
       }
       this.zoomTimer = setTimeout(() => {
         const zoomLev = Math.round(this.map.getZoom())
-        this.addMarkerData()
+        this.addMarker(this.pointLists, zoomLev)
       }, 700)
     })
     map.on('click', (e) => {
@@ -226,7 +253,6 @@ class Intersection extends Component {
     });
     map.on('load', () => {
       map.trafficLayer(true, options);
-      this.addMarkerData()
       window.onbeforeunload = function (e) {
         map.removeLayerAndSource('icon');
       };

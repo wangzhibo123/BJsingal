@@ -32,7 +32,6 @@ class InterMonitor extends Component {
       moveUp: null,
       moveDown: null,
       trafficInfoList: null,
-      tendencyName: 'cricle',
       interConfigMsg: null,
     }
     this.confItems = [
