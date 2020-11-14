@@ -48,7 +48,7 @@ const Parent = () => (
     <Route path="/areaMon" component={AreaMon} />
     <Route path="/timeControl" component={TimeControl} />
     <Route exact path="/plancontrolpage" component={PlancontrolPage} />
-    <Route exact path="/intermonitor" component={InterMonitor} />
+    <Route exact path="/intermonitor/:id" component={InterMonitor} />
     <Route exact path="/intersection" component={Intersection} />
     <Route exact path="/region" component={Region} />
     <Route exact path="/trunkManagement" component={TrunkManagement} />
