@@ -44,95 +44,173 @@ $bor-color: #a5fcff;
                     }
                 }
             }
-            > p,
-            .divs {
-                height: 55px;
-                color: #5f9ef2;
-                display: flex;
-                align-items: center;
-                margin-bottom: 0;
-                > span {
-                    width: 75px;
-                }
-                .inputBox {
-                    flex: 1;
-                    height: 30px;
-                    outline: none;
+            .slideRightBoxAddBox {
+                height: calc(100% - 60px);
+                padding-right: 5px;
+                > p,
+                .divs {
+                    height: 55px;
                     color: #5f9ef2;
-                    border: 1px solid #1c59ce;
-                    background-color: #18346a;
-                    padding-left: 5px;
-                }
-                .ant-select-selector {
-                    color: #5f9ef2;
-                    border: 1px solid #1c59ce;
-                    background-color: #18346a;
-                    padding-left: 5px;
-                }
-                .ant-select-arrow {
-                    color: #fff;
-                }
-            }
-            .lineBox {
-                height: calc(100% - 170px);
-                overflow-y: auto;
-                .lineBoxRight {
-                    width: 100%;
-                    padding-left: 15px;
-                    > p {
-                        width: 100%;
-                        height: 55px;
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 0;
+                    > span {
+                        width: 75px;
+                    }
+                    .inputBox {
+                        flex: 1;
+                        height: 30px;
+                        outline: none;
                         color: #5f9ef2;
-                        display: flex;
-                        margin-bottom: 0;
-                        align-items: center;
-                        justify-content: space-around;
-                        span {
-                            width: 55px;
+                        border: 1px solid #1c59ce;
+                        background-color: #18346a;
+                        padding-left: 5px;
+                    }
+                    .ant-select-selector {
+                        color: #5f9ef2;
+                        border: 1px solid #1c59ce;
+                        background-color: #18346a;
+                        padding-left: 5px;
+                    }
+                    .ant-select-arrow {
+                        color: #fff;
+                    }
+                }
+                .lineBox {
+                    height: calc(100% - 320px);
+                    overflow-y: auto;
+                    .lineBoxRight {
+                        width: 100%;
+                        padding-left: 15px;
+                        > p {
+                            width: 100%;
                             height: 55px;
+                            color: #5f9ef2;
+                            display: flex;
+                            margin-bottom: 0;
+                            align-items: center;
+                            justify-content: space-around;
+                            span {
+                                width: 55px;
+                                height: 55px;
+                                display: flex;
+                                align-items: center;
+                                font-size: 16px;
+                                justify-content: center;
+                            }
+                            .inputBox {
+                                width: 195px;
+                                height: 30px;
+                                outline: none;
+                                border: 1px solid #1c59ce;
+                                background-color: #18346a;
+                                padding-left: 5px;
+                            }
                         }
-                        .inputBox {
-                            width: 195px;
-                            height: 30px;
-                            outline: none;
-                            border: 1px solid #1c59ce;
-                            background-color: #18346a;
-                            padding-left: 5px;
+                        .roadBox {
+                            height: 100%;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            .roadBoxLeft {
+                                width: 5px;
+                                height: 35px;
+                                margin-left: 18px;
+                                background-color: #1df249;
+                                border-radius: 2px;
+                            }
+                            .roadBoxRight {
+                                width: 195px;
+                                p {
+                                    width: 100%;
+                                    height: 55px;
+                                    color: #5f9ef2;
+                                    display: flex;
+                                    margin-bottom: 0;
+                                    align-items: center;
+                                    justify-content: space-around;
+                                    span {
+                                        width: 55px;
+                                        height: 55px;
+                                    }
+                                    .inputBox {
+                                        width: 195px;
+                                        height: 30px;
+                                        outline: none;
+                                        border: 1px solid #1c59ce;
+                                        background-color: #18346a;
+                                        padding-left: 5px;
+                                    }
+                                }
+                            }
                         }
                     }
-                    .roadBox {
+                }
+            }
+            .roadDetailBox {
+                height: calc(100% - 60px);
+                padding-right: 5px;
+                > p {
+                    height: 25px;
+                    color: #5f9ef2;
+                    padding-left: 15px;
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 0;
+                    span {
+                        width: 75px;
+                    }
+                    .inputBox {
+                        flex: 1;
+                        height: 30px;
+                        outline: none;
+                        border: 1px solid #1c59ce;
+                        background-color: #18346a;
+                        padding-left: 5px;
+                    }
+                }
+                .lineBox {
+                    height: calc(100% - 170px);
+                    overflow-y: auto;
+                    display: flex;
+                    .lineBoxLeft {
+                        width: 50px;
                         height: 100%;
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        .roadBoxLeft {
-                            width: 5px;
-                            height: 35px;
-                            margin-left: 18px;
-                            background-color: #1DF249;
-                            border-radius: 2px;
-                        }
-                        .roadBoxRight {
-                            width: 195px;
+                    }
+                    .lineBoxRight {
+                        width: 100%;
+                        padding-left: 15px;
+                        .streetBox {
+                            height: 55px;
+                            margin-bottom: 5px;
                             p {
-                                width: 100%;
-                                height: 55px;
-                                color: #5f9ef2;
-                                display: flex;
                                 margin-bottom: 0;
-                                align-items: center;
-                                justify-content: space-around;
+                            }
+                            .street {
+                                height: 20px;
                                 span {
-                                    width: 55px;
-                                    height: 55px;
+                                    display: inline-block;
+                                    width: 20px;
+                                    color: #15e94f;
+                                    &:nth-child(2) {
+                                        color: #0570ad;
+                                        cursor: pointer;
+                                    }
                                 }
-                                .inputBox {
-                                    width: 195px;
-                                    height: 30px;
-                                    outline: none;
-                                    border: 1px solid #1c59ce;
-                                    background-color: #18346a;
-                                    padding-left: 5px;
+                            }
+                            .intersection {
+                                height: 35px;
+                                line-height: 35px;
+                                display: flex;
+                                align-items: center;
+                                span {
+                                    color: #02bde3;
+                                    margin-left: 20px;
+                                    padding: 0px 5px;
+                                    height: 16px;
+                                    line-height: 16px;
+                                    background-color: #0668c2;
+                                    border-radius: 5px;
                                 }
                             }
                         }
@@ -181,72 +259,6 @@ $bor-color: #a5fcff;
                         border-radius: 3px;
                         line-height: 30px;
                         background-color: #18459b;
-                    }
-                }
-            }
-            > p {
-                height: 25px;
-                color: #5f9ef2;
-                padding-left: 15px;
-                display: flex;
-                align-items: center;
-                margin-bottom: 0;
-                span {
-                    width: 75px;
-                }
-                .inputBox {
-                    flex: 1;
-                    height: 30px;
-                    outline: none;
-                    border: 1px solid #1c59ce;
-                    background-color: #18346a;
-                    padding-left: 5px;
-                }
-            }
-            .lineBox {
-                height: calc(100% - 170px);
-                overflow-y: auto;
-                display: flex;
-                .lineBoxLeft {
-                    width: 50px;
-                    height: 100%;
-                }
-                .lineBoxRight {
-                    width: 100%;
-                    padding-left: 15px;
-                    .streetBox {
-                        height: 55px;
-                        margin-bottom: 5px;
-                        p {
-                            margin-bottom: 0;
-                        }
-                        .street {
-                            height: 20px;
-                            span {
-                                display: inline-block;
-                                width: 20px;
-                                color: #15e94f;
-                                &:nth-child(2) {
-                                    color: #0570ad;
-                                    cursor: pointer;
-                                }
-                            }
-                        }
-                        .intersection {
-                            height: 35px;
-                            line-height: 35px;
-                            display: flex;
-                            align-items: center;
-                            span {
-                                color: #02bde3;
-                                margin-left: 20px;
-                                padding: 0px 5px;
-                                height: 16px;
-                                line-height: 16px;
-                                background-color: #0668c2;
-                                border-radius: 5px;
-                            }
-                        }
                     }
                 }
             }
