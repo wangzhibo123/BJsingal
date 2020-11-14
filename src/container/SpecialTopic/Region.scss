@@ -157,6 +157,160 @@ input[type="number"]{ -moz-appearance: textfield; }
     height: 100%;
     background-color: #021027;
     overflow: hidden;
+    .maskPop{
+        position: absolute;
+        top:0;
+        right:0;
+        bottom:0;
+        left:0;
+        z-index: 10;
+    }
+    .roadInterPop{
+        width:960px;
+        min-height:620px;
+        padding:15px;
+        color:#7EA4EC;
+        box-shadow: inset 0 0 15px #13419B;
+        background:rgba(3, 16, 96, 0.7);
+        position: absolute;
+        top:50%;
+        left:50%;
+        z-index: 11;
+        transform:translate(-50%,-50%);
+        -webkit-transform:translate(-50%,-50%) ;
+        -moz-transform:translate(-50%,-50%) ;
+        -ms-transform:translate(-50%,-50%) ;
+        -o-transform:translate(-50%,-50%) ;
+        border-radius: 4px;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        -ms-border-radius: 4px;
+        -o-border-radius: 4px;
+        flex-direction: column;
+        .anticon-close{
+            width:30px;
+            height:30px;
+            line-height: 33px;
+            color:#7EA4EC;
+            font-weight: bold;
+            font-size:14px;
+            box-shadow: inset 0 0 5px #13419B;
+            background:rgba(3, 16, 96, 0.7);
+            position: absolute;
+            right:-30px;
+            top:0;
+            border-radius: 2px;
+            -webkit-border-radius: 2px;
+            -moz-border-radius: 2px;
+            -ms-border-radius: 2px;
+            -o-border-radius: 2px;
+            cursor: pointer;
+            user-select: none;
+            >svg{
+                transition: all .3s;
+                &:hover {
+                    transform: rotate(-180deg) scale(1.1);
+                }        
+            }
+        }
+        .roadInterPopTit{
+            line-height: 35px;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .roadInterPopImg{
+            margin-bottom:10px;
+            >img{
+                width:930px;
+                height:320px;
+                display: inline-block;
+            }
+        }
+        .roadInterPopCon{
+            width: 100%;
+            background: rgba(2,34,90,.8);
+            padding:10px;
+            display: flex;
+            justify-content: center;
+            align-items: space-around;
+            .conBox{
+                flex: 2.5;
+                height:calc(100% - 20px);
+                background:rgba(2,45,106,.5);
+                border:1px solid #023B77;
+                > dl{
+                    padding:15px 15px;
+                    margin:0;
+                }
+                > dl dt {
+                    font-size: 14px;
+                    line-height: 35px;
+                }
+                .conBoxTit{
+                    padding:10px 15px;
+                    position: relative;
+                    line-height: 30px;
+                    > em{
+                        padding:3px 10px;
+                        border:1px solid #023B77;
+                        background: rgba(2,59,128,.8);
+                    }
+                    > span{
+                        width: 60px;
+                        height: 28px;
+                        text-align: center;
+                        line-height: 28px;
+                        background:url(../imgs/kuang.png) no-repeat;
+                        background-size: 100% 100%;
+                        cursor: pointer;
+                        user-select: none;
+                        position: absolute;
+                        top:10px;
+                        right:15px;
+                    }
+                }
+                .conBoxContent{
+                    height:190px;
+                    overflow-y: auto;
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: flex-start;
+                    align-content: flex-start;
+                    flex-wrap: wrap;
+                    > span{
+                        width: 110px;
+                        height: 80px;
+                        margin: 0 0 15px 15px;
+                        flex-direction: column;
+                        border:1px solid #023B77;
+                        background: rgba(2,59,128,.8);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        border-radius: 4px;
+                        -webkit-border-radius: 4px;
+                        -moz-border-radius: 4px;
+                        -ms-border-radius: 4px;
+                        -o-border-radius: 4px;
+                        >i{
+                            width: 30px;
+                            height:30px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            >img{
+                                display: inline-block;
+                            }
+                        }
+                        > em {
+                            font-style: normal;
+                            line-height: 25px;
+                        }
+                    }
+                }
+            }
+        }
+    }
     .sidebarLeft,.sidebarRight {
         position: fixed;
         top: 82px;
@@ -374,6 +528,22 @@ input[type="number"]{ -moz-appearance: textfield; }
                     .iBgColor3{background: #F4934A;}
                     .iBgColor4{background: #7A6858;}
                     .iBgColor5{background: #7C0129;}
+                    .imgRectangleBg{
+                        width:27px;
+                        height:10px;
+                        background:url(../imgs/icon_bus_Rectangle_s.png) no-repeat;
+                        background-size: cover;
+                        border-radius:unset;
+                    }
+                    .imgArrowBg{
+                        width:25px;
+                        height:17px;
+                        background:url(../imgs/icon_bus_arrow_green_s.png) no-repeat;
+                        background-size: cover;
+                        position: relative;
+                        top:2px;
+                        border-radius:unset;
+                    }
                 }
             }
             .map-container{

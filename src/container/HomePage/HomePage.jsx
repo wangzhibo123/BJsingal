@@ -22,6 +22,7 @@ class Homepage extends Component {
       oprationData: null,
       faultData: null,
       areaMsgList: null,
+      coverage: false,
       errline: [0, 0, 0, 0],
       offline: [0, 0, 0, 0],
       online: [0, 0, 0, 0],
@@ -31,19 +32,20 @@ class Homepage extends Component {
       interNum: [0, 0, 0, 0],
       simulationPlanNum: [0, 0, 0, 0],
     }
+    this.mapLegend = { condition: true, minitor: true }
     this.interMarkers = []
     this.trafficTimer = null
     this.mapPopup = null
     this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
     this.rateColors = ['#FF0000', '#FF7800', '#FFD800', '#0CB424']
-    this.congestionUrl = '/engine-monitor/index/getCongestionRanking?user_id=1'
-    this.repairRateUrl = '/engine-monitor/index/getFailureRepairRate?user_id=1'
-    this.staticUrl = '/engine-monitor/index/getRealtimeStatistics?user_id=1'
-    this.cloudUrl = '/engine-monitor/index/getCloudResourceUtilization?user_id=1'
-    this.oprationUrl = '/engine-monitor/index/getOperatingEfficiency?user_id=1'
-    this.faultUrl = '/engine-monitor/index/getFaultStatistics?user_id=1'
-    this.areaList = '/engine-monitor/index/getRealTimeMonitoring?user_id=1'
-    this.pointLists = '/engine-monitor/index/getPointByFault?user_id=1'
+    this.congestionUrl = '/control-application-front/index/getCongestionRanking?user_id=1'
+    this.repairRateUrl = '/control-application-front/index/getFailureRepairRate?user_id=1'
+    this.staticUrl = '/control-application-front/index/getRealtimeStatistics?user_id=1'
+    this.cloudUrl = '/control-application-front/index/getCloudResourceUtilization?user_id=1'
+    this.oprationUrl = '/control-application-front/index/getOperatingEfficiency?user_id=1'
+    this.faultUrl = '/control-application-front/index/getFaultStatistics?user_id=1'
+    this.areaList = '/control-application-front/index/getRealTimeMonitoring?user_id=1'
+    this.pointLists = '/control-application-front/index/getPointByFault?user_id=1'
     this.controlMode = ['时间表控制', '感应控制', '平台优化控制', '中心手动控制', '路口手动控制']
     this.singalType = ['西门子', '海信', '易华录', '千方', '中兴']
   }
@@ -62,6 +64,7 @@ class Homepage extends Component {
   addTrafficLayer = () => {
     if (this.trafficTimer) {
       clearTimeout(this.trafficTimer)
+      this.trafficTimer = null
     }
     this.map.trafficLayer(false)
     this.map.trafficLayer(true)
@@ -83,30 +86,6 @@ class Homepage extends Component {
           allNum: ('000' + (errline + offline + online)).slice(-4).split(''),
           pointlist
         })
-        // let num = 0
-        // let numTwo = parseInt(pointlist.length / 2)
-        // let numThree = 0
-        // this.timeOne = setInterval(() => {
-        //   if (num >= online) { clearInterval(this.timeOne) }
-        //   const nodeSimulation = ('000' + num).slice(-4).split('')
-        //   this.setState({ nodeSimulation }, () => {
-        //     num += 1
-        //   })
-        // }, 0)
-        // this.timeTwo = setInterval(() => {
-        //   if (numTwo >= (errline + offline + online)) { clearInterval(this.timeTwo) }
-        //   const interNum = ('000' + numTwo).slice(-4).split('')
-        //   this.setState({ interNum }, () => {
-        //     numTwo += 1
-        //   })
-        // }, 0)
-        // this.timeThree = setInterval(() => {
-        //   if (numThree >= offline) { clearInterval(this.timeThree) }
-        //   const simulationPlanNum = ('000' + numThree).slice(-4).split('')
-        //   this.setState({ simulationPlanNum }, () => {
-        //     numThree += 1
-        //   })
-        // }, 0)
       }
     })
   }
@@ -218,17 +197,16 @@ class Homepage extends Component {
           <div class="message">设备状态：${interMsg.alarm_state}</div>
           <div class="message">运行阶段：${interMsg.stage_code}</div>
         </div>
-        <div class="interDetails"><div class="monitorBtn">路口检测</div></div>
+        <div class="interDetails"><div class="monitorBtn" ref='${(input) => { this.interMonitorBtn = input }}'>路口检测</div></div>
       </div>
     `
   }
   addMarker = (points, zoomVal = 8) => {
     this.removeMarkers()
     if (this.map) {
+      this.interMarkers = []
       const currentThis = this
-      this.markers = []
       const interList = zoomVal < 13 ? points.filter(item => item.unit_grade <= 4) : points
-      console.log(interList)
       interList.forEach((item, index) => {
         const el = document.createElement('div')
         el.style.width = '20px'
@@ -248,6 +226,7 @@ class Homepage extends Component {
         .addTo(this.map)
         this.interMarkers.push(marker)
       })
+      console.log(this.interMarkers.length)
     }
   }
   removeMarkers = () => {
@@ -255,7 +234,6 @@ class Homepage extends Component {
       this.interMarkers.forEach((item) => {
         item.remove()
       })
-      this.interMarkers = []
     }
   }
   addInfoWindow = (marker) => {
@@ -274,6 +252,7 @@ class Homepage extends Component {
       .setHTML(this.getInfoWindowHtml(marker))
       .addTo(this.map)
     // $('.mapabcgl-popup')[0].style.maxWidth = '1000px'
+    console.log(this.interMonitorBtn)
   }
   renderChartsMap = () => {
     const geoJson = require('./beijing.json')
@@ -315,7 +294,7 @@ class Homepage extends Component {
           }
         },
         data:[]  //数据
-      }]  
+      }]
     }
     const myChart = echarts.init(this.chartMapBox)
     myChart.setOption(optionMap)
@@ -354,10 +333,33 @@ class Homepage extends Component {
     this.map.panTo([lng, lat])
     $('#marker' + key).trigger('click')
   }
+  handleToggleLegend = (e) => {
+    const legend = e.currentTarget.getAttribute('legendname')
+    if (legend === 'coverage') {
+      this.setState({ coverage: !this.state.coverage })
+    } else {
+      this.mapLegend[legend] = !this.mapLegend[legend]
+      if (this.mapLegend.condition) {
+        this.addTrafficLayer()
+      } else {
+        if (this.trafficTimer) {
+          clearTimeout(this.trafficTimer)
+          this.trafficTimer = null
+        }
+        this.map.trafficLayer(false)
+      }
+      if (this.mapLegend.minitor) {
+        console.log('显示视频点位')
+      } else {
+        console.log('隐藏视频点位')
+      }
+    }
+    
+  }
   render() {
     const {
       mainHomePage, congestionList, repairRateList, singalStatus, cloudSource, oprationData, faultData, areaMsgList,
-      allNum, errline, offline, online, pointlist
+      allNum, errline, offline, online, pointlist, coverage
     } = this.state
     return (
       <div className="homepageWrapper">
@@ -603,26 +605,29 @@ class Homepage extends Component {
               </div>
               <div className="mapLegend" style={{ top: '20px' }}>
                 <div className="legendBox">
-                  <div className="legendItem"><span className="legenIcon coverage"></span> 图层</div>
-                  <div className="legendItem"><span className="legenIcon condition"></span> 路况</div>
-                  <div className="legendItem"><span className="legenIcon minitor"></span> 监控</div>
+                  <div className="legendItem" legendname="coverage" onClick={this.handleToggleLegend}><span className="legenIcon coverage"></span> 图层</div>
+                  <div className="legendItem" legendname="condition" onClick={this.handleToggleLegend}><span className="legenIcon condition"></span> 路况</div>
+                  <div className="legendItem" legendname="minitor" onClick={this.handleToggleLegend}><span className="legenIcon minitor"></span> 监控</div>
                 </div>
-                <div className="singalModeBox">
-                  <div className="checkMsg"><Checkbox>控制模式</Checkbox></div>
-                  <ul style={{ paddingLeft: '20px' }}>
-                    {
-                      this.controlMode.map((item) => (<li key={item} className="checkMsg"><Checkbox>{item}</Checkbox></li>))
-                    }
-                    <li className="checkMsg"><Checkbox>其他</Checkbox></li>
-                  </ul>
-                  <div className="checkMsg"><Checkbox>型号类型</Checkbox></div>
-                  <ul style={{ paddingLeft: '20px' }}>
-                    {
-                      this.singalType.map((item) => (<li key={item} className="checkMsg"><Checkbox>{item}</Checkbox></li>))
-                    }
-                    <li className="checkMsg"><Checkbox>其他</Checkbox></li>
-                  </ul>
-                </div>
+                {
+                  coverage &&
+                  <div className="singalModeBox">
+                    <div className="checkMsg"><Checkbox>控制模式</Checkbox></div>
+                    <ul style={{ paddingLeft: '20px' }}>
+                      {
+                        this.controlMode.map((item) => (<li key={item} className="checkMsg"><Checkbox>{item}</Checkbox></li>))
+                      }
+                      <li className="checkMsg"><Checkbox>其他</Checkbox></li>
+                    </ul>
+                    <div className="checkMsg"><Checkbox>型号类型</Checkbox></div>
+                    <ul style={{ paddingLeft: '20px' }}>
+                      {
+                        this.singalType.map((item) => (<li key={item} className="checkMsg"><Checkbox>{item}</Checkbox></li>))
+                      }
+                      <li className="checkMsg"><Checkbox>其他</Checkbox></li>
+                    </ul>
+                  </div>
+                }
               </div>
             </div>
           }

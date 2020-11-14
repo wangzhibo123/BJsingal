@@ -1,5 +1,6 @@
 import React from 'react'
 import echarts from 'echarts'
+import { speed } from 'jquery'
 
 class Graph extends React.Component {
   constructor(props) {
@@ -10,21 +11,10 @@ class Graph extends React.Component {
   }
   componentDidMount = () => {
     const chartsBox = echarts.init(this.chartsBox)
-    const { chartsDatas } = this.props
-    if (chartsDatas) {
-      const xData = []
-      const seriseData = []
-      chartsDatas.forEach((item) => {
-        xData.push(item.area_name)
-        seriseData.push(item.amount)
-      })
-      this.renderCharts(chartsBox, xData, seriseData)
-    } else {
-      // this.renderCharts(chartsBox, this.xDatas, this.series)
-      this.testRenderCharts(chartsBox)
-    }
+    const { jamdurArr, speedArr, timeArr } = this.props.chartsDatas
+    this.testRenderCharts(chartsBox, timeArr, jamdurArr, speedArr)
   }
-  testRenderCharts = (chartsBox) => {
+  testRenderCharts = (chartsBox, times, jamdur, speed) => {
     const options = {
       title: {
         text: '近24小时路况趋势',
@@ -59,7 +49,7 @@ class Graph extends React.Component {
       xAxis: [
         {
           type: 'category',
-          data: ['00:00', '02:00', '04:00', '06:00', '08:00'],
+          data: times,
           axisPointer: {
             type: 'shadow'
           },
@@ -163,7 +153,7 @@ class Graph extends React.Component {
           type: 'line',
           symbol: 'none',
           smooth: true,
-          data: [1,5,8,4,3],
+          data: jamdur,
           itemStyle: {
             color: '#9257AE',
           },
@@ -184,7 +174,7 @@ class Graph extends React.Component {
           type: 'line',
           smooth: true,
           symbol: 'none',
-          data: [50,30,20,60,25],
+          data: speed,
           yAxisIndex: 1,
           itemStyle: {
             color: '#FFAE5E',
