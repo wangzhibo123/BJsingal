@@ -30,7 +30,7 @@ export default class MainMonitoring extends Component {
       intersectioNodes:[{latitude:116.383,longitude:39.9071},{latitude:116.389,longitude:39.90721},{latitude:116.396,longitude:39.9074},{latitude:116.402,longitude:39.9077},{latitude:116.409,longitude:39.90793}],
       //地图默认中心点
       defaultCenterPoint:[116.396, 39.9075],
-      //地图靠近中心点的倍率
+      //地图视角角度
       modeMapFlyToPitch:60,
       //地图缩放倍率
       modeMapFlyToZoom:15,
@@ -361,6 +361,7 @@ export default class MainMonitoring extends Component {
         el.style.backgroundImage = `url(${bascButton})`
         el.style.backgroundSize="100% 100%"
         el.style.cursor="pointer"
+        el.style.position="relative;"
         el.addEventListener('click', (e) => {
           e.stopPropagation()
           this.ClickMessge(index)
@@ -371,6 +372,9 @@ export default class MainMonitoring extends Component {
         al.style.width = '118px'
         al.style.height = '137px'
         al.style.backgroundImage=`url(${bascUpDown})`
+        al.style.position="absolute"
+        al.style.top="-120px"
+        al.style.left="-30px"
         new window.mapabcgl.Marker(el)
         //绿色中心点坐标
           .setLngLat([item.latitude, item.longitude])
