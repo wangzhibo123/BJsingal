@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Upload, message } from 'antd'
 import { CloseOutlined } from '@ant-design/icons'
 import './InterConfMsg.scss'
 
@@ -64,6 +65,7 @@ class InterConfMsg extends Component {
     this.turnPic = [
       { pic: goleft }, { pic: goright }, { pic: top }, { pic: bottom }, { pic: topleft }, { pic: topright }, { pic: bottomleft }, { pic: bottomright }
     ]
+    this.uploadPic = `/control-application-front/unitMontitor/uploadCanalizationFile?unitCode=${this.props.interId}`
   }
   componentDidMount = () => {
     const { configName } = this.props
@@ -80,6 +82,21 @@ class InterConfMsg extends Component {
   }
   handleUploadInterPic = () => {
     this.setState({ isUpload: true })
+  }
+  beforeUploadInterPic = (file) => {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+      message.error('请选择jpg或png文件')
+    }
+    return isJpgOrPng
+  }
+  handleUploadPicChange = (info) => {
+    if (info.file.status === 'uploading') {
+      console.log('uploading')
+    }
+    if (info.file.status === 'done') {
+      console.log(info.file)
+    }
   }
   render() {
     const { isUpload, currentItem, configName, currentParams } = this.state
@@ -133,7 +150,19 @@ class InterConfMsg extends Component {
                         <img src={interPic} alt="" height="100%" /> :
                         <span className="pleaseUpload">请上传该路口渠化图</span>
                     }
-                    <div className="uploadPic" onClick={this.handleUploadInterPic}>{isUpload ? <span>重新上传</span> : <span>上传</span>}</div>
+                    <Upload
+                      name="file"
+                      className="avatar-uploader"
+                      showUploadList={false}
+                      action={this.uploadPic}
+                      beforeUpload={this.beforeUploadInterPic}
+                      onChange={this.handleUploadPicChange}
+                    >
+                      <div className="uploadPic" onClick={this.handleUploadInterPic}>
+                        {isUpload ? <span>重新上传</span> : <span>上传</span>}
+                      </div>
+                    </Upload>
+                    
                   </div> :
                   <div className="interConfDetails">
                     <div className="deviceConf">

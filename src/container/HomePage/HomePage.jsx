@@ -13,6 +13,22 @@ const { Option } = Select
 class Homepage extends Component {
   constructor(props) {
     super(props)
+    this.controlMode = [
+      { controlName: '时间表控制', isShow: true, code: '' },
+      { controlName: '感应控制', isShow: true, code: '' },
+      { controlName: '平台优化控制', isShow: true, code: '' },
+      { controlName: '中心手动控制', isShow: true, code: '' },
+      { controlName: '路口手动控制', isShow: true, code: '' },
+      { controlName: '其他', isShow: true, code: '' },
+    ]
+    this.singalType = [
+      { controlName: '西门子', isShow: true, code: '' },
+      { controlName: '海信', isShow: true, code: '' },
+      { controlName: '易华录', isShow: true, code: '' },
+      { controlName: '千方', isShow: true, code: '' },
+      { controlName: '中兴', isShow: true, code: '' },
+      { controlName: '其他', isShow: true, code: '' },
+    ]
     this.state = {
       mainHomePage: true,
       congestionList: null,
@@ -31,6 +47,10 @@ class Homepage extends Component {
       nodeSimulation: [0, 0, 0, 0],
       interNum: [0, 0, 0, 0],
       simulationPlanNum: [0, 0, 0, 0],
+      controlModes: this.controlMode,
+      singalTypes: this.singalType,
+      allControlMode: true,
+      allSingalType: true,
     }
     this.mapLegend = { condition: true, minitor: true }
     this.interMarkers = []
@@ -46,8 +66,6 @@ class Homepage extends Component {
     this.faultUrl = '/control-application-front/index/getFaultStatistics?user_id=1'
     this.areaList = '/control-application-front/index/getRealTimeMonitoring?user_id=1'
     this.pointLists = '/control-application-front/index/getPointByFault?user_id=1'
-    this.controlMode = ['时间表控制', '感应控制', '平台优化控制', '中心手动控制', '路口手动控制']
-    this.singalType = ['西门子', '海信', '易华录', '千方', '中兴']
   }
   componentDidMount = () => {
     // this.renderChartsMap()
@@ -192,12 +210,12 @@ class Homepage extends Component {
           <div class="message">设备类型：信号灯</div>
           <div class="message">所属城区：${interMsg.district_name}</div>
           <div class="message">控制状态：${interMsg.control_state}</div>
-          <div class="message">信号系统：${interMsg.signal_system_code}</div>
-          <div class="message">信号机IP：${interMsg.signal_ip}</div>
+          <div class="message">信号系统：${interMsg.signal_system_code || ''}</div>
+          <div class="message">信号机IP：${interMsg.signal_ip || ''}</div>
           <div class="message">设备状态：${interMsg.alarm_state}</div>
-          <div class="message">运行阶段：${interMsg.stage_code}</div>
+          <div class="message">运行阶段：${interMsg.stage_code || ''}</div>
         </div>
-        <div class="interDetails"><div class="monitorBtn" ref='${(input) => { this.interMonitorBtn = input }}'>路口检测</div></div>
+        <div class="interDetails"><div class="monitorBtn"><a style="color:#62bbff" href="#/interMonitor/${interMsg.unit_code}">路口检测</a></div></div>
       </div>
     `
   }
@@ -354,12 +372,31 @@ class Homepage extends Component {
         console.log('隐藏视频点位')
       }
     }
-    
+  }
+  handleControlChange = (e) => {
+    const { checked, indexs, mode, all } = e.target
+    const checkList = all === 'allSingalType' ? this.singalType : this.controlMode
+    checkList[indexs].isShow = checked
+    const isAllCheck = checkList.filter(item => item.isShow === false)
+    console.log(isAllCheck.length)
+    this.setState({
+      [mode]: checkList,
+      [all]: isAllCheck.length ? false : true,
+    })
+  }
+  handleAllCheckChange = (e) => {
+    const { checked, mode, all } = e.target
+    const checkList = all === 'allSingalType' ? this.singalType : this.controlMode
+    checkList.forEach(item => item.isShow = checked)
+    this.setState({
+      [all]: e.target.checked,
+      [mode]: checkList,
+    })
   }
   render() {
     const {
       mainHomePage, congestionList, repairRateList, singalStatus, cloudSource, oprationData, faultData, areaMsgList,
-      allNum, errline, offline, online, pointlist, coverage
+      allNum, errline, offline, online, pointlist, coverage, controlModes, singalTypes, allControlMode, allSingalType,
     } = this.state
     return (
       <div className="homepageWrapper">
@@ -612,19 +649,49 @@ class Homepage extends Component {
                 {
                   coverage &&
                   <div className="singalModeBox">
-                    <div className="checkMsg"><Checkbox>控制模式</Checkbox></div>
+                    <div className="checkMsg">
+                      <Checkbox
+                        checked={allControlMode}
+                        mode="controlModes"
+                        all="allControlMode"
+                        onChange={this.handleAllCheckChange}>控制模式</Checkbox>
+                    </div>
                     <ul style={{ paddingLeft: '20px' }}>
                       {
-                        this.controlMode.map((item) => (<li key={item} className="checkMsg"><Checkbox>{item}</Checkbox></li>))
+                        controlModes.map((item, index) => (
+                          <li key={item.controlName} className="checkMsg">
+                            <Checkbox
+                              checked={item.isShow}
+                              indexs={index}
+                              mode="controlModes"
+                              all="allControlMode"
+                              onChange={this.handleControlChange}
+                            >{item.controlName}</Checkbox>
+                          </li>
+                        ))
                       }
-                      <li className="checkMsg"><Checkbox>其他</Checkbox></li>
                     </ul>
-                    <div className="checkMsg"><Checkbox>型号类型</Checkbox></div>
+                    <div className="checkMsg">
+                      <Checkbox
+                        checked={allSingalType}
+                        mode="singalTypes"
+                        all="allSingalType"
+                        onChange={this.handleAllCheckChange}
+                      >信号类型</Checkbox>
+                    </div>
                     <ul style={{ paddingLeft: '20px' }}>
                       {
-                        this.singalType.map((item) => (<li key={item} className="checkMsg"><Checkbox>{item}</Checkbox></li>))
+                        singalTypes.map((item, index) => (
+                          <li key={item.controlName} className="checkMsg">
+                            <Checkbox
+                              checked={item.isShow}
+                              indexs={index}
+                              mode="singalTypes"
+                              all="allSingalType"
+                              onChange={this.handleControlChange}
+                            >{item.controlName}</Checkbox></li>
+                        ))
                       }
-                      <li className="checkMsg"><Checkbox>其他</Checkbox></li>
                     </ul>
                   </div>
                 }
