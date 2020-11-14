@@ -21,7 +21,9 @@
     "react-loadable": "^5.5.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
-    "source-map-explorer": "^2.5.0"
+    "source-map-explorer": "^2.5.0",
+    "video.js": "^7.10.2",
+    "videojs-flash": "^2.2.1"
   },
   "proxy": "http://192.168.1.53:20191",
   "scripts": {

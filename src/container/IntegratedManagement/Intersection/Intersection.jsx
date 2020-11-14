@@ -62,7 +62,7 @@ class Intersection extends Component {
       }
     ]
 
-    this.getPointAll = '/control-application-front/unitMontitor/getPointAll' // 加载所有点位
+    this.getPointAll = '/control-application-front/unitInfo/getPointAll' // 加载所有点位
     this.loadTree = '/control-application-front/districtManagement/loadTree' // 路口管理树
     this.editDistrictInfo = '/control-application-front/districtManagement/editSubDistrictInfo' // 加载当前区域信息
     this.deleteUnitInfo = '/control-application-front/unitInfo/deleteUnitInfo' // 删除路口信息

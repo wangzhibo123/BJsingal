@@ -184,18 +184,29 @@ class BusPriority extends Component {
   }
   addMarker = () => {
     if (this.map) {
+      const elParent = document.createElement('div')
+      elParent.style.width = '40px'
+      elParent.style.height = '20px'
+      elParent.style.position = 'relative'
+      const elAnimation = document.createElement('div')
+      elAnimation.setAttribute('class','animationS')
       const el = document.createElement('div')
-      el.style.width = '20px'
+      el.style.width = '40px'
       el.style.height = '20px'
       el.style.borderRadius = '50%'
-      el.style.backgroundColor = 'green'
+      el.style.backgroundColor = 'rgba(34,245,248)'
       el.style.cursor = 'pointer'
-      el.setAttribute("title",'中心点')
-      el.addEventListener('click',() => {
-        this.addInfoWindow(this.returnCenterLnglat(lineData[0],lineData[lineData.length - 1]))
+      el.style.position = 'absolute'
+      el.style.left = '0'
+      el.style.top = '0'
+      el.setAttribute("title", '中心点')
+      el.addEventListener('click', () => {
+        this.addInfoWindow(this.returnCenterLnglat(lineData[0], lineData[lineData.length - 1]))
       })
-      new window.mapabcgl.Marker(el)
-        .setLngLat(this.returnCenterLnglat(lineData[0],lineData[lineData.length - 1]))
+      elParent.appendChild(elAnimation)
+      elParent.appendChild(el)
+      new window.mapabcgl.Marker(elParent)
+        .setLngLat(this.returnCenterLnglat(lineData[0], lineData[lineData.length - 1]))
         .addTo(this.map);
     }
   }
