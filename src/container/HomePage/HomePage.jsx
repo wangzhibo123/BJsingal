@@ -197,17 +197,16 @@ class Homepage extends Component {
           <div class="message">设备状态：${interMsg.alarm_state}</div>
           <div class="message">运行阶段：${interMsg.stage_code}</div>
         </div>
-        <div class="interDetails"><div class="monitorBtn">路口检测</div></div>
+        <div class="interDetails"><div class="monitorBtn" ref='${(input) => { this.interMonitorBtn = input }}'>路口检测</div></div>
       </div>
     `
   }
   addMarker = (points, zoomVal = 8) => {
     this.removeMarkers()
     if (this.map) {
+      this.interMarkers = []
       const currentThis = this
-      this.markers = []
       const interList = zoomVal < 13 ? points.filter(item => item.unit_grade <= 4) : points
-      console.log(interList)
       interList.forEach((item, index) => {
         const el = document.createElement('div')
         el.style.width = '20px'
@@ -227,6 +226,7 @@ class Homepage extends Component {
         .addTo(this.map)
         this.interMarkers.push(marker)
       })
+      console.log(this.interMarkers.length)
     }
   }
   removeMarkers = () => {
@@ -234,7 +234,6 @@ class Homepage extends Component {
       this.interMarkers.forEach((item) => {
         item.remove()
       })
-      this.interMarkers = []
     }
   }
   addInfoWindow = (marker) => {
@@ -253,6 +252,7 @@ class Homepage extends Component {
       .setHTML(this.getInfoWindowHtml(marker))
       .addTo(this.map)
     // $('.mapabcgl-popup')[0].style.maxWidth = '1000px'
+    console.log(this.interMonitorBtn)
   }
   renderChartsMap = () => {
     const geoJson = require('./beijing.json')
@@ -294,7 +294,7 @@ class Homepage extends Component {
           }
         },
         data:[]  //数据
-      }]  
+      }]
     }
     const myChart = echarts.init(this.chartMapBox)
     myChart.setOption(optionMap)
