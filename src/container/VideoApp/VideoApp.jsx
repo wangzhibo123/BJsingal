@@ -6,7 +6,7 @@ import videojs from 'video.js'
 import styles from './VideoApp.scss'
 const url = [
     {
-        // url:"rtmp://192.168.1.124:9999/live/25371",
+        // url:"rtmp://192.168.1.124:9999/live/31434",
         url:"rtmp://58.200.131.2:1935/livetv/hunantv",
         name:"湖南卫视"
     },
@@ -25,7 +25,7 @@ class VideoApp extends Component{
           autoplay: true,
           controls: true,
           sources: [{
-            // src: 'rtmp://192.168.1.124:9999/live/25371',
+            // src: 'rtmp://192.168.1.124:9999/live/31434',
             src: 'rtmp://58.200.131.2:1935/livetv/hunantv',
             type: 'rtmp/flv'
           }]
