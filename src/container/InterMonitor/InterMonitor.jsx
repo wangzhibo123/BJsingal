@@ -145,9 +145,13 @@ class InterMonitor extends Component {
   handleShowSingalInfo = () => {
     this.setState({ showSingalInfo: true })
   }
+  handleHideSingalInfo =() => {
+    this.setState({ showSingalInfo: false })
+  }
   render() {
     const {
-      confListLeft, modeIndex, moveLeft, moveRight, moveUp, moveDown, trafficInfoList, interConfigMsg, trendChartsData, interInfo,
+      confListLeft, modeIndex, moveLeft, moveRight, moveUp, moveDown, trafficInfoList, interConfigMsg, trendChartsData, interInfo, showSingalInfo,
+      phaseTime,
     } = this.state
     return (
       <div className="interMonitorBox">
@@ -175,20 +179,26 @@ class InterMonitor extends Component {
             <div className="singalIconBox" onClick={this.handleShowSingalInfo}>
               <img src={singalIcon} alt=""/>
             </div>
-            <div className="singalInfoBox">
-              <div className="singalTitle">设备名称：27787827<CloseOutlined className="closeIcon" /></div>
-              <div className="infoItem">
-                <div className="item">关联编号：10101</div>
-                <div className="item">关联编号：10101</div>
+            {
+              showSingalInfo &&
+              <div className="singalInfoBox">
+                <div className="singalTitle">设备名称：27787827<CloseOutlined className="closeIcon" onClick={this.handleHideSingalInfo} /></div>
+                <div className="infoItem">
+                  <div className="item">关联编号：10101</div>
+                  <div className="item">关联编号：10101</div>
+                </div>
+                <div className="infoItem">
+                  <div className="item">维护单位：指挥中心</div>
+                  <div className="item">维护电话：110</div>
+                </div>
+                <div className="infoItem">
+                  <div className="item">管理单位：指挥中心</div>
+                  <div className="item">设备状态：正常</div>
+                </div>
               </div>
-              <div className="infoItem">
-                <div className="item">维护单位：指挥中心</div>
-                <div className="item">维护电话：110</div>
-              </div>
-              <div className="infoItem">
-                <div className="item">管理单位：指挥中心</div>
-                <div className="item">设备状态：正常</div>
-              </div>
+            }
+            <div className="interPhaseTime">
+              <em><i>{phaseTime}s</i></em>
             </div>
             <div className="conditionList">
               <div className="titles">各路口实时路况</div>

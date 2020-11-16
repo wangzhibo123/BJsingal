@@ -323,7 +323,9 @@ class Homepage extends Component {
     this.map.addControl(new window.mapabcgl.NavigationControl());
     this.map.on('load', () => {
       this.addTrafficLayer()
-      this.addMarker(this.pointLists)
+      if (this.pointLists.length) {
+        this.addMarker(this.pointLists)
+      }
     })
     this.map.on('zoom', () => {
       if (this.zoomTimer) {
@@ -332,7 +334,9 @@ class Homepage extends Component {
       }
       this.zoomTimer = setTimeout(() => {
         const zoomLev = Math.round(this.map.getZoom())
-        this.addMarker(this.pointLists, zoomLev)
+        if (this.pointLists.length) {
+          this.addMarker(this.pointLists, zoomLev)
+        }
       }, 700)
     })
   }
