@@ -45,10 +45,11 @@ class InterMonitor extends Component {
       { text: '中心控制', img: cneter },
       { text: '中心手控', img: hand },
     ]
+    this.interId = this.props.match.params.id
     this.modeUrl = '/control-application-front/unitMontitor/getControlModeById?unit_id=1'
     this.trafficUrl = '/control-application-front/unitMontitor/getRealtimeTrafficById?unit_id=1'
     this.trendUrl = '/control-application-front/unitMontitor/getRoadTrendById?unit_id=1'
-    this.messageUrl = '/control-application-front/unitMontitor/getUnitInfoById?unit_id=1'
+    this.messageUrl = `/control-application-front/unitMontitor/getUnitInfoById?unit_id=${this.interId}`
   }
   componentDidMount = () => {
     this.getControlMode()
@@ -143,7 +144,7 @@ class InterMonitor extends Component {
           </div>
           {
             !!interConfigMsg &&
-            <InterConfMsg closeInterConf={this.hanldleCloseInterConf} configName={interConfigMsg} />
+            <InterConfMsg closeInterConf={this.hanldleCloseInterConf} configName={interConfigMsg} interId={this.interId} />
           }
           <div className="title">当前路口-</div>
           <div className="monitorDetails">
