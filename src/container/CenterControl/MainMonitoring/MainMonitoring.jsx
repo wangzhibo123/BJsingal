@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import "./MainMonitoring.scss";
-//引入依赖
-import 'video.js/dist/video-js.css'
-import 'videojs-flash'
-import videojs from 'video.js'
+//引入视频
+import Video from '../../utils/video/video'
 //引入图片
 import yellow from "../../imgs/yellow.png"
 import red from "../../imgs/red.png";
@@ -24,11 +22,6 @@ import { Select, Button,Switch,Menu } from "antd";
 import { EditOutlined,SearchOutlined, CompassOutlined } from "@ant-design/icons";
 const { Option } = Select;
 const { SubMenu } = Menu;
-const lineData = [
-  [116.383,39.9071],
-  [116.389,39.90721],
-  [116.396,39.9074]
-]
 export default class MainMonitoring extends Component {
   constructor(props) {
     super(props);
@@ -37,7 +30,8 @@ export default class MainMonitoring extends Component {
         {name: "海淀区",id: "1",children: [{name: "西二旗",id: "1_1"},{name: "西直门",id: "1_2"},{name: "东直门",id: "1_3"}]},
         {name: "朝阳区",id: "2",children: [{name: "奥林匹克",id: "2_1"},{name: "欢乐谷",id: "2_2"}]},
         {name: "上地",id: "3",children: [{name: "华联",id: "3_1"}, {name: "中关村",id: "3_2"}]},
-        {name: "三里屯", id: "4",children: [{name: "太里古",id: "4_1"}, {name: "乾坤大厦",id: "4_2"}]}],
+        {name: "三里屯", id: "4",children: [{name: "太里古",id: "4_1"}, {name: "乾坤大厦",id: "4_2"}]}
+      ],
       lineData:[{lnglat:[116.383,39.9071],img:bascRightLeft},{lnglat:[116.389,39.9080],img:bascRightUpLeft},{lnglat:[116.399,39.9090],img:bascUpDown}],
       //地图默认中心点
       defaultCenterPoint:[116.396, 39.9075],
@@ -50,14 +44,6 @@ export default class MainMonitoring extends Component {
       modeMapShow: true,
       modeMainMonitor: false,
       modeMainTabShow: true,
-      //向东 按钮
-      modeMainEStyle:true,
-       //向西 按钮
-      modeMainWStyle:false,
-       //向南 按钮
-      modeMainSStyle:true,
-       //向北 按钮
-      modeMainNStyle:false,
       //切换到2D按钮
       modeMainTabTypeD:true,
       //2D到3D
@@ -67,23 +53,14 @@ export default class MainMonitoring extends Component {
       //点击中心点渲染多次处理
       clickCenterRenders:false,
       //视频
-      nowPlay:null
+      url : [{url:"rtmp://58.200.131.2:1935/livetv/hunantv",name:"东",id:"my_E"},{url:"rtmp://202.69.69.180:443/webcast/bshdlive-pc",name:"西",id:"my_W"}],
+      arl:[{url:"rtmp://58.200.131.2:1935/livetv/hunantv",name:"南",id:'my_S'},{url:"rtmp://202.69.69.180:443/webcast/bshdlive-pc",name:"北",id:"my_N"}],
     };
   }
   componentDidMount() {
     this.state.modeMapShow&&this.renderMap();
   }
-  modeTabToMapPage=()=>{
-    this.setState({
-      modeNavShow: true,
-      modeMapShow: true,
-      modeMainMonitor: false,
-      modeMainTabShow: true,
-      modeMainTabTypeD:true
-    },()=>{
-      this.renderMap()
-    })
-  }
+  //地图默认坐标
   intersectionRenderin = async () => {
     //默认起始点坐标
     await this.getstartpoint({ lng: 116.38151572176511, lat: 39.90708534816005 })
@@ -126,7 +103,6 @@ export default class MainMonitoring extends Component {
       clear.addEventListener('click', function (e) {
         clearMap();
       })
-      // 初始话渲染路口
     })
     this.getstartpoint = (lnglat) => {
       // console.log(lnglat, '开始')
@@ -445,32 +421,6 @@ export default class MainMonitoring extends Component {
     })
     this.map = map
   }
-  //东西南北 按钮的 控制
-  modeMainEBtn=()=>{
-    this.setState({
-      modeMainEStyle:true,
-      modeMainWStyle:false
-    })
-  }
-  modeMainWBtn=()=>{
-    this.setState({
-      modeMainEStyle:false,
-      modeMainWStyle:true
-    })
-  }
-  modeMainSBtn=()=>{
-    this.setState({
-      modeMainSStyle:true,
-      modeMainNStyle:false
-    })
-  }
-  modeMainNBtn=()=>{
-    this.setState({
-      modeMainSStyle:false,
-      modeMainNStyle:true
-    })
-  }
-
   //2D,3D切换
   flyTo2D=()=>{
     if(this.state.modeMainTabD){
@@ -493,9 +443,8 @@ export default class MainMonitoring extends Component {
       })
     }
   }
-  
   render() {
-    const { modeNavShow, modeMapShow, modeMainMonitor, modeMainTabShow ,modeMainEStyle,modeMainWStyle,modeMainSStyle,modeMainNStyle,modeMainTabTypeD,modeMainTabD} = this.state;
+    const { modeNavShow, modeMapShow, modeMainMonitor, modeMainTabShow ,modeMainTabTypeD,modeMainTabD} = this.state;
     return (
       <div className="mainMon">
         {
@@ -575,26 +524,14 @@ export default class MainMonitoring extends Component {
               <div className="modeMainDirection">
                 <div className="modeMainEWMode">
                   {/* 东西走向 */}
-                  <div className="modeMainEWBtn">
-                    <Button onClick={this.modeMainEBtn} className={modeMainEStyle&&"modeShowStyle"}>东</Button>
-                    <Button onClick={this.modeMainWBtn} className={modeMainWStyle&&"modeShowStyle"}>西</Button>
-                  </div>
                   <div className="modeMainEWVideo">
-                    <video src="*" style={{ width: "100%", height: "100%" }} controls id="my-video">
-                      <source src="*" type="video/mp4"></source>
-                    </video>
+                    <Video url={this.state.url}></Video>
                   </div>
                 </div>
                 <div className="modeMainSNMode">
                   {/* 南北走向 */}
-                  <div className="modeMainSNBtn">
-                    <Button onClick={this.modeMainSBtn} className={modeMainSStyle&&"modeShowStyle"}>南</Button>
-                    <Button onClick={this.modeMainNBtn} className={modeMainNStyle&&"modeShowStyle"}>北</Button>
-                  </div>
                   <div className="modeMainSNVideo">
-                    <video style={{ width: "100%", height: "100%" }} controls id="my-video">
-                      <source src="*" type="video/mp4"></source>
-                    </video>
+                    <Video url={this.state.arl}></Video>
                   </div>
                 </div>
               </div>
