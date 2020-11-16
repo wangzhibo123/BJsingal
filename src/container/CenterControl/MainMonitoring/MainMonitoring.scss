@@ -229,6 +229,41 @@
         button, select {
             text-transform: none;
         }
+        @keyframes animationScale {
+            0% {
+                transform: scale(.5);
+            }
+            100% {
+                transform: scale(2.5);
+            }
+        }
+        @keyframes animationAction {
+            0% {
+                transform:translateY(0px);
+            }
+            50%{
+                transform:translateY(6px);
+            }
+            100% {
+                transform:translateY(0px);
+            }
+        }
+        .animationS{
+            width:40px;
+            height:20px;
+            background: rgba(34,245,248, .5);
+            animation: animationScale 1.5s infinite;
+            -webkit-animation: animationScale 1.5s infinite;
+            border-radius: 50%;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            -ms-border-radius: 50%;
+            -o-border-radius: 50%;
+        }
+        .animationA{
+            animation: animationAction 1.5s infinite;
+            -webkit-animation: animationAction 1.5s infinite;
+        }
     }
     .modeSwitchBtn{
             width: 103px;

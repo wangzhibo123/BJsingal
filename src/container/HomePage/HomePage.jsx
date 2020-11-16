@@ -215,7 +215,7 @@ class Homepage extends Component {
           <div class="message">设备状态：${interMsg.alarm_state}</div>
           <div class="message">运行阶段：${interMsg.stage_code || ''}</div>
         </div>
-        <div class="interDetails"><div class="monitorBtn"><a style="color:#62bbff" href="#/interMonitor/${interMsg.unit_code}">路口检测</a></div></div>
+        <div class="interDetails"><div class="monitorBtn"><a style="color:#62bbff" href="#/interMonitor/${interMsg.id}">路口检测</a></div></div>
       </div>
     `
   }

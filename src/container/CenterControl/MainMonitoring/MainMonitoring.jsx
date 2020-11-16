@@ -1,5 +1,10 @@
 import React, { Component } from "react";
 import "./MainMonitoring.scss";
+//引入依赖
+import 'video.js/dist/video-js.css'
+import 'videojs-flash'
+import videojs from 'video.js'
+//引入图片
 import yellow from "../../imgs/yellow.png"
 import red from "../../imgs/red.png";
 import upDownPng from "../../imgs/03.png"
@@ -9,14 +14,21 @@ import upLeftUp from "../../imgs/11.png"
 import rightUpLeftDown from "../../imgs/02.png"
 import startPng from '../../imgs/start.png'
 import endPng from '../../imgs/end.png'
-import bascButton from "../../imgs/bascButton.png"
+import bascRightLeft from "../../imgs/bascRightLeft.png"
+import bascRightUpLeft from "../../imgs/bascRightUpLeft.png"
 import bascUpDown from "../../imgs/bascUpDown.png"
-
+//引入地图
 import mapConfiger from "../../utils/minemapConf";
-import { EditOutlined,SearchOutlined, CompassOutlined } from "@ant-design/icons";
+//引入antd
 import { Select, Button,Switch,Menu } from "antd";
+import { EditOutlined,SearchOutlined, CompassOutlined } from "@ant-design/icons";
 const { Option } = Select;
 const { SubMenu } = Menu;
+const lineData = [
+  [116.383,39.9071],
+  [116.389,39.90721],
+  [116.396,39.9074]
+]
 export default class MainMonitoring extends Component {
   constructor(props) {
     super(props);
@@ -26,8 +38,7 @@ export default class MainMonitoring extends Component {
         {name: "朝阳区",id: "2",children: [{name: "奥林匹克",id: "2_1"},{name: "欢乐谷",id: "2_2"}]},
         {name: "上地",id: "3",children: [{name: "华联",id: "3_1"}, {name: "中关村",id: "3_2"}]},
         {name: "三里屯", id: "4",children: [{name: "太里古",id: "4_1"}, {name: "乾坤大厦",id: "4_2"}]}],
-      //路口节点
-      intersectioNodes:[{latitude:116.383,longitude:39.9071},{latitude:116.389,longitude:39.90721},{latitude:116.396,longitude:39.9074},{latitude:116.402,longitude:39.9077},{latitude:116.409,longitude:39.90793}],
+      lineData:[{lnglat:[116.383,39.9071],img:bascRightLeft},{lnglat:[116.389,39.9080],img:bascRightUpLeft},{lnglat:[116.399,39.9090],img:bascUpDown}],
       //地图默认中心点
       defaultCenterPoint:[116.396, 39.9075],
       //地图视角角度
@@ -54,7 +65,9 @@ export default class MainMonitoring extends Component {
       //控制多次渲染起点 终点图标
       modeMainControlMapSign:true,
       //点击中心点渲染多次处理
-      clickCenterRenders:false
+      clickCenterRenders:false,
+      //视频
+      nowPlay:null
     };
   }
   componentDidMount() {
@@ -291,7 +304,7 @@ export default class MainMonitoring extends Component {
     function addMarker(img, point, position) {
       var marker = '', html = ''
       html = document.createElement('div');
-      html.style.cssText = 'background:url(' + img + ')' + position + 'px 0px no-repeat;width:80px;height:50px;';
+      // html.style.cssText = 'background:url(' + img + ')' + position + 'px 0px no-repeat;width:80px;height:50px;';
       html.style.backgroundSize = '100% 100%';
       // html.style.position = 'relative';
       // html.style.top = '-20px';
@@ -312,6 +325,12 @@ export default class MainMonitoring extends Component {
         .addTo(_this.map);
       return marker;
     };
+  }
+  // 计算起始与终点之间的中心点 > 用于重置地图中心点
+  returnCenterLnglat = (startPoint, endPoint) => {
+    const lng = startPoint[0] + (Math.abs(startPoint[0] - endPoint[0]) / 2)
+    const lat = startPoint[1] + (Math.abs(startPoint[1] - endPoint[1]) / 2)
+    return [lng, lat]
   }
   ClickMessge = (index) => {
     const {intersectioNodes} = this.state;
@@ -352,34 +371,44 @@ export default class MainMonitoring extends Component {
   //地图中心点
   addMarker = () => {
     if (this.map) {
-      let {intersectioNodes} =this.state;
-      intersectioNodes.map((item,index)=>{
-        const el = document.createElement('div')
-        el.style.width = '56px'
-        el.style.height = '40px'
-        // el.style.borderRadius = '50%'
-        el.style.backgroundImage = `url(${bascButton})`
-        el.style.backgroundSize="100% 100%"
-        el.style.cursor="pointer"
-        el.style.position="relative;"
-        el.addEventListener('click', (e) => {
-          e.stopPropagation()
-          this.ClickMessge(index)
-          this.setState({clickCenterRenders:1})
-        })
-        const al=document.createElement("div");
-        el.appendChild(al)
-        al.style.width = '118px'
-        al.style.height = '137px'
-        al.style.backgroundImage=`url(${bascUpDown})`
-        al.style.position="absolute"
-        al.style.top="-120px"
-        al.style.left="-30px"
-        new window.mapabcgl.Marker(el)
-        //绿色中心点坐标
-          .setLngLat([item.latitude, item.longitude])
-          .addTo(this.map);
+      for(var i=0;i<this.state.lineData.length;i++){
+      const elParent = document.createElement('div')
+      elParent.style.width = '40px'
+      elParent.style.height = '20px'
+      elParent.style.position = 'relative'
+      const elAnimation = document.createElement('div')
+      elAnimation.setAttribute('class','animationS')
+      const el = document.createElement('div')
+      el.style.width = '40px'
+      el.style.height = '20px'
+      el.style.borderRadius = '50%'
+      el.style.backgroundColor = 'rgba(34,245,248)'
+      el.style.cursor = 'pointer'
+      el.style.position = 'absolute'
+      el.style.left = '0'
+      el.style.top = '0'
+      const al=document.createElement("div");
+      al.setAttribute('class','animationA')
+      el.appendChild(al)
+      al.style.width = '118px'
+      al.style.height = '137px'
+      al.style.backgroundImage=`url(${this.state.lineData[i].img})`
+      al.style.position="absolute"
+      al.style.top="-133px"
+      al.style.left="-38px"
+      new window.mapabcgl.Marker(el)
+      el.setAttribute("title", '中心点')
+      el.addEventListener('click', () => {
+        // this.addInfoWindow(lineData[0], lineData[lineData.length - 1])
+        console.log("弹框")
       })
+      elParent.appendChild(elAnimation)
+      elParent.appendChild(el)
+      new window.mapabcgl.Marker(elParent)
+        .setLngLat(this.state.lineData[i].lnglat)
+        .addTo(this.map);
+      }
+      
     }
   }
   gettitletops = (isShow) => {
@@ -551,7 +580,7 @@ export default class MainMonitoring extends Component {
                     <Button onClick={this.modeMainWBtn} className={modeMainWStyle&&"modeShowStyle"}>西</Button>
                   </div>
                   <div className="modeMainEWVideo">
-                    <video src="*" style={{ width: "100%", height: "100%" }} controls>
+                    <video src="*" style={{ width: "100%", height: "100%" }} controls id="my-video">
                       <source src="*" type="video/mp4"></source>
                     </video>
                   </div>
@@ -563,7 +592,7 @@ export default class MainMonitoring extends Component {
                     <Button onClick={this.modeMainNBtn} className={modeMainNStyle&&"modeShowStyle"}>北</Button>
                   </div>
                   <div className="modeMainSNVideo">
-                    <video style={{ width: "100%", height: "100%" }} controls>
+                    <video style={{ width: "100%", height: "100%" }} controls id="my-video">
                       <source src="*" type="video/mp4"></source>
                     </video>
                   </div>

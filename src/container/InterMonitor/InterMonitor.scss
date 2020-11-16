@@ -119,6 +119,13 @@
             position: absolute;
             height: calc(100% - 40px);
             width: 100%;
+            .singalIconBox {
+                z-index: 1;
+                position: absolute;
+                bottom: 300px;
+                left: 650px;
+                cursor: pointer;
+            }
             .roadTrends {
                 position: absolute;
                 right: 0;
