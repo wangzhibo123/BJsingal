@@ -10,8 +10,7 @@ import mapConfiger from '../../utils/minemapConf'
 import startPng from '../../imgs/start.png'
 import endPng from '../../imgs/end.png'
 import axiosInstance from '../../utils/getInterfaceData'
-import CustomInterTree from '../../../components/CustomInterTree/CustomInterTree'
-const { SubMenu } = Menu;
+const { SubMenu } = Menu
 class TrunkManagement extends Component {
   constructor(props) {
     super(props)

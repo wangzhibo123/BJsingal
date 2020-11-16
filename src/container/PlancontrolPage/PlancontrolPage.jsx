@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import { Menu, Input, DatePicker, Button, Select } from 'antd'
 import { EditOutlined, CloseOutlined } from '@ant-design/icons';
+import axiosInstance from '../utils/getInterfaceData'
 import styles from './PlancontrolPage.module.scss'
 import mapConfiger from '../utils/minemapConf'
 import startPng from '../imgs/start.png'
@@ -23,26 +24,101 @@ class Homepage extends Component {
       mainHomePage: false,
       Istitletops: true,
       IsddMessge: false,
+      clickNum: '',
+      menuOpenkeys: [],
     }
+    this.defaultChildren = []
+    this.interMarkers = []
+    this.clickOperation = [
+      {
+        id: 1,
+        name: '新增干线',
+      },
+      {
+        id: 3,
+        name: '切换视图',
+      }
+    ]
   }
+
   componentDidMount = () => {
     this.renderMap()
+    this.getDataList()
+    this.getAddDataList()
   }
-  addMarkers = (arr) => {
+  getDataList = () => { // 获取所有点位
+    axiosInstance.post(this.loadRouteTree).then(res => {
+      const { code, treeList } = res.data
+      if (code === '1') {
+        this.treeListDatas = treeList
+        this.setState({ treeList, treeListChild: this.defaultChildren })
+      }
+    })
+  }
+  getAddDataList = () => {
+    axiosInstance.post(this.getPointAll).then(res => {
+      const { code, list } = res.data
+      if (code === '1') {
+        this.pointLists = list
+        this.addMarker(this.pointLists, 8)
+      }
+    })
+  }
+  addMarker = (points, zoomVal) => {
+    this.removeMarkers()
     if (this.map) {
-      const el = document.createElement('div')
-      el.style.width = '20px'
-      el.style.height = '20px'
-      el.style.borderRadius = '50%'
-      el.style.backgroundColor = '#02FB09'
-      el.addEventListener('click', () => {
-        this.handleClckMessge(true)
+      const currentThis = this
+      this.markers = []
+      const interList = zoomVal < 13 ? points.filter(item => item.unit_grade <= 4) : points
+      // console.log(interList)
+      interList && interList.forEach((item, index) => {
+        const el = document.createElement('div')
+        el.style.width = '20px'
+        el.style.height = '20px'
+        el.style.borderRadius = '50%'
+        el.style.backgroundColor = 'green'
+        el.style.cursor = 'pointer'
+        el.id = 'marker' + item.unit_code
+        el.addEventListener('click', function (e) {
+          // currentThis.addInfoWindow(item)
+          this.handleClckMessge(true)
+        });
+        el.addEventListener('contextmenu', function (e) {
+
+        });
+        if (isNaN(item.longitude) || isNaN(item.latitude)) {
+          console.log(index)
+        }
+        const marker = new window.mapabcgl.Marker(el)
+          .setLngLat([item.longitude, item.latitude])
+          .addTo(this.map)
+        this.interMarkers.push(marker)
       })
-      const marker = new window.mapabcgl.Marker(el)
-        .setLngLat(arr)
-        .addTo(this.map);
     }
   }
+  removeMarkers = () => {
+    if (this.interMarkers.length) {
+      this.interMarkers.forEach((item) => {
+        item.remove()
+      })
+      this.interMarkers = []
+    }
+  }
+  // addMarker = (arr) => {
+  //   if (this.map) {
+  //     const el = document.createElement('div')
+  //     el.style.width = '20px'
+  //     el.style.height = '20px'
+  //     el.style.borderRadius = '50%'
+  //     el.style.backgroundColor = '#02FB09'
+  //     el.addEventListener('click', () => {
+  //       this.handleClckMessge(true)
+  //     })
+  //     const marker = new window.mapabcgl.Marker(el)
+  //       .setLngLat(arr)
+  //       .addTo(this.map);
+  //   }
+  // }
   addMarkersTwo = (arr) => {
     if (this.map) {
       var marker = ''
@@ -193,8 +269,8 @@ class Homepage extends Component {
       plan();
       endmarker.on('dragend', plan);
     }
-    this.getstartpoint({ lng: 116.39171507191793, lat: 39.910732551600205 })
-    this.getendpoint({ lng: 116.3909904231216, lat: 39.9223143411036 })
+    // this.getstartpoint({ lng: 116.39171507191793, lat: 39.910732551600205 })
+    // this.getendpoint({ lng: 116.3909904231216, lat: 39.9223143411036 })
     this.getChannelpoint = (lnglat) => {
       if (marker) {
         marker.remove();
@@ -424,7 +500,7 @@ class Homepage extends Component {
         });
       });
       map.trafficLayer(true, options);
-      this.addMarkers([116.39159349169165, 39.91203316087379])
+      // this.addMarkers([116.39159349169165, 39.91203316087379])
       map.addControl(new window.mapabcgl.NavControl({ showCompass: true, position: 'bottom-right' }));
       map.loadImage('http://map.mapabc.com:35001/mapdemo/apidemos/sourceLinks/img/dir.png', function (error, image) {
         map.addImage('arrowImg', image);
@@ -445,9 +521,52 @@ class Homepage extends Component {
       IsddMessge: isShow,
     })
   }
+  clickOperationNum = (id) => { // 点击新增
+    // if (id === 1) {
+    //   if (this.map) {
+    //     this.clearMap();
+    //   }
+    //   this.initializationState()
+    //   this.setState({
+    //     rights: 0,
+    //     isAddEdit: true,
+    //     ismodify: false,
+    //     roadtitle: '新增干线',
+    //   })
+    //   this.showName = 'add'
+    //   this.unitArr = ''
+    //   this.isAddEdit = true
+
+    // } else if (id === 3) {
+    //   this.map.flyTo({
+    //     // center: [116.391, 39.911], 
+    //     zoom: 14,
+    //     pitch: 60
+    //   })
+    // }
+    // this.setState({
+    //   clickNum: id
+    // })
+  }
+  onOpenChangeSubMenu = (eventKey) => { // SubMenu-ite触发
+    this.isAddEdit = false
+    this.unitArr = ''
+    if (this.map) {
+      this.clearMap();
+    }
+    if (eventKey.length === 0) {
+      this.setState({ menuOpenkeys: [] })
+    } else {
+      const keys = eventKey.pop()
+      const { menuOpenkeys } = this.state
+      if (eventKey !== menuOpenkeys) {
+        this.getLoadChildTree(keys)
+      }
+    }
+  }
   render() {
     const { Option } = Select
-    const { mainHomePage, Istitletops, IsddMessge } = this.state
+    const { mainHomePage, Istitletops, IsddMessge, clickNum, menuOpenkeys, treeList } = this.state
     return (
       <div className={styles.PlancontrolPageWrapper}>
         {/* <div class="control_panel position_lb driveInfo">
@@ -797,45 +916,48 @@ class Homepage extends Component {
           <Menu
             onClick={this.handleClick}
             style={{ width: 251, color: '#86b7fa', height: '100%', overflowY: 'auto', fontSize: '16px' }}
-            // defaultSelectedKeys={['7']}
-            // defaultOpenKeys={['sub2', 'sub3']}
             mode="inline"
 
           >
-            <SubMenu key="sub2" title="海淀区">
-              {/* <Menu.Item key="5"></Menu.Item> */}
-              <SubMenu key="sub3" title="知春路拥堵应急">
-                <Menu.Item key="7">知春路与罗庄东路<EditOutlined /></Menu.Item>
-                <Menu.Item key="8">知春路与罗庄中路</Menu.Item>
-                <Menu.Item key="9">知春路与罗庄西路</Menu.Item>
-                <Menu.Item key="10">知春路与海淀黄庄路</Menu.Item>
-              </SubMenu>
-              <SubMenu key="sub3-2" title="万泉庄路"></SubMenu>
-            </SubMenu>
-            <SubMenu
-              key="sub4"
-              title="房山区"
-            >
-              {/* <Menu.Item key="1-2-9">Option 9</Menu.Item> */}
-            </SubMenu>
-            <SubMenu
-              key="sub5"
-              title="通州区"
-            >
-            </SubMenu>
-            <SubMenu
-              key="sub6"
-              title="门头沟区"
-            >
-            </SubMenu>
-            <SubMenu
-              key="sub7"
-              title="中关村东路"
-            >
-            </SubMenu>
+
           </Menu>
         </div>
-        <div className={styles.container}>
+        <div className='sidebarLeft'>
+          <div className='tabLeft'>
+            {
+              this.clickOperation.map(item => <span className={clickNum === item.id ? 'active' : ''}
+                onClick={() => this.clickOperationNum(item.id)} key={item.id}>{item.name}</span>)
+            }
+          </div>
+          <div className='sidebarLeftBox'>
+            <Menu
+              onOpenChange={this.onOpenChangeSubMenu}
+              onClick={this.onClickMenuItem}
+              style={{ width: 251, color: '#86b7fa', height: '100%', overflowY: 'auto', fontSize: '16px' }}
+              mode="inline"
+              openKeys={menuOpenkeys}
+            >
+              {
+                treeList && treeList.map((item, index) =>
+                  <SubMenu
+                    key={item.id}
+                    // onTitleClick={(e) => this.onOpeSubMenu(e, item)}
+                    title={item.route_name}
+                    data_item={item}
+                  >
+                    {
+                      item.childrens &&
+                      item.childrens.map((child) => (
+                        <Menu.Item key={child.id}>{child.unit_name}</Menu.Item>
+                      ))
+                    }
+                  </SubMenu>
+                )
+              }
+            </Menu>
+          </div>
+        </div>
+        <div className={styles.container} >
           {
             !mainHomePage &&
             <div className={styles.contentCenter}>
@@ -843,7 +965,7 @@ class Homepage extends Component {
             </div>
           }
         </div>
-      </div >
+      </div>
     )
   }
 }

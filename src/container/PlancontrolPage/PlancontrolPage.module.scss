@@ -314,23 +314,22 @@ $input-bac: rgba(0, 169, 192, 0.2);
             height: 45px;
             width: 100%;
             color: #5477ca;
+            display: flex;
+            justify-content: space-around;
             .titletopsActive {
                 color: #fffdff;
                 background-color: #0b378e;
             }
             span {
-                width: 45%;
-                height: 100%;
+                flex: 1;
                 font-size: 12px;
-                text-align: center;
-                line-height: 45px;
+                margin: 0 5px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 cursor: pointer;
-                float: left;
                 border-radius: 5px;
                 background-color: rgba(13, 40, 94, 0.6);
-                &:nth-child(1) {
-                    margin-right: 15px;
-                }
             }
         }
     }
@@ -514,9 +513,9 @@ $input-bac: rgba(0, 169, 192, 0.2);
             // position: relative;
             // top: 30px;
         }
-        :global(.mapabcgl-popup-content){
+        :global(.mapabcgl-popup-content) {
             padding: 0;
-            background: transparent; 
+            background: transparent;
         }
     }
 }
