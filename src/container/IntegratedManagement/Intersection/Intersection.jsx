@@ -188,15 +188,18 @@ class Intersection extends Component {
     const popupOption = {
       closeOnClick: false,
       closeButton: true,
+      maxWidth: '1000px',
       offset: [0, 0]
     }
     this.mapPopup = new window.mapabcgl.Popup(popupOption)
       .setLngLat(new window.mapabcgl.LngLat(marker.longitude, marker.latitude))
       .setHTML(this.getInfoWindowHtml(marker))
       .addTo(this.map)
-    $('.mapabcgl-popup')[0].style.maxWidth = '1000px'
+    // $('.mapabcgl-popup')[0].style.maxWidth = '1000px'
+    // console.log(this.interMonitorBtn)
   }
   getInfoWindowHtml = (interMsg) => {
+    console.log(interMsg, 'qiaoss')
     return `
       <div class="infoWindow">
         <div class="infotitle">${interMsg.unit_name}</div>
