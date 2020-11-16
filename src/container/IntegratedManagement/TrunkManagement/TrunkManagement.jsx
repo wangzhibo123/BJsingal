@@ -76,7 +76,7 @@ class TrunkManagement extends Component {
         name: '切换视图',
       }
     ]
-    this.getPointAll = '/control-application-front/unitInfo/getPointAll' // 获取所有点位
+    this.getPointAll = '/control-application-front/unitMontitor/getPointAll' // 获取所有点位
     this.deleteRoute = '/control-application-front/routeManagement/deleteRoute' // 删除干线信息
     this.getRouteInfo = '/control-application-front/routeManagement/getRouteInfo' // 加载当前干线信息
     this.loadRouteTree = '/control-application-front/routeManagement/loadRouteTree' // 干线树

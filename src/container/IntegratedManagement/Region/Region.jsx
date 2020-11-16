@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
-import { Menu, Select } from 'antd'
+import { Menu, Select, message, Modal } from 'antd'
 import { EditOutlined, SearchOutlined, DeleteOutlined, CloseOutlined } from '@ant-design/icons';
 import './Region.scss'
 import mapConfiger from '../../utils/minemapConf'
@@ -27,6 +27,7 @@ class Region extends Component {
       sub_district_name: '',
       sub_district_user: '',
       unitArr: '',
+      deleteConfirm: false,
     }
     this.clickOperation = [
       {
@@ -43,7 +44,11 @@ class Region extends Component {
     this.getPointAll = '/control-application-front/unitInfo/getPointAll' // 加载所有点位
     this.loadSubDistrictTree = '/control-application-front/subDistrictManagement/loadSubDistrictTree' // 区域树
     this.deleteSubDistrict = '/control-application-front/subDistrictManagement/deleteSubDistrict' // 删除子区信息
+    this.saveOrUpdateSubDistrict = '/control-application-front/subDistrictManagement/saveOrUpdateSubDistrict' // 新增修改子区信息
+
     this.interMarkers = []
+    this.addRoad = false // 新增区域数组
+    this.unitArr = []
   }
   componentDidMount = () => {
     this.renderMap()
@@ -82,9 +87,10 @@ class Region extends Component {
     axiosInstance.post(`${this.loadSubDistrictTree}?id=${id}`).then(res => {
       const { code, treeList } = res.data
       if (code === '1') {
+        const arr = treeList.map(item => item)
         const currentArea = this.treeListDatas.find((item) => item.id === Number(id))
         currentArea.childrens = treeList
-        this.setState({ treeList: this.treeListDatas, menuOpenkeys: [id] })
+        this.setState({ treeList: this.treeListDatas, menuOpenkeys: [id], unitArr: arr })
 
       }
     })
@@ -105,13 +111,13 @@ class Region extends Component {
         el.style.cursor = 'pointer'
         el.id = 'marker' + item.unit_code
         el.addEventListener('click', function (e) {
-          // currentThis.addInfoWindow(item)
-        });
-        el.addEventListener('contextmenu', function (e) {
-          // currentThis.addRoadLine = true
-          // // 新增干线时添加路线
-          // currentThis.unitArr += item.id + ','
-
+          console.log(item, currentThis.addRoad, '123456')
+          if (currentThis.addRoad) {
+            currentThis.unitArr.push(item)
+            currentThis.setState({
+              unitArr: currentThis.unitArr,
+            })
+          }
         });
         if (isNaN(item.longitude) || isNaN(item.latitude)) {
           console.log(index)
@@ -168,6 +174,8 @@ class Region extends Component {
   clickOperationNum = (id) => {
     if (id === 1) {
       // this.getAddDataList()
+      this.initializationState()
+      this.addRoad = true
       this.setState({
         rights: 0,
         isAddEdit: true,
@@ -187,8 +195,9 @@ class Region extends Component {
     console.log('click ', e);
   }
   onOpenChangeSubMenu = (eventKey) => { // SubMenu-ite触发
+    this.addRoad = true
     if (eventKey.length === 0) {
-      this.setState({ menuOpenkeys: [] })
+      this.setState({ menuOpenkeys: [], rights: -300 })
     } else {
       const keys = eventKey.pop()
       const { menuOpenkeys } = this.state
@@ -198,30 +207,19 @@ class Region extends Component {
       }
     }
   }
-  onOpeSubMenu = (e, SubMenuItem) => {
+  onOpeSubMenu = (e, SubMenuItem) => { // 数据回显
     this.isAddEdit = false
+    this.roaddId = SubMenuItem.id
     this.setState({
       isAddEdit: false,
       rights: 0,
       ismodify: true,
+      detail: SubMenuItem.detail,
+      sub_district_code: SubMenuItem.sub_district_code,
+      sub_district_name: SubMenuItem.sub_district_name,
+      sub_district_user: SubMenuItem.sub_district_user,
       roadtitle: '区域信息',
     })
-    // this.roaddId = SubMenuItem.id
-    // console.log(SubMenuItem, '回显数据')
-    // const { loadRouteDirectionList, loadRouteTypeList } = this.state
-    // const route_direction = loadRouteDirectionList && loadRouteDirectionList.find(item => item.c_code === SubMenuItem.route_direction).code_name
-    // const route_type = loadRouteTypeList && loadRouteTypeList.find(item => item.c_code === SubMenuItem.route_type).code_name
-    // this.setState({
-    //   route_name: SubMenuItem.route_name,
-    //   route_code: SubMenuItem.route_code,
-    //   route_direction: SubMenuItem.route_direction,
-    //   route_directionvalue: route_direction,
-    //   route_miles: SubMenuItem.route_miles,
-    //   route_type: SubMenuItem.route_type,
-    //   route_typevalue: route_type,
-    //   detail: SubMenuItem.detail,
-    //   isAddEdit: false,
-    // })
   }
   onClickMenuItem = (item) => {
     // console.log(item, 'vvcss')
@@ -239,29 +237,127 @@ class Region extends Component {
     })
   }
   noneAddRoad = () => { // 取消添加修改
+    this.addRoad = false
     this.setState({
       rights: -300
     })
   }
-  changeLoadRouteDirection = (e, s) => { // 选择干线方向
-    console.log(e, s)
-  }
-  changeLoadRouteType = () => { // 选择干线类型
-
-  }
-  getChangeValue = (e) => {
-    console.log(e)
-  }
-  getismodify = (isShow) => { // 添加编辑
+  getismodify = (isShowName) => { // 添加编辑
+    this.showName = isShowName // 编辑
     this.setState({
-      ismodify: isShow,
+      ismodify: false,
+      isAddEdit: true,
+      roadtitle: '干线修改',
+    })
+  }
+  changeLoadRouteDirection = (e, options) => { // 添加修改input selecct
+    if (options) {
+      const { addeditname, intername, children } = options.props
+      // console.log(intername, children, e)
+      this.setState({
+        [addeditname]: children,
+        [intername]: e,
+      })
+    } else {
+      const { value } = e.target
+      const nameInput = e.target.getAttribute('intername')
+      this.setState({
+        [nameInput]: value,
+      })
+    }
+  }
+  handclickAddEdit = () => {// 添加或修改路口按钮
+    let str = ''
+    const {
+      detail,
+      sub_district_code,
+      sub_district_name,
+      sub_district_user,
+      unitArr,
+    } = this.state
+    unitArr && unitArr.forEach(item => str += item.id + ',')
+    const addobjs = {
+      sub_district_code,
+      sub_district_name,
+      sub_district_user,
+      unitArr: str,
+      detail: detail,
+      id: '',
+    }
+    console.log(this.FormData(addobjs), sub_district_name, sub_district_user, sub_district_code, detail, ":::::")
+    if (this.showName === 'edit') {
+      addobjs.id = JSON.stringify(this.roaddId)
+    }
+    axiosInstance.post(`${this.saveOrUpdateSubDistrict}?${this.FormData(addobjs)}`,).then(res => { // 干线
+      const { code, result } = res.data
+      if (code === '1') {
+        this.setState({
+          rights: -300,
+          menuOpenkeys: [],
+        })
+        message.info(result)
+        this.getDataList()
+        this.initializationState()
+      } else {
+        // this.setState({
+        //   rights: -300,
+        //   menuOpenkeys: [],
+        // })
+        // message.info(result)
+      }
+      // this.getDataList()
+      // this.initializationState()
+    })
+  }
+  delectroad = (id) => {
+    const { unitArr } = this.state
+    const index = unitArr.findIndex(item => item.id === id)
+    unitArr.splice(index, 1)
+    console.log(index, unitArr)
+    this.setState({
+      unitArr: unitArr,
+    })
+  }
+  FormData = (adj) => {
+    let str = ''
+    for (const key in adj) {
+      str += `${key}=${adj[key]}&`
+    }
+    return str
+  }
+  // 显示提示框
+  deleteList() {
+    this.setState({
+      deleteConfirm: true,
+    })
+  }
+  // 确定删除
+  deleteOks = () => {
+    axiosInstance.post(`${this.deleteSubDistrict}/${this.roaddId}`).then(res => {// 管理单位 this.deleteUnitInfo
+      // console.log(res.data, '删除')
+      const { code, result } = res.data
+      if (code === '1') {
+        this.setState({
+          deleteConfirm: false,
+          rights: -300,
+          menuOpenkeys: [],
+        })
+        message.info(result)
+        this.getDataList()
+      }
+    })
+  }
+  // 取消删除
+  deleteCancel = () => {
+    this.setState({
+      deleteConfirm: false,
     })
   }
   render() {
     const { Option } = Select
     const {
       mainHomePage, treeList, clickNum, menuOpenkeys, isAddEdit, rights, ismodify,
-      roadtitle, detail, sub_district_code, sub_district_name, sub_district_user, unitArr,
+      roadtitle, detail, sub_district_code, sub_district_name, sub_district_user, unitArr, deleteConfirm,
     } = this.state
     return (
       <div className='RegionBox'>
@@ -289,34 +385,31 @@ class Region extends Component {
                   <p><span>区域描述：</span><input onChange={this.changeLoadRouteDirection} value={detail} intername='detail' type="text" className='inputBox' placeholder="区域描述" /></p>
                   <div className='lineBox'>
                     <div className="lineBoxRight">
-                      <p><input type="text" className='inputBox' id='startInp' /><span><CloseOutlined /></span></p>
-                      {/* {
-                      roadValue && roadValue.map((item, index) => {
-                        return (
-                            <p  key={item + index}><input type="text" className='inputBox' id='startInp' /><span><CloseOutlined /></span></p>
-                        )
-                      })
-                    } */}
-                      {/*  <p><input type="text" className='inputBox' /></p> */}
+                      {
+                        unitArr && unitArr.map((item, index) => {
+                          return (
+                            <p key={item + index}><b>{item.unit_name}</b><span><CloseOutlined onClick={() => this.delectroad(item.id)} /></span></p>
+                          )
+                        })
+                      }
                     </div>
                   </div>
                 </div>
                 :
                 <div className='roadDetailBox'>
-                  <p>区域名称：<span>7.3公里</span></p>
-                  <p>区域编号：<span>0001</span></p>
-                  <p>区域创建者：<span>西向东</span></p>
-                  <p>区域描述：<span>西向东</span></p>
+                  <p>区域名称：{sub_district_name}</p>
+                  <p>区域编号：{sub_district_code}</p>
+                  <p>区域创建者：{sub_district_user}</p>
+                  <p>区域描述：{detail}</p>
                   <div className='lineBox'>
                     <div className="lineBoxRight">
-                      <div className='streetBox'>
-                        <p className='street'><span>01</span>西长安街与西单北大街{ismodify ? <DeleteOutlined /> : ''}</p>
-                        <p className='intersection'><span>十字路口</span><span>西城区</span></p>
-                      </div>
-                      <div className='streetBox'>
-                        <p className='street'><span>01</span>西长安街与西单北大街{ismodify ? <DeleteOutlined /> : ''}</p>
-                        <p className='intersection'><span>十字路口</span><span>西城区</span></p>
-                      </div>
+                      {
+                        unitArr && unitArr.map((item, index) => {
+                          return (
+                            <p key={item + index}><b>{item.unit_name}</b></p>
+                          )
+                        })
+                      }
                     </div>
                   </div>
                 </div>
@@ -395,6 +488,12 @@ class Region extends Component {
             </div>
           }
         </div>
+        <Modal
+          title="确定删除?"
+          visible={deleteConfirm}
+          onOk={this.deleteOks}
+          onCancel={this.deleteCancel}
+        />
       </div >
     )
   }
