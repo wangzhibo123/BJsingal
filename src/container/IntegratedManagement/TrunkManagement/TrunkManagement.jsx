@@ -94,6 +94,7 @@ class TrunkManagement extends Component {
       const { code, treeList } = res.data
       if (code === '1') {
         this.treeListDatas = treeList
+
         this.setState({ treeList, treeListChild: this.defaultChildren })
       }
     })
@@ -162,6 +163,9 @@ class TrunkManagement extends Component {
       if (code === '1') {
         this.pointLists = list
         this.addMarker(this.pointLists, 8)
+        this.setState({
+          pointlist: list,
+        })
       }
     })
     axiosInstance.post(this.loadRouteDirection).then(res => { // 干线方向
@@ -500,15 +504,18 @@ class TrunkManagement extends Component {
     const popupOption = {
       closeOnClick: false,
       closeButton: true,
+      maxWidth: '1000px',
       offset: [0, 0]
     }
     this.mapPopup = new window.mapabcgl.Popup(popupOption)
       .setLngLat(new window.mapabcgl.LngLat(marker.longitude, marker.latitude))
       .setHTML(this.getInfoWindowHtml(marker))
       .addTo(this.map)
-    $('.mapabcgl-popup')[0].style.maxWidth = '1000px'
+    // $('.mapabcgl-popup')[0].style.maxWidth = '1000px'
+    // console.log(this.interMonitorBtn)
   }
   getInfoWindowHtml = (interMsg) => {
+    // console.log(interMsg, 'dfdfd')
     return `
       <div class="infoWindow">
         <div class="infotitle">${interMsg.unit_name}</div>
@@ -875,12 +882,20 @@ class TrunkManagement extends Component {
       deleteConfirm: false,
     })
   }
+  // 路口搜索
+  handleInterSearch = (value, options) => {
+    console.log(value, options)
+    const { key, lng, lat } = options
+    this.map.panTo([lng, lat])
+    $('#marker' + key).trigger('click')
+  }
   render() {
     const { Option } = Select
     const {
       mainHomePage, stateSelect, clickNum, Istitletops, isAddEdit, ismodify, IsddMessge, rights, roadValue,
       loadRouteDirectionList, loadRouteTypeList, treeList, menuOpenkeys, deleteConfirm, treeListChild,
-      route_name, route_code, route_directionvalue, route_miles, route_typevalue, detail, roadtitle
+      route_name, route_code, route_directionvalue, route_miles, route_typevalue, detail, roadtitle,
+      pointlist
     } = this.state
     return (
       <div className='TrunkManagementBox'>
@@ -1010,11 +1025,21 @@ class TrunkManagement extends Component {
             </div>
           </div> */}
         </div>
-        <div className="iptSearchNavMap">
-          <input type="text" placeholder="查询…" className="inptNavMon" />
-          <div className="MagBox">
-            <SearchOutlined />
-          </div>
+        <div className="interSearchBox">
+          <Select
+            showSearch
+            style={{ width: 200 }}
+            placeholder="路口查询"
+            onChange={this.handleInterSearch}
+            dropdownClassName="searchList"
+          >
+            {
+              pointlist &&
+              pointlist.map((item) => (
+                <Option key={item.unit_code} value={item.unit_name} lng={item.longitude} lat={item.latitude}>{item.unit_name}</Option>
+              ))
+            }
+          </Select>
         </div>
         <div className='sidebarLeft'>
           <div className='tabLeft'>
@@ -1023,7 +1048,7 @@ class TrunkManagement extends Component {
                 onClick={() => this.clickOperationNum(item.id)} key={item.id}>{item.name}</span>)
             }
           </div>
-          <div className="topNavMon">
+          {/* <div className="topNavMon">
             <div className="selectNav">
               <Select
                 // defaultValue="海淀区"
@@ -1044,7 +1069,7 @@ class TrunkManagement extends Component {
                 <SearchOutlined />
               </div>
             </div>
-          </div>
+          </div> */}
           <div className='sidebarLeftBox'>
             <Menu
               onOpenChange={this.onOpenChangeSubMenu}

@@ -215,7 +215,7 @@ class Homepage extends Component {
           <div class="message">设备状态：${interMsg.alarm_state}</div>
           <div class="message">运行阶段：${interMsg.stage_code || ''}</div>
         </div>
-        <div class="interDetails"><div class="monitorBtn"><a style="color:#62bbff" href="#/interMonitor/${interMsg.unit_code}">路口检测</a></div></div>
+        <div class="interDetails"><div class="monitorBtn"><a style="color:#62bbff" href="#/interMonitor/${interMsg.id}">路口检测</a></div></div>
       </div>
     `
   }
@@ -323,7 +323,9 @@ class Homepage extends Component {
     this.map.addControl(new window.mapabcgl.NavigationControl());
     this.map.on('load', () => {
       this.addTrafficLayer()
-      this.addMarker(this.pointLists)
+      if (this.pointLists.length) {
+        this.addMarker(this.pointLists)
+      }
     })
     this.map.on('zoom', () => {
       if (this.zoomTimer) {
@@ -332,7 +334,9 @@ class Homepage extends Component {
       }
       this.zoomTimer = setTimeout(() => {
         const zoomLev = Math.round(this.map.getZoom())
-        this.addMarker(this.pointLists, zoomLev)
+        if (this.pointLists.length) {
+          this.addMarker(this.pointLists, zoomLev)
+        }
       }, 700)
     })
   }

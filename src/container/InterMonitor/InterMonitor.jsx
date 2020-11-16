@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Select } from 'antd'
 import {
   SearchOutlined, DoubleLeftOutlined, DoubleRightOutlined, CaretUpOutlined, CaretDownOutlined, LeftCircleOutlined,
-  RightCircleOutlined, UpCircleOutlined, DownCircleOutlined,
+  RightCircleOutlined, UpCircleOutlined, DownCircleOutlined, CloseOutlined,
 } from '@ant-design/icons'
 import './InterMonitor.scss'
 
@@ -12,7 +12,13 @@ import hand from '../imgs/iconH.png'
 import allred from '../imgs/iconR.png'
 import yellow from '../imgs/IconY.png'
 import phasePic from '../imgs/01.png'
-import test1 from '../imgs/test1.png'
+import phasePic2 from '../imgs/03.png'
+import phasePic3 from '../imgs/11.png'
+import phasePic4 from '../imgs/04.png'
+import phasePic5 from '../imgs/10.png'
+import phasePic6 from '../imgs/02.png'
+import test1 from '../imgs/interBg.png'
+import singalIcon from '../imgs/singalIcon.png'
 
 import InterTimeList from './InterTimeList/InterTimeList'
 import Graph from './Graph/Graph'
@@ -34,6 +40,7 @@ class InterMonitor extends Component {
       trafficInfoList: null,
       interConfigMsg: null,
       trendChartsData: null,
+      interInfo: null,
     }
     this.confItems = [
       { confname: '基础信息', id: 'interBase' }, { confname: '信号参数', id: 'singalParams' },
@@ -60,7 +67,12 @@ class InterMonitor extends Component {
   // 路口信息
   getInterInfo = () => {
     axiosInstance.post(this.messageUrl).then((res) => {
-      console.log(res)
+      const { code, list } = res.data
+      if (code === '1') {
+        this.setState({ interInfo: list })
+      } else {
+        this.setState({ interIndo: null })
+      }
     })
   }
   // 获取实时状态控制模式
@@ -130,13 +142,18 @@ class InterMonitor extends Component {
   hanldleCloseInterConf = () => {
     this.setState({ interConfigMsg: null })
   }
+  handleShowSingalInfo = () => {
+    this.setState({ showSingalInfo: true })
+  }
   render() {
-    const { confListLeft, modeIndex, moveLeft, moveRight, moveUp, moveDown, trafficInfoList, interConfigMsg, trendChartsData } = this.state
+    const {
+      confListLeft, modeIndex, moveLeft, moveRight, moveUp, moveDown, trafficInfoList, interConfigMsg, trendChartsData, interInfo, showSingalInfo,
+      phaseTime,
+    } = this.state
     return (
       <div className="interMonitorBox">
         <div className="interMessage">
           <span className="slideLeft slideIcon" dir="moveLeft" onClick={this.handleToggleInter}><LeftCircleOutlined /></span>
-          <span className="slideRight slideIcon" dir="moveRight" onClick={this.handleToggleInter}><RightCircleOutlined /></span>
           <span className="slideUp slideIcon" dir="moveUp" onClick={this.handleToggleInter}><UpCircleOutlined /></span>
           <span className="slideDown slideIcon" dir="moveDown" onClick={this.handleToggleInter}><DownCircleOutlined /></span>
           <div className="interPic">
@@ -144,9 +161,9 @@ class InterMonitor extends Component {
           </div>
           {
             !!interConfigMsg &&
-            <InterConfMsg closeInterConf={this.hanldleCloseInterConf} configName={interConfigMsg} interId={this.interId} />
+            <InterConfMsg closeInterConf={this.hanldleCloseInterConf} configName={interConfigMsg} interId={this.interId} interInfo={interInfo} />
           }
-          <div className="title">当前路口-</div>
+          <div className="title">当前路口-{interInfo && interInfo.unit_name}</div>
           <div className="monitorDetails">
             <InterTimeList />
             <div className="roadTrends">
@@ -155,38 +172,61 @@ class InterMonitor extends Component {
                 <Graph chartsDatas={trendChartsData} />
               }
             </div>
-            {/* <Example /> */}
+            <div className="singalIconBox" onClick={this.handleShowSingalInfo}>
+              <img src={singalIcon} alt="" />
+            </div>
+            {
+              showSingalInfo &&
+              <div className="singalInfoBox">
+                <div className="singalTitle">设备名称：27787827<CloseOutlined className="closeIcon" onClick={this.handleHideSingalInfo} /></div>
+                <div className="infoItem">
+                  <div className="item">关联编号：10101</div>
+                  <div className="item">关联编号：10101</div>
+                </div>
+                <div className="infoItem">
+                  <div className="item">维护单位：指挥中心</div>
+                  <div className="item">维护电话：110</div>
+                </div>
+                <div className="infoItem">
+                  <div className="item">管理单位：指挥中心</div>
+                  <div className="item">设备状态：正常</div>
+                </div>
+              </div>
+            }
+            <div className="interPhaseTime">
+              <em><i>{phaseTime}s</i></em>
+            </div>
             <div className="conditionList">
               <div className="titles">各路口实时路况</div>
-                <div className="listBox">
-                  <div className="listTh">
-                    <span className="innterBorder" />
-                    <div className="listTd" />
-                    <div className="listTd">拥堵状态</div>
-                    <div className="listTd">平均车速</div>
-                    <div className="listTd">饱和度</div>
-                  </div>
-                  <div className="listBody">
-                    {
-                      trafficInfoList &&
-                      trafficInfoList.map((item) => (
-                        <div className="listTr" key={item.distriction}>
-                          <span className="innterBorder" />
-                          <div className="listTd">{item.distriction}路</div>
-                          <div className="listTd">{item.jam_dur}</div>
-                          <div className="listTd">{item.speed}km/h</div>
-                          <div className="listTd">{item.saturation}</div>
-                        </div>
-                      ))
-                    }
-                  </div>
+              <div className="listBox">
+                <div className="listTh">
+                  <span className="innterBorder" />
+                  <div className="listTd" />
+                  <div className="listTd">拥堵状态</div>
+                  <div className="listTd">平均车速</div>
+                  <div className="listTd">饱和度</div>
                 </div>
+                <div className="listBody">
+                  {
+                    trafficInfoList &&
+                    trafficInfoList.map((item) => (
+                      <div className="listTr" key={item.distriction}>
+                        <span className="innterBorder" />
+                        <div className="listTd">{item.distriction}路</div>
+                        <div className="listTd">{item.jam_dur}</div>
+                        <div className="listTd">{item.speed}km/h</div>
+                        <div className="listTd">{item.saturation}</div>
+                      </div>
+                    ))
+                  }
+                </div>
+              </div>
             </div>
             <div className="confList" style={{ left: confListLeft }}>
               <div className="showConf" onClick={this.handleshowConfList}>
                 {
                   confListLeft === 0 ?
-                  <DoubleLeftOutlined className="showIcon" /> : <DoubleRightOutlined className="showIcon" />
+                    <DoubleLeftOutlined className="showIcon" /> : <DoubleRightOutlined className="showIcon" />
                 }
               </div>
               <div className="interSearch">
@@ -233,49 +273,42 @@ class InterMonitor extends Component {
                 </div>
                 <div className="controlDetails">
                   <div className="phaseTime">
-                    <div className="phaseinner"><img src={phasePic} alt=""/></div>
-                    <div className="phaseinner times">
-                      <span>540</span>
-                      <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
-                    </div>
-                  </div>
-                  <div className="phaseTime">
-                    <div className="phaseinner"><img src={phasePic} alt=""/></div>
+                    <div className="phaseinner"><img src={phasePic2} alt="" /></div>
                     <div className="phaseinner times">
                       <span>40</span>
                       <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
                     </div>
                   </div>
                   <div className="phaseTime">
-                    <div className="phaseinner"><img src={phasePic} alt=""/></div>
+                    <div className="phaseinner"><img src={phasePic3} alt="" /></div>
                     <div className="phaseinner times">
                       <span>40</span>
                       <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
                     </div>
                   </div>
                   <div className="phaseTime">
-                    <div className="phaseinner"><img src={phasePic} alt=""/></div>
+                    <div className="phaseinner"><img src={phasePic4} alt="" /></div>
                     <div className="phaseinner times">
                       <span>40</span>
                       <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
                     </div>
                   </div>
                   <div className="phaseTime">
-                    <div className="phaseinner"><img src={phasePic} alt=""/></div>
+                    <div className="phaseinner"><img src={phasePic} alt="" /></div>
                     <div className="phaseinner times">
                       <span>40</span>
                       <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
                     </div>
                   </div>
                   <div className="phaseTime">
-                    <div className="phaseinner"><img src={phasePic} alt=""/></div>
+                    <div className="phaseinner"><img src={phasePic5} alt="" /></div>
                     <div className="phaseinner times">
                       <span>40</span>
                       <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
                     </div>
                   </div>
                   <div className="phaseTime">
-                    <div className="phaseinner"><img src={phasePic} alt=""/></div>
+                    <div className="phaseinner"><img src={phasePic6} alt="" /></div>
                     <div className="phaseinner times">
                       <span>40</span>
                       <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>

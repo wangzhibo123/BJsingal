@@ -2,6 +2,7 @@
 import React, { Component } from 'react'
 import { Menu, Select, message, Modal } from 'antd'
 import { EditOutlined, SearchOutlined, DeleteOutlined, CloseOutlined } from '@ant-design/icons';
+import $ from 'jquery'
 import './Region.scss'
 import mapConfiger from '../../utils/minemapConf'
 import axiosInstance from '../../utils/getInterfaceData'
@@ -70,6 +71,9 @@ class Region extends Component {
       if (code === '1') {
         this.pointLists = list
         this.addMarker(this.pointLists, 8)
+        this.setState({
+          pointlist: list,
+        })
       }
     })
   }
@@ -353,10 +357,17 @@ class Region extends Component {
       deleteConfirm: false,
     })
   }
+  // 路口搜索
+  handleInterSearch = (value, options) => {
+    console.log(value, options)
+    const { key, lng, lat } = options
+    this.map.panTo([lng, lat])
+    $('#marker' + key).trigger('click')
+  }
   render() {
     const { Option } = Select
     const {
-      mainHomePage, treeList, clickNum, menuOpenkeys, isAddEdit, rights, ismodify,
+      mainHomePage, treeList, clickNum, menuOpenkeys, isAddEdit, rights, ismodify, pointlist,
       roadtitle, detail, sub_district_code, sub_district_name, sub_district_user, unitArr, deleteConfirm,
     } = this.state
     return (
@@ -416,11 +427,21 @@ class Region extends Component {
             }
           </div>
         </div>
-        <div className="iptSearchNavMap">
-          <input type="text" placeholder="查询…" className="inptNavMon" />
-          <div className="MagBox">
-            <SearchOutlined />
-          </div>
+        <div className="interSearchBox">
+          <Select
+            showSearch
+            style={{ width: 200 }}
+            placeholder="路口查询"
+            onChange={this.handleInterSearch}
+            dropdownClassName="searchList"
+          >
+            {
+              pointlist &&
+              pointlist.map((item) => (
+                <Option key={item.unit_code} value={item.unit_name} lng={item.longitude} lat={item.latitude}>{item.unit_name}</Option>
+              ))
+            }
+          </Select>
         </div>
         <div className='sidebarLeft'>
           <div className='tabLeft'>
@@ -429,7 +450,7 @@ class Region extends Component {
                 onClick={() => this.clickOperationNum(item.id)} key={item.id}>{item.name}</span>)
             }
           </div>
-          <div className="topNavMon">
+          {/* <div className="topNavMon">
             <div className="selectNav">
               <Select
                 // defaultValue="海淀区"
@@ -450,7 +471,7 @@ class Region extends Component {
                 <SearchOutlined />
               </div>
             </div>
-          </div>
+          </div> */}
           <div className='sidebarLeftBox'>
             <Menu
               onOpenChange={this.onOpenChangeSubMenu}

@@ -68,7 +68,7 @@ class InterConfMsg extends Component {
     this.uploadPic = `/control-application-front/unitMontitor/uploadCanalizationFile?unitCode=${this.props.interId}`
   }
   componentDidMount = () => {
-    const { configName } = this.props
+    const { configName, interInfo } = this.props
     this.setState({ configName })
   }
   componentDidUpdate = (prevState) => {
@@ -169,16 +169,16 @@ class InterConfMsg extends Component {
                       <div className="deviceList">
                         {
                           currentItem === 'channel' &&
-                          this.dirPic.map((item) => (
-                            <div className="devicePicBox" key={item}>
+                          this.dirPic.map((item, index) => (
+                            <div className="devicePicBox" key={index} draggable="true">
                               <img src={item.pic} alt="" height="100%" />
                             </div>
                           ))
                         }
                         {
                           currentItem === 'inter' &&
-                          this.turnPic.map((item) => (
-                            <div className="devicePicBox" key={item}>
+                          this.turnPic.map((item, index) => (
+                            <div className="devicePicBox" key={index}>
                               <img src={item.pic} alt="" height="100%" />
                             </div>
                           ))
