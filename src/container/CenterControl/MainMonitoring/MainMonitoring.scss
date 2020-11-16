@@ -377,64 +377,21 @@
                 .modeMainEWMode{
                     height: 50%;
                     margin-left: 30px;
-                    .modeMainEWBtn{
-                        height: 50px;
-                        margin-top: 30px;
-                        .ant-btn{
-                            width: 67px;
-                             height: 41px;
-                             background: #010F46;
-                             border: 1px solid #4289E1;
-                             color: #515A8B;
-                             font-size: 20px;
-                             margin-left:15px;
-                             box-shadow:inset 0px 0px 2px 1px #4289E1;
-                        }
-                        .modeShowStyle{
-                            color: #fff;
-                            box-shadow: inset +-1px 1px 1px 1px #4289E1;
-                        }
-                        
-                    }
                     .modeMainEWVideo{
-                        width: 483px;
-                        height: 292px;
-                        margin-left:15px;
-                        margin-top: 5px;
+                        width: calc(100% - 10px);
+                        height: 100%;
+                        margin-left:10px;
+                        margin-top: 20px;
                     }
-                }   
+                }
                 .modeMainSNMode{
-                    width: 100%;
                     height: 50%;
                     margin-left: 30px;
-                    .modeMainSNBtn{
-                        height: 50px;
-                        margin-top: 30px;
-                        .ant-btn{
-                            width: 67px;
-                             height: 41px;
-                             background: #010F46;
-                             border: 1px solid #4289E1;
-                             color:#515A8B;
-                             font-size: 20px;
-                             margin-left:15px;
-                             box-shadow:inset 0px 0px 2px 1px #4289E1;
-                        }
-                        .modeShowStyle{
-                            color: #fff;
-                            box-shadow: inset +-1px 1px 1px 1px #4289E1;
-                        }
-                    }
                     .modeMainSNVideo{
-                        width: 483px;
-                        height: 292px;
-                        // background: skyblue;
-                        margin-left:15px;
-                        margin-top: 5px;
-                        video{
-                            width: 100%;
-                            height: 100%;
-                        }
+                        width: calc(100% - 10px);
+                        height: 100%;
+                        margin-left:10px;
+                        margin-top: 20px;
                     }
                 }
             }
