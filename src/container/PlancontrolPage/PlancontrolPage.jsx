@@ -919,7 +919,6 @@ class Homepage extends Component {
             mode="inline"
 
           >
-
           </Menu>
         </div>
         <div className='sidebarLeft'>
