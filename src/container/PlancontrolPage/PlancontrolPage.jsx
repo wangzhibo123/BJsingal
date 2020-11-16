@@ -8,7 +8,7 @@ import mapConfiger from '../utils/minemapConf'
 import startPng from '../imgs/start.png'
 import endPng from '../imgs/end.png'
 import carPng from '../imgs/car.png'
-import phase1 from '../imgs/03.png'
+import phase1 from '../imgs/01.png'
 import phase2 from '../imgs/03.png'
 import phase3 from '../imgs/03.png'
 import phase4 from '../imgs/03.png'
@@ -75,7 +75,7 @@ class Homepage extends Component {
     function getMarkerEl() {
       var el = document.createElement('div')
       el.className = "text-marker" //可以设置统一class，方便管理
-      el.innerHTML = `<img width="36px" height="36px" src="${phase3}" />`
+      el.innerHTML = `<img width="36px" height="36px" src="${phase1}" />`
       el.style.width = '35px';
       el.style.height = '41px';
       el.style.paddingTop = '5px';
