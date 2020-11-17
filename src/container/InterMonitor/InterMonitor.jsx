@@ -145,9 +145,6 @@ class InterMonitor extends Component {
   handleShowSingalInfo = () => {
     this.setState({ showSingalInfo: true })
   }
-  handleHideSingalInfo =() => {
-    this.setState({ showSingalInfo: false })
-  }
   render() {
     const {
       confListLeft, modeIndex, moveLeft, moveRight, moveUp, moveDown, trafficInfoList, interConfigMsg, trendChartsData, interInfo, showSingalInfo,
@@ -157,7 +154,6 @@ class InterMonitor extends Component {
       <div className="interMonitorBox">
         <div className="interMessage">
           <span className="slideLeft slideIcon" dir="moveLeft" onClick={this.handleToggleInter}><LeftCircleOutlined /></span>
-          <span className="slideRight slideIcon" dir="moveRight" onClick={this.handleToggleInter}><RightCircleOutlined /></span>
           <span className="slideUp slideIcon" dir="moveUp" onClick={this.handleToggleInter}><UpCircleOutlined /></span>
           <span className="slideDown slideIcon" dir="moveDown" onClick={this.handleToggleInter}><DownCircleOutlined /></span>
           <div className="interPic">
@@ -180,7 +176,7 @@ class InterMonitor extends Component {
               }
             </div>
             <div className="singalIconBox" onClick={this.handleShowSingalInfo}>
-              <img src={singalIcon} alt=""/>
+              <img src={singalIcon} alt="" />
             </div>
             {
               showSingalInfo &&
@@ -202,35 +198,35 @@ class InterMonitor extends Component {
             }
             <div className="conditionList">
               <div className="titles">各路口实时路况</div>
-                <div className="listBox">
-                  <div className="listTh">
-                    <span className="innterBorder" />
-                    <div className="listTd" />
-                    <div className="listTd">拥堵状态</div>
-                    <div className="listTd">平均车速</div>
-                    <div className="listTd">饱和度</div>
-                  </div>
-                  <div className="listBody">
-                    {
-                      trafficInfoList &&
-                      trafficInfoList.map((item) => (
-                        <div className="listTr" key={item.distriction}>
-                          <span className="innterBorder" />
-                          <div className="listTd">{item.distriction}路</div>
-                          <div className="listTd">{item.jam_dur}</div>
-                          <div className="listTd">{item.speed}km/h</div>
-                          <div className="listTd">{item.saturation}</div>
-                        </div>
-                      ))
-                    }
-                  </div>
+              <div className="listBox">
+                <div className="listTh">
+                  <span className="innterBorder" />
+                  <div className="listTd" />
+                  <div className="listTd">拥堵状态</div>
+                  <div className="listTd">平均车速</div>
+                  <div className="listTd">饱和度</div>
                 </div>
+                <div className="listBody">
+                  {
+                    trafficInfoList &&
+                    trafficInfoList.map((item) => (
+                      <div className="listTr" key={item.distriction}>
+                        <span className="innterBorder" />
+                        <div className="listTd">{item.distriction}路</div>
+                        <div className="listTd">{item.jam_dur}</div>
+                        <div className="listTd">{item.speed}km/h</div>
+                        <div className="listTd">{item.saturation}</div>
+                      </div>
+                    ))
+                  }
+                </div>
+              </div>
             </div>
             <div className="confList" style={{ left: confListLeft }}>
               <div className="showConf" onClick={this.handleshowConfList}>
                 {
                   confListLeft === 0 ?
-                  <DoubleLeftOutlined className="showIcon" /> : <DoubleRightOutlined className="showIcon" />
+                    <DoubleLeftOutlined className="showIcon" /> : <DoubleRightOutlined className="showIcon" />
                 }
               </div>
               <div className="interSearch">
@@ -277,42 +273,42 @@ class InterMonitor extends Component {
                 </div>
                 <div className="controlDetails">
                   <div className="phaseTime">
-                    <div className="phaseinner"><img src={phasePic2} alt=""/></div>
+                    <div className="phaseinner"><img src={phasePic2} alt="" /></div>
                     <div className="phaseinner times">
                       <span>40</span>
                       <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
                     </div>
                   </div>
                   <div className="phaseTime">
-                    <div className="phaseinner"><img src={phasePic3} alt=""/></div>
+                    <div className="phaseinner"><img src={phasePic3} alt="" /></div>
                     <div className="phaseinner times">
                       <span>40</span>
                       <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
                     </div>
                   </div>
                   <div className="phaseTime">
-                    <div className="phaseinner"><img src={phasePic4} alt=""/></div>
+                    <div className="phaseinner"><img src={phasePic4} alt="" /></div>
                     <div className="phaseinner times">
                       <span>40</span>
                       <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
                     </div>
                   </div>
                   <div className="phaseTime">
-                    <div className="phaseinner"><img src={phasePic} alt=""/></div>
+                    <div className="phaseinner"><img src={phasePic} alt="" /></div>
                     <div className="phaseinner times">
                       <span>40</span>
                       <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
                     </div>
                   </div>
                   <div className="phaseTime">
-                    <div className="phaseinner"><img src={phasePic5} alt=""/></div>
+                    <div className="phaseinner"><img src={phasePic5} alt="" /></div>
                     <div className="phaseinner times">
                       <span>40</span>
                       <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
                     </div>
                   </div>
                   <div className="phaseTime">
-                    <div className="phaseinner"><img src={phasePic6} alt=""/></div>
+                    <div className="phaseinner"><img src={phasePic6} alt="" /></div>
                     <div className="phaseinner times">
                       <span>40</span>
                       <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>

@@ -135,6 +135,9 @@ class Intersection extends Component {
       if (code === '1') {
         this.pointLists = list
         this.addMarker(this.pointLists, 8)
+        this.setState({
+          pointlist: list,
+        })
       }
     })
   }
@@ -188,26 +191,34 @@ class Intersection extends Component {
     const popupOption = {
       closeOnClick: false,
       closeButton: true,
+      maxWidth: '1000px',
       offset: [0, 0]
     }
     this.mapPopup = new window.mapabcgl.Popup(popupOption)
       .setLngLat(new window.mapabcgl.LngLat(marker.longitude, marker.latitude))
       .setHTML(this.getInfoWindowHtml(marker))
       .addTo(this.map)
-    $('.mapabcgl-popup')[0].style.maxWidth = '1000px'
+    // $('.mapabcgl-popup')[0].style.maxWidth = '1000px'
+    // console.log(this.interMonitorBtn)
   }
   getInfoWindowHtml = (interMsg) => {
+    console.log(interMsg, 'qiaoss')
+    const { UnitPosition, UnitType, UnitDistrict, UnitGroup } = this.state
+    const roadposition = UnitPosition && UnitPosition.find(item => item.c_code === interMsg.unit_position).code_name
+    const roadunit_type_code = UnitType && UnitType.find(item => item.c_code === interMsg.unit_type_code).code_name
+    const roaddistrict_id = UnitDistrict && UnitDistrict.find(item => item.id === interMsg.district_id).district_name
+    const roaduser_group_id = UnitGroup && UnitGroup.find(item => item.id === interMsg.user_group_id).user_group_name
     return `
       <div class="infoWindow">
         <div class="infotitle">${interMsg.unit_name}</div>
         <div class="interMessage">
-          <div class="message">设备类型：信号灯</div>
-          <div class="message">所属城区：${interMsg.district_name}</div>
-          <div class="message">控制状态：${interMsg.control_state}</div>
-          <div class="message">信号系统：${interMsg.signal_system_code}</div>
-          <div class="message">信号机IP：${interMsg.signal_ip}</div>
-          <div class="message">设备状态：${interMsg.alarm_state}</div>
-          <div class="message">运行阶段：${interMsg.stage_code}</div>
+          <div class="message">路口编号：${interMsg.unit_code}</div>
+          <div class="message">所属区域：${roaddistrict_id}</div>
+          <div class="message">路口位置：${roadposition}</div>
+          <div class="message">路口类型：${roadunit_type_code}</div>
+          <div class="message">原始路口名称：${interMsg.unit_name_old}</div>
+          <div class="message">管理单位：${roaduser_group_id}</div>
+          <div class="message">主路口编号：${interMsg.main_unit_id}</div>
         </div>
         <div class="interDetails"><div class="monitorBtn">路口检测</div></div>
       </div>
@@ -335,11 +346,13 @@ class Intersection extends Component {
     }
   }
   onClickMenuItem = (event) => { // 点击menu-item
-    console.log(event.item.props.data_item, 'vvbbb')
+    // console.log(event.item.props.data_item, 'vvbbb')
     const { UnitPosition, UnitType, UnitDistrict, UnitGroup } = this.state
     const { data_item } = event.item.props
+    this.map.panTo([data_item.longitude, data_item.latitude])
+    $('#marker' + data_item.unit_code).trigger('click')
     this.roaddId = data_item.id
-    console.log(UnitPosition, data_item.unit_position, '121321324564')
+    // console.log(UnitPosition, data_item.unit_position, '121321324564')
     const roadposition = UnitPosition && UnitPosition.find(item => item.c_code === data_item.unit_position).code_name
     const roadunit_type_code = UnitType && UnitType.find(item => item.c_code === data_item.unit_type_code).code_name
     const roaddistrict_id = UnitDistrict && UnitDistrict.find(item => item.id === data_item.district_id).district_name
@@ -507,6 +520,13 @@ class Intersection extends Component {
       deleteConfirm: false,
     })
   }
+  // 路口搜索
+  handleInterSearch = (value, options) => {
+    console.log(value, options)
+    const { key, lng, lat } = options
+    this.map.panTo([lng, lat])
+    $('#marker' + key).trigger('click')
+  }
   render() {
     const { Option } = Select
     const {
@@ -514,7 +534,7 @@ class Intersection extends Component {
       unit_code, unit_type_code, unit_position, district_id, user_group_id, longitude, latitude,
       signal_sys_unit_id, signal_unit_id, minor_unit_number, be_taken, unit_name, deleteConfirm,
       UnitPosition, UnitType, UnitGroup, UnitDistrict, signal_system_code,
-      unit_name_signal_sys, main_unit_id, unit_name_old,
+      unit_name_signal_sys, main_unit_id, unit_name_old, pointlist,
       roadposition, roadunit_type_code, roaddistrict_id, roaduser_group_id, roadbe_taken, roadtitle
     } = this.state
     return (
@@ -666,11 +686,21 @@ class Intersection extends Component {
                 </div> */}
           </div>
         </div>
-        <div className="iptSearchNavMap">
-          <input type="text" placeholder="查询…" className="inptNavMon" />
-          <div className="MagBox">
-            <SearchOutlined />
-          </div>
+        <div className="interSearchBox">
+          <Select
+            showSearch
+            style={{ width: 200 }}
+            placeholder="路口查询"
+            onChange={this.handleInterSearch}
+            dropdownClassName="searchList"
+          >
+            {
+              pointlist &&
+              pointlist.map((item) => (
+                <Option key={item.unit_code} value={item.unit_name} lng={item.longitude} lat={item.latitude}>{item.unit_name}</Option>
+              ))
+            }
+          </Select>
         </div>
         <div className='sidebarLeft'>
           <div className='tabLeft'>
@@ -679,7 +709,7 @@ class Intersection extends Component {
                 onClick={() => this.clickOperationNum(item.id)} key={item.id}>{item.name}</span>)
             }
           </div>
-          <div className="topNavMon">
+          {/* <div className="topNavMon">
             <div className="selectNav">
               <Select
                 // defaultValue="海淀区"
@@ -700,7 +730,7 @@ class Intersection extends Component {
                 <SearchOutlined />
               </div>
             </div>
-          </div>
+          </div> */}
           <div className='sidebarLeftBox'>
             <Menu
               onOpenChange={this.onOpenChangeSubMenu}

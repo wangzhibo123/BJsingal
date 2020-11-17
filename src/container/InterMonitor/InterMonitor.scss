@@ -47,7 +47,7 @@
     position: relative;
     width: 100%;
     height: 100%;
-    background-color: #02102B;
+    background-color: #02102b;
     .interMessage {
         position: absolute;
         bottom: 0;
@@ -64,8 +64,8 @@
             text-align: center;
             line-height: 30px;
             font-size: 30px;
-            opacity: .5;
-            transition: all .3s;
+            opacity: 0.5;
+            transition: all 0.3s;
             cursor: pointer;
             &:hover {
                 opacity: 1;
@@ -103,19 +103,19 @@
             img {
                 width: 100%;
                 height: 100%;
-                transition: all .3s;
+                transition: all 0.3s;
             }
             .slideInLeft {
-                animation: slideLeft .5s;
+                animation: slideLeft 0.5s;
             }
             .slideInRight {
-                animation: slideRight .5s;
+                animation: slideRight 0.5s;
             }
             .slideInUp {
-                animation: slideUp .5s;
+                animation: slideUp 0.5s;
             }
             .slideInDown {
-                animation: slideDown .5s;
+                animation: slideDown 0.5s;
             }
             .interPhaseTime {
                 > em {
@@ -123,46 +123,46 @@
                     width:109px;
                     height:109px;
                     text-align: center;
-                    background:url(../imgs/timeBgText.png) no-repeat;
+                    background: url(../imgs/timeBgText.png) no-repeat;
                     position: absolute;
-                    top:50%;
-                    left:50%;
-                    transform: translate(-50%,-50%);
-                    > i{
-                        width:109px;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    > i {
+                        width: 109px;
                         line-height: 109px;
                         font-size: 28px;
                         font-weight: bold;
                         color: #fff;
                         position: absolute;
-                        top:0;
-                        right:0;
-                        bottom:0;
-                        left:0;
-                        z-index: 1; 
-                    }                   
+                        top: 0;
+                        right: 0;
+                        bottom: 0;
+                        left: 0;
+                        z-index: 1;
+                    }
                 }
-                > em::after{
-                    width:99px;
-                    height:99px;
+                > em::after {
+                    width: 99px;
+                    height: 99px;
                     display: inline-block;
-                    content: '';
+                    content: "";
                     position: absolute;
-                    top:5px;
-                    left:5px;
+                    top: 5px;
+                    left: 5px;
                     background: #051431;
                     border-radius: 100%;
                     z-index: 0;
                 }
-                > em::before{
-                    width:114px;
-                    height:114px;
+                > em::before {
+                    width: 114px;
+                    height: 114px;
                     display: inline-block;
-                    content: '';
+                    content: "";
                     background: url(../imgs/timeCircle.png) no-repeat right center;
                     position: absolute;
-                    top:-3px;
-                    left:-3px;
+                    top: -3px;
+                    left: -3px;
                     animation: rotateDeg 1s infinite;
                 }
             }
@@ -196,7 +196,7 @@
                 left: 750px;
                 width: 350px;
                 padding-bottom: 10px;
-                background-color: rgba(9,17,77, .9);
+                background-color: rgba(9, 17, 77, 0.9);
                 border-radius: 5px;
                 .singalTitle {
                     position: relative;
@@ -204,8 +204,8 @@
                     padding-left: 20px;
                     font-size: 15px;
                     line-height: 40px;
-                    color: #B6D2EF;
-                    border-bottom: 1px solid #27519C;
+                    color: #b6d2ef;
+                    border-bottom: 1px solid #27519c;
                     .closeIcon {
                         position: absolute;
                         right: 5px;
@@ -218,7 +218,7 @@
                         font-size: 15px;
                         border-radius: 50%;
                         cursor: pointer;
-                        transition: all .3s;
+                        transition: all 0.3s;
                         &:hover {
                             transform: rotate(-180deg) scale(1.2);
                         }
@@ -227,7 +227,7 @@
                 .infoItem {
                     height: 30px;
                     display: flex;
-                    color: #74A7DC;
+                    color: #74a7dc;
                     .item {
                         flex: 1;
                         line-height: 30px;
@@ -250,8 +250,8 @@
                 width: 378px;
                 height: 243px;
                 padding: 0 10px;
-                background-color: RGBA(2, 26, 74, .6);
-                box-shadow: inset 0 0 3px #072A5C;
+                background-color: RGBA(2, 26, 74, 0.6);
+                box-shadow: inset 0 0 3px #072a5c;
                 .titles {
                     position: absolute;
                     top: 0;
@@ -261,7 +261,7 @@
                     padding: 6px 0 0 6px;
                     line-height: 20px;
                     font-size: 16px;
-                    color:#7ED7FF;
+                    color: #7ed7ff;
                     background-color: RGBA(2, 26, 74, 1);
                     box-shadow: inset 0 0 10px #133c75;
                 }
@@ -273,7 +273,8 @@
                         flex: 1;
                         overflow-y: auto;
                     }
-                    .listTh, .listTr {
+                    .listTh,
+                    .listTr {
                         position: relative;
                         height: 45px;
                         display: flex;
@@ -282,7 +283,7 @@
                             flex: 1;
                             display: flex;
                             justify-content: center;
-                            color: #B2EBFF;
+                            color: #b2ebff;
                         }
                         .innterBorder {
                             position: absolute;
@@ -290,18 +291,28 @@
                             left: 0;
                             width: 100%;
                             height: 1px;
-                            background: linear-gradient(90deg, rgba(42, 52, 240, 0), rgba(32, 93, 197, 0.99), rgba(42, 52, 240, 0));
+                            background: linear-gradient(
+                                90deg,
+                                rgba(42, 52, 240, 0),
+                                rgba(32, 93, 197, 0.99),
+                                rgba(42, 52, 240, 0)
+                            );
                         }
                     }
                     .listTh {
                         .listTd {
-                            color: #5388FF;
+                            color: #5388ff;
                         }
                     }
                     .listTr {
                         cursor: pointer;
                         &:hover {
-                            background: linear-gradient(90deg, rgba(52, 92, 167, 0.02), rgba(16, 68, 175, 0.99), rgba(52, 92, 167, 0));
+                            background: linear-gradient(
+                                90deg,
+                                rgba(52, 92, 167, 0.02),
+                                rgba(16, 68, 175, 0.99),
+                                rgba(52, 92, 167, 0)
+                            );
                         }
                     }
                 }
@@ -313,8 +324,8 @@
                 width: 260px;
                 // height: calc(100% - 340px);
                 padding: 10px;
-                background-color:RGBA(3, 22, 53, .7);
-                transition: all .2s;
+                background-color: RGBA(3, 22, 53, 0.7);
+                transition: all 0.2s;
                 .showConf {
                     position: absolute;
                     right: -20px;
@@ -323,9 +334,9 @@
                     height: 30px;
                     text-align: center;
                     line-height: 30px;
-                    background-color:RGBA(3, 22, 53, .7);
+                    background-color: RGBA(3, 22, 53, 0.7);
                     font-size: 15px;
-                    color: #30466E;
+                    color: #30466e;
                     cursor: pointer;
                 }
                 .interSearch {
@@ -338,7 +349,7 @@
                     }
                     .ant-select-selector {
                         border: none;
-                        background-color: #0A2967;
+                        background-color: #0a2967;
                     }
                     .ant-select-arrow {
                         color: #fff;
@@ -353,14 +364,14 @@
                             border: none;
                             outline: none;
                             border-radius: 4px;
-                            background-color: #0A2967;
+                            background-color: #0a2967;
                         }
                         .searchIcon {
                             position: absolute;
                             top: 7px;
                             right: 5px;
                             font-size: 18px;
-                            color: #09A4E7;
+                            color: #09a4e7;
                         }
                     }
                 }
@@ -372,10 +383,15 @@
                         line-height: 50px;
                         text-align: center;
                         font-size: 15px;
-                        color: #61A4FF;
+                        color: #61a4ff;
                         cursor: pointer;
                         &:hover {
-                            background: linear-gradient(90deg, rgba(52, 92, 167, 0.02), rgba(16, 68, 175, 0.99), rgba(52, 92, 167, 0));
+                            background: linear-gradient(
+                                90deg,
+                                rgba(52, 92, 167, 0.02),
+                                rgba(16, 68, 175, 0.99),
+                                rgba(52, 92, 167, 0)
+                            );
                         }
                         .innterBorder {
                             position: absolute;
@@ -383,7 +399,12 @@
                             left: 0;
                             width: 100%;
                             height: 1px;
-                            background: linear-gradient(90deg, rgba(42, 52, 240, 0), rgba(32, 93, 197, 0.99), rgba(42, 52, 240, 0));
+                            background: linear-gradient(
+                                90deg,
+                                rgba(42, 52, 240, 0),
+                                rgba(32, 93, 197, 0.99),
+                                rgba(42, 52, 240, 0)
+                            );
                         }
                     }
                 }
@@ -396,7 +417,7 @@
                 height: 270px;
                 padding: 10px 0 0 20px;
                 background: linear-gradient(0deg, rgba(2, 15, 36, 0.4), rgba(0, 38, 120, 0.99), rgba(2, 15, 36, 0.4));
-                font-family: 'MicrosoftYaHei';
+                font-family: "MicrosoftYaHei";
                 .controlMsg {
                     height: 40px;
                     display: flex;
@@ -406,9 +427,9 @@
                     margin-right: 20px;
                     .itemsVal {
                         padding: 2px 10px;
-                        border: 1px solid #3E70FF;
+                        border: 1px solid #3e70ff;
                         border-radius: 2px;
-                        color: #87AEF8;
+                        color: #87aef8;
                     }
                 }
                 .modifyBox {
@@ -422,8 +443,8 @@
                         margin-right: 5px;
                         text-align: center;
                         line-height: 28px;
-                        color: #87B1FF;
-                        background-color: #3E70FF;
+                        color: #87b1ff;
+                        background-color: #3e70ff;
                         cursor: pointer;
                         border-radius: 3px;
                     }
@@ -451,7 +472,7 @@
                             display: flex;
                             flex-direction: column;
                             align-items: center;
-                            color: #87AEF8;
+                            color: #87aef8;
                             background-color: #112954;
                             cursor: pointer;
                             .icon {
@@ -482,11 +503,11 @@
                                 align-items: center;
                             }
                             .times {
-                                font-family: 'FZLTTHJW';
+                                font-family: "FZLTTHJW";
                                 font-size: 32px;
                                 font-weight: bold;
-                                color: #00F0FF;
-                                background: linear-gradient(0deg, #0066B4 0%, #00F0FF 100%);
+                                color: #00f0ff;
+                                background: linear-gradient(0deg, #0066b4 0%, #00f0ff 100%);
                                 background-clip: text;
                                 -webkit-text-fill-color: transparent;
                                 .caculate {
@@ -495,7 +516,8 @@
                                     flex-direction: column;
                                     justify-content: center;
                                     font-size: 26px;
-                                    .add, .subtract {
+                                    .add,
+                                    .subtract {
                                         cursor: pointer;
                                     }
                                 }
@@ -508,15 +530,15 @@
                     line-height: 40px;
                     .planName {
                         padding-left: 30px;
-                        color: #87AEF8;
+                        color: #87aef8;
                         .ant-select-selector {
-                            background-color: #031B45;
-                            color:#87AEF8;
-                            border-color:#3E70FF;
+                            background-color: #031b45;
+                            color: #87aef8;
+                            border-color: #3e70ff;
                             border-radius: 4px;
                         }
                         .ant-select-arrow {
-                            color:#87AEF8;
+                            color: #87aef8;
                         }
                     }
                 }
@@ -542,11 +564,11 @@
                                 align-items: center;
                             }
                             .times {
-                                font-family: 'FZLTTHJW';
+                                font-family: "FZLTTHJW";
                                 font-size: 32px;
                                 font-weight: bold;
-                                color: #00F0FF;
-                                background: linear-gradient(0deg, #0066B4 0%, #00F0FF 100%);
+                                color: #00f0ff;
+                                background: linear-gradient(0deg, #0066b4 0%, #00f0ff 100%);
                                 background-clip: text;
                                 -webkit-text-fill-color: transparent;
                                 .caculate {
@@ -555,7 +577,8 @@
                                     flex-direction: column;
                                     justify-content: center;
                                     font-size: 26px;
-                                    .add, .subtract {
+                                    .add,
+                                    .subtract {
                                         cursor: pointer;
                                     }
                                 }
@@ -567,7 +590,7 @@
                         display: flex;
                         .lockText {
                             display: flex;
-                            align-items:center;
+                            align-items: center;
                             padding-right: 30px;
                         }
                         .phaseList {
