@@ -17,7 +17,7 @@ import topright from '../../imgs/topright.png'
 import bottomleft from '../../imgs/bottomleft.png'
 import bottomright from '../../imgs/bottomright.png'
 import singal from '../../imgs/singal.png'
-import videoIcon from '../../imgs/videoicon.png'
+import videoIcon from '../../imgs/moni.png'
 
 import ChannelTable from './BaseMessage/ChannelTable/ChannelTable'
 import InterRelation from './BaseMessage/InterRelation/InterRelation'
@@ -76,6 +76,8 @@ class InterConfMsg extends Component {
       { pic: topright, picname: 'gotopright', confname: 'inter' },
       { pic: bottomleft, picname: 'gobottomleft', confname: 'inter' },
       { pic: bottomright, picname: 'gobottomright', confname: 'inter' },
+      { pic: singal, picname: 'light', confname: 'lightGroup' },
+      { pic: videoIcon, picname: 'videos', confname: 'video' },
     ]
     this.turnPic = [
       { pic: goleft }, { pic: goright }, { pic: top }, { pic: bottom }, { pic: topleft }, { pic: topright }, { pic: bottomleft }, { pic: bottomright }
@@ -226,25 +228,17 @@ class InterConfMsg extends Component {
                     <div className="deviceConf">
                       <div className="deviceList">
                         {
-                          (currentItem === 'channel' || currentItem === 'inter') &&
+                          (currentItem === 'channel' || currentItem === 'inter' || currentItem === 'lightGroup' || currentItem === 'video') &&
                           this.dirPic.map((item, index) => {
                             if (item.confname === currentItem) {
                               return (
                                 <div className="devicePicBox" key={index}>
-                                  <img src={item.pic} alt="" height="100%" picname={item.picname} draggable="true" onDragStart={this.handleDirDragStart} />
+                                  <img src={item.pic} alt="" height={item.picname !== 'videos' ? '100%' : 'auto'} picname={item.picname} draggable="true" onDragStart={this.handleDirDragStart} />
                                 </div>
                               )
                             }
                           })
                         }
-                        {/* {
-                          currentItem === 'inter' &&
-                          this.turnPic.map((item, index) => (
-                            <div className="devicePicBox" key={index}>
-                              <img src={item.pic} alt="" height="100%" />
-                            </div>
-                          ))
-                        } */}
                         {
                           currentItem === 'singal' &&
                           <>
@@ -259,18 +253,6 @@ class InterConfMsg extends Component {
                             <div className="devicePicBox">线圈</div>
                           </>
                         }
-                        {
-                          currentItem === 'lightGroup' &&
-                          <div className="devicePicBox">
-                            <img src={singal} alt="" height="100%" />
-                          </div>
-                        }
-                        {
-                          currentItem === 'video' &&
-                          <div className="devicePicBox">
-                            <img src={videoIcon} alt="" width="80%" />
-                          </div>
-                        }
                       </div>
                       <div className="picConfig">
                         <div style={{ width: '760px', height: '585px', position: 'relative' }} onDrop={this.handleDropPic} onDragOver={this.handleDragOver}>
@@ -282,7 +264,7 @@ class InterConfMsg extends Component {
                                 key={item.picname + index}
                                 indexs={index} src={item.pic}
                                 alt=""
-                                style={{ position: 'absolute', top: `${item.posy}px`, left: `${item.posx}px`, height: '48px' }}
+                                style={{ position: 'absolute', top: `${item.posy}px`, left: `${item.posx}px`, height: item.picname !== 'videos' ? '48px' : 'auto' }}
                                 draggable="true"
                                 onDragStart={this.handleDragConfPic}
                               />
