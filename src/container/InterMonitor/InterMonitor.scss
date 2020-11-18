@@ -97,6 +97,9 @@
             left: 0;
             width: 100%;
             height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             img {
                 width: 100%;
                 height: 100%;
@@ -114,26 +117,11 @@
             .slideInDown {
                 animation: slideDown 0.5s;
             }
-        }
-        .title {
-            position: relative;
-            height: 40px;
-            padding-left: 20px;
-            line-height: 40px;
-            font-size: 24px;
-            color: #00e5d3;
-        }
-        .monitorDetails {
-            position: absolute;
-            height: calc(100% - 40px);
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             .interPhaseTime {
                 > em {
-                    width: 109px;
-                    height: 109px;
+                    z-index: 1;
+                    width:109px;
+                    height:109px;
                     text-align: center;
                     background: url(../imgs/timeBgText.png) no-repeat;
                     position: absolute;
@@ -178,6 +166,22 @@
                     animation: rotateDeg 1s infinite;
                 }
             }
+        }
+        .title {
+            position: relative;
+            height: 40px;
+            padding-left: 20px;
+            line-height: 40px;
+            font-size: 24px;
+            color: #00E5D3;
+        }
+        .monitorDetails {
+            position: absolute;
+            height: calc(100% - 40px);
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             .singalIconBox {
                 z-index: 1;
                 position: absolute;

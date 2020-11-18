@@ -17,7 +17,7 @@ import topright from '../../imgs/topright.png'
 import bottomleft from '../../imgs/bottomleft.png'
 import bottomright from '../../imgs/bottomright.png'
 import singal from '../../imgs/singal.png'
-import videoIcon from '../../imgs/videoicon.png'
+import videoIcon from '../../imgs/moni.png'
 
 import ChannelTable from './BaseMessage/ChannelTable/ChannelTable'
 import InterRelation from './BaseMessage/InterRelation/InterRelation'
@@ -36,12 +36,16 @@ import DayPlan from './SingalParams/DayPlan/DayPlan'
 class InterConfMsg extends Component {
   constructor(props) {
     super(props)
+    this.roadLists = [
+      // { picname: 'left', pic: left, posx: '20', posy: '20', angle: '', dir: '', flowDir: '' }
+    ]
     this.state = {
       isUpload: false,
       currentConf: '',
       currentItem: 'canalization',
       currentParams: 'phasemsg',
       configName: null,
+      laneLists: this.roadLists,
     }
     this.baseConfList = [
       { confName: '渠化信息', id: 'canalization', compos: null },
@@ -60,7 +64,20 @@ class InterConfMsg extends Component {
       { confName: '调度方案', id: 'dispathplan', compos: DispathPlan },
     ]
     this.dirPic = [
-      { pic: left }, { pic: right }, { pic: straight }, { pic: round }
+      { pic: left, picname: 'left', confname: 'channel' },
+      { pic: right, picname: 'right', confname: 'channel' },
+      { pic: straight, picname: 'straight', confname: 'channel' },
+      { pic: round, picname: 'round', confname: 'channel' },
+      { pic: goleft, picname: 'goleft', confname: 'inter' },
+      { pic: goright, picname: 'goright', confname: 'inter' },
+      { pic: top, picname: 'gotop', confname: 'inter' },
+      { pic: bottom, picname: 'gobottom', confname: 'inter' },
+      { pic: topleft, picname: 'gotopleft', confname: 'inter' },
+      { pic: topright, picname: 'gotopright', confname: 'inter' },
+      { pic: bottomleft, picname: 'gobottomleft', confname: 'inter' },
+      { pic: bottomright, picname: 'gobottomright', confname: 'inter' },
+      { pic: singal, picname: 'light', confname: 'lightGroup' },
+      { pic: videoIcon, picname: 'videos', confname: 'video' },
     ]
     this.turnPic = [
       { pic: goleft }, { pic: goright }, { pic: top }, { pic: bottom }, { pic: topleft }, { pic: topright }, { pic: bottomleft }, { pic: bottomright }
@@ -98,8 +115,51 @@ class InterConfMsg extends Component {
       console.log(info.file)
     }
   }
+  handleDirDragStart = (ev) => {
+    this.currentDragIndex = null
+    const BeforetargetLeft = ev.target.offsetLeft
+    this.moveBeforeX = ev.clientX - BeforetargetLeft
+    this.moveBeforeY = ev.clientY + 58
+    const picname = ev.target.getAttribute('picname')
+    console.log(picname)
+    const pic = this.dirPic.find(item => item.picname === picname)
+    this.newConfPic = { picname, pic: pic.pic }
+  }
+  handleDirDragEnd = (ev) => {
+    console.log(ev.target, 'end:::')
+  }
+  handleDropPic = (ev) => {
+    ev.preventDefault();
+    const dropBoxLeft = ev.currentTarget.offsetLeft
+    const moveAfterX = ev.clientX
+    const moveAfterY = ev.clientY
+    if (this.currentDragIndex) {
+      const { posx, posy } = this.newConfPic
+      const posX = posx + (moveAfterX - this.moveBeforeX)
+      const posY = posy + (moveAfterY - this.moveBeforeY)
+      this.newConfPic.posx = posX
+      this.newConfPic.posy = posY
+    } else {
+      const posX = moveAfterX - this.moveBeforeX - dropBoxLeft
+      const posY = moveAfterY - this.moveBeforeY
+      this.newConfPic.posx = posX
+      this.newConfPic.posy = posY
+      this.roadLists.push(this.newConfPic)
+    }
+    this.setState({ laneLists: this.roadLists })
+    console.log(this.roadLists)
+  }
+  handleDragOver = (ev) => {
+    ev.preventDefault();
+  }
+  handleDragConfPic = (ev) => {
+    this.currentDragIndex = ev.target.getAttribute('indexs')
+    this.moveBeforeX = ev.clientX
+    this.moveBeforeY = ev.clientY
+    this.newConfPic = this.roadLists[this.currentDragIndex]
+  }
   render() {
-    const { isUpload, currentItem, configName, currentParams } = this.state
+    const { isUpload, currentItem, configName, currentParams, laneLists } = this.state
     return (
       <div className="interConfMsg">
         <div className="confMsgBox">
@@ -168,20 +228,16 @@ class InterConfMsg extends Component {
                     <div className="deviceConf">
                       <div className="deviceList">
                         {
-                          currentItem === 'channel' &&
-                          this.dirPic.map((item, index) => (
-                            <div className="devicePicBox" key={index} draggable="true">
-                              <img src={item.pic} alt="" height="100%" />
-                            </div>
-                          ))
-                        }
-                        {
-                          currentItem === 'inter' &&
-                          this.turnPic.map((item, index) => (
-                            <div className="devicePicBox" key={index}>
-                              <img src={item.pic} alt="" height="100%" />
-                            </div>
-                          ))
+                          (currentItem === 'channel' || currentItem === 'inter' || currentItem === 'lightGroup' || currentItem === 'video') &&
+                          this.dirPic.map((item, index) => {
+                            if (item.confname === currentItem) {
+                              return (
+                                <div className="devicePicBox" key={index}>
+                                  <img src={item.pic} alt="" height={item.picname !== 'videos' ? '100%' : 'auto'} picname={item.picname} draggable="true" onDragStart={this.handleDirDragStart} />
+                                </div>
+                              )
+                            }
+                          })
                         }
                         {
                           currentItem === 'singal' &&
@@ -197,21 +253,24 @@ class InterConfMsg extends Component {
                             <div className="devicePicBox">线圈</div>
                           </>
                         }
-                        {
-                          currentItem === 'lightGroup' &&
-                          <div className="devicePicBox">
-                            <img src={singal} alt="" height="100%" />
-                          </div>
-                        }
-                        {
-                          currentItem === 'video' &&
-                          <div className="devicePicBox">
-                            <img src={videoIcon} alt="" width="80%" />
-                          </div>
-                        }
                       </div>
                       <div className="picConfig">
-                        <img src={interPic} alt="" height="100%" />
+                        <div style={{ width: '760px', height: '585px', position: 'relative' }} onDrop={this.handleDropPic} onDragOver={this.handleDragOver}>
+                          <img src={interPic} alt="" height="100%" draggable="false" />
+                          {
+                            laneLists &&
+                            laneLists.map((item, index) => (
+                              <img
+                                key={item.picname + index}
+                                indexs={index} src={item.pic}
+                                alt=""
+                                style={{ position: 'absolute', top: `${item.posy}px`, left: `${item.posx}px`, height: item.picname !== 'videos' ? '48px' : 'auto' }}
+                                draggable="true"
+                                onDragStart={this.handleDragConfPic}
+                              />
+                            ))
+                          }
+                        </div>
                       </div>
                     </div>
                     <div className="confDetails">

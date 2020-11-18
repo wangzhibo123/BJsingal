@@ -1,3 +1,5 @@
+//<Video url={this.state.url} showB={true}></Video>
+// url => 数据源 showB => 是否显示按钮
 import React, { Component } from 'react'
 //引入依赖
 import 'video.js/dist/video-js.css'
@@ -7,7 +9,8 @@ import styles from './video.scss'
 import {Button} from "antd"
 class VideoApp extends Component{
   state={
-      nowPlay:""
+      nowPlay:"",
+      showButton:this.props.showB && true
   }
 //组件挂载完成之后初始化播放控件
   componentDidMount(){
@@ -16,7 +19,7 @@ class VideoApp extends Component{
           controls: true,
           sources: [{
             // src: 'rtmp://192.168.1.124:9999/live/31434',
-            src: 'rtmp://58.200.131.2:1935/livetv/hunantv',
+            src: this.props.url[0].url,
             type: 'rtmp/flv'
           }]
         }
@@ -43,7 +46,7 @@ class VideoApp extends Component{
           this.player.load();
           this.player.play();
   }
-  render(){
+  render(){ 
       let li = {
       }
       let playing = {
@@ -56,6 +59,7 @@ class VideoApp extends Component{
               <div>
                   <ul style={{marginBottom:"13px"}}>
                   {
+                    this.state.showButton&&
                       url.map((item,index)=>{
                           return <Button  key={item.name} onClick={()=>this.handleClick(item)} style={{width:"66px",height:"40px",background: "#010F46",border: "1px solid #4289E1",color: "#515A8B",fontSize: "20px",boxShadow:"inset 0px 0px 1.7px 1px #4289E1"}}>
                                       <span style={this.state.nowPlay === item.name ? playing : li }>{item.name}</span>

@@ -158,6 +158,9 @@ class InterMonitor extends Component {
           <span className="slideDown slideIcon" dir="moveDown" onClick={this.handleToggleInter}><DownCircleOutlined /></span>
           <div className="interPic">
             <img className={`${moveLeft ? 'slideInLeft' : moveRight ? 'slideInRight' : moveUp ? 'slideInUp' : moveDown ? 'slideInDown' : ''}`} src={test1} alt="" />
+            <div className="interPhaseTime">
+                <em><i>{phaseTime}s</i></em>
+              </div>
           </div>
           {
             !!interConfigMsg &&
@@ -193,9 +196,6 @@ class InterMonitor extends Component {
                 </div>
               </div>
             }
-            <div className="interPhaseTime">
-              <em><i>{phaseTime}s</i></em>
-            </div>
             <div className="conditionList">
               <div className="titles">各路口实时路况</div>
               <div className="listBox">

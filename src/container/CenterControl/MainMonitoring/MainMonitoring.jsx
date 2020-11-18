@@ -18,8 +18,10 @@ import bascUpDown from "../../imgs/bascUpDown.png"
 //引入地图
 import mapConfiger from "../../utils/minemapConf";
 //引入antd
-import { Select, Button, Switch, Menu } from "antd";
+import { Select, Switch, Menu } from "antd";
 import { EditOutlined, SearchOutlined, CompassOutlined } from "@ant-design/icons";
+//引用axios
+import axiosInstance from "../../utils/getInterfaceData"
 const { Option } = Select;
 const { SubMenu } = Menu;
 export default class MainMonitoring extends Component {
@@ -32,7 +34,7 @@ export default class MainMonitoring extends Component {
         { name: "上地", id: "3", children: [{ name: "华联", id: "3_1" }, { name: "中关村", id: "3_2" }] },
         { name: "三里屯", id: "4", children: [{ name: "太里古", id: "4_1" }, { name: "乾坤大厦", id: "4_2" }] }
       ],
-      lineData: [{ lnglat: [116.383, 39.9071], img: bascRightLeft }, { lnglat: [116.389, 39.9080], img: bascRightUpLeft }, { lnglat: [116.399, 39.9090], img: bascUpDown }],
+      lineData: [{ lnglat: [116.383, 39.90706], img: bascRightLeft }, { lnglat: [116.389, 39.9073], img: bascRightUpLeft }, { lnglat: [116.399, 39.90769], img: bascUpDown }],
       //地图默认中心点
       defaultCenterPoint: [116.396, 39.9075],
       //地图视角角度
@@ -53,12 +55,20 @@ export default class MainMonitoring extends Component {
       //点击中心点渲染多次处理
       clickCenterRenders: false,
       //视频
-      url: [{ url: "rtmp://58.200.131.2:1935/livetv/hunantv", name: "东", id: "my_E" }, { url: "rtmp://202.69.69.180:443/webcast/bshdlive-pc", name: "西", id: "my_W" }],
-      arl: [{ url: "rtmp://58.200.131.2:1935/livetv/hunantv", name: "南", id: 'my_S' }, { url: "rtmp://202.69.69.180:443/webcast/bshdlive-pc", name: "北", id: "my_N" }],
+      url: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv2", name: "东", id: "my_E" }, { url: "rtmp://58.200.131.2:1935/livetv/cctv6", name: "西", id: "my_W" }],
+      arl: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv15", name: "南", id: 'my_S' }, { url: "rtmp://58.200.131.2:1935/livetv/cctv1", name: "北", id: "my_N" }],
     };
+    this.videoState="http://192.168.1.55:20191/control-application-front/video/getLiveUrl/123"
   }
+  
   componentDidMount() {
     this.state.modeMapShow && this.renderMap();
+    this.getVideoSource()
+  }
+  getVideoSource=(cameraCode)=>{
+    axiosInstance.get(this.videoState).then(res=>{
+      console.log(res.data,"____________________________")
+    })
   }
   //地图默认坐标
   intersectionRenderin = async () => {
@@ -79,6 +89,7 @@ export default class MainMonitoring extends Component {
       modeMainTabTypeD: true
     }, () => {
       this.renderMap()
+      window.location.reload()
     })
   }
   addMenu = () => {
@@ -357,8 +368,9 @@ export default class MainMonitoring extends Component {
   }
   //地图中心点
   addMarker = () => {
+    const {lineData} =this.state;
     if (this.map) {
-      for (var i = 0; i < this.state.lineData.length; i++) {
+      for (var i = 0; i < lineData.length; i++) {
         const elParent = document.createElement('div')
         elParent.style.width = '40px'
         elParent.style.height = '20px'
@@ -371,15 +383,15 @@ export default class MainMonitoring extends Component {
         el.style.borderRadius = '50%'
         el.style.backgroundColor = 'rgba(34,245,248)'
         el.style.cursor = 'pointer'
-        el.style.position = 'absolute'
-        el.style.left = '0'
-        el.style.top = '0'
+        // el.style.position = 'absolute'
+        // el.style.left = '0'
+        // el.style.top = '0'
         const al = document.createElement("div");
         al.setAttribute('class', 'animationA')
         el.appendChild(al)
         al.style.width = '118px'
         al.style.height = '137px'
-        al.style.backgroundImage = `url(${this.state.lineData[i].img})`
+        al.style.backgroundImage = `url(${lineData[i].img})`
         al.style.position = "absolute"
         al.style.top = "-133px"
         al.style.left = "-38px"
@@ -392,7 +404,7 @@ export default class MainMonitoring extends Component {
         elParent.appendChild(elAnimation)
         elParent.appendChild(el)
         new window.mapabcgl.Marker(elParent)
-          .setLngLat(this.state.lineData[i].lnglat)
+          .setLngLat(lineData[i].lnglat)
           .addTo(this.map);
       }
 
@@ -536,13 +548,13 @@ export default class MainMonitoring extends Component {
                 <div className="modeMainEWMode">
                   {/* 东西走向 */}
                   <div className="modeMainEWVideo">
-                    <Video url={this.state.url}></Video>
+                    <Video url={this.state.url} showB={true}></Video>
                   </div>
                 </div>
                 <div className="modeMainSNMode">
                   {/* 南北走向 */}
                   <div className="modeMainSNVideo">
-                    <Video url={this.state.arl}></Video>
+                    <Video url={this.state.arl} showB={true}></Video>
                   </div>
                 </div>
               </div>
