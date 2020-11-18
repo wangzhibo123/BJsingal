@@ -15,6 +15,10 @@ import endPng from '../../imgs/end.png'
 import bascRightLeft from "../../imgs/bascRightLeft.png"
 import bascRightUpLeft from "../../imgs/bascRightUpLeft.png"
 import bascUpDown from "../../imgs/bascUpDown.png"
+import ballP from "../../imgs/ballP.png"
+import ballG from "../../imgs/ballG.png"
+import ballRY from "../../imgs/ballRY.png"
+import ballY from "../../imgs/ballY.png"
 //引入地图
 import mapConfiger from "../../utils/minemapConf";
 //引入antd
@@ -34,13 +38,13 @@ export default class MainMonitoring extends Component {
         { name: "上地", id: "3", children: [{ name: "华联", id: "3_1" }, { name: "中关村", id: "3_2" }] },
         { name: "三里屯", id: "4", children: [{ name: "太里古", id: "4_1" }, { name: "乾坤大厦", id: "4_2" }] }
       ],
-      lineData: [{ lnglat: [116.383, 39.90706], img: bascRightLeft }, { lnglat: [116.389, 39.9073], img: bascRightUpLeft }, { lnglat: [116.399, 39.90769], img: bascUpDown }],
+      lineData: [{ lnglat: [116.383, 39.90706], img: bascRightLeft }, { lnglat: [116.389, 39.90723], img: bascRightUpLeft }, { lnglat: [116.399, 39.90753], img: bascUpDown }],
       //地图默认中心点
       defaultCenterPoint: [116.396, 39.9075],
       //地图视角角度
-      modeMapFlyToPitch: 60,
+      modeMapFlyToPitch: 60, //0 表示竖直状态视角 90表示水平状态视角
       //地图缩放倍率
-      modeMapFlyToZoom: 15,
+      modeMapFlyToZoom: 15, //范围 0~17  17表示放大到最大 15及以上开始3D
       //展示开关
       modeNavShow: true,
       modeMapShow: true,
@@ -55,10 +59,11 @@ export default class MainMonitoring extends Component {
       //点击中心点渲染多次处理
       clickCenterRenders: false,
       //视频
-      url: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv2", name: "东", id: "my_E" }, { url: "rtmp://58.200.131.2:1935/livetv/cctv6", name: "西", id: "my_W" }],
-      arl: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv15", name: "南", id: 'my_S' }, { url: "rtmp://58.200.131.2:1935/livetv/cctv1", name: "北", id: "my_N" }],
+      url: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv2", name: "东", id: "my_E"  }, { url: "rtmp://58.200.131.2:1935/livetv/cetv2", name: "西", id: "my_W" , displayStyle:true }],
+      arl: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv13", name: "南", id: 'my_S'  }, { url: "rtmp://58.200.131.2:1935/livetv/startv", name: "北", id: "my_N" , displayStyle:true }],
     };
-    this.videoState="http://192.168.1.55:20191/control-application-front/video/getLiveUrl/123"
+    //接口
+    this.videoState="/control-application-front/video/getLiveUrl/123";
   }
   
   componentDidMount() {
@@ -67,7 +72,9 @@ export default class MainMonitoring extends Component {
   }
   getVideoSource=(cameraCode)=>{
     axiosInstance.get(this.videoState).then(res=>{
-      console.log(res.data,"____________________________")
+      if(res.data.code===1){
+        console.log(res.data,"data")
+      }
     })
   }
   //地图默认坐标
@@ -105,7 +112,7 @@ export default class MainMonitoring extends Component {
       var html = document.createElement('div');
       var contextmenu = '<div class="context_menu" style="padding:5px 10px;' + style + '">' + '<li id="start" style="cursor:point;">起点</li>' + '<li style="cursor:point;" id="end">终点</li>' + '<li style="cursor:point;" id="channel">途径点</li>' + '<li style="cursor:point;" id="clearmap">清空地图</li>' + '</div>';
       html.innerHTML = contextmenu
-      marker = new window.mapabcgl.Marker(html)
+      marker = new window.mapabcgl.Marker()
         .setLngLat([lnglat.lng, lnglat.lat])
         .setOffset([50, 0])
         .addTo(_this.map);
@@ -191,7 +198,6 @@ export default class MainMonitoring extends Component {
           destination: destination,
           waypoints: str//途经点
         }, function (data) {
-          console.log(data, "data")
           if (data.status == 0) {
             var data = data.result.routes[0].steps, xys = '';
             _this.map.removeLayerAndSource('plan');
@@ -374,7 +380,6 @@ export default class MainMonitoring extends Component {
         const elParent = document.createElement('div')
         elParent.style.width = '40px'
         elParent.style.height = '20px'
-        elParent.style.position = 'relative'
         const elAnimation = document.createElement('div')
         elAnimation.setAttribute('class', 'animationS')
         const el = document.createElement('div')
@@ -383,9 +388,9 @@ export default class MainMonitoring extends Component {
         el.style.borderRadius = '50%'
         el.style.backgroundColor = 'rgba(34,245,248)'
         el.style.cursor = 'pointer'
-        // el.style.position = 'absolute'
-        // el.style.left = '0'
-        // el.style.top = '0'
+        el.style.position = 'absolute'
+        el.style.left = '0'
+        el.style.top = '0'
         const al = document.createElement("div");
         al.setAttribute('class', 'animationA')
         el.appendChild(al)
@@ -398,8 +403,7 @@ export default class MainMonitoring extends Component {
         new window.mapabcgl.Marker(el)
         el.setAttribute("title", '中心点')
         el.addEventListener('click', () => {
-          // this.addInfoWindow(lineData[0], lineData[lineData.length - 1])
-          console.log("弹框")
+          
         })
         elParent.appendChild(elAnimation)
         elParent.appendChild(el)
@@ -407,7 +411,6 @@ export default class MainMonitoring extends Component {
           .setLngLat(lineData[i].lnglat)
           .addTo(this.map);
       }
-
     }
   }
   gettitletops = (isShow) => {
@@ -571,7 +574,7 @@ export default class MainMonitoring extends Component {
                   {/* 条状图 */}
                   <div className="modeMainMonitorContentStrip">
                     <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#02AED7,#0173C8)", borderRadius: "20px", position: "relative" }}>
-                      <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0 }}>
+                      <div style={{ width: 15, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0 }}>
                       </div>
                     </div>
                   </div>
@@ -582,7 +585,7 @@ export default class MainMonitoring extends Component {
                         苏州街
                         </div>
                     </div>
-                    <div className="modeMainMonitorContentball">
+                    <div className="modeMainMonitorContentball" style={{background: `url(${ballP}) center no-repeat`,backgroundSize:"100% 100%"}}>
                     </div>
                     <div className="modeMainMonitorContentList">
                       <div className="modeMainMonitorContentListTop">
@@ -612,7 +615,7 @@ export default class MainMonitoring extends Component {
                   {/* 条状图 */}
                   <div className="modeMainMonitorContentStripTwo" style={{ position: "absolute", top: "202px", left: "calc(190px * 1)" }}>
                     <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#0163DA,#0147CB)", borderRadius: "20px", position: "relative" }}>
-                      <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0 }}>
+                      <div style={{ width: 15, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0 }}>
                       </div>
                     </div>
                   </div>
@@ -623,7 +626,7 @@ export default class MainMonitoring extends Component {
                         中关村大街
                         </div>
                     </div>
-                    <div className="modeMainMonitorContentball">
+                    <div className="modeMainMonitorContentball" style={{background: `url(${ballG}) center no-repeat`,backgroundSize:"100% 100%"}}>
 
                     </div>
                     <div className="modeMainMonitorContentList">
@@ -652,8 +655,8 @@ export default class MainMonitoring extends Component {
                   </div>
                   {/* 条状图 */}
                   <div className="modeMainMonitorContentStripTwo" style={{ position: "absolute", top: "202px", left: "calc((190px - 2px) * 2)" }}>
-                    <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#0163DA,#0147CB)", borderRadius: "20px", position: "relative" }}>
-                      <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0 }}>
+                    <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#810CC9,#422AD3)", borderRadius: "20px", position: "relative" }}>
+                      <div style={{ width: 15, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0 }}>
                       </div>
                     </div>
                   </div>
@@ -661,10 +664,10 @@ export default class MainMonitoring extends Component {
                   <div className="modeMainMonitorContentLineTwo" style={{ position: "absolute", top: "0px", left: "calc(155px + 185px * 2)" }}>
                     <div className="modeMainMonitorContentCross">
                       <div className="modeMainMonitorContentCrossText">
-                        中关村大街
+                        中关村东路
                         </div>
                     </div>
-                    <div className="modeMainMonitorContentball">
+                    <div className="modeMainMonitorContentball" style={{background: `url(${ballRY}) center no-repeat`,backgroundSize:"100% 100%"}}>
 
                     </div>
                     <div className="modeMainMonitorContentList">
@@ -694,7 +697,7 @@ export default class MainMonitoring extends Component {
                   {/* 条状图 */}
                   <div className="modeMainMonitorContentStripTwo" style={{ position: "absolute", top: "202px", left: "calc((190px - 3px) * 3)" }}>
                     <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#0163DA,#0147CB)", borderRadius: "20px", position: "relative" }}>
-                      <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0 }}>
+                      <div style={{ width: 15, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0 }}>
                       </div>
                     </div>
                   </div>
@@ -702,10 +705,10 @@ export default class MainMonitoring extends Component {
                   <div className="modeMainMonitorContentLineTwo" style={{ position: "absolute", top: "0px", left: "calc(155px + 185px * 3)" }}>
                     <div className="modeMainMonitorContentCross">
                       <div className="modeMainMonitorContentCrossText">
-                        中关村大街
+                        学知桥
                         </div>
                     </div>
-                    <div className="modeMainMonitorContentball">
+                    <div className="modeMainMonitorContentball" style={{background: `url(${ballP}) center no-repeat`,backgroundSize:"100% 100%"}}>
 
                     </div>
                     <div className="modeMainMonitorContentList">
@@ -734,8 +737,8 @@ export default class MainMonitoring extends Component {
                   </div>
                   {/* 条状图 */}
                   <div className="modeMainMonitorContentStripTwo" style={{ position: "absolute", top: "202px", left: "calc((190px - 4px) * 4)" }}>
-                    <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#0163DA,#0147CB)", borderRadius: "20px", position: "relative" }}>
-                      <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0 }}>
+                    <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#850BC7,#4228D4)", borderRadius: "20px", position: "relative" }}>
+                      <div style={{ width: 15, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0 }}>
                       </div>
                     </div>
                   </div>
@@ -743,10 +746,10 @@ export default class MainMonitoring extends Component {
                   <div className="modeMainMonitorContentLineTwo" style={{ position: "absolute", top: "0px", left: "calc(155px + 185px * 4)" }}>
                     <div className="modeMainMonitorContentCross">
                       <div className="modeMainMonitorContentCrossText">
-                        中关村大街
+                        花园东路
                         </div>
                     </div>
-                    <div className="modeMainMonitorContentball">
+                    <div className="modeMainMonitorContentball" style={{background: `url(${ballG}) center no-repeat`,backgroundSize:"100% 100%"}}>
 
                     </div>
                     <div className="modeMainMonitorContentList">
@@ -776,7 +779,7 @@ export default class MainMonitoring extends Component {
                   {/* 条状图 */}
                   <div className="modeMainMonitorContentStripTwo" style={{ position: "absolute", top: "202px", left: "calc((190px - 4px) * 5)" }}>
                     <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#0163DA,#0147CB)", borderRadius: "20px", position: "relative" }}>
-                      <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0 }}>
+                      <div style={{ width: 15, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0 }}>
                       </div>
                     </div>
                   </div>
@@ -784,10 +787,10 @@ export default class MainMonitoring extends Component {
                   <div className="modeMainMonitorContentLineTwo" style={{ position: "absolute", top: "0px", left: "calc(155px + 185px * 5)" }}>
                     <div className="modeMainMonitorContentCross">
                       <div className="modeMainMonitorContentCrossText">
-                        中关村大街
+                        健翔桥
                         </div>
                     </div>
-                    <div className="modeMainMonitorContentball">
+                    <div className="modeMainMonitorContentball" style={{background: `url(${ballG}) center no-repeat`,backgroundSize:"100% 100%"}}>
                     </div>
                     <div className="modeMainMonitorContentList">
                       <div className="modeMainMonitorContentListTop">
@@ -815,8 +818,8 @@ export default class MainMonitoring extends Component {
                   </div>
                   {/* 条状图 */}
                   <div className="modeMainMonitorContentStripTwo" style={{ position: "absolute", top: "202px", left: "calc((190px - 4px) * 6)" }}>
-                    <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#0163DA,#0147CB)", borderRadius: "20px", position: "relative" }}>
-                      <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0 }}>
+                    <div style={{ width: 150, height: 18, background: "linear-gradient(to top,#02AED7,#0173C8)", borderRadius: "20px", position: "relative" }}>
+                      <div style={{ width: 15, height: 18, borderRadius: "50%", background: "rgba(67,176,220,.66)", position: "absolute", right: "0", top: 0 }}>
                       </div>
                     </div>
                   </div>
@@ -824,10 +827,10 @@ export default class MainMonitoring extends Component {
                   <div className="modeMainMonitorContentLineTwo" style={{ position: "absolute", top: "0px", left: "calc(155px + 185px * 6)" }}>
                     <div className="modeMainMonitorContentCross">
                       <div className="modeMainMonitorContentCrossText">
-                        中关村大街
+                        西直门
                         </div>
                     </div>
-                    <div className="modeMainMonitorContentball">
+                    <div className="modeMainMonitorContentball" style={{background: `url(${ballP}) center no-repeat`,backgroundSize:"100% 100%"}}>
 
                     </div>
                     <div className="modeMainMonitorContentList">

@@ -38,7 +38,8 @@ class VideoApp extends Component{
           return
       }
       this.setState({
-          nowPlay:item.name
+          nowPlay:item.name,
+          displayStyle:item.displayStyle
       })
           this.player.pause();
           //切换网址
@@ -55,14 +56,13 @@ class VideoApp extends Component{
       const {url} =this.props;
     return(
        <div className="VideoAppBox">
-        {/* 视频流开发中... */}
               <div>
                   <ul style={{marginBottom:"13px"}}>
                   {
                     this.state.showButton&&
                       url.map((item,index)=>{
                           return <Button  key={item.name} onClick={()=>this.handleClick(item)} style={{width:"66px",height:"40px",background: "#010F46",border: "1px solid #4289E1",color: "#515A8B",fontSize: "20px",boxShadow:"inset 0px 0px 1.7px 1px #4289E1"}}>
-                                      <span style={this.state.nowPlay === item.name ? playing : li }>{item.name}</span>
+                                      <span style={this.state.displayStyle === item.displayStyle ? playing : li }>{item.name}</span>
                                   </Button>
                       })
                   }
