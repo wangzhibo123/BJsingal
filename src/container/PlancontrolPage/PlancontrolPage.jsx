@@ -1,8 +1,8 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
-import { Menu, Input, DatePicker, Button, Select } from 'antd'
-import { EditOutlined, CloseOutlined } from '@ant-design/icons';
+import { Menu, Input, DatePicker, Button, Select, Switch } from 'antd'
+import { EditOutlined, CloseOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
 import axiosInstance from '../utils/getInterfaceData'
 import styles from './PlancontrolPage.module.scss'
 import mapConfiger from '../utils/minemapConf'
@@ -26,10 +26,15 @@ class Homepage extends Component {
       IsddMessge: false,
       clickNum: '',
       menuOpenkeys: [],
-      rights: 0,
-      isAddEdit: true,
-      ismodify: false,
-      roadtitle: '新增干线',
+      rights: -320,
+      rightsNew: -320,
+      isAddEdit: false,
+      ismodify: true,
+      roadtitle: '干线信息',
+      // rights: 0,
+      // isAddEdit: true,
+      // ismodify: false,
+      // roadtitle: '新增预案',
       route_name: '',
       route_code: '',
       route_direction: '',
@@ -44,12 +49,19 @@ class Homepage extends Component {
       loadRouteDirectionList: [],
       loadRouteTypeList: [],
       treeListChild: [],
+      reserveplanName: '预按控制',
+      addReserveplan: '新增预案',
     }
     this.defaultChildren = []
     this.interMarkers = []
+    this.isreserveplan = false
     this.clickOperation = [
       {
         id: 1,
+        name: '应急预案',
+      },
+      {
+        id: 2,
         name: '新增预案',
       },
       {
@@ -64,6 +76,7 @@ class Homepage extends Component {
     this.loadPlanTree = '/control-application-front/planControl/loadPlanAreaUnit' // 获取区域应急预案下的路口
     this.loadPlanUnit = '/control-application-front/planControl/loadPlanTable' // 预案列表
     this.loadPlanUnit = '/control-application-front/planControl/loadPlanVipUnit' // 获取特勤预案下的路口
+    this.switchViews = false
   }
   componentDidMount = () => {
     this.renderMap()
@@ -93,8 +106,8 @@ class Homepage extends Component {
     if (this.map) {
       const currentThis = this
       this.markers = []
-      const interList = zoomVal < 13 ? points.filter(item => item.unit_grade <= 4) : points
-      // console.log(interList)
+      const interList = zoomVal < 13 ? points && points.filter(item => item.unit_grade <= 4) : points
+      console.log(interList, 'sssss')
       interList && interList.forEach((item, index) => {
         const el = document.createElement('div')
         el.style.width = '20px'
@@ -545,47 +558,79 @@ class Homepage extends Component {
       IsddMessge: isShow,
     })
   }
-  clickOperationNum = (id) => { // 点击新增
-    if (id === 1) {
-      // if (this.map) {
-      //   this.clearMap();
-      // }
-      // this.initializationState()
+  clickOperationNum = (name) => { // 点击新增
+    if (name === 'reserveplan') {
+      this.isreserveplan = !this.isreserveplan
+      let isreserveplanTitle = ''
+      let addTitle = ''
+      if (this.isreserveplan) {
+        isreserveplanTitle = '勤务疏导'
+        addTitle = '新增勤务'
+
+      } else {
+        isreserveplanTitle = '应急预案'
+        addTitle = '新增预案'
+      }
       this.setState({
+        reserveplanName: isreserveplanTitle,
+        addReserveplan: addTitle
+      })
+    }
+    if (name === 'add') {
+      // if (this.isreserveplan) {
+      //   this.setState({
+      //     rightsNew: -320,
+      //     rights: 0,
+      //     isAddEdit: false,
+      //     ismodify: true,
+      //   })
+      // } else {
+      //   this.setState({
+      //     rights: -320,
+      //     rightsNew: 0,
+      //     isAddEdit: false,
+      //     ismodify: true,
+      //   })
+      // }
+      this.setState({
+        roadtitle: '新增预案',
         rights: 0,
         isAddEdit: true,
         ismodify: false,
-        roadtitle: '新增干线',
-      })
-      // this.showName = 'add'
-      // this.unitArr = ''
-      // this.isAddEdit = true
-
-    } else if (id === 3) {
-      this.map.flyTo({
-        // center: [116.391, 39.911], 
-        zoom: 14,
-        pitch: 60
       })
     }
-    this.setState({
-      clickNum: id
-    })
-  }
-  onOpenChangeSubMenu = (eventKey) => { // SubMenu-ite触发
-    this.isAddEdit = false
-    this.unitArr = ''
-    if (this.map) {
-      this.clearMap();
-    }
-    if (eventKey.length === 0) {
-      this.setState({ menuOpenkeys: [] })
-    } else {
-      const keys = eventKey.pop()
-      const { menuOpenkeys } = this.state
-      if (eventKey !== menuOpenkeys) {
-        this.getLoadChildTree(keys)
+    if (name === 'switch') {
+      this.switchViews = !this.switchViews
+      if (this.switchViews) {
+        this.map.flyTo({
+          // center: [116.391, 39.911], 
+          zoom: 14,
+          pitch: 60
+        })
+      } else {
+        this.map.flyTo({
+          // center: [116.391, 39.911], 
+          zoom: 11,
+          pitch: 0
+        })
       }
+    }
+  }
+  handleShowInterConf = () => { // 点击回显编辑
+    if (this.isreserveplan) {
+      this.setState({
+        rightsNew: -320,
+        rights: 0,
+        isAddEdit: false,
+        ismodify: true,
+      })
+    } else {
+      this.setState({
+        rights: -320,
+        rightsNew: 0,
+        isAddEdit: false,
+        ismodify: true,
+      })
     }
   }
   render() {
@@ -595,10 +640,31 @@ class Homepage extends Component {
       rights, isAddEdit, ismodify, roadtitle, roadValue,
       loadRouteDirectionList, loadRouteTypeList, treeListChild,
       route_name, route_code, route_directionvalue, route_miles, route_typevalue, detail,
-      pointlist
+      pointlist, reserveplanName, addReserveplan, rightsNew,
     } = this.state
     return (
       <div className={styles.PlancontrolPageWrapper}>
+        <div className={styles.openEdit}><Switch checkedChildren="编辑模式" unCheckedChildren="正常模式" defaultChecked /></div>
+        <div className={styles.videoBox}>
+          <div className={styles.videoBoxer}>
+            <div className={styles.header}>
+              <span>海淀大街-海淀中街</span>
+              <CloseOutlined />
+            </div>
+            <div className={styles.videos}>
+
+            </div>
+          </div>
+          <div className={styles.videoBoxer}>
+            <div className={styles.header}>
+              <span>海淀大街-海淀中街</span>
+              <CloseOutlined />
+            </div>
+            <div className={styles.videos}>
+
+            </div>
+          </div>
+        </div>
         <div className={styles.sildeRight} style={{ right: `${rights}px` }}>
           <div className={styles.slideRightBoxAdd}>
             <div className={styles.addMainLine}>
@@ -623,7 +689,7 @@ class Homepage extends Component {
                     <Select
                       // defaultValue="海淀区"
                       value={route_directionvalue}
-                      style={{ width: 195, height: 30 }}
+                      style={{ width: 225, height: 30 }}
                       onChange={this.changeLoadRouteDirection}
                     >
                       {
@@ -640,7 +706,7 @@ class Homepage extends Component {
                     <Select
                       // defaultValue="海淀区"
                       value={route_typevalue}
-                      style={{ width: 195, height: 30 }}
+                      style={{ width: 225, height: 30 }}
                       onChange={this.changeLoadRouteDirection}
                     >
                       {
@@ -689,30 +755,638 @@ class Homepage extends Component {
                 </div >
                 :
                 <div className={styles.slideRightBoxEditBox}>
-                  <p> 干线名称：<span>{route_name}</span></p>
-                  <p>干线编号：<span>{route_code}</span></p>
-                  <p>干线方向：<span>{route_directionvalue}</span></p>
-                  <p>干线长度：<span>{route_miles}</span></p>
-                  <p>干线类型：<span>{route_typevalue}</span></p>
-                  <p>干线描述：<span>{detail}</span></p>
+                  <div className={styles.dateOperation}>
+                    <div className={styles.datatime}>
+                      <div>日期：2020-10-10</div>
+                      <div>时间：14:30:00</div>
+                    </div>
+                    <div className={styles.boxoperation}>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                    </div>
+                  </div>
                   <div className={styles.lineBox}>
+                    <div className={styles.lineBoxer}>
+                      {/* {
+                      treeListChild && treeListChild.map((item, index) => */}
+                      <div className={styles.lineBoxer_item}>
+                        <span ></span>
+                        <div className={styles.streetBox}>
+                          <div className={styles.streetTitleBox}>
+                            <div>西安长街-金融街</div>
+                            <div><span>模式：</span>中心控制</div>
+                          </div>
+                          <div className={styles.intersectionBox}>
+                            <div className={styles.mountingThead}>
+                              <span>阶段绑定</span>
+                              <span>临时方案</span>
+                              <span>默认方案</span>
+                              <div>周期：50秒</div>
+                            </div>
+                            <div className={styles.mountingTh}>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div >
+                      </div >
+                      <div className={styles.lineBoxer_item}>
+                        <span ></span>
+                        <div className={styles.streetBox}>
+                          <div className={styles.streetTitleBox}>
+                            <div>西安长街-金融街</div>
+                            <div><span>模式：</span>中心控制</div>
+                          </div>
+                          <div className={styles.intersectionBox}>
+                            <div className={styles.mountingThead}>
+                              <span>阶段绑定</span>
+                              <span>临时方案</span>
+                              <span>默认方案</span>
+                              <div>周期：50秒</div>
+                            </div>
+                            <div className={styles.mountingTh}>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div >
+                      </div >
+                      <div className={styles.lineBoxer_item}>
+                        <span ></span>
+                        <div className={styles.streetBox}>
+                          <div className={styles.streetTitleBox}>
+                            <div>西安长街-金融街</div>
+                            <div><span>模式：</span>中心控制</div>
+                          </div>
+                          <div className={styles.intersectionBox}>
+                            <div className={styles.mountingThead}>
+                              <span>阶段绑定</span>
+                              <span>临时方案</span>
+                              <span>默认方案</span>
+                              <div>周期：50秒</div>
+                            </div>
+                            <div className={styles.mountingTh}>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div >
+                      </div >
+                      <div className={styles.lineBoxer_item}>
+                        <span ></span>
+                        <div className={styles.streetBox}>
+                          <div className={styles.streetTitleBox}>
+                            <div>西安长街-金融街</div>
+                            <div><span>模式：</span>中心控制</div>
+                          </div>
+                          <div className={styles.intersectionBox}>
+                            <div className={styles.mountingThead}>
+                              <span>阶段绑定</span>
+                              <span>临时方案</span>
+                              <span>默认方案</span>
+                              <div>周期：50秒</div>
+                            </div>
+                            <div className={styles.mountingTh}>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div >
+                      </div >
+                      <div className={styles.lineBoxer_item}>
+                        <span ></span>
+                        <div className={styles.streetBox}>
+                          <div className={styles.streetTitleBox}>
+                            <div>西安长街-金融街</div>
+                            <div><span>模式：</span>中心控制</div>
+                          </div>
+                          <div className={styles.intersectionBox}>
+                            <div className={styles.mountingThead}>
+                              <span>阶段绑定</span>
+                              <span>临时方案</span>
+                              <span>默认方案</span>
+                              <div>周期：50秒</div>
+                            </div>
+                            <div className={styles.mountingTh}>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div >
+                      </div >
+                      <div className={styles.lineBoxer_item}>
+                        <span ></span>
+                        <div className={styles.streetBox}>
+                          <div className={styles.streetTitleBox}>
+                            <div>西安长街-金融街</div>
+                            <div><span>模式：</span>中心控制</div>
+                          </div>
+                          <div className={styles.intersectionBox}>
+                            <div className={styles.mountingThead}>
+                              <span>阶段绑定</span>
+                              <span>临时方案</span>
+                              <span>默认方案</span>
+                              <div>周期：50秒</div>
+                            </div>
+                            <div className={styles.mountingTh}>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div >
+                      </div >
+                      <div className={styles.lineBoxer_item}>
+                        <span ></span>
+                        <div className={styles.streetBox}>
+                          <div className={styles.streetTitleBox}>
+                            <div>西安长街-金融街</div>
+                            <div><span>模式：</span>中心控制</div>
+                          </div>
+                          <div className={styles.intersectionBox}>
+                            <div className={styles.mountingThead}>
+                              <span>阶段绑定</span>
+                              <span>临时方案</span>
+                              <span>默认方案</span>
+                              <div>周期：50秒</div>
+                            </div>
+                            <div className={styles.mountingTh}>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+
+                              <div className={styles.phaseTime}>
+                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
+                                <div className={`${styles.phaseinner} ${styles.times}`}>
+                                  <span>40</span>
+                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div >
+                      </div >
+                      {/* )
+                    } */}
+                    </div >
+                  </div >
+                </div >
+              // <div className={styles.slideRightBoxEditBox}>
+              //   {/* <p>干线名称：<span>{route_name}</span></p>
+              //   <p>干线编号：<span>{route_code}</span></p>
+              //   <p>干线方向：<span>{route_directionvalue}</span></p>
+              //   <p>干线长度：<span>{route_miles}</span></p>
+              //   <p>干线类型：<span>{route_typevalue}</span></p>
+              //   <p>干线描述：<span>{detail}</span></p> */}
+              //   <div className={styles.lineBox}>
+              //     < div className={
+              //       styles.lineBoxer}>
+              //       {/* {
+              //         treeListChild && treeListChild.map((item, index) => */}
+              //       <div className={styles.lineBoxer_item}>
+              //         <span ></span>
+              //         <div className={styles.streetBox}>
+              //           <div className={styles.streetTitleBox}>
+              //             <div>西安长街-金融街</div>
+              //             <div><span>模式：</span>中心控制</div>
+              //           </div>
+              //           <div className={styles.intersectionBox}>
+              //             <div className={styles.mountingThead}>
+              //               <div>需求阶段</div>
+              //               <div>运行时间</div>
+              //               <div>间隔时间</div>
+              //               <div><span>开始</span></div>
+              //             </div>
+              //             <div className={styles.mountingTh}>
+              //               <div>东西直行</div>
+              //               <div>15秒</div>
+              //               <div>50秒</div>
+              //               <div><span>结束</span></div>
+              //             </div>
+              //           </div>
+              //         </div >
+              //       </div >
+              //       {/* )
+              //       } */}
+              //     </div >
+              //   </div >
+              // </div >
+            }
+          </div >
+          {/* :
+              <div className='slideRightBoxEdit'>
+            <div className='addMainLine'>
+              <div className='newLine'>长安街干线详情</div>
+              {
+                !ismodify ? <div className='operationLine'><span>删除</span><span onClick={() => this.getismodify(true)}>编辑</span></div> : <div className='operationLineAdd'><span>保存</span><span onClick={() => this.getismodify(false)}>取消</span></div>
+              }
+            </div>
+          </div> */}
+        </div >
+        <div className={styles.sildeRight} style={{ right: `${rightsNew}px` }}>
+          <div className={styles.slideRightBoxAdd}>
+            <div className={styles.addMainLine}>
+              <div className={styles.newLine}>{roadtitle}</div>
+              {
+                ismodify ?
+                  <div className={styles.operationLine}>
+                    <span onClick={() => this.deleteList()} >删除</span><span onClick={() => this.getismodify('edit')}>编辑</span>
+                  </div>
+                  :
+                  <div className={styles.operationLine}>
+                    <span onClick={this.handclickAddEdit}>保存</span><span onClick={this.noneAddRoad}>取消</span>
+                  </div>
+              }
+            </div>
+            {
+              isAddEdit ?
+                <div className={styles.slideRightBoxAddBox}>
+                  <p><span>干线名称：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="干线名称" /></p>
+                  <p><span>干线编号：</span><input onChange={this.changeLoadRouteDirection} value={route_code} intername='route_code' type="text" className={styles.inputBox} placeholder="干线编号" /></p>
+                  <div className={styles.divs}><span>干线方向：</span>
+                    <Select
+                      // defaultValue="海淀区"
+                      value={route_directionvalue}
+                      style={{ width: 225, height: 30 }}
+                      onChange={this.changeLoadRouteDirection}
+                    >
+                      {
+                        loadRouteDirectionList && loadRouteDirectionList.map((item) => {
+                          return (
+                            <Option addeditname='route_directionvalue' intername='route_direction' value={item.c_code} style={{ width: 225, height: 30 }} key={item.id}>{item.code_name}</Option>
+                          )
+                        })
+                      }
+                    </Select>
+                  </div>
+                  <p><span>干线长度：</span><input onChange={this.changeLoadRouteDirection} value={route_miles} intername='route_miles' type="text" className={styles.inputBox} placeholder="干线长度" /></p>
+                  <div className={styles.divs}><span>干线类型：</span>
+                    <Select
+                      // defaultValue="海淀区"
+                      value={route_typevalue}
+                      style={{ width: 225, height: 30 }}
+                      onChange={this.changeLoadRouteDirection}
+                    >
+                      {
+                        loadRouteTypeList && loadRouteTypeList.map((item) => {
+                          return (
+                            <Option addeditname='route_typevalue' intername='route_type' value={item.c_code} style={{ width: 193, height: 30 }} key={item.id}>{item.code_name}</Option>
+                          )
+                        })
+                      }
+                    </Select>
+                  </div>
+                  <p><span>干线描述：</span><input onChange={this.changeLoadRouteDirection} intername='detail' value={detail} type="text" className={styles.inputBox} placeholder="干线描述" /></p>
+                  <div className={styles.lineBox}>
+                    <div className={styles.lineBoxRight}>
+                      <p><span></span><input type="text" className={styles.inputBox} id='startInp' /></p>
+                      {
+                        typeof (roadValue[0]) == 'object' ?
+                          roadValue && roadValue.map((item, index) => {
+                            return (
+                              <div className={styles.roadBox} key={item + index}>
+                                < div className={styles.roadBoxLeft} >
+                                </div>
+                                <div className={styles.roadBoxRight}>
+                                  <p><input type="text" onChange={this.getChangeValue} className={styles.inputBox} id='channelInp' value={item.unit_name} /></p>
+                                </div>
+                              </div>
+                            )
+                          }) :
+                          roadValue && roadValue.map((item, index) => {
+                            console.log(item, index, 'vsvsvsv')
+                            return (
+                              <div className={styles.roadBox} key={item + index}>
+                                <div className={styles.roadBoxLeft}>
+                                </div>
+                                <div className={styles.roadBoxRight}>
+                                  < p > <input type="text" onChange={this.getChangeValue} className={styles.inputBox} value={item} /></p>
+                                </div >
+                              </div >
+                            )
+                          })
+                      }
+                      {/*  <p><input type="text" className={styles.inputBox' /></p> */}
+                      <p><span></span><input type="text" className={styles.inputBox} id='endInp' /></p>
+                    </div >
+                  </div >
+                </div >
+                :
+                <div className={styles.slideRightBoxEditBox}>
+                  {/* <p>干线名称：<span>{route_name}</span></p>
+                <p>干线编号：<span>{route_code}</span></p>
+                <p>干线方向：<span>{route_directionvalue}</span></p>
+                <p>干线长度：<span>{route_miles}</span></p>
+                <p>干线类型：<span>{route_typevalue}</span></p>
+                <p>干线描述：<span>{detail}</span></p> */}
+                  <div className={styles.lineBoxNew}>
                     < div className={
                       styles.lineBoxer}>
-                      {
-                        treeListChild && treeListChild.map((item, index) =>
-                          <div key={item.id} className={styles.lineBoxer_item}>
-                            <span ></span>
-                            <div className={styles.streetBox}>
-                              <p className={
-                                styles.street}><span>{index < 9 ? ('0' + (index + 1)) : index}</span>{item.unit_name}</p>
-                              <div className={styles.intersectionBox}>
-                                <p className={
-                                  styles.intersection}><span>{item.unit_name}</span><span>{item.district_name}</span></p>
-                              </div>
-                            </div >
-                          </div >
-                        )
-                      }
+                      {/* {
+                      treeListChild && treeListChild.map((item, index) => */}
+                      <div className={styles.lineBoxer_item}>
+                        <span ></span>
+                        <div className={styles.streetBox}>
+                          <div className={styles.streetTitleBox}>
+                            <div>西安长街-金融街</div>
+                            <div><span>模式：</span>中心控制</div>
+                          </div>
+                          <div className={styles.intersectionBox}>
+                            <div className={styles.mountingThead}>
+                              <div>需求阶段</div>
+                              <div>运行时间</div>
+                              <div>间隔时间</div>
+                              <div><span>开始</span></div>
+                            </div>
+                            <div className={styles.mountingTh}>
+                              <div>东西直行</div>
+                              <div>15秒</div>
+                              <div>50秒</div>
+                              <div><span>结束</span></div>
+                            </div>
+                          </div>
+                        </div >
+                      </div >
+                      {/* )
+                    } */}
                     </div >
                   </div >
                 </div >
@@ -1082,39 +1756,15 @@ class Homepage extends Component {
         </div> */}
         <div className={styles.sidebarLeft}>
           <div className={styles.tabLeft}>
-            {
-              this.clickOperation.map(item => <span className={clickNum === item.id ? styles.active : ''}
-                onClick={() => this.clickOperationNum(item.id)} key={item.id}>{item.name}</span>)
-            }
+            <span onClick={() => this.clickOperationNum('reserveplan')} className={clickNum === 'reserveplan' ? styles.active : ''}>{reserveplanName}</span>
+            <span onClick={() => this.clickOperationNum('add')} className={clickNum === 'reserveplan' ? styles.active : ''}>{addReserveplan}</span>
+            <span onClick={() => this.clickOperationNum('switch')} className={clickNum === 'reserveplan' ? styles.active : ''}>切换视图</span>
           </div>
           <div className={styles.sidebarLeftBox}>
-            <Menu
-              onOpenChange={this.onOpenChangeSubMenu}
-              onClick={this.onClickMenuItem}
-              style={{ width: 251, color: '#86b7fa', height: '100%', overflowY: 'auto', fontSize: '16px' }}
-              mode="inline"
-              openKeys={menuOpenkeys}
-            >
-              {
-                treeList && treeList.map((item, index) =>
-                  <SubMenu
-                    key={item.id}
-                    onTitleClick={(e) => this.onOpeSubMenu(e, item)}
-                    title={item.route_name}
-                    data_item={item}
-                  >
-                    {
-                      item.childrens &&
-                      item.childrens.map((child) => (
-                        <Menu.Item key={child.id}>{child.unit_name}</Menu.Item>
-                      ))
-                    }
-                  </SubMenu>
-                )
-              }
-            </Menu>
+            <ul className={styles.confUl}>
+              <li className={styles.confLi} onClick={() => this.handleShowInterConf()}>123<span className={styles.innterBorder} /></li>
+            </ul>
           </div>
-
         </div>
         <div className={styles.container} >
           {

@@ -104,8 +104,8 @@ class Region extends Component {
     if (this.map) {
       const currentThis = this
       this.markers = []
-      const interList = zoomVal < 13 ? points.filter(item => item.unit_grade <= 4) : points
-      // console.log(interList)
+      const interList = zoomVal < 13 ? points && points.filter(item => item.unit_grade <= 4) : points
+      console.log(points, zoomVal,interList,'sdfsdfds')
       interList && interList.forEach((item, index) => {
         const el = document.createElement('div')
         el.style.width = '20px'
@@ -126,6 +126,7 @@ class Region extends Component {
         if (isNaN(item.longitude) || isNaN(item.latitude)) {
           console.log(index)
         }
+        console.log(item,item.longitude, item.latitude,'dfdfdfdfvvvvv::::')
         const marker = new window.mapabcgl.Marker(el)
           .setLngLat([item.longitude, item.latitude])
           .addTo(this.map)
