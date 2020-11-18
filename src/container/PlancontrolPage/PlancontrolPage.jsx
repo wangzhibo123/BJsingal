@@ -26,28 +26,52 @@ class Homepage extends Component {
       IsddMessge: false,
       clickNum: '',
       menuOpenkeys: [],
+      rights: 0,
+      isAddEdit: true,
+      ismodify: false,
+      roadtitle: '新增干线',
+      route_name: '',
+      route_code: '',
+      route_direction: '',
+      route_directionvalue: '',
+      route_miles: '',
+      route_type: '',
+      route_typevalue: '',
+      detail: '',
+      roadValue: [],
+      roadValueId: [],
+      treeList: [],
+      loadRouteDirectionList: [],
+      loadRouteTypeList: [],
+      treeListChild: [],
     }
     this.defaultChildren = []
     this.interMarkers = []
     this.clickOperation = [
       {
         id: 1,
-        name: '新增干线',
+        name: '新增预案',
       },
       {
         id: 3,
         name: '切换视图',
       }
     ]
+    this.getDirection = '/control-application-front/planControl/addOrUpdateVipPlan' // 新增修改修改预案
+    this.getDirection = '/control-application-front/planControl/getDirection' // 获取方向
+    this.getPointAll = '/control-application-front/planControl/getPointAll' // 加载所有点位
+    this.getTaskStatus = '/control-application-front/planControl/getTaskStatus' // 获取任务状态
+    this.loadPlanTree = '/control-application-front/planControl/loadPlanAreaUnit' // 获取区域应急预案下的路口
+    this.loadPlanUnit = '/control-application-front/planControl/loadPlanTable' // 预案列表
+    this.loadPlanUnit = '/control-application-front/planControl/loadPlanVipUnit' // 获取特勤预案下的路口
   }
-
   componentDidMount = () => {
     this.renderMap()
     this.getDataList()
     this.getAddDataList()
   }
   getDataList = () => { // 获取所有点位
-    axiosInstance.post(this.loadRouteTree).then(res => {
+    axiosInstance.post(this.loadPlanTree).then(res => {
       const { code, treeList } = res.data
       if (code === '1') {
         this.treeListDatas = treeList
@@ -81,7 +105,7 @@ class Homepage extends Component {
         el.id = 'marker' + item.unit_code
         el.addEventListener('click', function (e) {
           // currentThis.addInfoWindow(item)
-          this.handleClckMessge(true)
+          // this.handleClckMessge(true)
         });
         el.addEventListener('contextmenu', function (e) {
 
@@ -211,7 +235,7 @@ class Homepage extends Component {
   }
   addMenu = () => {
     const _this = this
-    this.map.flyTo({ center: [116.391, 39.911], zoom: 14, pitch: 60 })
+    // this.map.flyTo({ center: [116.391, 39.911], zoom: 14, pitch: 60 })
     var marker = '', startmarker = '', endmarker = '', channelmarker = [];
     this.map.on('contextmenu', function (item) {
       if (marker) {
@@ -522,31 +546,31 @@ class Homepage extends Component {
     })
   }
   clickOperationNum = (id) => { // 点击新增
-    // if (id === 1) {
-    //   if (this.map) {
-    //     this.clearMap();
-    //   }
-    //   this.initializationState()
-    //   this.setState({
-    //     rights: 0,
-    //     isAddEdit: true,
-    //     ismodify: false,
-    //     roadtitle: '新增干线',
-    //   })
-    //   this.showName = 'add'
-    //   this.unitArr = ''
-    //   this.isAddEdit = true
+    if (id === 1) {
+      // if (this.map) {
+      //   this.clearMap();
+      // }
+      // this.initializationState()
+      this.setState({
+        rights: 0,
+        isAddEdit: true,
+        ismodify: false,
+        roadtitle: '新增干线',
+      })
+      // this.showName = 'add'
+      // this.unitArr = ''
+      // this.isAddEdit = true
 
-    // } else if (id === 3) {
-    //   this.map.flyTo({
-    //     // center: [116.391, 39.911], 
-    //     zoom: 14,
-    //     pitch: 60
-    //   })
-    // }
-    // this.setState({
-    //   clickNum: id
-    // })
+    } else if (id === 3) {
+      this.map.flyTo({
+        // center: [116.391, 39.911], 
+        zoom: 14,
+        pitch: 60
+      })
+    }
+    this.setState({
+      clickNum: id
+    })
   }
   onOpenChangeSubMenu = (eventKey) => { // SubMenu-ite触发
     this.isAddEdit = false
@@ -566,9 +590,144 @@ class Homepage extends Component {
   }
   render() {
     const { Option } = Select
-    const { mainHomePage, Istitletops, IsddMessge, clickNum, menuOpenkeys, treeList } = this.state
+    const {
+      mainHomePage, Istitletops, IsddMessge, clickNum, menuOpenkeys, treeList,
+      rights, isAddEdit, ismodify, roadtitle, roadValue,
+      loadRouteDirectionList, loadRouteTypeList, treeListChild,
+      route_name, route_code, route_directionvalue, route_miles, route_typevalue, detail,
+      pointlist
+    } = this.state
     return (
       <div className={styles.PlancontrolPageWrapper}>
+        <div className={styles.sildeRight} style={{ right: `${rights}px` }}>
+          <div className={styles.slideRightBoxAdd}>
+            <div className={styles.addMainLine}>
+              <div className={styles.newLine}>{roadtitle}</div>
+              {
+                ismodify ?
+                  <div className={styles.operationLine}>
+                    <span onClick={() => this.deleteList()} >删除</span><span onClick={() => this.getismodify('edit')}>编辑</span>
+                  </div>
+                  :
+                  <div className={styles.operationLine}>
+                    <span onClick={this.handclickAddEdit}>保存</span><span onClick={this.noneAddRoad}>取消</span>
+                  </div>
+              }
+            </div>
+            {
+              isAddEdit ?
+                <div className={styles.slideRightBoxAddBox}>
+                  <p><span>干线名称：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="干线名称" /></p>
+                  <p><span>干线编号：</span><input onChange={this.changeLoadRouteDirection} value={route_code} intername='route_code' type="text" className={styles.inputBox} placeholder="干线编号" /></p>
+                  <div className={styles.divs}><span>干线方向：</span>
+                    <Select
+                      // defaultValue="海淀区"
+                      value={route_directionvalue}
+                      style={{ width: 195, height: 30 }}
+                      onChange={this.changeLoadRouteDirection}
+                    >
+                      {
+                        loadRouteDirectionList && loadRouteDirectionList.map((item) => {
+                          return (
+                            <Option addeditname='route_directionvalue' intername='route_direction' value={item.c_code} style={{ width: 195, height: 30 }} key={item.id}>{item.code_name}</Option>
+                          )
+                        })
+                      }
+                    </Select>
+                  </div>
+                  <p><span>干线长度：</span><input onChange={this.changeLoadRouteDirection} value={route_miles} intername='route_miles' type="text" className={styles.inputBox} placeholder="干线长度" /></p>
+                  <div className={styles.divs}><span>干线类型：</span>
+                    <Select
+                      // defaultValue="海淀区"
+                      value={route_typevalue}
+                      style={{ width: 195, height: 30 }}
+                      onChange={this.changeLoadRouteDirection}
+                    >
+                      {
+                        loadRouteTypeList && loadRouteTypeList.map((item) => {
+                          return (
+                            <Option addeditname='route_typevalue' intername='route_type' value={item.c_code} style={{ width: 193, height: 30 }} key={item.id}>{item.code_name}</Option>
+                          )
+                        })
+                      }
+                    </Select>
+                  </div>
+                  <p><span>干线描述：</span><input onChange={this.changeLoadRouteDirection} intername='detail' value={detail} type="text" className={styles.inputBox} placeholder="干线描述" /></p>
+                  <div className={styles.lineBox}>
+                    <div className={styles.lineBoxRight}>
+                      <p><span></span><input type="text" className={styles.inputBox} id='startInp' /></p>
+                      {
+                        typeof (roadValue[0]) == 'object' ?
+                          roadValue && roadValue.map((item, index) => {
+                            return (
+                              <div className={styles.roadBox} key={item + index}>
+                                < div className={styles.roadBoxLeft} >
+                                </div>
+                                <div className={styles.roadBoxRight}>
+                                  <p><input type="text" onChange={this.getChangeValue} className={styles.inputBox} id='channelInp' value={item.unit_name} /></p>
+                                </div>
+                              </div>
+                            )
+                          }) :
+                          roadValue && roadValue.map((item, index) => {
+                            console.log(item, index, 'vsvsvsv')
+                            return (
+                              <div className={styles.roadBox} key={item + index}>
+                                <div className={styles.roadBoxLeft}>
+                                </div>
+                                <div className={styles.roadBoxRight}>
+                                  < p > <input type="text" onChange={this.getChangeValue} className={styles.inputBox} value={item} /></p>
+                                </div >
+                              </div >
+                            )
+                          })
+                      }
+                      {/*  <p><input type="text" className={styles.inputBox' /></p> */}
+                      <p><span></span><input type="text" className={styles.inputBox} id='endInp' /></p>
+                    </div >
+                  </div >
+                </div >
+                :
+                <div className={styles.slideRightBoxEditBox}>
+                  <p> 干线名称：<span>{route_name}</span></p>
+                  <p>干线编号：<span>{route_code}</span></p>
+                  <p>干线方向：<span>{route_directionvalue}</span></p>
+                  <p>干线长度：<span>{route_miles}</span></p>
+                  <p>干线类型：<span>{route_typevalue}</span></p>
+                  <p>干线描述：<span>{detail}</span></p>
+                  <div className={styles.lineBox}>
+                    < div className={
+                      styles.lineBoxer}>
+                      {
+                        treeListChild && treeListChild.map((item, index) =>
+                          <div key={item.id} className={styles.lineBoxer_item}>
+                            <span ></span>
+                            <div className={styles.streetBox}>
+                              <p className={
+                                styles.street}><span>{index < 9 ? ('0' + (index + 1)) : index}</span>{item.unit_name}</p>
+                              <div className={styles.intersectionBox}>
+                                <p className={
+                                  styles.intersection}><span>{item.unit_name}</span><span>{item.district_name}</span></p>
+                              </div>
+                            </div >
+                          </div >
+                        )
+                      }
+                    </div >
+                  </div >
+                </div >
+            }
+          </div >
+          {/* :
+              <div className='slideRightBoxEdit'>
+            <div className='addMainLine'>
+              <div className='newLine'>长安街干线详情</div>
+              {
+                !ismodify ? <div className='operationLine'><span>删除</span><span onClick={() => this.getismodify(true)}>编辑</span></div> : <div className='operationLineAdd'><span>保存</span><span onClick={() => this.getismodify(false)}>取消</span></div>
+              }
+            </div>
+          </div> */}
+        </div >
         {/* <div class="control_panel position_lb driveInfo">
           <ul>
             <li>
@@ -585,10 +744,10 @@ class Homepage extends Component {
             </li>
           </ul>
         </div> */}
-        <div className={styles.reserveplan}>
+        < div className={styles.reserveplan} >
           <div />
           <span>添加预案</span>
-        </div>
+        </div >
         <div className={`${styles.reserveplan} ${styles.reserveplanTwo}`}>
           <div />
           <span>添加预案</span>
@@ -908,7 +1067,7 @@ class Homepage extends Component {
             </div>
           </div>
         }
-        <div className={styles.sidebarLeft}>
+        {/* <div className={styles.sidebarLeft}>
           <div className={styles.titletops}>
             <span onClick={() => this.gettitletops(true)} className={Istitletops ? styles.titletopsActive : ''}>活动</span>
             <span onClick={() => this.gettitletops(false)} className={!Istitletops ? styles.titletopsActive : ''}>应急</span>
@@ -920,15 +1079,15 @@ class Homepage extends Component {
 
           >
           </Menu>
-        </div>
-        <div className='sidebarLeft'>
-          <div className='tabLeft'>
+        </div> */}
+        <div className={styles.sidebarLeft}>
+          <div className={styles.tabLeft}>
             {
-              this.clickOperation.map(item => <span className={clickNum === item.id ? 'active' : ''}
+              this.clickOperation.map(item => <span className={clickNum === item.id ? styles.active : ''}
                 onClick={() => this.clickOperationNum(item.id)} key={item.id}>{item.name}</span>)
             }
           </div>
-          <div className='sidebarLeftBox'>
+          <div className={styles.sidebarLeftBox}>
             <Menu
               onOpenChange={this.onOpenChangeSubMenu}
               onClick={this.onClickMenuItem}
@@ -940,7 +1099,7 @@ class Homepage extends Component {
                 treeList && treeList.map((item, index) =>
                   <SubMenu
                     key={item.id}
-                    // onTitleClick={(e) => this.onOpeSubMenu(e, item)}
+                    onTitleClick={(e) => this.onOpeSubMenu(e, item)}
                     title={item.route_name}
                     data_item={item}
                   >
@@ -955,6 +1114,7 @@ class Homepage extends Component {
               }
             </Menu>
           </div>
+
         </div>
         <div className={styles.container} >
           {
@@ -964,7 +1124,7 @@ class Homepage extends Component {
             </div>
           }
         </div>
-      </div>
+      </div >
     )
   }
 }

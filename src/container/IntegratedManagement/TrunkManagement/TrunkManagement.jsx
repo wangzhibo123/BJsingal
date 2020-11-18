@@ -30,26 +30,6 @@ class TrunkManagement extends Component {
       menuOpenkeys: [],
       treeListChild: [],
       stateSelect: [
-        {
-          name: "海淀区",
-          id: "1",
-          children: []
-        },
-        {
-          name: "朝阳区",
-          id: "2",
-          children: []
-        },
-        {
-          name: "上地",
-          id: "3",
-          children: []
-        },
-        {
-          name: "三里屯",
-          id: "4",
-          children: []
-        }
       ],
       route_name: '',
       route_code: '',
@@ -716,7 +696,10 @@ class TrunkManagement extends Component {
       this.clearMap();
     }
     if (eventKey.length === 0) {
-      this.setState({ menuOpenkeys: [] })
+      this.setState({
+        menuOpenkeys: [],
+        rights: -300,
+      })
     } else {
       const keys = eventKey.pop()
       const { menuOpenkeys } = this.state
@@ -1001,7 +984,7 @@ class TrunkManagement extends Component {
                           <div key={item.id} className='lineBoxer_item'>
                             <span></span>
                             <div className='streetBox'>
-                              <p className='street'><span>{index < 9 ? ('0' + (index + 1)) : index}</span>{item.unit_name}{ismodify ? <DeleteOutlined /> : ''}</p>
+                              <p className='street'><span>{index < 9 ? ('0' + (index + 1)) : index}</span>{item.unit_name}</p>
                               <div className='intersectionBox'>
                                 <p className='intersection'><span>{item.unit_name}</span><span>{item.district_name}</span></p>
                               </div>
