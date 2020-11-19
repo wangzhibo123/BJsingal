@@ -45,6 +45,7 @@ class InterConfMsg extends Component {
       currentItem: 'canalization',
       currentParams: 'phasemsg',
       configName: null,
+      interInfo: null,
       laneLists: this.roadLists,
     }
     this.baseConfList = [
@@ -86,12 +87,12 @@ class InterConfMsg extends Component {
   }
   componentDidMount = () => {
     const { configName, interInfo } = this.props
-    this.setState({ configName })
+    this.setState({ configName, interInfo })
   }
   componentDidUpdate = (prevState) => {
-    const { configName } = this.props
+    const { configName, interInfo } = this.props
     if (prevState.configName !== configName) {
-      this.setState({ configName })
+      this.setState({ configName, interInfo })
     }
   }
   handleBaseItemChange = (currentItem, stateName) => {
@@ -159,30 +160,31 @@ class InterConfMsg extends Component {
     this.newConfPic = this.roadLists[this.currentDragIndex]
   }
   render() {
-    const { isUpload, currentItem, configName, currentParams, laneLists } = this.state
+    const { isUpload, currentItem, configName, currentParams, laneLists, interInfo } = this.state
+    console.log(interInfo)
     return (
       <div className="interConfMsg">
         <div className="confMsgBox">
           <div className="closeBox" onClick={this.props.closeInterConf}><CloseOutlined className="closeIcon" /></div>
-          <div className="confInterName">南线阁街与枣林前街</div>
+          <div className="confInterName">{interInfo && interInfo.unit_name}</div>
           <div className="interMsg">
             <div className="msgDetails">
-              <div className="msgItem">路口编号：100267</div>
-              <div className="msgItem">原始路口名称：无</div>
-              <div className="msgItem">路口类型：平面十字</div>
-              <div className="msgItem">路口位置：三环内</div>
-              <div className="msgItem">所属区域：海淀区</div>
-              <div className="msgItem" style={{ flex: 1.5 }}>管理单位：海淀区交通支队</div>
-              <div className="msgItem">经度：100267</div>
-              <div className="msgItem">纬度：100267</div>
+              <div className="msgItem">路口编号：{interInfo && interInfo.unit_code}</div>
+              <div className="msgItem" style={{ flex: 1.6 }}>原始路口名称：{interInfo && interInfo.unit_name_old}</div>
+              <div className="msgItem">路口类型：{interInfo && interInfo.unit_type_code}</div>
+              <div className="msgItem">路口位置：{interInfo && interInfo.unit_position}</div>
+              <div className="msgItem">所属区域：{interInfo && interInfo.district_id}</div>
+              <div className="msgItem" style={{ flex: 1.2 }}>管理单位：{interInfo && interInfo.org_unit}</div>
+              <div className="msgItem" style={{ flex: 0.7 }}>经度：{interInfo && interInfo.longitude}</div>
+              <div className="msgItem" style={{ flex: 0.7 }}>纬度：{interInfo && interInfo.latitude}</div>
             </div>
             <div className="msgDetails">
-              <div className="msgItem" style={{ flex: 1.2 }}>信号控制系统对应路口编号：100267</div>
-              <div className="msgItem" style={{ flex: 1.5 }}>信号系统路口名称：枣林前街路口</div>
-              <div className="msgItem">信号机对应路口编号：100267</div>
-              <div className="msgItem">信号控制系统：scats</div>
-              <div className="msgItem">是否被带：否</div>
-              <div className="msgItem">主路口编号：否</div>
+              <div className="msgItem" style={{ flex: 1.2 }}>信号控制系统对应路口编号：{interInfo && interInfo.signal_sys_unit_id}</div>
+              <div className="msgItem" style={{ flex: 1.5 }}>信号系统路口名称：{interInfo && interInfo.unit_name_signal_sys}</div>
+              <div className="msgItem">信号机对应路口编号：{interInfo && interInfo.signal_unit_id}</div>
+              <div className="msgItem">信号控制系统：{interInfo && interInfo.signal_system_code}</div>
+              <div className="msgItem">是否被带：{interInfo && (interInfo.be_taken === 0 ? '否' : '是')}</div>
+              <div className="msgItem">主路口编号：{interInfo && interInfo.main_unit_id}</div>
             </div>
           </div>
           <div className="interConflist">

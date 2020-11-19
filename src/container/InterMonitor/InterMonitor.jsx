@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { Select } from 'antd'
 import {
   SearchOutlined, DoubleLeftOutlined, DoubleRightOutlined, CaretUpOutlined, CaretDownOutlined, LeftCircleOutlined,
-  RightCircleOutlined, UpCircleOutlined, DownCircleOutlined, CloseOutlined,
+  RightCircleOutlined, UpCircleOutlined, DownCircleOutlined, CloseOutlined, EnvironmentOutlined,
 } from '@ant-design/icons'
+import mapConfiger from '../utils/minemapConf'
 import './InterMonitor.scss'
 
 import axiosInstance from '../utils/getInterfaceData'
@@ -11,12 +12,12 @@ import cneter from '../imgs/iconM.png'
 import hand from '../imgs/iconH.png'
 import allred from '../imgs/iconR.png'
 import yellow from '../imgs/IconY.png'
-import phasePic from '../imgs/01.png'
-import phasePic2 from '../imgs/03.png'
-import phasePic3 from '../imgs/11.png'
-import phasePic4 from '../imgs/04.png'
-import phasePic5 from '../imgs/10.png'
-import phasePic6 from '../imgs/02.png'
+// import phasePic from '../imgs/01.png'
+// import phasePic2 from '../imgs/03.png'
+// import phasePic3 from '../imgs/11.png'
+// import phasePic4 from '../imgs/04.png'
+// import phasePic5 from '../imgs/10.png'
+// import phasePic6 from '../imgs/02.png'
 import test1 from '../imgs/interBg.png'
 import singalIcon from '../imgs/singalIcon.png'
 
@@ -41,6 +42,9 @@ class InterMonitor extends Component {
       interConfigMsg: null,
       trendChartsData: null,
       interInfo: null,
+      statusControlData: null,
+      stageList: null,
+      showInterMap: false,
     }
     this.confItems = [
       { confname: '基础信息', id: 'interBase' }, { confname: '信号参数', id: 'singalParams' },
@@ -52,10 +56,19 @@ class InterMonitor extends Component {
       { text: '中心控制', img: cneter },
       { text: '中心手控', img: hand },
     ]
+    this.defaultMarkers = [
+      [116.32346, 39.95645],
+      [116.32815, 39.95668],
+      [116.33536, 39.95711],
+      [116.33615, 39.95176],
+      [116.34108, 39.94728],
+      [116.34310, 39.93679],
+      [116.37923, 39.95809],
+    ]
     this.interId = this.props.match.params.id
-    this.modeUrl = '/control-application-front/unitMontitor/getControlModeById?unit_id=1'
-    this.trafficUrl = '/control-application-front/unitMontitor/getRealtimeTrafficById?unit_id=1'
-    this.trendUrl = '/control-application-front/unitMontitor/getRoadTrendById?unit_id=1'
+    this.modeUrl = `/control-application-front/unitMontitor/getControlModeById?unit_id=${this.interId}`
+    this.trafficUrl = `/control-application-front/unitMontitor/getRealtimeTrafficById?unit_id=${this.interId}`
+    this.trendUrl = `/control-application-front/unitMontitor/getRoadTrendById?unit_id=${this.interId}`
     this.messageUrl = `/control-application-front/unitMontitor/getUnitInfoById?unit_id=${this.interId}`
   }
   componentDidMount = () => {
@@ -78,7 +91,23 @@ class InterMonitor extends Component {
   // 获取实时状态控制模式
   getControlMode = () => {
     axiosInstance.post(this.modeUrl).then((res) => {
-      console.log(res)
+      const { code, list } = res.data
+      if (code === '1') {
+        const stageIds = list.stage_id.split(',')
+        this.defaultStageList = []
+        this.modifyStageList = []
+        if (stageIds.length) {
+          const stageTimes = list.stage_time.split(',')
+          const imgs = list.stage_image.split(',')
+          stageIds.forEach((item, index) => {
+            const obj = { stageId: item, stageTime: stageTimes[index], stageImg: imgs[index] }
+            this.defaultStageList.push(obj)
+            this.modifyStageList.push(obj)
+          })
+        }
+        
+        this.setState({ statusControlData: list, stageList: this.defaultStageList })
+      }
     })
   }
   // 获取实时路况
@@ -145,10 +174,42 @@ class InterMonitor extends Component {
   handleShowSingalInfo = () => {
     this.setState({ showSingalInfo: true })
   }
+  handleHideSingalInfo = () => {
+    this.setState({ showSingalInfo: false })
+  }
+  renderInterMap = () => {
+    mapConfiger.zoom = 11
+    this.map = new window.mapabcgl.Map(mapConfiger)
+    this.map.addControl(new window.mapabcgl.NavigationControl());
+    const { longitude, latitude } = this.state.interInfo
+    this.map.setCenter([longitude, latitude])
+    this.addMarker(longitude, latitude)
+  }
+  handleShowIntermap = () => {
+    this.setState({ showInterMap: true }, () => {
+      this.renderInterMap()
+    })
+  }
+  handleHideInterMap = () => {
+    this.setState({ showInterMap: false })
+  }
+  getMarkerEl = () => {
+    var el = document.createElement('div')
+    el.style.backgroundImage = 'url(http://map.mapabc.com:35001/mapdemo/apidemos/sourceLinks/img/marker-icon.png)';
+    //宽度和高度要和图片宽高相同，否则点的位置会有偏差
+    el.style.width = '25px'; 
+    el.style.height = '41px'; 
+    return el
+  }
+  addMarker = (lng, lat) => {
+      new window.mapabcgl.Marker(this.getMarkerEl())
+      .setLngLat([lng, lat])
+      .addTo(this.map);
+  }
   render() {
     const {
       confListLeft, modeIndex, moveLeft, moveRight, moveUp, moveDown, trafficInfoList, interConfigMsg, trendChartsData, interInfo, showSingalInfo,
-      phaseTime,
+      phaseTime, statusControlData, stageList, showInterMap
     } = this.state
     return (
       <div className="interMonitorBox">
@@ -159,16 +220,28 @@ class InterMonitor extends Component {
           <div className="interPic">
             <img className={`${moveLeft ? 'slideInLeft' : moveRight ? 'slideInRight' : moveUp ? 'slideInUp' : moveDown ? 'slideInDown' : ''}`} src={test1} alt="" />
             <div className="interPhaseTime">
-                <em><i>{phaseTime}s</i></em>
-              </div>
+              <em><i>{phaseTime}s</i></em>
+            </div>
           </div>
           {
             !!interConfigMsg &&
             <InterConfMsg closeInterConf={this.hanldleCloseInterConf} configName={interConfigMsg} interId={this.interId} interInfo={interInfo} />
           }
-          <div className="title">当前路口-{interInfo && interInfo.unit_name}</div>
+          <div className="titles">
+            当前路口-{interInfo && interInfo.unit_name}
+            <span className="interMapIcon" onClick={this.handleShowIntermap}><EnvironmentOutlined /></span>
+          </div>
+          {
+            showInterMap &&
+            <div className="interMapWrapper">
+              <div className="interMapZoom" id="mapContainer" />
+              <CloseOutlined className="closeInterMap" onClick={this.handleHideInterMap} />
+            </div>
+          }
+          
+          
           <div className="monitorDetails">
-            <InterTimeList />
+            <InterTimeList {...this.props} />
             <div className="roadTrends">
               {
                 trendChartsData &&
@@ -249,10 +322,10 @@ class InterMonitor extends Component {
             <div className="controlExecute">
               <div className="controlMsg">
                 <span className="controlItems">网络状态：<span className="itemsVal">在线</span></span>
-                <span className="controlItems">控制模式：<span className="itemsVal">中心控制</span></span>
+                <span className="controlItems">控制模式：<span className="itemsVal">{statusControlData && statusControlData.control_state_txt}</span></span>
                 <span className="controlItems">是否锁定：<span className="itemsVal">未锁</span></span>
-                <span className="controlItems">方案号：<span className="itemsVal">4</span></span>
-                <span className="controlItems">周期：<span className="itemsVal">141</span></span>
+                <span className="controlItems">方案号：<span className="itemsVal">{statusControlData && statusControlData.planno}</span></span>
+                <span className="controlItems">周期：<span className="itemsVal">{statusControlData && statusControlData.cyclelen}</span></span>
               </div>
               <div className="modifyBox">
                 <div className="modifyBtn modify">运行</div>
@@ -272,48 +345,23 @@ class InterMonitor extends Component {
                   }
                 </div>
                 <div className="controlDetails">
-                  <div className="phaseTime">
-                    <div className="phaseinner"><img src={phasePic2} alt="" /></div>
-                    <div className="phaseinner times">
-                      <span>40</span>
-                      <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
-                    </div>
-                  </div>
-                  <div className="phaseTime">
-                    <div className="phaseinner"><img src={phasePic3} alt="" /></div>
-                    <div className="phaseinner times">
-                      <span>40</span>
-                      <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
-                    </div>
-                  </div>
-                  <div className="phaseTime">
-                    <div className="phaseinner"><img src={phasePic4} alt="" /></div>
-                    <div className="phaseinner times">
-                      <span>40</span>
-                      <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
-                    </div>
-                  </div>
-                  <div className="phaseTime">
-                    <div className="phaseinner"><img src={phasePic} alt="" /></div>
-                    <div className="phaseinner times">
-                      <span>40</span>
-                      <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
-                    </div>
-                  </div>
-                  <div className="phaseTime">
-                    <div className="phaseinner"><img src={phasePic5} alt="" /></div>
-                    <div className="phaseinner times">
-                      <span>40</span>
-                      <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
-                    </div>
-                  </div>
-                  <div className="phaseTime">
-                    <div className="phaseinner"><img src={phasePic6} alt="" /></div>
-                    <div className="phaseinner times">
-                      <span>40</span>
-                      <div className="caculate"><CaretUpOutlined className="add" /><CaretDownOutlined className="subtract" /></div>
-                    </div>
-                  </div>
+                  {
+                    stageList &&
+                    stageList.map((item, index) => {
+                      return (
+                        <div className="phaseTime" key={item.stageId}>
+                          <div className="phaseinner"><img src={item.stageImg} alt="" /></div>
+                          <div className="phaseinner times">
+                            <span>{item.stageTime}</span>
+                            <div className="caculate">
+                              <CaretUpOutlined className="add" onClick={this.handleModifyStageTime} />
+                              <CaretDownOutlined className="subtract" onClick={this.handleModifyStageTime} />
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })
+                  }
                 </div>
               </div>
             </div>

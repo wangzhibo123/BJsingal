@@ -69,6 +69,7 @@ class Homepage extends Component {
   }
   componentDidMount = () => {
     // this.renderChartsMap()
+    this.getMapPoints()
     this.getAreaMsgLists()
     this.getCongestionList()
     this.getFaulRepairRate()
@@ -76,7 +77,6 @@ class Homepage extends Component {
     this.getCloudSource()
     this.getOprationEfficiency()
     this.getFaultStatistics()
-    this.getMapPoints()
   }
   // 添加实时路况
   addTrafficLayer = () => {
@@ -93,7 +93,6 @@ class Homepage extends Component {
   // 地图点位
   getMapPoints = () => {
     axiosInstance.post(this.pointLists).then((res) => {
-      console.log(res)
       const { code, errline, offline, online, pointlist } = res.data
       if (code === '1') {
         this.pointLists = pointlist
@@ -102,7 +101,7 @@ class Homepage extends Component {
           offline: ('000' + offline).slice(-4).split(''),
           online: ('000' + online).slice(-4).split(''),
           allNum: ('000' + (errline + offline + online)).slice(-4).split(''),
-          pointlist
+          pointlist,
         })
       }
     })
@@ -230,9 +229,18 @@ class Homepage extends Component {
         el.style.width = '20px'
         el.style.height = '20px'
         el.style.borderRadius = '50%'
-        el.style.backgroundColor = 'green'
+        el.style.backgroundColor = 'rgba(0,255,0,.4)'
+        el.style.display = 'flex'
+        el.style.justifyContent = 'center'
+        el.style.alignItems = 'center'
         el.style.cursor = 'pointer'
         el.id = 'marker' + item.unit_code
+        const childEl = document.createElement('div')
+        childEl.style.width = '10px'
+        childEl.style.height = '10px'
+        childEl.style.borderRadius = '50%'
+        childEl.style.backgroundColor = '#00FF00'
+        el.appendChild(childEl)
         el.addEventListener('click',function(e){
           currentThis.addInfoWindow(item)
         });
@@ -255,6 +263,7 @@ class Homepage extends Component {
     }
   }
   addInfoWindow = (marker) => {
+    console.log(marker.longitude, marker.latitude)
     if (this.mapPopup) {
       this.mapPopup.remove()
     }
@@ -269,8 +278,6 @@ class Homepage extends Component {
       .setLngLat( new window.mapabcgl.LngLat(marker.longitude, marker.latitude))
       .setHTML(this.getInfoWindowHtml(marker))
       .addTo(this.map)
-    // $('.mapabcgl-popup')[0].style.maxWidth = '1000px'
-    console.log(this.interMonitorBtn)
   }
   renderChartsMap = () => {
     const geoJson = require('./beijing.json')
@@ -323,9 +330,10 @@ class Homepage extends Component {
     this.map.addControl(new window.mapabcgl.NavigationControl());
     this.map.on('load', () => {
       this.addTrafficLayer()
-      if (this.pointLists.length) {
+      this.renderMapLines()
+      setTimeout(() => {
         this.addMarker(this.pointLists)
-      }
+      }, 500)
     })
     this.map.on('zoom', () => {
       if (this.zoomTimer) {
@@ -340,6 +348,39 @@ class Homepage extends Component {
       }, 700)
     })
   }
+  renderMapLines = () => {
+    this.map.addSource("lineSource", {
+      "type": "geojson",
+      "data": {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [116.32346, 39.95645],
+            [116.32815, 39.95668],
+            [116.33536, 39.95711],
+            [116.33615, 39.95176],
+            [116.34108, 39.94728]
+          ]
+        }
+
+      }
+    });
+    this.map.addLayer({
+      "id": "addArrowLine",
+      "type": "line",
+      "source": "lineSource",
+      "layout": {
+        "line-join": "round",
+        "line-cap": "round"
+      },
+      "paint": {
+        "line-color": "#de0000",
+        "line-width": 8
+      }
+    });
+  }
   randomData = () => {  
     return Math.round(Math.random()*500);  
   }
@@ -349,11 +390,11 @@ class Homepage extends Component {
     })
   }
   // 路口搜索
-  handleInterSearch = (value, options) => {
-    console.log(value, options)
+  handleInterSelect = (value, options) => {
     const { key, lng, lat } = options
-    this.map.panTo([lng, lat])
-    $('#marker' + key).trigger('click')
+    this.map.setCenter([lng, lat])
+    this.map.setZoom(15)
+    $('#marker' + key).trigger('click',)
   }
   handleToggleLegend = (e) => {
     const legend = e.currentTarget.getAttribute('legendname')
@@ -625,8 +666,10 @@ class Homepage extends Component {
                   showSearch
                   style={{ width: 200 }}
                   placeholder="路口查询"
-                  onChange={this.handleInterSearch}
+                  autoClearSearchValue
+                  // onChange={this.handleInterSearch}
                   dropdownClassName="searchList"
+                  onSelect={this.handleInterSelect}
                 >
                   {
                     pointlist &&

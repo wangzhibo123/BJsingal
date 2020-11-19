@@ -26,13 +26,13 @@ class branchHome extends Component {
     this.trafficTimer = null
     this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
     this.rateColors = ['#FF0000', '#FF7800', '#FFD800', '#0CB424']
-    this.congestionUrl = '/engine-unified/index/getCrossGongestion?user_id=2'
-    this.singalStatusUrl = '/engine-unified/index/getSignalRealState?user_id=2'
-    this.controlCountUrl = '/engine-unified/index/getControlCount?user_id=2'
-    this.oprationUrl = '/engine-unified/index/getOperatingEfficiency?user_id=2'
-    this.faultUrl = '/engine-unified/index/getFaultStatistics?user_id=2'
-    this.staticUrl = '/engine-unified/index/getRealtimeStatistics?user_id=2'
-    this.pointLists = '/engine-unified/index/getPointByFault?user_id=2'
+    this.congestionUrl = '/control-application-front/index/getCrossGongestion?user_id=2'
+    this.singalStatusUrl = '/control-application-front/index/getSignalRealState?user_id=2'
+    this.controlCountUrl = '/control-application-front/index/getControlCount?user_id=2'
+    this.oprationUrl = '/control-application-front/index/getOperatingEfficiency?user_id=2'
+    this.faultUrl = '/control-application-front/index/getFaultStatistics?user_id=2'
+    this.staticUrl = '/control-application-front/index/getRealtimeStatistics?user_id=2'
+    this.pointLists = '/control-application-front/index/getPointByFault?user_id=2'
   }
   componentDidMount = () => {
     this.renderMap()
