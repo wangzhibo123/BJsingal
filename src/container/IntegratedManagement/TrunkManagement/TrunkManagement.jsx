@@ -30,26 +30,6 @@ class TrunkManagement extends Component {
       menuOpenkeys: [],
       treeListChild: [],
       stateSelect: [
-        {
-          name: "海淀区",
-          id: "1",
-          children: []
-        },
-        {
-          name: "朝阳区",
-          id: "2",
-          children: []
-        },
-        {
-          name: "上地",
-          id: "3",
-          children: []
-        },
-        {
-          name: "三里屯",
-          id: "4",
-          children: []
-        }
       ],
       route_name: '',
       route_code: '',
@@ -75,7 +55,7 @@ class TrunkManagement extends Component {
         name: '切换视图',
       }
     ]
-    this.getPointAll = '/control-application-front/unitMontitor/getPointAll' // 获取所有点位
+    this.getPointAll = '/control-application-front/unitInfo/getPointAll' // 获取所有点位
     this.deleteRoute = '/control-application-front/routeManagement/deleteRoute' // 删除干线信息
     this.getRouteInfo = '/control-application-front/routeManagement/getRouteInfo' // 加载当前干线信息
     this.loadRouteTree = '/control-application-front/routeManagement/loadRouteTree' // 干线树
@@ -564,7 +544,7 @@ class TrunkManagement extends Component {
       const currentThis = this
       this.markers = []
       const interList = zoomVal < 13 ? points.filter(item => item.unit_grade <= 4) : points
-      // console.log(interList)
+      // console.log(interList, 'sdfsdf')
       interList && interList.forEach((item, index) => {
         const el = document.createElement('div')
         el.style.width = '20px'
@@ -716,7 +696,10 @@ class TrunkManagement extends Component {
       this.clearMap();
     }
     if (eventKey.length === 0) {
-      this.setState({ menuOpenkeys: [] })
+      this.setState({
+        menuOpenkeys: [],
+        rights: -300,
+      })
     } else {
       const keys = eventKey.pop()
       const { menuOpenkeys } = this.state
@@ -1001,7 +984,7 @@ class TrunkManagement extends Component {
                           <div key={item.id} className='lineBoxer_item'>
                             <span></span>
                             <div className='streetBox'>
-                              <p className='street'><span>{index < 9 ? ('0' + (index + 1)) : index}</span>{item.unit_name}{ismodify ? <DeleteOutlined /> : ''}</p>
+                              <p className='street'><span>{index < 9 ? ('0' + (index + 1)) : index}</span>{item.unit_name}</p>
                               <div className='intersectionBox'>
                                 <p className='intersection'><span>{item.unit_name}</span><span>{item.district_name}</span></p>
                               </div>

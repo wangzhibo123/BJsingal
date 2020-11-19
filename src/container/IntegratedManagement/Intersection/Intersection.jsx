@@ -61,7 +61,24 @@ class Intersection extends Component {
         name: '切换视图',
       }
     ]
-
+    this.formIntersection = {
+      // unit_code,
+      // unit_type_code,
+      // unit_position,
+      // district_id,
+      // user_group_id,
+      // longitude,
+      // latitude,
+      // signal_sys_unit_id,
+      // signal_system_code,
+      // signal_unit_id,
+      // minor_unit_number,
+      // be_taken,
+      // unit_name,
+      // unit_name_signal_sys,
+      // main_unit_id,
+      // unit_name_old,
+    }
     this.getPointAll = '/control-application-front/unitInfo/getPointAll' // 加载所有点位
     this.loadTree = '/control-application-front/districtManagement/loadTree' // 路口管理树
     this.editDistrictInfo = '/control-application-front/districtManagement/editSubDistrictInfo' // 加载当前区域信息
@@ -146,7 +163,7 @@ class Intersection extends Component {
     if (this.map) {
       const currentThis = this
       this.markers = []
-      const interList = zoomVal < 13 ? points.filter(item => item.unit_grade <= 4) : points
+      const interList = zoomVal < 13 ? points && points.filter(item => item.unit_grade <= 4) : points
       // console.log(interList)
       interList && interList.forEach((item, index) => {
         const el = document.createElement('div')
@@ -254,10 +271,13 @@ class Intersection extends Component {
     map.on('click', (e) => {
       console.log(this.mapaddOnclick, e.lngLat.lng.toFixed(6))
       if (this.mapaddOnclick) {
-
         this.setState({
           longitude: e.lngLat.lng.toFixed(6),
           latitude: e.lngLat.lat.toFixed(6)
+        })
+      } else {
+        this.setState({
+          rights: -300
         })
       }
       // document.getElementById('lnglat').value = e.lngLat.lng.toFixed(6) + "," + e.lngLat.lat.toFixed(6);
@@ -347,6 +367,7 @@ class Intersection extends Component {
   }
   onClickMenuItem = (event) => { // 点击menu-item
     // console.log(event.item.props.data_item, 'vvbbb')
+    this.mapaddOnclick = false
     const { UnitPosition, UnitType, UnitDistrict, UnitGroup } = this.state
     const { data_item } = event.item.props
     this.map.panTo([data_item.longitude, data_item.latitude])

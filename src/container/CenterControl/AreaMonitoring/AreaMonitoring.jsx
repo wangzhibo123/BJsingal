@@ -34,7 +34,7 @@ export default class AreaMonitoring extends Component {
         { name: "上地", id: "3", children: [{ name: "华联", id: "3_1" }, { name: "中关村", id: "3_2" }] },
         { name: "三里屯", id: "4", children: [{ name: "太里古", id: "4_1" }, { name: "乾坤大厦", id: "4_2" }] }
       ],
-      lineData: [{ lnglat: [116.383, 39.9071], img: bascRightLeft }, { lnglat: [116.389, 39.9080], img: bascRightUpLeft }, { lnglat: [116.399, 39.9090], img: bascUpDown }],
+      lineData: [{ lnglat: [116.383, 39.90706], img: bascRightLeft }, { lnglat: [116.389, 39.90723], img: bascRightUpLeft }, { lnglat: [116.399, 39.90753], img: bascUpDown }],
       //地图默认中心点
       defaultCenterPoint: [116.396, 39.9075],
       //地图视角角度
@@ -371,7 +371,6 @@ export default class AreaMonitoring extends Component {
         const elParent = document.createElement('div')
         elParent.style.width = '40px'
         elParent.style.height = '20px'
-        elParent.style.position = 'relative'
         const elAnimation = document.createElement('div')
         elAnimation.setAttribute('class', 'animationS')
         const el = document.createElement('div')
