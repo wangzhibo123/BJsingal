@@ -3,10 +3,21 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './router';
 import * as serviceWorker from './serviceWorker';
-React.IMGIPURL = '1234567890'
+const defaultValue = '1234567890'
+const MyContext = React.createContext(defaultValue)
+console.log(MyContext)
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <MyContext.Provider>
+      <MyContext.Consumer>
+        {
+          (value) => (
+            <App contextValue={value} />
+          )
+        }
+      </MyContext.Consumer>
+    </MyContext.Provider>
+    
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -19,7 +19,7 @@ import yellow from '../imgs/IconY.png'
 // import phasePic5 from '../imgs/10.png'
 // import phasePic6 from '../imgs/02.png'
 import test1 from '../imgs/interBg.png'
-import singalIcon from '../imgs/singalIcon.png'
+import singalIcon from '../imgs/hasence.png'
 
 import InterTimeList from './InterTimeList/InterTimeList'
 import Graph from './Graph/Graph'
@@ -45,6 +45,7 @@ class InterMonitor extends Component {
       statusControlData: null,
       stageList: null,
       showInterMap: false,
+      isResetStage: true,
     }
     this.confItems = [
       { confname: '基础信息', id: 'interBase' }, { confname: '信号参数', id: 'singalParams' },
@@ -65,17 +66,28 @@ class InterMonitor extends Component {
       [116.34310, 39.93679],
       [116.37923, 39.95809],
     ]
+    this.defaultStageList = []
     this.interId = this.props.match.params.id
     this.modeUrl = `/control-application-front/unitMontitor/getControlModeById?unit_id=${this.interId}`
     this.trafficUrl = `/control-application-front/unitMontitor/getRealtimeTrafficById?unit_id=${this.interId}`
     this.trendUrl = `/control-application-front/unitMontitor/getRoadTrendById?unit_id=${this.interId}`
     this.messageUrl = `/control-application-front/unitMontitor/getUnitInfoById?unit_id=${this.interId}`
+    this.imgUrl = 'control-application-front/file/getTrackerUrl'
   }
   componentDidMount = () => {
+    console.log('受否存在context：：：', this.props)
+    this.getImageIpurl()
     this.getControlMode()
     this.getTrafficInfo()
     this.getRoadTrend()
     this.getInterInfo()
+  }
+  // 获取图片IP地址
+  getImageIpurl = () => {
+    axiosInstance.get(this.imgUrl).then((res) => {
+      this.imgUrl = res.data
+      this.getControlMode()
+    })
   }
   // 路口信息
   getInterInfo = () => {
@@ -94,19 +106,19 @@ class InterMonitor extends Component {
       const { code, list } = res.data
       if (code === '1') {
         const stageIds = list.stage_id.split(',')
-        this.defaultStageList = []
-        this.modifyStageList = []
         if (stageIds.length) {
           const stageTimes = list.stage_time.split(',')
           const imgs = list.stage_image.split(',')
           stageIds.forEach((item, index) => {
-            const obj = { stageId: item, stageTime: stageTimes[index], stageImg: imgs[index] }
+            const obj = { stageId: item, stageTime: stageTimes[index], modifyTime: stageTimes[index], stageImg: imgs[index] }
             this.defaultStageList.push(obj)
-            this.modifyStageList.push(obj)
           })
         }
-        
-        this.setState({ statusControlData: list, stageList: this.defaultStageList })
+        this.setState({
+          statusControlData: list,
+          stageList: this.defaultStageList,
+          isResetStage: true,
+        })
       }
     })
   }
@@ -194,11 +206,21 @@ class InterMonitor extends Component {
     this.setState({ showInterMap: false })
   }
   getMarkerEl = () => {
-    var el = document.createElement('div')
-    el.style.backgroundImage = 'url(http://map.mapabc.com:35001/mapdemo/apidemos/sourceLinks/img/marker-icon.png)';
-    //宽度和高度要和图片宽高相同，否则点的位置会有偏差
-    el.style.width = '25px'; 
-    el.style.height = '41px'; 
+    const el = document.createElement('div')
+    el.style.width = '20px'
+    el.style.height = '20px'
+    el.style.borderRadius = '50%'
+    el.style.backgroundColor = 'rgba(0,255,0,.4)'
+    el.style.display = 'flex'
+    el.style.justifyContent = 'center'
+    el.style.alignItems = 'center'
+    el.style.cursor = 'pointer'
+    const childEl = document.createElement('div')
+    childEl.style.width = '10px'
+    childEl.style.height = '10px'
+    childEl.style.borderRadius = '50%'
+    childEl.style.backgroundColor = '#00FF00'
+    el.appendChild(childEl)
     return el
   }
   addMarker = (lng, lat) => {
@@ -206,10 +228,19 @@ class InterMonitor extends Component {
       .setLngLat([lng, lat])
       .addTo(this.map);
   }
+  handleModifyStageTime = (type, indexs) => {
+    const defaultTime = parseInt(this.defaultStageList[indexs].modifyTime)
+    this.defaultStageList[indexs].modifyTime = type === 'add' ? defaultTime + 1 : defaultTime - 1
+    this.setState({ stageList: this.defaultStageList, isResetStage: false })
+  }
+  handleResetStage = () => {
+    this.defaultStageList.forEach(item => item.modifyTime = item.stageTime)
+    this.setState({ isResetStage: true })
+  }
   render() {
     const {
       confListLeft, modeIndex, moveLeft, moveRight, moveUp, moveDown, trafficInfoList, interConfigMsg, trendChartsData, interInfo, showSingalInfo,
-      phaseTime, statusControlData, stageList, showInterMap
+      phaseTime, statusControlData, stageList, showInterMap, isResetStage
     } = this.state
     return (
       <div className="interMonitorBox">
@@ -329,7 +360,7 @@ class InterMonitor extends Component {
               </div>
               <div className="modifyBox">
                 <div className="modifyBtn modify">运行</div>
-                <div className="modifyBtn modify">复位</div>
+                <div className="modifyBtn modify" onClick={this.handleResetStage}>复位</div>
               </div>
               <div className="controlMode">
                 <div className="modeItems">
@@ -350,12 +381,12 @@ class InterMonitor extends Component {
                     stageList.map((item, index) => {
                       return (
                         <div className="phaseTime" key={item.stageId}>
-                          <div className="phaseinner"><img src={item.stageImg} alt="" /></div>
+                          <div className="phaseinner"><img src={this.imgUrl + item.stageImg} alt="" /></div>
                           <div className="phaseinner times">
-                            <span>{item.stageTime}</span>
+                            <span>{isResetStage ? item.stageTime : item.modifyTime}</span>
                             <div className="caculate">
-                              <CaretUpOutlined className="add" onClick={this.handleModifyStageTime} />
-                              <CaretDownOutlined className="subtract" onClick={this.handleModifyStageTime} />
+                              <CaretUpOutlined className="add" onClick={() => { this.handleModifyStageTime('add', index) }} />
+                              <CaretDownOutlined className="subtract" onClick={() => { this.handleModifyStageTime('subtract', index) }} />
                             </div>
                           </div>
                         </div>

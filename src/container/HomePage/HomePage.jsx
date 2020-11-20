@@ -244,15 +244,11 @@ class Homepage extends Component {
         el.addEventListener('click',function(e){
           currentThis.addInfoWindow(item)
         });
-        if (isNaN(item.longitude) || isNaN(item.latitude)) {
-          console.log(index)
-        }
         const marker = new window.mapabcgl.Marker(el)
           .setLngLat([item.longitude, item.latitude])
         .addTo(this.map)
         this.interMarkers.push(marker)
       })
-      console.log(this.interMarkers.length)
     }
   }
   removeMarkers = () => {
@@ -330,7 +326,6 @@ class Homepage extends Component {
     this.map.addControl(new window.mapabcgl.NavigationControl());
     this.map.on('load', () => {
       this.addTrafficLayer()
-      this.renderMapLines()
       setTimeout(() => {
         this.addMarker(this.pointLists)
       }, 500)
@@ -347,42 +342,6 @@ class Homepage extends Component {
         }
       }, 700)
     })
-  }
-  renderMapLines = () => {
-    this.map.addSource("lineSource", {
-      "type": "geojson",
-      "data": {
-        "type": "Feature",
-        "properties": {},
-        "geometry": {
-          "type": "LineString",
-          "coordinates": [
-            [116.32346, 39.95645],
-            [116.32815, 39.95668],
-            [116.33536, 39.95711],
-            [116.33615, 39.95176],
-            [116.34108, 39.94728]
-          ]
-        }
-
-      }
-    });
-    this.map.addLayer({
-      "id": "addArrowLine",
-      "type": "line",
-      "source": "lineSource",
-      "layout": {
-        "line-join": "round",
-        "line-cap": "round"
-      },
-      "paint": {
-        "line-color": "#de0000",
-        "line-width": 8
-      }
-    });
-  }
-  randomData = () => {  
-    return Math.round(Math.random()*500);  
   }
   handleCutMap = () => {
     this.setState({ mainHomePage: false }, () => {
@@ -423,7 +382,6 @@ class Homepage extends Component {
     const checkList = all === 'allSingalType' ? this.singalType : this.controlMode
     checkList[indexs].isShow = checked
     const isAllCheck = checkList.filter(item => item.isShow === false)
-    console.log(isAllCheck.length)
     this.setState({
       [mode]: checkList,
       [all]: isAllCheck.length ? false : true,
@@ -503,10 +461,10 @@ class Homepage extends Component {
                         <div className="faultDetails" key={item.district_name}>
                           <div className="faultNo" style={{ backgroundColor: index < 4 ? this.rateColors[index] : '#0CB424' }}>{index + 1}</div>
                           <div className="faultArea">{item.district_name}</div>
-                          <div className="present">{(item.fault_number / 10) * 100}%</div>
+                          <div className="present">{item.fault_number}%</div>
                           <div className="faultValue">
-                            <div className="progress" style={{ width: `${(item.fault_number / 10) * 100}%` }} />
-                            <div className="value">{item.fault_number}</div>
+                            <div className="progress" style={{ width: `${item.fault_number}%` }} />
+                            <div className="value">{item.numbers}</div>
                           </div>
                         </div>
                       )
