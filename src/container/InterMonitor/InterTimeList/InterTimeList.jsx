@@ -11,8 +11,11 @@ class InterTimeList extends Component {
     this.state = {
       showTimeDetails: false,
       timeTableData: null,
+      timePlanDetails: null,
     }
-    this.timeTableUrl = '/control-application-front/unitMontitor/getTimeTableById?unit_id=1'
+    this.interId = this.props.match.params.id
+    this.timeTableUrl = `/control-application-front/unitMontitor/getTimeTableById?unit_id=${this.interId}`
+    this.planStageUrl = `/control-application-front/unitMontitor/getPlanStage`
   }
   componentDidMount = () => {
     this.getTimeTableDatas()
@@ -26,17 +29,28 @@ class InterTimeList extends Component {
       }
     })
   }
-  handleTimeDetails = () => {
-    this.setState({ showTimeDetails: true })
+  // 时间表方案详情
+  handleTimeDetails = (planno) => {
+    axiosInstance.post(`${this.planStageUrl}?planno=${planno}&unit_id=${this.interId}`).then((res) => {
+      console.log(res)
+      const { code, list } = res.data
+      if (code === '1') {
+        this.setState({
+          timePlanDetails: list,
+          showTimeDetails: true,
+        })
+      }
+    })
+    
   }
   handleCloseDetails = () => {
     this.setState({ showTimeDetails: false })
   }
   render() {
-    const { showTimeDetails, timeTableData } = this.state
+    const { showTimeDetails, timeTableData, timePlanDetails } = this.state
     return (
       <div className="timeList">
-        <div className="titles">时间表</div>
+        <div className="timeTitle">时间表</div>
         <div className="listBox">
           <div className="listTh">
             <span className="innterBorder" />
@@ -48,7 +62,7 @@ class InterTimeList extends Component {
             {
               timeTableData &&
               timeTableData.map((item) => (
-                <div className="listTr" key={item.planno} onClick={this.handleTimeDetails}>
+                <div className="listTr" key={item.planno + item.starttime} onClick={() => { this.handleTimeDetails(item.planno) }}>
                   <span className="innterBorder" />
                   <div className="listTd">{item.starttime}</div>
                   <div className="listTd">{item.planname}</div>
@@ -62,7 +76,7 @@ class InterTimeList extends Component {
           showTimeDetails &&
           <div className="timeDetails">
             <div className="detailsMsg">
-            <div className="closeBox" onClick={this.handleCloseDetails}><CloseOutlined /></div>
+            <div className="closeBox" onClick={this.handleCloseDetails}><CloseOutlined className="closeIcon" /></div>
               <div className="detailsHead">
                 <span className="innterBorder" />
                 <div className="detailsTh" style={{ flex: 0.6 }}>时段</div>
@@ -73,32 +87,22 @@ class InterTimeList extends Component {
                 <div className="detailsTh">绝对相位差(秒)</div>
               </div>
               <div className="detailsTbody">
-                <div className="detailsTr">
-                  <span className="innterBorder" />
-                  <div className="detailsTd" style={{ flex: 0.6 }}>00:00</div>
-                  <div className="detailsTd" style={{ flex: 0.5 }}>1</div>
-                  <div className="detailsTd" style={{ flex: 2 }}>123</div>
-                  <div className="detailsTd" style={{ flex: 0.6 }}>125</div>
-                  <div className="detailsTd">
-                    <Select defaultValue="1">
-                      <Option key="1" value="1">东西直行</Option>
-                    </Select>
-                  </div>
-                  <div className="detailsTd"><input className="phaseInput" type="text" defaultValue="12" /></div>
-                </div>
-                <div className="detailsTr">
-                  <span className="innterBorder" />
-                  <div className="detailsTd" style={{ flex: 0.6 }}>00:00</div>
-                  <div className="detailsTd" style={{ flex: 0.5 }}>1</div>
-                  <div className="detailsTd" style={{ flex: 2 }}>123</div>
-                  <div className="detailsTd" style={{ flex: 0.6 }}>125</div>
-                  <div className="detailsTd">
-                    <Select defaultValue="1">
-                      <Option key="1" value="1">东西直行</Option>
-                    </Select>
-                  </div>
-                  <div className="detailsTd"><input className="phaseInput" type="text" defaultValue="12" /></div>
-                </div>
+                {
+                  timePlanDetails &&
+                  timePlanDetails.map((item, index) => {
+                    return (
+                      <div className="detailsTr" key={item.planno + index}>
+                        <span className="innterBorder" />
+                        <div className="detailsTd" style={{ flex: 0.6 }}>{item.starttime}</div>
+                        <div className="detailsTd" style={{ flex: 0.5 }}>{item.planno}</div>
+                        <div className="detailsTd" style={{ flex: 2 }}>123</div>
+                        <div className="detailsTd" style={{ flex: 0.6 }}>{item.cyclelen}</div>
+                        <div className="detailsTd">{item.phasename}</div>
+                        <div className="detailsTd">{item.offset}</div>
+                      </div>
+                    )
+                  })
+                }
               </div>
             </div>
           </div>

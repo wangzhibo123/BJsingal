@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './router';
 import * as serviceWorker from './serviceWorker';
-
+React.IMGIPURL = '1234567890'
 ReactDOM.render(
   <React.StrictMode>
     <App />
