@@ -5,8 +5,8 @@ import React, { Component } from 'react'
 import 'video.js/dist/video-js.css'
 import 'videojs-flash'
 import videojs from 'video.js'
-import styles from './video.scss'
 import {Button} from "antd"
+import "./video.scss"
 class VideoApp extends Component{
   state={
       nowPlay:"",
@@ -31,7 +31,7 @@ class VideoApp extends Component{
           this.on('ended', function() {
             videojs.log('Awww...over so soon?!');
           });
-        }); 
+        });
   }
   handleClick(item){
       if(item.name===this.state.nowPlay){
@@ -47,6 +47,14 @@ class VideoApp extends Component{
           this.player.load();
           this.player.play();
   }
+  componentWillUnmount = () =>{
+    console.log(this.props.url,"url")
+    const myVideoElem = document.getElementById(this.props.url[0].id);
+    if(myVideoElem){
+        const player = videojs(this.props.url[0].id);
+        player.dispose();
+    }
+  }
   render(){ 
       let li = {
       }
@@ -61,16 +69,16 @@ class VideoApp extends Component{
                   {
                     this.state.showButton&&
                       url.map((item,index)=>{
-                          return <Button  key={item.name} onClick={()=>this.handleClick(item)} style={{width:"66px",height:"40px",background: "#010F46",border: "1px solid #4289E1",color: "#515A8B",fontSize: "20px",boxShadow:"inset 0px 0px 1.7px 1px #4289E1"}}>
+                          return <Button  key={item.name} onClick={()=>this.handleClick(item)} style={{width:"66px",height:"40px",background: "#010F46",border: "1px solid #4289E1",color: "#515A8B",fontSize: "20px",boxShadow:"inset 0px 0px 1.7px 1px #4289E1",marginLeft: "18px"}}>
                                       <span style={this.state.displayStyle === item.displayStyle ? playing : li }>{item.name}</span>
                                   </Button>
                       })
                   }
-                  </ul> 
-                  <video style={{width:"483px",height:"292px",margin:"0 auto"}} id={url[0].id} className="video-js vjs-default-skin">
+                  </ul>
+                  <video style={{width:"483px",height:"292px",marginLeft:"18px"}} id={url[0].id} className="video-js vjs-default-skin">
                   </video>
-              </div> 
-          </div>   
+              </div>
+          </div>
       )
   }
 }
