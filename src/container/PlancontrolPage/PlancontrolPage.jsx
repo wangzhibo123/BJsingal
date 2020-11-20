@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
 import { Menu, Input, DatePicker, Button, Select, Switch } from 'antd'
+import $ from 'jquery'
 import { EditOutlined, CloseOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
 import axiosInstance from '../utils/getInterfaceData'
 import styles from './PlancontrolPage.module.scss'
@@ -49,12 +50,30 @@ class Homepage extends Component {
       loadRouteDirectionList: [],
       loadRouteTypeList: [],
       treeListChild: [],
-      reserveplanName: '预按控制',
-      addReserveplan: '新增预案',
+
+      // detail: '',
+      area_id: '',
+      make_time: '',
+      make_user: '',
+      task_state: '',
+      reserveplanName: '特勤预案',
+      addReserveplan: '新增特勤',
+      boxStyleShow: false,
+
+      emergencyMode: '',
+      contingency_type_value: '',
+      cyclelen: '',
+      unit_id: '',
+      stage_id: '',
+      stage_order: '',
+      stage_plan_id: '',
+      stage_time: '',
+      contingenct_type: '',
+      listTree: []
     }
     this.defaultChildren = []
     this.interMarkers = []
-    this.isreserveplan = false
+    this.isreserveplan = true
     this.clickOperation = [
       {
         id: 1,
@@ -69,28 +88,84 @@ class Homepage extends Component {
         name: '切换视图',
       }
     ]
-    this.getDirection = '/control-application-front/planControl/addOrUpdateVipPlan' // 新增修改修改预案
+    this.addOrUpdateAreaPlan = '/control-application-front/planControl/addOrUpdateAreaPlan' // 新增修改区域应急预案
+    this.addOrUpdateVipPlan = '/control-application-front/planControl/addOrUpdateVipPlan' // 新增修改特勤预案
+    this.deleteAreaPlan = '/control-application-front/planControl/deleteAreaPlan' // 删除区域应急预案
+    this.deleteVipPlan = '/control-application-front/planControl/deleteVipPlan' // 删除特勤预案
     this.getDirection = '/control-application-front/planControl/getDirection' // 获取方向
     this.getPointAll = '/control-application-front/planControl/getPointAll' // 加载所有点位
     this.getTaskStatus = '/control-application-front/planControl/getTaskStatus' // 获取任务状态
-    this.loadPlanTree = '/control-application-front/planControl/loadPlanAreaUnit' // 获取区域应急预案下的路口
-    this.loadPlanUnit = '/control-application-front/planControl/loadPlanTable' // 预案列表
-    this.loadPlanUnit = '/control-application-front/planControl/loadPlanVipUnit' // 获取特勤预案下的路口
+    this.loadPlanAreaUnit = '/control-application-front/planControl/loadPlanAreaUnit' // 获取区域应急预案下的路口
+    this.loadPlanTable = '/control-application-front/planControl/loadPlanTable' // 预案列表
+    this.loadPlanVipUnit = '/control-application-front/planControl/loadPlanVipUnit' // 获取特勤预案下的路口
     this.switchViews = false
   }
   componentDidMount = () => {
     this.renderMap()
-    this.getDataList()
     this.getAddDataList()
+    this.getMethodAll()
+    this.getloadPlanTable(1)
+
   }
-  getDataList = () => { // 获取所有点位
-    axiosInstance.post(this.loadPlanTree).then(res => {
-      const { code, treeList } = res.data
+  getloadPlanTable = (id) => {  // 预案列表
+    axiosInstance.post(`${this.loadPlanTable}?type=${id}`).then(res => { // 获取所有方向
+      const { code, list } = res.data
       if (code === '1') {
-        this.treeListDatas = treeList
-        this.setState({ treeList, treeListChild: this.defaultChildren })
+        this.setState({
+          listTree: list,
+        })
       }
     })
+  }
+  getloadPlanAreaUnit = () => {  // 获取区域应急预案下的路口
+    axiosInstance.post(this.loadPlanAreaUnit).then(res => { // 获取所有方向
+      const { code, list } = res.data
+      if (code === '1') {
+        this.setState({
+
+        })
+      }
+    })
+  }
+  getloadPlanVipUnit = () => { // 获取特勤预案下的路口
+    axiosInstance.post(this.loadPlanVipUnit).then(res => { // 获取所有方向
+      const { code, treeList } = res.data
+      if (code === '1') {
+        this.setState({
+
+        })
+      }
+    })
+  }
+  getMethodAll = () => { // 获取所有数据
+    axiosInstance.post(this.getDirection).then(res => { // 获取所有方向
+      const { code, list } = res.data
+      if (code === '1') {
+        this.setState({
+
+        })
+      }
+    })
+    axiosInstance.post(this.getTaskStatus).then(res => { // 获取任务状态
+      const { code, list } = res.data
+      if (code === '1') {
+        this.setState({
+
+        })
+      }
+    })
+  }
+  // loadPlanVipUnit = () => { // 获取所有点位
+  //   axiosInstance.post(this.loadPlanVipUnit).then(res => {
+  //     const { code, treeList } = res.data
+  //     if (code === '1') {
+  //       this.treeListDatas = treeList
+  //       this.setState({ treeList, treeListChild: this.defaultChildren })
+  //     }
+  //   })
+  // }
+  getDataList = () => {
+
   }
   getAddDataList = () => {
     axiosInstance.post(this.getPointAll).then(res => {
@@ -117,6 +192,8 @@ class Homepage extends Component {
         el.style.cursor = 'pointer'
         el.id = 'marker' + item.unit_code
         el.addEventListener('click', function (e) {
+          // console.log($('#marker' + item.unit_code).attr('class'))
+          $('#marker' + item.unit_code).addClass('markers')
           // currentThis.addInfoWindow(item)
           // this.handleClckMessge(true)
         });
@@ -130,6 +207,22 @@ class Homepage extends Component {
           .setLngLat([item.longitude, item.latitude])
           .addTo(this.map)
         this.interMarkers.push(marker)
+      })
+    }
+  }
+  changeLoadRouteDirection = (e, options) => { // 添加修改input selecct
+    if (options) {
+      const { addeditname, intername, children } = options.props
+      // console.log(intername, children, e)
+      this.setState({
+        [addeditname]: children,
+        [intername]: e,
+      })
+    } else {
+      const { value } = e.target
+      const nameInput = e.target.getAttribute('intername')
+      this.setState({
+        [nameInput]: value,
       })
     }
   }
@@ -543,6 +636,7 @@ class Homepage extends Component {
         map.addImage('arrowImg', image);
       });
       this.addMenu()
+      this.drawLine()
     })
     //添加右键菜单
   }
@@ -564,12 +658,13 @@ class Homepage extends Component {
       let isreserveplanTitle = ''
       let addTitle = ''
       if (this.isreserveplan) {
-        isreserveplanTitle = '勤务疏导'
-        addTitle = '新增勤务'
-
+        isreserveplanTitle = '特勤预案'
+        addTitle = '新增特勤'
+        this.getloadPlanTable(1)
       } else {
         isreserveplanTitle = '应急预案'
         addTitle = '新增预案'
+        this.getloadPlanTable(2)
       }
       this.setState({
         reserveplanName: isreserveplanTitle,
@@ -616,8 +711,42 @@ class Homepage extends Component {
       }
     }
   }
-  handleShowInterConf = () => { // 点击回显编辑
-    if (this.isreserveplan) {
+
+
+  drawLine = () => { // 页面连线f
+    this.map.addLayer({
+      "id": "route",
+      "type": "line",
+      "source": {
+        "type": "geojson",
+        "data": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [116.391, 39.911],
+              [116.391, 39.911 + 0.05],
+              [116.391 + 0.05, 39.911 + 0.05],
+            ]
+          }
+        }
+      },
+      "layout": {
+        "line-join": "round",
+        "line-cap": "round"
+      },
+      "paint": {
+        "line-color": "#ff0000",
+        "line-width": 8
+      }
+    })
+  }
+
+
+  handleShowInterConf = (id) => { // 点击回显编辑
+    console.log()
+    if (!this.isreserveplan) {
       this.setState({
         rightsNew: -320,
         rights: 0,
@@ -640,7 +769,9 @@ class Homepage extends Component {
       rights, isAddEdit, ismodify, roadtitle, roadValue,
       loadRouteDirectionList, loadRouteTypeList, treeListChild,
       route_name, route_code, route_directionvalue, route_miles, route_typevalue, detail,
-      pointlist, reserveplanName, addReserveplan, rightsNew,
+      pointlist, reserveplanName, addReserveplan, rightsNew, boxStyleShow,
+      make_user, task_state, make_time, area_id, emergencyMode, contingency_type_value,
+      cyclelen, unit_id, stage_id, stage_order, stage_plan_id, stage_time, listTree
     } = this.state
     return (
       <div className={styles.PlancontrolPageWrapper}>
@@ -683,46 +814,102 @@ class Homepage extends Component {
             {
               isAddEdit ?
                 <div className={styles.slideRightBoxAddBox}>
-                  <p><span>干线名称：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="干线名称" /></p>
-                  <p><span>干线编号：</span><input onChange={this.changeLoadRouteDirection} value={route_code} intername='route_code' type="text" className={styles.inputBox} placeholder="干线编号" /></p>
-                  <div className={styles.divs}><span>干线方向：</span>
-                    <Select
-                      // defaultValue="海淀区"
-                      value={route_directionvalue}
-                      style={{ width: 225, height: 30 }}
-                      onChange={this.changeLoadRouteDirection}
-                    >
-                      {
-                        loadRouteDirectionList && loadRouteDirectionList.map((item) => {
-                          return (
-                            <Option addeditname='route_directionvalue' intername='route_direction' value={item.c_code} style={{ width: 195, height: 30 }} key={item.id}>{item.code_name}</Option>
-                          )
-                        })
-                      }
-                    </Select>
-                  </div>
-                  <p><span>干线长度：</span><input onChange={this.changeLoadRouteDirection} value={route_miles} intername='route_miles' type="text" className={styles.inputBox} placeholder="干线长度" /></p>
-                  <div className={styles.divs}><span>干线类型：</span>
-                    <Select
-                      // defaultValue="海淀区"
-                      value={route_typevalue}
-                      style={{ width: 225, height: 30 }}
-                      onChange={this.changeLoadRouteDirection}
-                    >
-                      {
-                        loadRouteTypeList && loadRouteTypeList.map((item) => {
-                          return (
-                            <Option addeditname='route_typevalue' intername='route_type' value={item.c_code} style={{ width: 193, height: 30 }} key={item.id}>{item.code_name}</Option>
-                          )
-                        })
-                      }
-                    </Select>
-                  </div>
-                  <p><span>干线描述：</span><input onChange={this.changeLoadRouteDirection} intername='detail' value={detail} type="text" className={styles.inputBox} placeholder="干线描述" /></p>
+                  <p><span>制定人：</span><input onChange={this.changeLoadRouteDirection} value={make_user} intername='make_user' type="text" className={styles.inputBox} placeholder="制定人" /></p>
+                  <p><span>任务状态：</span><input onChange={this.changeLoadRouteDirection} value={task_state} intername='task_state' type="text" className={styles.inputBox} placeholder="任务状态" /></p>
+                  <p><span>制定时间：</span><input onChange={this.changeLoadRouteDirection} value={make_time} intername='make_time' type="text" className={styles.inputBox} placeholder="制定时间" /></p>
+                  <p><span>子区编号：</span><input onChange={this.changeLoadRouteDirection} value={area_id} intername='area_id' type="text" className={styles.inputBox} placeholder="子区编号" /></p>
+                  <p><span>描述：</span><input onChange={this.changeLoadRouteDirection} value={detail} intername='detail' type="text" className={styles.inputBox} placeholder="描述" /></p>
                   <div className={styles.lineBox}>
                     <div className={styles.lineBoxRight}>
-                      <p><span></span><input type="text" className={styles.inputBox} id='startInp' /></p>
-                      {
+                      <div>
+                        <span></span>
+                        <div className={styles.linboxer}>
+                          <p><span>关联路口：</span><input onChange={this.changeLoadRouteDirection} value={unit_id} intername='unit_id' type="text" className={styles.inputBox} placeholder="关联路口" /></p>
+                          <p><span>应急方式对应值：</span><input onChange={this.changeLoadRouteDirection} value={contingency_type_value} intername='contingency_type_value' type="text" className={styles.inputBox} placeholder="应急方式对应值" /></p>
+                          <p><span>配时周期：</span><input onChange={this.changeLoadRouteDirection} value={cyclelen} intername='cyclelen' type="text" className={styles.inputBox} placeholder="配时周期" /></p>
+                          <div className={styles.boxStyle}>
+                            <span>应急方式：</span>
+                            <Select
+                              // defaultValue="海淀区"
+                              value={emergencyMode}
+                              style={{ width: 160, height: 30 }}
+                              onChange={this.changeLoadRouteDirection}
+                            >
+                              <Option addeditname='emergencyMode' intername='contingenct_type' style={{ width: 160, height: 30 }} >配时方案定义1</Option>
+                              <Option addeditname='emergencyMode' intername='contingenct_type' style={{ width: 160, height: 30 }} >锁定控制方式2</Option>
+                              <Option addeditname='emergencyMode' intername='contingenct_type' style={{ width: 160, height: 30 }} >锁定交通流向3</Option>
+                            </Select>
+                            {
+                              boxStyleShow ? <div>
+                                <p><span>阶段编号：</span><input onChange={this.changeLoadRouteDirection} value={stage_id} intername='stage_id' type="text" className={styles.inputBox} placeholder="阶段编号" /></p>
+                                <p><span>阶段序号：</span><input onChange={this.changeLoadRouteDirection} value={stage_order} intername='stage_order' type="text" className={styles.inputBox} placeholder="阶段序号" /></p>
+                                <p><span>相序方案号：</span><input onChange={this.changeLoadRouteDirection} value={stage_plan_id} intername='stage_plan_id' type="text" className={styles.inputBox} placeholder="相序方案号" /></p>
+                                <p><span>阶段时间：</span><input onChange={this.changeLoadRouteDirection} value={stage_time} intername='stage_time' type="text" className={styles.inputBox} placeholder="阶段时间" /></p>
+                              </div> : ''
+                            }
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <span></span>
+                        <div className={styles.linboxer}>
+                          <p><span>关联路口：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="关联路口" /></p>
+                          <p><span>应急方式对应值：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="应急方式对应值" /></p>
+                          <p><span>配时周期：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="配时周期" /></p>
+                          <div className={styles.boxStyle}>
+                            <span>应急方式：</span>
+                            <Select
+                              // defaultValue="海淀区"
+                              // value={ }
+                              style={{ width: 160, height: 30 }}
+                              onChange={this.changeLoadRouteDirection}
+                            >
+                              <Option addeditname='route_directionvalue' intername='route_direction' style={{ width: 160, height: 30 }} >配时方案定义1</Option>
+                              <Option addeditname='route_directionvalue' intername='route_direction' style={{ width: 160, height: 30 }} >锁定控制方式2</Option>
+                              <Option addeditname='route_directionvalue' intername='route_direction' style={{ width: 160, height: 30 }} >锁定交通流向3</Option>
+                            </Select>
+                            {
+                              boxStyleShow ? <div>
+                                <p><span>阶段编号：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="阶段编号" /></p>
+                                <p><span>阶段序号：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="阶段序号" /></p>
+                                <p><span>相序方案号：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="相序方案号" /></p>
+                                <p><span>阶段时间：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="阶段时间" /></p>
+                              </div> : ''
+                            }
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <span></span>
+                        <div className={styles.linboxer}>
+                          <p><span>关联路口：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="关联路口" /></p>
+                          <p><span>应急方式对应值：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="应急方式对应值" /></p>
+                          <p><span>配时周期：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="配时周期" /></p>
+                          <div className={styles.boxStyle}>
+                            <span>应急方式：</span>
+                            <Select
+                              // defaultValue="海淀区"
+                              // value={ }
+                              style={{ width: 160, height: 30 }}
+                              onChange={this.changeLoadRouteDirection}
+                            >
+                              <Option addeditname='route_directionvalue' intername='route_direction' style={{ width: 160, height: 30 }} >配时方案定义1</Option>
+                              <Option addeditname='route_directionvalue' intername='route_direction' style={{ width: 160, height: 30 }} >锁定控制方式2</Option>
+                              <Option addeditname='route_directionvalue' intername='route_direction' style={{ width: 160, height: 30 }} >锁定交通流向3</Option>
+                            </Select>
+                          </div>
+                          {
+                            boxStyleShow ? <div>
+                              <p><span>阶段编号：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="阶段编号" /></p>
+                              <p><span>阶段序号：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="阶段序号" /></p>
+                              <p><span>相序方案号：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="相序方案号" /></p>
+                              <p><span>阶段时间：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="阶段时间" /></p>
+                            </div> : ''
+                          }
+                        </div>
+                      </div>
+
+                      {/* {
                         typeof (roadValue[0]) == 'object' ?
                           roadValue && roadValue.map((item, index) => {
                             return (
@@ -736,7 +923,6 @@ class Homepage extends Component {
                             )
                           }) :
                           roadValue && roadValue.map((item, index) => {
-                            console.log(item, index, 'vsvsvsv')
                             return (
                               <div className={styles.roadBox} key={item + index}>
                                 <div className={styles.roadBoxLeft}>
@@ -749,7 +935,7 @@ class Homepage extends Component {
                           })
                       }
                       {/*  <p><input type="text" className={styles.inputBox' /></p> */}
-                      <p><span></span><input type="text" className={styles.inputBox} id='endInp' /></p>
+                      {/* <div><span></span><input type="text" className={styles.inputBox} id='endInp' /></div>  */}
                     </div >
                   </div >
                 </div >
@@ -1279,73 +1465,29 @@ class Homepage extends Component {
             {
               isAddEdit ?
                 <div className={styles.slideRightBoxAddBox}>
-                  <p><span>干线名称：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="干线名称" /></p>
-                  <p><span>干线编号：</span><input onChange={this.changeLoadRouteDirection} value={route_code} intername='route_code' type="text" className={styles.inputBox} placeholder="干线编号" /></p>
-                  <div className={styles.divs}><span>干线方向：</span>
-                    <Select
-                      // defaultValue="海淀区"
-                      value={route_directionvalue}
-                      style={{ width: 225, height: 30 }}
-                      onChange={this.changeLoadRouteDirection}
-                    >
-                      {
-                        loadRouteDirectionList && loadRouteDirectionList.map((item) => {
-                          return (
-                            <Option addeditname='route_directionvalue' intername='route_direction' value={item.c_code} style={{ width: 225, height: 30 }} key={item.id}>{item.code_name}</Option>
-                          )
-                        })
-                      }
-                    </Select>
-                  </div>
-                  <p><span>干线长度：</span><input onChange={this.changeLoadRouteDirection} value={route_miles} intername='route_miles' type="text" className={styles.inputBox} placeholder="干线长度" /></p>
-                  <div className={styles.divs}><span>干线类型：</span>
-                    <Select
-                      // defaultValue="海淀区"
-                      value={route_typevalue}
-                      style={{ width: 225, height: 30 }}
-                      onChange={this.changeLoadRouteDirection}
-                    >
-                      {
-                        loadRouteTypeList && loadRouteTypeList.map((item) => {
-                          return (
-                            <Option addeditname='route_typevalue' intername='route_type' value={item.c_code} style={{ width: 193, height: 30 }} key={item.id}>{item.code_name}</Option>
-                          )
-                        })
-                      }
-                    </Select>
-                  </div>
-                  <p><span>干线描述：</span><input onChange={this.changeLoadRouteDirection} intername='detail' value={detail} type="text" className={styles.inputBox} placeholder="干线描述" /></p>
-                  <div className={styles.lineBox}>
+                  <p><span>制定人：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="制定人" /></p>
+                  <p><span>任务状态：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="任务状态" /></p>
+                  <p><span>制定时间：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="制定时间" /></p>
+                  <p><span>预定执行时间：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="预定执行时间" /></p>
+                  <p><span>所属区域：</span><input onChange={this.changeLoadRouteDirection} value={route_code} intername='route_code' type="text" className={styles.inputBox} placeholder="所属区域" /></p>
+                  <p><span>出发地：</span><input onChange={this.changeLoadRouteDirection} value={route_code} intername='route_code' type="text" className={styles.inputBox} placeholder="出发地" /></p>
+                  <p><span>目的地：</span><input onChange={this.changeLoadRouteDirection} value={route_code} intername='route_code' type="text" className={styles.inputBox} placeholder="目的地" /></p>
+                  <p><span>描述：</span><input onChange={this.changeLoadRouteDirection} value={route_code} intername='route_code' type="text" className={styles.inputBox} placeholder="描述" /></p>
+                  <div className={styles.lineBoxTwo}>
                     <div className={styles.lineBoxRight}>
-                      <p><span></span><input type="text" className={styles.inputBox} id='startInp' /></p>
-                      {
-                        typeof (roadValue[0]) == 'object' ?
-                          roadValue && roadValue.map((item, index) => {
-                            return (
-                              <div className={styles.roadBox} key={item + index}>
-                                < div className={styles.roadBoxLeft} >
-                                </div>
-                                <div className={styles.roadBoxRight}>
-                                  <p><input type="text" onChange={this.getChangeValue} className={styles.inputBox} id='channelInp' value={item.unit_name} /></p>
-                                </div>
-                              </div>
-                            )
-                          }) :
-                          roadValue && roadValue.map((item, index) => {
-                            console.log(item, index, 'vsvsvsv')
-                            return (
-                              <div className={styles.roadBox} key={item + index}>
-                                <div className={styles.roadBoxLeft}>
-                                </div>
-                                <div className={styles.roadBoxRight}>
-                                  < p > <input type="text" onChange={this.getChangeValue} className={styles.inputBox} value={item} /></p>
-                                </div >
-                              </div >
-                            )
-                          })
-                      }
-                      {/*  <p><input type="text" className={styles.inputBox' /></p> */}
-                      <p><span></span><input type="text" className={styles.inputBox} id='endInp' /></p>
+                      <div>
+                        <span></span>
+                        <div className={styles.linboxer}>
+                          <p><span>关联路口：</span><input onChange={this.changeLoadRouteDirection} value={unit_id} intername='unit_id' type="text" className={styles.inputBox} placeholder="关联路口" /></p>
+                          <p><span>间隔时间：</span><input onChange={this.changeLoadRouteDirection} value={contingency_type_value} intername='contingency_type_value' type="text" className={styles.inputBox} placeholder="间隔时间" /></p>
+                          <p><span>锁定阶段编号：</span><input onChange={this.changeLoadRouteDirection} value={cyclelen} intername='cyclelen' type="text" className={styles.inputBox} placeholder="锁定阶段编号" /></p>
+                          <p><span>锁定时长：</span><input onChange={this.changeLoadRouteDirection} value={cyclelen} intername='cyclelen' type="text" className={styles.inputBox} placeholder="锁定时长" /></p>
+                          <p><span>入口方向：</span><input onChange={this.changeLoadRouteDirection} value={cyclelen} intername='cyclelen' type="text" className={styles.inputBox} placeholder="入口方向" /></p>
+                          <p><span>出口方向：</span><input onChange={this.changeLoadRouteDirection} value={cyclelen} intername='cyclelen' type="text" className={styles.inputBox} placeholder="出口方向" /></p>
+                          <p><span>路口顺序号：</span><input onChange={this.changeLoadRouteDirection} value={cyclelen} intername='cyclelen' type="text" className={styles.inputBox} placeholder="路口顺序号" /></p>
+                          <p><span>所属特勤任务：</span><input onChange={this.changeLoadRouteDirection} value={cyclelen} intername='cyclelen' type="text" className={styles.inputBox} placeholder="所属特勤任务" /></p>
+                        </div>
+                      </div>
                     </div >
                   </div >
                 </div >
@@ -1418,14 +1560,14 @@ class Homepage extends Component {
             </li>
           </ul>
         </div> */}
-        < div className={styles.reserveplan} >
+        {/* < div className={styles.reserveplan} >
           <div />
           <span>添加预案</span>
         </div >
         <div className={`${styles.reserveplan} ${styles.reserveplanTwo}`}>
           <div />
           <span>添加预案</span>
-        </div>
+        </div> */}
         {
           IsddMessge &&
           <div className={styles.addMessge}>
@@ -1762,7 +1904,10 @@ class Homepage extends Component {
           </div>
           <div className={styles.sidebarLeftBox}>
             <ul className={styles.confUl}>
-              <li className={styles.confLi} onClick={() => this.handleShowInterConf()}>123<span className={styles.innterBorder} /></li>
+              {
+
+                listTree && listTree.map(item => <li className={styles.confLi} onClick={() => this.handleShowInterConf(item.id)}>{item.plan_name}<span className={styles.innterBorder} /></li>)
+              }
             </ul>
           </div>
         </div>
