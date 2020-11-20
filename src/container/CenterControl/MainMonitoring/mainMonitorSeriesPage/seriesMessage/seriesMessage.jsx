@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import styles from './AreaMessage.module.scss'
+import styles from './seriesMessage.module.scss'
 class TimingMessage extends Component {
   constructor(props) {
     super(props)

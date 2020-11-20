@@ -8,7 +8,7 @@ export default class MainMonitoring extends Component{
   constructor(props){
     super(props);
     this.state={
-      displayPage:"1" ,   //3d => 1  2d =>  2  简洁 => 3  时序 => 4
+      displayPage:"4" ,   //3d => 1  2d =>  2  简洁 => 3  时序 => 4
       displayStrip:true,  //展示条
     }
   }
