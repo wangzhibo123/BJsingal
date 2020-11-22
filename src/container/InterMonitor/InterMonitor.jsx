@@ -75,7 +75,7 @@ class InterMonitor extends Component {
     this.imgUrl = 'control-application-front/file/getTrackerUrl'
   }
   componentDidMount = () => {
-    console.log('受否存在context：：：', this.props)
+    console.log('受否存在context：：：', this.context)
     this.getImageIpurl()
     this.getControlMode()
     this.getTrafficInfo()
@@ -402,5 +402,4 @@ class InterMonitor extends Component {
     )
   }
 }
-
 export default InterMonitor

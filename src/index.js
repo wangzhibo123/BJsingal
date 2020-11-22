@@ -8,16 +8,7 @@ const MyContext = React.createContext(defaultValue)
 console.log(MyContext)
 ReactDOM.render(
   <React.StrictMode>
-    <MyContext.Provider>
-      <MyContext.Consumer>
-        {
-          (value) => (
-            <App contextValue={value} />
-          )
-        }
-      </MyContext.Consumer>
-    </MyContext.Provider>
-    
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -86,6 +86,7 @@ class InterConfMsg extends Component {
     this.uploadPic = `/control-application-front/unitMontitor/uploadCanalizationFile?unitCode=${this.props.interId}`
   }
   componentDidMount = () => {
+    console.log('zizujian:;::;;;', this.context)
     const { configName, interInfo } = this.props
     this.setState({ configName, interInfo })
   }
