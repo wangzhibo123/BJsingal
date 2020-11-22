@@ -8,6 +8,7 @@ import Histogram from './Histogram/Histogram'
 import Graph from './Graph/Graph'
 import mapConfiger from '../utils/minemapConf'
 import axiosInstance from '../utils/getInterfaceData'
+import { seriesMapData } from './chartsMap/seriesMapdata'
 
 const { Option } = Select
 class Homepage extends Component {
@@ -51,6 +52,8 @@ class Homepage extends Component {
       singalTypes: this.singalType,
       allControlMode: true,
       allSingalType: true,
+      legendMinitor: null,
+      legendCondition: null,
     }
     this.mapLegend = { condition: true, minitor: true }
     this.interMarkers = []
@@ -68,7 +71,7 @@ class Homepage extends Component {
     this.pointLists = '/control-application-front/index/getPointByFault?user_id=1'
   }
   componentDidMount = () => {
-    // this.renderChartsMap()
+    this.renderChartsMap()
     this.getMapPoints()
     this.getAreaMsgLists()
     this.getCongestionList()
@@ -276,29 +279,18 @@ class Homepage extends Component {
       .addTo(this.map)
   }
   renderChartsMap = () => {
-    const geoJson = require('./beijing.json')
-    echarts.registerMap('beijing', geoJson);
+    const geoJson = require('./chartsMap/beijing.json')
+    echarts.registerMap('beijing', geoJson)
     const optionMap = {
-      // backgroundColor: '#FFFFFF',  
-      title: {  
-          text: '',  
-          subtext: '',  
-          x:'center'  
+      title: {
+          text: '',
+          subtext: '',
+          x:'center',
       },  
-      tooltip : {  
-          trigger: 'item'  
-      },
-      // 左侧小导航图标
-      visualMap: {  
-        show : false,
-        x: 'left',
-        y: 'center',
-        splitList: [
-            {start: 500, end:600},{start: 400, end: 500},
-            {start: 300, end: 400},{start: 200, end: 300},
-            {start: 100, end: 200},{start: 0, end: 100},
-        ],
-        color: ['#5475f5', '#9feaa5', '#85daef','#74e2ca', '#e6ac53', '#9fb5ea']
+      tooltip : {
+          show: false,
+          trigger: 'item',
+          color: 'auto',
       },
       // 配置属性
       series: [{
@@ -307,18 +299,23 @@ class Homepage extends Component {
         mapType: 'beijing',
         roam: true,
         label: {
-          normal: {
-              show: true  //省份名称
-          },
-          emphasis: {
-              show: false
-          }
+          show: false,  //省份名称
         },
-        data:[]  //数据
+        itemStyle: {
+          borderColor: '#FDAD3B',
+          borderWidth: 1,
+        },
+        color: '#ff0000',
+        data: seriesMapData,  //数据
       }]
     }
+    const currentThis = this
     const myChart = echarts.init(this.chartMapBox)
     myChart.setOption(optionMap)
+    myChart.on('click', (params) => {
+      console.log(params.data)
+      currentThis.handleCutMap()
+    })
   }
   renderMap = () => {
     mapConfiger.zoom = 11
@@ -343,6 +340,7 @@ class Homepage extends Component {
       }, 700)
     })
   }
+  // 切换地图显示
   handleCutMap = () => {
     this.setState({ mainHomePage: false }, () => {
       this.renderMap()
@@ -355,28 +353,37 @@ class Homepage extends Component {
     this.map.setZoom(15)
     $('#marker' + key).trigger('click',)
   }
+  // 地图图例切换
   handleToggleLegend = (e) => {
     const legend = e.currentTarget.getAttribute('legendname')
     if (legend === 'coverage') {
       this.setState({ coverage: !this.state.coverage })
-    } else {
-      this.mapLegend[legend] = !this.mapLegend[legend]
+      return
+    }
+    this.mapLegend[legend] = !this.mapLegend[legend]
+    if (legend === 'condition') {
       if (this.mapLegend.condition) {
         this.addTrafficLayer()
+        this.setState({ legendCondition: null })
       } else {
+        this.setState({ legendCondition: legend })
         if (this.trafficTimer) {
           clearTimeout(this.trafficTimer)
           this.trafficTimer = null
         }
         this.map.trafficLayer(false)
       }
+    } else {
       if (this.mapLegend.minitor) {
         console.log('显示视频点位')
+        this.setState({ legendMinitor: null })
       } else {
         console.log('隐藏视频点位')
+        this.setState({ legendMinitor: legend })
       }
     }
   }
+  // 图层控制
   handleControlChange = (e) => {
     const { checked, indexs, mode, all } = e.target
     const checkList = all === 'allSingalType' ? this.singalType : this.controlMode
@@ -387,6 +394,7 @@ class Homepage extends Component {
       [all]: isAllCheck.length ? false : true,
     })
   }
+  // 图层控制全选
   handleAllCheckChange = (e) => {
     const { checked, mode, all } = e.target
     const checkList = all === 'allSingalType' ? this.singalType : this.controlMode
@@ -400,6 +408,7 @@ class Homepage extends Component {
     const {
       mainHomePage, congestionList, repairRateList, singalStatus, cloudSource, oprationData, faultData, areaMsgList,
       allNum, errline, offline, online, pointlist, coverage, controlModes, singalTypes, allControlMode, allSingalType,
+      legendMinitor, legendCondition
     } = this.state
     return (
       <div className="homepageWrapper">
@@ -648,8 +657,8 @@ class Homepage extends Component {
               <div className="mapLegend" style={{ top: '20px' }}>
                 <div className="legendBox">
                   <div className="legendItem" legendname="coverage" onClick={this.handleToggleLegend}><span className="legenIcon coverage"></span> 图层</div>
-                  <div className="legendItem" legendname="condition" onClick={this.handleToggleLegend}><span className="legenIcon condition"></span> 路况</div>
-                  <div className="legendItem" legendname="minitor" onClick={this.handleToggleLegend}><span className="legenIcon minitor"></span> 监控</div>
+                  <div className={`legendItem ${legendCondition === 'condition' ? 'legendActive' : ''}`} legendname="condition" onClick={this.handleToggleLegend}><span className="legenIcon condition"></span> 路况</div>
+                  <div className={`legendItem ${legendMinitor === 'minitor' ? 'legendActive' : ''}`} legendname="minitor" onClick={this.handleToggleLegend}><span className="legenIcon minitor"></span> 监控</div>
                 </div>
                 {
                   coverage &&

@@ -22,6 +22,7 @@ class branchHome extends Component {
       nodeSimulation: [0, 0, 0, 0],
       interNum: [0, 0, 0, 0],
       simulationPlanNum: [0, 0, 0, 0],
+      branchName: null,
     }
     this.trafficTimer = null
     this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
@@ -64,6 +65,40 @@ class branchHome extends Component {
       })
     }
   }
+  addInfoWindow = (marker) => {
+    console.log(marker.longitude, marker.latitude)
+    if (this.mapPopup) {
+      this.mapPopup.remove()
+    }
+    this.map.addControl(new window.mapabcgl.NavigationControl())
+    const popupOption = {
+      closeOnClick: false,
+      closeButton: true,
+      maxWidth: '1000px',
+      offset: [0,0]
+    }
+    this.mapPopup = new window.mapabcgl.Popup(popupOption)
+      .setLngLat( new window.mapabcgl.LngLat(marker.longitude, marker.latitude))
+      .setHTML(this.getInfoWindowHtml(marker))
+      .addTo(this.map)
+  }
+  getInfoWindowHtml = (interMsg) => {
+    return `
+      <div class="infoWindow">
+        <div class="infotitle">${interMsg.unit_name}</div>
+        <div class="interMessage">
+          <div class="message">设备类型：信号灯</div>
+          <div class="message">所属城区：${interMsg.district_name}</div>
+          <div class="message">控制状态：${interMsg.control_state}</div>
+          <div class="message">信号系统：${interMsg.signal_system_code || ''}</div>
+          <div class="message">信号机IP：${interMsg.signal_ip || ''}</div>
+          <div class="message">设备状态：${interMsg.alarm_state}</div>
+          <div class="message">运行阶段：${interMsg.stage_code || ''}</div>
+        </div>
+        <div class="interDetails"><div class="monitorBtn"><a style="color:#62bbff" href="#/interMonitor/${interMsg.id}">路口检测</a></div></div>
+      </div>
+    `
+  }
   // 添加实时路况
   addTrafficLayer = () => {
     if (this.trafficTimer) {
@@ -73,7 +108,7 @@ class branchHome extends Component {
     this.map.trafficLayer(true)
     this.trafficTimer = setTimeout(() => {
       this.addTrafficLayer()
-    }, 5 * 1000)
+    }, 30 * 1000)
   }
   // 地图点位
   getMapPoints = () => {
@@ -82,7 +117,7 @@ class branchHome extends Component {
       const { code, errline, offline, online, pointlist } = res.data
       if (code === '1') {
         this.pointLists = pointlist
-        this.setState({ errline, offline, online, pointlist })
+        this.setState({ errline, offline, online, pointlist, branchName: pointlist[0].district_name })
         this.addMarker(this.pointLists)
         let num = 0
         let numTwo = 0
@@ -98,7 +133,7 @@ class branchHome extends Component {
           if (numTwo >= (errline + offline + online)) { clearInterval(this.timeTwo) }
           const interNum = ('000' + numTwo).slice(-4).split('')
           this.setState({ interNum }, () => {
-            numTwo += 1
+            numTwo += (errline + offline + online)
           })
         }, 0)
         this.timeThree = setInterval(() => {
@@ -210,7 +245,7 @@ class branchHome extends Component {
   render() {
     const {
       mainHomePage, congestionList, controlCount, singalStatus, oprationData, faultData, controlStatus,
-      nodeSimulation, interNum, simulationPlanNum,
+      nodeSimulation, interNum, simulationPlanNum, branchName,
     } = this.state
     return (
       <div className="branchHomeWrapper">
@@ -346,7 +381,7 @@ class branchHome extends Component {
                     <div className="topInfo">
                       <div className="info">
                         <div className="infoName">
-                          <span className="infoText">房山区</span>
+                          <span className="infoText">{branchName}</span>
                           <span>信号点位</span>
                         </div>
                         <div className="infoValue">

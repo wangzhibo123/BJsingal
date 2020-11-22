@@ -330,6 +330,10 @@
                             background-size: 100% 100%;
                         }
                     }
+                    .legendActive {
+                        background-color: rgba(25,47,84,.8);
+                        opacity: .5;
+                    }
                 }
                 .singalModeBox {
                     width: 180px;
@@ -537,7 +541,7 @@
                             bottom: 0;
                             width: 100%;
                             height: calc(100% - 100px);
-                            background: url(../imgs/mapbg.png) center center no-repeat;
+                            // background: url(../imgs/mapbg.png) center center no-repeat;
                             background-size: contain;
                         }
                     }
