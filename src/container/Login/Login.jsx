@@ -9,6 +9,9 @@ class Login extends Component {
     }
     handleLogin = () => {
         this.props.history.push('/home')
+        setTimeout(() => {
+            React.globalvarUrl = '12345665343212'
+        }, 1000)
     }
     render() {
         return (

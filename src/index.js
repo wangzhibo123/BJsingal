@@ -3,9 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './router';
 import * as serviceWorker from './serviceWorker';
-const defaultValue = '1234567890'
-const MyContext = React.createContext(defaultValue)
-console.log(MyContext)
 ReactDOM.render(
   <React.StrictMode>
     <App />

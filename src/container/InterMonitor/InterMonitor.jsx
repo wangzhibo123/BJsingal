@@ -75,7 +75,7 @@ class InterMonitor extends Component {
     this.imgUrl = 'control-application-front/file/getTrackerUrl'
   }
   componentDidMount = () => {
-    console.log('受否存在context：：：', this.context)
+    console.log('受否存在context：：：', React.globalvarUrl)
     this.getImageIpurl()
     this.getControlMode()
     this.getTrafficInfo()
@@ -169,6 +169,7 @@ class InterMonitor extends Component {
   handleControlMode = (indexs) => {
     this.setState({ modeIndex: indexs })
   }
+  // 切换路口
   handleToggleInter = (e) => {
     const dir = e.currentTarget.getAttribute('dir')
     this.setState({ [dir]: true }, () => {
@@ -177,6 +178,7 @@ class InterMonitor extends Component {
       }, 600)
     })
   }
+  // 显示路口配置
   handleShowInterConf = (confName) => {
     this.setState({ interConfigMsg: confName })
   }
@@ -228,11 +230,13 @@ class InterMonitor extends Component {
       .setLngLat([lng, lat])
       .addTo(this.map);
   }
+  // 修改阶段时间
   handleModifyStageTime = (type, indexs) => {
     const defaultTime = parseInt(this.defaultStageList[indexs].modifyTime)
     this.defaultStageList[indexs].modifyTime = type === 'add' ? defaultTime + 1 : defaultTime - 1
     this.setState({ stageList: this.defaultStageList, isResetStage: false })
   }
+  // 复位
   handleResetStage = () => {
     this.defaultStageList.forEach(item => item.modifyTime = item.stageTime)
     this.setState({ isResetStage: true })

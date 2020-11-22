@@ -96,9 +96,11 @@ class InterConfMsg extends Component {
       this.setState({ configName, interInfo })
     }
   }
+  // 切换配置
   handleBaseItemChange = (currentItem, stateName) => {
     this.setState({ [stateName]: currentItem })
   }
+  
   handleUploadInterPic = () => {
     this.setState({ isUpload: true })
   }

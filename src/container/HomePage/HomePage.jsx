@@ -80,6 +80,7 @@ class Homepage extends Component {
     this.getCloudSource()
     this.getOprationEfficiency()
     this.getFaultStatistics()
+    console.log(React)
   }
   // 添加实时路况
   addTrafficLayer = () => {
