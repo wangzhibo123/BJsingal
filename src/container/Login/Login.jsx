@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import './Login.scss'
 
@@ -16,7 +17,12 @@ class Login extends Component {
   }
   getTrackerImgUrl = () => {
     axiosInstance.get(this.trackerImgurl).then((res) => {
-      globalVar.imgUrl = res.data
+      const { code, data } = res.data
+      if (code === 200) {
+        globalVar.imgUrl = data
+      } else {
+        message.error(res.data.message)
+      }
     })
   }
   handleLogin = () => {

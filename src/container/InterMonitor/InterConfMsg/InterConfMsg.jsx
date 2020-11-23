@@ -33,6 +33,8 @@ import TimePlan from './SingalParams/TimePlan/TimePlan'
 import DispathPlan from './SingalParams/DetectorPlan/DetectorPlan'
 import DayPlan from './SingalParams/DayPlan/DayPlan'
 
+import axiosInstance from '../../utils/getInterfaceData'
+
 class InterConfMsg extends Component {
   constructor(props) {
     super(props)
@@ -84,9 +86,9 @@ class InterConfMsg extends Component {
       { pic: goleft }, { pic: goright }, { pic: top }, { pic: bottom }, { pic: topleft }, { pic: topright }, { pic: bottomleft }, { pic: bottomright }
     ]
     this.uploadPic = '/control-application-front/file/upload'
+    this.updatePic = '/control-application-front/basic/info/unit/background'
   }
   componentDidMount = () => {
-    console.log('zizujian:;::;;;', this.context)
     const { configName, interInfo } = this.props
     this.setState({ configName, interInfo })
   }
@@ -95,6 +97,12 @@ class InterConfMsg extends Component {
     if (prevState.configName !== configName) {
       this.setState({ configName, interInfo })
     }
+  }
+  handleUpdateInterPic = (imgPath) => {
+    const savePathParams = { id: this.props.interInfo.id, backgroungImg: imgPath }
+    axiosInstance.post(this.updatePic, savePathParams).then((res) => {
+      console.log(res)
+    })
   }
   // 切换配置
   handleBaseItemChange = (currentItem, stateName) => {
@@ -117,6 +125,13 @@ class InterConfMsg extends Component {
     }
     if (info.file.status === 'done') {
       console.log(info.file)
+      const { response } = info.file
+      if (response.code === 200) {
+        message.info('上传成功')
+        this.handleUpdateInterPic(response.data)
+      } else {
+        message.info(response.message)
+      }
     }
   }
   handleDirDragStart = (ev) => {
@@ -125,7 +140,6 @@ class InterConfMsg extends Component {
     this.moveBeforeX = ev.clientX - BeforetargetLeft
     this.moveBeforeY = ev.clientY + 58
     const picname = ev.target.getAttribute('picname')
-    console.log(picname)
     const pic = this.dirPic.find(item => item.picname === picname)
     this.newConfPic = { picname, pic: pic.pic }
   }

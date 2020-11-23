@@ -23,6 +23,7 @@ class branchHome extends Component {
       interNum: [0, 0, 0, 0],
       simulationPlanNum: [0, 0, 0, 0],
       branchName: null,
+      statusType: '1',
     }
     this.trafficTimer = null
     this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
@@ -216,8 +217,8 @@ class branchHome extends Component {
     })
   }
   // 信号机实时状态统计
-  getSingalStatus = () => {
-    axiosInstance.post(this.staticUrl).then((res) => {
+  getSingalStatus = (type = 1) => {
+    axiosInstance.post(`${this.staticUrl}&type=${type}`).then((res) => {
       const { code, list } = res.data
       if (code === '1') {
         this.setState({ singalStatus: list })
@@ -225,6 +226,11 @@ class branchHome extends Component {
         this.setState({ singalStatus: [] })
       }
     })
+  }
+  handleToggleSingalStatus = (e) => {
+    const types = e.target.getAttribute('statustype')
+    this.getSingalStatus(types)
+    this.setState({ statusType: types })
   }
   renderMap = () => {
     mapConfiger.zoom = 11
@@ -245,7 +251,7 @@ class branchHome extends Component {
   render() {
     const {
       mainHomePage, congestionList, controlCount, singalStatus, oprationData, faultData, controlStatus,
-      nodeSimulation, interNum, simulationPlanNum, branchName,
+      nodeSimulation, interNum, simulationPlanNum, branchName, statusType
     } = this.state
     return (
       <div className="branchHomeWrapper">
@@ -335,7 +341,10 @@ class branchHome extends Component {
               <div className="title">信号机实时状态统计</div>
               <div className="itemContent">
                 <div className="singalStatus">
-                  <div className="statusEach"><span className="each">区域</span><span className="each">品牌</span></div>
+                  <div className="statusEach" onClick={this.handleToggleSingalStatus}>
+                    <span className={`each ${statusType === '1' ? 'eachActive' : ''}`} statustype="1">区域</span>
+                    <span className={`each ${statusType === '2' ? 'eachActive' : ''}`} statustype="2">品牌</span>
+                  </div>
                   <div className="statusDetails">
                     {
                       singalStatus &&
@@ -347,9 +356,9 @@ class branchHome extends Component {
                           <div className="singalMsg" key={item.code_name}>
                             <div className="singalName">{item.code_name}</div>
                             <div className="presents">
-                              <div className="nomals" style={{ width: `${onLineRate}%` }}><span>{onLineRate}%</span></div>
-                              <div className="faults" style={{ width: `${outLineRate}%` }}><span>{outLineRate}%</span></div>
-                              <div className="outlines" style={{ width: `${faultRate}%` }}><span>{faultRate}%</span></div>
+                              <div className="nomals" style={{ width: `${onLineRate}%` }}><span>{parseInt(onLineRate)}%</span></div>
+                              <div className="faults" style={{ width: `${outLineRate}%` }}><span>{parseInt(outLineRate)}%</span></div>
+                              <div className="outlines" style={{ width: `${faultRate}%` }}><span>{parseInt(faultRate)}%</span></div>
                             </div>
                           </div>
                         )

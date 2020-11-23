@@ -151,9 +151,10 @@
                                 padding-bottom: 1px;
                                 text-decoration: underline;
                                 cursor: pointer;
-                                &:hover {
-                                    color: #2AFAFD;
-                                }
+                                transition: all .2s;
+                            }
+                            .eachActive {
+                                color: #2AFAFD;
                             }
                             .legendInfo {
                                 margin-left: 20px;

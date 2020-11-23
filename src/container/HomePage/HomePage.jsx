@@ -92,7 +92,7 @@ class Homepage extends Component {
     this.map.trafficLayer(true)
     this.trafficTimer = setTimeout(() => {
       this.addTrafficLayer()
-    }, 10 * 1000)
+    }, 30 * 1000)
   }
   // 地图点位
   getMapPoints = () => {
