@@ -6,7 +6,7 @@
     .loginTitle {
         display: flex;
         justify-content: center;
-        padding-top: 40px;
+        padding-top: 5%;
         .title {
             height: 190px;
             width: 1077px;
@@ -16,84 +16,69 @@
     }
     .loginContent {
         display: flex;
-        .left, .right {
-            flex: 1;
-            display: flex;
-        }
-        .left {
-            justify-content: flex-end;
-            .content {
-                width: 673px;
-                height: 530px;
-                background: url(../imgs/loginleft.png) center center no-repeat;
-                background-size: 100% 100%;
-            }
-        }
-        .right {
-            padding-left: 100px;
-            justify-content: flex-start;
-            .content {
-                width: 500px;
-                height: 510px;
-                padding-top: 90px;
-                background: url(../imgs/loginright.png) center center no-repeat;
-                background-size: 100% 100%;
-                .userBox, .btnBox {
-                    display: flex;
-                    justify-content: center;
-                    padding-top: 35px;
-                    .inputBox {
-                        position: relative;
-                        .inputIcon {
-                            position: absolute;
-                            width: 20px;
-                            height: 20px;
-                            left: 10px;
-                            top: 12px;
-                            text-align: center;
-                            line-height: 20px;
-                            font-size: 20px;
-                            color: #22F5F8;
-                        }
-                        input {
-                            width: 320px;
-                            height: 45px;
-                            padding-left: 40px;
-                            background-color: rgba(11, 161, 248, .5);
-                            border: 1px solid #0BA1F8;
-                            outline: none;
-                            font-size: 18px;
-                            color: #fff;
-                            &::-webkit-input-placeholder{
-                                color:#eee;
-                            }
-                        }
-                    }
-                    .forgotpwd {
-                        width: 320px;
-                        text-align: right;
-                        color: #22F5F8;
-                        span {
-                            cursor: pointer;
-                        }
-                    }
-                    .loginBtn {
-                        width: 320px;
-                        height: 50px;
-                        margin-top: 40px;
+        justify-content: center;
+        padding-top: 2%;
+        .content {
+            width: 500px;
+            height: 510px;
+            padding-top: 90px;
+            background: url(../imgs/loginright.png) center center no-repeat;
+            background-size: 100% 100%;
+            .userBox, .btnBox {
+                display: flex;
+                justify-content: center;
+                padding-top: 35px;
+                .inputBox {
+                    position: relative;
+                    .inputIcon {
+                        position: absolute;
+                        width: 20px;
+                        height: 20px;
+                        left: 10px;
+                        top: 12px;
                         text-align: center;
-                        line-height: 50px;
-                        font-size: 26px;
-                        letter-spacing: 15px;
-                        text-indent: 15px;
-                        font-family: 'MicrosoftYaHei';
-                        background-image: linear-gradient(to right, #1D9BFC, #00F3FF);
+                        line-height: 20px;
+                        font-size: 20px;
+                        color: #22F5F8;
+                    }
+                    input {
+                        width: 320px;
+                        height: 45px;
+                        padding-left: 40px;
+                        background-color: rgba(11, 161, 248, .5);
+                        border: 1px solid #0BA1F8;
+                        outline: none;
+                        font-size: 18px;
+                        color: #fff;
+                        &::-webkit-input-placeholder{
+                            color:#eee;
+                        }
+                    }
+                }
+                .forgotpwd {
+                    width: 320px;
+                    text-align: right;
+                    color: #22F5F8;
+                    span {
                         cursor: pointer;
                     }
                 }
-                .btnBox {
-                    padding-top: 10px;
+                .loginBtn {
+                    width: 320px;
+                    height: 50px;
+                    margin-top: 40px;
+                    text-align: center;
+                    line-height: 50px;
+                    font-size: 26px;
+                    letter-spacing: 15px;
+                    text-indent: 15px;
+                    font-family: 'MicrosoftYaHei';
+                    background-image: linear-gradient(to right, #1D9BFC, #00F3FF);
+                    cursor: pointer;
                 }
+            }
+            .btnBox {
+                padding-top: 10px;
             }
         }
     }

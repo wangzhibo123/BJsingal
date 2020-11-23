@@ -83,7 +83,7 @@ class InterConfMsg extends Component {
     this.turnPic = [
       { pic: goleft }, { pic: goright }, { pic: top }, { pic: bottom }, { pic: topleft }, { pic: topright }, { pic: bottomleft }, { pic: bottomright }
     ]
-    this.uploadPic = `/control-application-front/unitMontitor/uploadCanalizationFile?unitCode=${this.props.interId}`
+    this.uploadPic = '/control-application-front/file/upload'
   }
   componentDidMount = () => {
     console.log('zizujian:;::;;;', this.context)

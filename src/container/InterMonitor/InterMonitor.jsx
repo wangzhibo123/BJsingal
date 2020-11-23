@@ -24,6 +24,7 @@ import singalIcon from '../imgs/hasence.png'
 import InterTimeList from './InterTimeList/InterTimeList'
 import Graph from './Graph/Graph'
 import InterConfMsg from './InterConfMsg/InterConfMsg'
+import globalVar from '../utils/globalVariable'
 
 const { Option } = Select
 class InterMonitor extends Component {
@@ -75,19 +76,12 @@ class InterMonitor extends Component {
     this.imgUrl = 'control-application-front/file/getTrackerUrl'
   }
   componentDidMount = () => {
-    console.log('受否存在context：：：', React.globalvarUrl)
-    this.getImageIpurl()
+    console.log('受否存在context：：：', globalVar)
+    this.getControlMode()
     this.getControlMode()
     this.getTrafficInfo()
     this.getRoadTrend()
     this.getInterInfo()
-  }
-  // 获取图片IP地址
-  getImageIpurl = () => {
-    axiosInstance.get(this.imgUrl).then((res) => {
-      this.imgUrl = res.data
-      this.getControlMode()
-    })
   }
   // 路口信息
   getInterInfo = () => {
@@ -384,8 +378,8 @@ class InterMonitor extends Component {
                     stageList &&
                     stageList.map((item, index) => {
                       return (
-                        <div className="phaseTime" key={item.stageId}>
-                          <div className="phaseinner"><img src={this.imgUrl + item.stageImg} alt="" /></div>
+                        <div className="phaseTime" key={item.stageId + item.stageTime}>
+                          <div className="phaseinner"><img src={globalVar.imgUrl + item.stageImg} alt="" /></div>
                           <div className="phaseinner times">
                             <span>{isResetStage ? item.stageTime : item.modifyTime}</span>
                             <div className="caculate">

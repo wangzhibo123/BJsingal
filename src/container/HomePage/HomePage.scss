@@ -163,9 +163,10 @@
                                 padding-bottom: 1px;
                                 text-decoration: underline;
                                 cursor: pointer;
-                                &:hover {
-                                    color: #2AFAFD;
-                                }
+                                transition: all .2s;
+                            }
+                            .eachActive {
+                                color: #2AFAFD;
                             }
                             .legendInfo {
                                 margin-left: 20px;
@@ -187,9 +188,7 @@
                             }
                         }
                         .statusDetails {
-                            flex: 1;
-                            display: flex;
-                            flex-direction: column;
+                            height: calc(100% - 20px);
                             overflow-y: auto;
                             padding: 0 10px;
                             .singalMsg {

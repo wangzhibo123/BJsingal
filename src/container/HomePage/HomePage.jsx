@@ -54,12 +54,14 @@ class Homepage extends Component {
       allSingalType: true,
       legendMinitor: null,
       legendCondition: null,
+      statusType: '1',
     }
     this.mapLegend = { condition: true, minitor: true }
     this.interMarkers = []
     this.trafficTimer = null
     this.mapPopup = null
-    this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
+    this.sortColors = ['#00a0e9', '#ff8400', '#9600ff', '#00ffd8', '#8a8000', '#ae5da1', '#920783', '#fff45c', '#e60012',
+    '#00ff00', '#7ecef4', '#8f82bc', '#a84200', '#002e73', '#440062', '#81511c', '#00561f', '#facd89']
     this.rateColors = ['#FF0000', '#FF7800', '#FFD800', '#0CB424']
     this.congestionUrl = '/control-application-front/index/getCongestionRanking?user_id=1'
     this.repairRateUrl = '/control-application-front/index/getFailureRepairRate?user_id=1'
@@ -71,7 +73,6 @@ class Homepage extends Component {
     this.pointLists = '/control-application-front/index/getPointByFault?user_id=1'
   }
   componentDidMount = () => {
-    this.renderChartsMap()
     this.getMapPoints()
     this.getAreaMsgLists()
     this.getCongestionList()
@@ -80,7 +81,6 @@ class Homepage extends Component {
     this.getCloudSource()
     this.getOprationEfficiency()
     this.getFaultStatistics()
-    console.log(React)
   }
   // 添加实时路况
   addTrafficLayer = () => {
@@ -119,6 +119,7 @@ class Homepage extends Component {
       } else {
         this.setState({ areaMsgList: null })
       }
+      this.renderChartsMap()
     })
   }
   // 实时拥堵排名
@@ -144,8 +145,8 @@ class Homepage extends Component {
     })
   }
   // 信号机实时状态统计
-  getSingalStatus = () => {
-    axiosInstance.post(this.staticUrl).then((res) => {
+  getSingalStatus = (type = 1) => {
+    axiosInstance.post(`${this.staticUrl}&type=${type}`).then((res) => {
       const { code, list } = res.data
       if (code === '1') {
         this.setState({ singalStatus: list })
@@ -304,24 +305,27 @@ class Homepage extends Component {
         },
         itemStyle: {
           borderColor: '#FDAD3B',
-          borderWidth: 1,
+          borderWidth: 1.5,
         },
         color: '#ff0000',
         data: seriesMapData,  //数据
       }]
     }
-    const currentThis = this
     const myChart = echarts.init(this.chartMapBox)
     myChart.setOption(optionMap)
     myChart.on('click', (params) => {
-      console.log(params.data)
-      currentThis.handleCutMap()
+      const { name } = params.data
+      const { areaMsgList } = this.state
+      const currentArea = areaMsgList.find(item => item.district_name === name)
+      const { center_longitude, center_latitude } = currentArea
+      this.handleCutMap(center_longitude, center_latitude)
     })
   }
-  renderMap = () => {
+  renderMap = (lng, lat) => {
     mapConfiger.zoom = 11
     this.map = new window.mapabcgl.Map(mapConfiger)
     this.map.addControl(new window.mapabcgl.NavigationControl());
+    this.map.setCenter([lng, lat])
     this.map.on('load', () => {
       this.addTrafficLayer()
       setTimeout(() => {
@@ -342,9 +346,9 @@ class Homepage extends Component {
     })
   }
   // 切换地图显示
-  handleCutMap = () => {
+  handleCutMap = (lng, lat) => {
     this.setState({ mainHomePage: false }, () => {
-      this.renderMap()
+      this.renderMap(lng, lat)
     })
   }
   // 路口搜索
@@ -405,11 +409,16 @@ class Homepage extends Component {
       [mode]: checkList,
     })
   }
+  handleToggleSingalStatus = (e) => {
+    const types = e.target.getAttribute('statustype')
+    this.getSingalStatus(types)
+    this.setState({ statusType: types })
+  }
   render() {
     const {
       mainHomePage, congestionList, repairRateList, singalStatus, cloudSource, oprationData, faultData, areaMsgList,
       allNum, errline, offline, online, pointlist, coverage, controlModes, singalTypes, allControlMode, allSingalType,
-      legendMinitor, legendCondition
+      legendMinitor, legendCondition, statusType
     } = this.state
     return (
       <div className="homepageWrapper">
@@ -498,7 +507,10 @@ class Homepage extends Component {
               <div className="title">信号机实时状态统计</div>
               <div className="itemContent">
                 <div className="singalStatus">
-                  <div className="statusEach"><span className="each">区域</span><span className="each">品牌</span></div>
+                  <div className="statusEach" onClick={this.handleToggleSingalStatus}>
+                    <span className={`each ${statusType === '1' ? 'eachActive' : ''}`} statustype="1">区域</span>
+                    <span className={`each ${statusType === '2' ? 'eachActive' : ''}`} statustype="2">品牌</span>
+                  </div>
                   <div className="statusDetails">
                     {
                       singalStatus &&
@@ -510,9 +522,9 @@ class Homepage extends Component {
                           <div className="singalMsg" key={item.code_name}>
                             <div className="singalName">{item.code_name}</div>
                             <div className="presents">
-                              <div className="nomals" style={{ width: `${onLineRate}%` }}><span>{onLineRate}%</span></div>
-                              <div className="faults" style={{ width: `${outLineRate}%` }}><span>{outLineRate}%</span></div>
-                              <div className="outlines" style={{ width: `${faultRate}%` }}><span>{faultRate}%</span></div>
+                              <div className="nomals" style={{ width: `${onLineRate}%` }}><span>{parseInt(onLineRate)}%</span></div>
+                              <div className="faults" style={{ width: `${outLineRate}%` }}><span>{parseInt(outLineRate)}%</span></div>
+                              <div className="outlines" style={{ width: `${faultRate}%` }}><span>{parseInt(faultRate)}%</span></div>
                             </div>
                           </div>
                         )
@@ -595,7 +607,7 @@ class Homepage extends Component {
                         </div>
                       </div>
                     </div>
-                    <div className="centerMap" onClick={this.handleCutMap} ref={(input) => { this.chartMapBox = input }}></div>
+                    <div className="centerMap" ref={(input) => { this.chartMapBox = input }}></div>
                   </div>
                   <div className="centerRight">
                   {
