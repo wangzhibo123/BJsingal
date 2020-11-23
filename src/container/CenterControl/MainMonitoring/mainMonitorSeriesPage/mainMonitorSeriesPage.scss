@@ -17,12 +17,17 @@
             font-weight: 700;
             .mainMonitorSeriesInfo{
                 flex: 5;
+                margin-left: 20px;
                 .infoChild{
                     width: 115px;
                     height: 30px;
                     text-align: center;
-                    border-bottom:2px solid;
-                    border-image: linear-gradient(to left,#022246,#88E6FF,#022246)30 30;
+                    span{
+                        display: block;
+                        width: 100%;
+                        height: 2px;
+                        background: linear-gradient(to right,#02294F,#7ED7F4,#02294F);
+                    }
                 }
             }
             .mainMonitorSeriesMark{
@@ -97,7 +102,7 @@
                 .xAxisBox {
                     position: absolute;
                     bottom: -6px;
-                    height: 6px;
+                    height: 6px;    
                     border-right: 2px solid #25459A;
                 }
                 .yAxisBox {

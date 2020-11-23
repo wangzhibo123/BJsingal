@@ -51,9 +51,6 @@ export default class MainMonitor3DPage extends Component{
               modeMainControlMapSign: true,
               //点击中心点渲染多次处理
               clickCenterRenders: false,
-              //视频
-              url: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv2", name: "东", id: "my_E"  }, { url: "rtmp://58.200.131.2:1935/livetv/cetv2", name: "西", id: "my_W" , displayStyle:true }],
-              arl: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv13", name: "南", id: 'my_S'  }, { url: "rtmp://58.200.131.2:1935/livetv/startv", name: "北", id: "my_N" , displayStyle:true }],
         };
             //接口
             this.videoState="/control-application-front/video/getLiveUrl/123";
@@ -177,7 +174,6 @@ export default class MainMonitor3DPage extends Component{
                 if (xys) {
                   xys = xys.substr(0, xys.length - 1)
                   var path = xys.split(';'), lines = [];
-    
                   for (var k = 0; k < path.length; k++) {
                     var xy = path[k].split(',')
                     lines.push(xy)
@@ -314,33 +310,34 @@ export default class MainMonitor3DPage extends Component{
           offset: [0, 25]
         }
         this.state.clickCenterRenders ? this.setState({ clickCenterRenders: false }) : this.setState({ clickCenterRenders: true })
-    //控制绿点弹出框
-    if (this.state.clickCenterRenders) {
-      this.popup = new window.mapabcgl.Popup(popupOption)
-        .setLngLat(new window.mapabcgl.LngLat(intersectioNodes[index].latitude, intersectioNodes[index].longitude))
-        .setHTML(`
-                <div style="width: 74px;color: #fff; font-size:12px;height: 486px;display:flex;flex-direction: column;">
-                    <div style="flex:1;display:flex;flex-direction: column;justify-content: center;align-items: center;">
-                      <div className="switch"> 
-                        <button type="button" role="switch" aria-checked="true" class="ant-switch ant-switch-checked" ant-click-animating="false" style="background:"#4A62E7">
-                            <div class="ant-switch-handle">
-                            </div>
-                            <span class="ant-switch-inner"></span>
-                        </button>
-                      </div>
-                      <div>开启手动</div>
-                    </div>
-                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  red;z-index:2"><img src=${rightUpLeftDown} alt=""/></div>
-                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${leftRightPng} alt=""/></div>
-                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upDownPng} alt=""/></div>
-                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upLeftUp} alt=""/></div>
-                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upLeftDownRight} alt=""/></div>
-                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${yellow} alt=""/></div>
-                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${red} alt=""/></div>
-                </div>`)
-        .addTo(this.map);
-    }
-  }
+        //控制绿点弹出框
+        if (this.state.clickCenterRenders) {
+          this.popup = new window.mapabcgl.Popup(popupOption)
+          console.log(new window.mapabcgl.LngLat(116.38151572176511, 39.90708534816005),"_____-")
+            // .setLngLat(new window.mapabcgl.LngLat(intersectioNodes[index].latitude, intersectioNodes[index].longitude))
+            // .setHTML(`
+            //         <div style="width: 74px;color: #fff; font-size:12px;height: 486px;display:flex;flex-direction: column;">
+            //             <div style="flex:1;display:flex;flex-direction: column;justify-content: center;align-items: center;">
+            //               <div className="switch"> 
+            //                 <button type="button" role="switch" aria-checked="true" class="ant-switch ant-switch-checked" ant-click-animating="false" style="background:"#4A62E7">
+            //                     <div class="ant-switch-handle"> 
+            //                     </div>
+            //                     <span class="ant-switch-inner"></span>
+            //                 </button>
+            //               </div>
+            //               <div>开启手动</div>
+            //             </div>
+            //             <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  red;z-index:2"><img src=${rightUpLeftDown} alt=""/></div>
+            //             <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${leftRightPng} alt=""/></div>
+            //             <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upDownPng} alt=""/></div>
+            //             <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upLeftUp} alt=""/></div>
+            //             <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upLeftDownRight} alt=""/></div>
+            //             <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${yellow} alt=""/></div>
+            //             <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${red} alt=""/></div>
+            //         </div>`)
+            // .addTo(this.map);
+        }
+      }
   //地图中心点
   addMarker = () => {
     const {lineData,modeMainImgDisplay,modeMapFlyToZoom} =this.state;
@@ -363,7 +360,6 @@ export default class MainMonitor3DPage extends Component{
         const al = document.createElement("div");
         al.setAttribute('class', 'animationA')
         if(modeMapFlyToZoom==15){
-          console.log(this.state.modeMapFlyToZoom,"123124")
           el.appendChild(al)
           al.style.width = '118px'
           al.style.height = '137px'
@@ -375,7 +371,7 @@ export default class MainMonitor3DPage extends Component{
         new window.mapabcgl.Marker(el)
         el.setAttribute("title", '中心点')
         el.addEventListener('click', () => {
-          
+          this.ClickMessge()
         })
         elParent.appendChild(elAnimation)
         elParent.appendChild(el)
@@ -415,7 +411,7 @@ export default class MainMonitor3DPage extends Component{
         this.map = map
     }
     render () {
-        const { modeNavShow, modeMapShow, modeMainMonitor, modeMainTabShow, modeMainTabTypeD, modeMainTabD } = this.state;
+        const { modeNavShow, modeMapShow } = this.state;
         return (
             <div className="mainMon3D">
               {

@@ -8,22 +8,21 @@ export default class MainMonitorSeriesPage extends Component{
     constructor(props){
         super(props)
     }
-
     render(){
         return (
             <div className="mainMonitorSeriesHome">
                 <div className="mainMonitorSeriesList">
                     <div className="mainMonitorSeriesListHead">
                         <div className="mainMonitorSeriesInfo">
-                            <div className="infoChild">子区详细信息</div>
+                            <div className="infoChild">子区详细信息<span></span></div>
                         </div>
                         <div className="mainMonitorSeriesMark">
                             <span>子区号:</span>
-                            <span style={{color:'#3AC7D8',fontSize:"18px",marginLeft:"15px"}}>254</span>
+                            <span style={{color:'#40EBF3',fontSize:"18px",marginLeft:"15px"}}>254</span>
                         </div>
                         <div className="mainMonitorSeriesName">
                             <span>子区名称:</span>
-                            <span style={{color:'#3AC7D8',fontSize:"18px",marginLeft:"15px"}}>平安大街</span>
+                            <span style={{color:'#40EBF3',fontSize:"18px",marginLeft:"15px"}}>平安大街</span>
                         </div>
                     </div>
                     <div className="mainMonitorSeriesHomeBody">
