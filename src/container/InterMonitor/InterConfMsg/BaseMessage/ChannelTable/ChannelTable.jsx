@@ -2,11 +2,7 @@ import React, { Component } from 'react'
 import { Select } from 'antd'
 import './ChannelTable.scss'
 
-import left from '../../../../imgs/left.png'
-import right from '../../../../imgs/right.png'
-
 import axiosInstance from '../../../../utils/getInterfaceData'
-import { timers } from 'jquery'
 
 const { Option } = Select
 class ChannelTable extends Component {
@@ -71,6 +67,7 @@ class ChannelTable extends Component {
     })
   }
   render() {
+    const globalImgurl = localStorage.getItem('ImgUrl')
     const { channelList } = this.state
     return (
       <>
@@ -92,7 +89,7 @@ class ChannelTable extends Component {
                     <div className="confTd">{item.cfgLaneInfo.movement}</div>
                     <div className="confTd">
                       <div className="identification">
-                        <img src="" alt="" height="100%" />
+                        <img src={globalImgurl + item.cfgLaneInfo.uiImageName} alt="" height="100%" />
                       </div>
                     </div>
                   </div>
