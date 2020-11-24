@@ -1,6 +1,7 @@
 import React , {Component} from "react";
 import "./mainMonitorConcisePage.scss"
 //引入视频
+import videojs from "video.js"
 import Video from '../../../utils/video/video'
 //引入图片
 import yellow from "../../../imgs/yellow.png"
@@ -57,6 +58,7 @@ export default class MainMonitorConcisePage extends Component{
             //接口
             this.videoState="/control-application-front/video/getLiveUrl/123";
         }
+    
     render(){
         return (
             <div className="modeMainMonitorHome">
@@ -392,4 +394,5 @@ export default class MainMonitorConcisePage extends Component{
           </div>
         )
     }
+    
 }

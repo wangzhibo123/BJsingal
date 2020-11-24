@@ -8,6 +8,7 @@ import Histogram from './Histogram/Histogram'
 import Graph from './Graph/Graph'
 import mapConfiger from '../utils/minemapConf'
 import axiosInstance from '../utils/getInterfaceData'
+import { seriesMapData } from './chartsMap/seriesMapdata'
 
 const { Option } = Select
 class Homepage extends Component {
@@ -51,12 +52,16 @@ class Homepage extends Component {
       singalTypes: this.singalType,
       allControlMode: true,
       allSingalType: true,
+      legendMinitor: null,
+      legendCondition: null,
+      statusType: '1',
     }
     this.mapLegend = { condition: true, minitor: true }
     this.interMarkers = []
     this.trafficTimer = null
     this.mapPopup = null
-    this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
+    this.sortColors = ['#00a0e9', '#ff8400', '#9600ff', '#00ffd8', '#8a8000', '#ae5da1', '#920783', '#fff45c', '#e60012',
+    '#00ff00', '#7ecef4', '#8f82bc', '#a84200', '#002e73', '#440062', '#81511c', '#00561f', '#facd89']
     this.rateColors = ['#FF0000', '#FF7800', '#FFD800', '#0CB424']
     this.congestionUrl = '/control-application-front/index/getCongestionRanking?user_id=1'
     this.repairRateUrl = '/control-application-front/index/getFailureRepairRate?user_id=1'
@@ -68,7 +73,6 @@ class Homepage extends Component {
     this.pointLists = '/control-application-front/index/getPointByFault?user_id=1'
   }
   componentDidMount = () => {
-    // this.renderChartsMap()
     this.getMapPoints()
     this.getAreaMsgLists()
     this.getCongestionList()
@@ -88,7 +92,7 @@ class Homepage extends Component {
     this.map.trafficLayer(true)
     this.trafficTimer = setTimeout(() => {
       this.addTrafficLayer()
-    }, 10 * 1000)
+    }, 30 * 1000)
   }
   // 地图点位
   getMapPoints = () => {
@@ -115,6 +119,7 @@ class Homepage extends Component {
       } else {
         this.setState({ areaMsgList: null })
       }
+      this.renderChartsMap()
     })
   }
   // 实时拥堵排名
@@ -140,8 +145,8 @@ class Homepage extends Component {
     })
   }
   // 信号机实时状态统计
-  getSingalStatus = () => {
-    axiosInstance.post(this.staticUrl).then((res) => {
+  getSingalStatus = (type = 1) => {
+    axiosInstance.post(`${this.staticUrl}&type=${type}`).then((res) => {
       const { code, list } = res.data
       if (code === '1') {
         this.setState({ singalStatus: list })
@@ -244,15 +249,11 @@ class Homepage extends Component {
         el.addEventListener('click',function(e){
           currentThis.addInfoWindow(item)
         });
-        if (isNaN(item.longitude) || isNaN(item.latitude)) {
-          console.log(index)
-        }
         const marker = new window.mapabcgl.Marker(el)
           .setLngLat([item.longitude, item.latitude])
         .addTo(this.map)
         this.interMarkers.push(marker)
       })
-      console.log(this.interMarkers.length)
     }
   }
   removeMarkers = () => {
@@ -280,29 +281,18 @@ class Homepage extends Component {
       .addTo(this.map)
   }
   renderChartsMap = () => {
-    const geoJson = require('./beijing.json')
-    echarts.registerMap('beijing', geoJson);
+    const geoJson = require('./chartsMap/beijing.json')
+    echarts.registerMap('beijing', geoJson)
     const optionMap = {
-      // backgroundColor: '#FFFFFF',  
-      title: {  
-          text: '',  
-          subtext: '',  
-          x:'center'  
+      title: {
+          text: '',
+          subtext: '',
+          x:'center',
       },  
-      tooltip : {  
-          trigger: 'item'  
-      },
-      // 左侧小导航图标
-      visualMap: {  
-        show : false,
-        x: 'left',
-        y: 'center',
-        splitList: [
-            {start: 500, end:600},{start: 400, end: 500},
-            {start: 300, end: 400},{start: 200, end: 300},
-            {start: 100, end: 200},{start: 0, end: 100},
-        ],
-        color: ['#5475f5', '#9feaa5', '#85daef','#74e2ca', '#e6ac53', '#9fb5ea']
+      tooltip : {
+          show: false,
+          trigger: 'item',
+          color: 'auto',
       },
       // 配置属性
       series: [{
@@ -311,26 +301,33 @@ class Homepage extends Component {
         mapType: 'beijing',
         roam: true,
         label: {
-          normal: {
-              show: true  //省份名称
-          },
-          emphasis: {
-              show: false
-          }
+          show: false,  //省份名称
         },
-        data:[]  //数据
+        itemStyle: {
+          borderColor: '#FDAD3B',
+          borderWidth: 1.5,
+        },
+        color: '#ff0000',
+        data: seriesMapData,  //数据
       }]
     }
     const myChart = echarts.init(this.chartMapBox)
     myChart.setOption(optionMap)
+    myChart.on('click', (params) => {
+      const { name } = params.data
+      const { areaMsgList } = this.state
+      const currentArea = areaMsgList.find(item => item.district_name === name)
+      const { center_longitude, center_latitude } = currentArea
+      this.handleCutMap(center_longitude, center_latitude)
+    })
   }
-  renderMap = () => {
+  renderMap = (lng, lat) => {
     mapConfiger.zoom = 11
     this.map = new window.mapabcgl.Map(mapConfiger)
     this.map.addControl(new window.mapabcgl.NavigationControl());
+    this.map.setCenter([lng, lat])
     this.map.on('load', () => {
       this.addTrafficLayer()
-      this.renderMapLines()
       setTimeout(() => {
         this.addMarker(this.pointLists)
       }, 500)
@@ -348,45 +345,10 @@ class Homepage extends Component {
       }, 700)
     })
   }
-  renderMapLines = () => {
-    this.map.addSource("lineSource", {
-      "type": "geojson",
-      "data": {
-        "type": "Feature",
-        "properties": {},
-        "geometry": {
-          "type": "LineString",
-          "coordinates": [
-            [116.32346, 39.95645],
-            [116.32815, 39.95668],
-            [116.33536, 39.95711],
-            [116.33615, 39.95176],
-            [116.34108, 39.94728]
-          ]
-        }
-
-      }
-    });
-    this.map.addLayer({
-      "id": "addArrowLine",
-      "type": "line",
-      "source": "lineSource",
-      "layout": {
-        "line-join": "round",
-        "line-cap": "round"
-      },
-      "paint": {
-        "line-color": "#de0000",
-        "line-width": 8
-      }
-    });
-  }
-  randomData = () => {  
-    return Math.round(Math.random()*500);  
-  }
-  handleCutMap = () => {
+  // 切换地图显示
+  handleCutMap = (lng, lat) => {
     this.setState({ mainHomePage: false }, () => {
-      this.renderMap()
+      this.renderMap(lng, lat)
     })
   }
   // 路口搜索
@@ -396,39 +358,48 @@ class Homepage extends Component {
     this.map.setZoom(15)
     $('#marker' + key).trigger('click',)
   }
+  // 地图图例切换
   handleToggleLegend = (e) => {
     const legend = e.currentTarget.getAttribute('legendname')
     if (legend === 'coverage') {
       this.setState({ coverage: !this.state.coverage })
-    } else {
-      this.mapLegend[legend] = !this.mapLegend[legend]
+      return
+    }
+    this.mapLegend[legend] = !this.mapLegend[legend]
+    if (legend === 'condition') {
       if (this.mapLegend.condition) {
         this.addTrafficLayer()
+        this.setState({ legendCondition: null })
       } else {
+        this.setState({ legendCondition: legend })
         if (this.trafficTimer) {
           clearTimeout(this.trafficTimer)
           this.trafficTimer = null
         }
         this.map.trafficLayer(false)
       }
+    } else {
       if (this.mapLegend.minitor) {
         console.log('显示视频点位')
+        this.setState({ legendMinitor: null })
       } else {
         console.log('隐藏视频点位')
+        this.setState({ legendMinitor: legend })
       }
     }
   }
+  // 图层控制
   handleControlChange = (e) => {
     const { checked, indexs, mode, all } = e.target
     const checkList = all === 'allSingalType' ? this.singalType : this.controlMode
     checkList[indexs].isShow = checked
     const isAllCheck = checkList.filter(item => item.isShow === false)
-    console.log(isAllCheck.length)
     this.setState({
       [mode]: checkList,
       [all]: isAllCheck.length ? false : true,
     })
   }
+  // 图层控制全选
   handleAllCheckChange = (e) => {
     const { checked, mode, all } = e.target
     const checkList = all === 'allSingalType' ? this.singalType : this.controlMode
@@ -438,10 +409,16 @@ class Homepage extends Component {
       [mode]: checkList,
     })
   }
+  handleToggleSingalStatus = (e) => {
+    const types = e.target.getAttribute('statustype')
+    this.getSingalStatus(types)
+    this.setState({ statusType: types })
+  }
   render() {
     const {
       mainHomePage, congestionList, repairRateList, singalStatus, cloudSource, oprationData, faultData, areaMsgList,
       allNum, errline, offline, online, pointlist, coverage, controlModes, singalTypes, allControlMode, allSingalType,
+      legendMinitor, legendCondition, statusType
     } = this.state
     return (
       <div className="homepageWrapper">
@@ -503,10 +480,10 @@ class Homepage extends Component {
                         <div className="faultDetails" key={item.district_name}>
                           <div className="faultNo" style={{ backgroundColor: index < 4 ? this.rateColors[index] : '#0CB424' }}>{index + 1}</div>
                           <div className="faultArea">{item.district_name}</div>
-                          <div className="present">{(item.fault_number / 10) * 100}%</div>
+                          <div className="present">{item.fault_number}%</div>
                           <div className="faultValue">
-                            <div className="progress" style={{ width: `${(item.fault_number / 10) * 100}%` }} />
-                            <div className="value">{item.fault_number}</div>
+                            <div className="progress" style={{ width: `${item.fault_number}%` }} />
+                            <div className="value">{item.numbers}</div>
                           </div>
                         </div>
                       )
@@ -530,7 +507,10 @@ class Homepage extends Component {
               <div className="title">信号机实时状态统计</div>
               <div className="itemContent">
                 <div className="singalStatus">
-                  <div className="statusEach"><span className="each">区域</span><span className="each">品牌</span></div>
+                  <div className="statusEach" onClick={this.handleToggleSingalStatus}>
+                    <span className={`each ${statusType === '1' ? 'eachActive' : ''}`} statustype="1">区域</span>
+                    <span className={`each ${statusType === '2' ? 'eachActive' : ''}`} statustype="2">品牌</span>
+                  </div>
                   <div className="statusDetails">
                     {
                       singalStatus &&
@@ -542,9 +522,9 @@ class Homepage extends Component {
                           <div className="singalMsg" key={item.code_name}>
                             <div className="singalName">{item.code_name}</div>
                             <div className="presents">
-                              <div className="nomals" style={{ width: `${onLineRate}%` }}><span>{onLineRate}%</span></div>
-                              <div className="faults" style={{ width: `${outLineRate}%` }}><span>{outLineRate}%</span></div>
-                              <div className="outlines" style={{ width: `${faultRate}%` }}><span>{faultRate}%</span></div>
+                              <div className="nomals" style={{ width: `${onLineRate}%` }}><span>{parseInt(onLineRate)}%</span></div>
+                              <div className="faults" style={{ width: `${outLineRate}%` }}><span>{parseInt(outLineRate)}%</span></div>
+                              <div className="outlines" style={{ width: `${faultRate}%` }}><span>{parseInt(faultRate)}%</span></div>
                             </div>
                           </div>
                         )
@@ -627,7 +607,7 @@ class Homepage extends Component {
                         </div>
                       </div>
                     </div>
-                    <div className="centerMap" onClick={this.handleCutMap} ref={(input) => { this.chartMapBox = input }}></div>
+                    <div className="centerMap" ref={(input) => { this.chartMapBox = input }}></div>
                   </div>
                   <div className="centerRight">
                   {
@@ -690,8 +670,8 @@ class Homepage extends Component {
               <div className="mapLegend" style={{ top: '20px' }}>
                 <div className="legendBox">
                   <div className="legendItem" legendname="coverage" onClick={this.handleToggleLegend}><span className="legenIcon coverage"></span> 图层</div>
-                  <div className="legendItem" legendname="condition" onClick={this.handleToggleLegend}><span className="legenIcon condition"></span> 路况</div>
-                  <div className="legendItem" legendname="minitor" onClick={this.handleToggleLegend}><span className="legenIcon minitor"></span> 监控</div>
+                  <div className={`legendItem ${legendCondition === 'condition' ? 'legendActive' : ''}`} legendname="condition" onClick={this.handleToggleLegend}><span className="legenIcon condition"></span> 路况</div>
+                  <div className={`legendItem ${legendMinitor === 'minitor' ? 'legendActive' : ''}`} legendname="minitor" onClick={this.handleToggleLegend}><span className="legenIcon minitor"></span> 监控</div>
                 </div>
                 {
                   coverage &&

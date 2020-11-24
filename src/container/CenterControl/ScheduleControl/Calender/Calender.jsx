@@ -70,7 +70,6 @@ export default class Calender extends Component {
                             <div className="gregorianCalendar">
                                 <Radio value={2} style={{ color: "#fff", marginLeft: "15px" }}>日历</Radio>
                             </div>
-                            
                         </Radio.Group>
                     </div>
                     <div className="calenderSelect">

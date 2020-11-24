@@ -25,20 +25,25 @@
         position: absolute;
         top: 90px;
         right: 30px;
-        color: #ccc;
+        color: #7D94AE;
         border-radius: 3px;
         width: 170px;
         height: 37px;
         display: flex;
+        align-items: center;
         background: #1D6BB3;
         span{
             flex: 1;
+            height: 70%;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             font-size: 12px;
+            border-right: 1px solid #fff;
         }
-        
+        span:nth-child(4){
+            border: none;
+        }
     }
 }

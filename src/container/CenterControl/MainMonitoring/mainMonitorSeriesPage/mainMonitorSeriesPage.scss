@@ -1,0 +1,125 @@
+.mainMonitorSeriesHome{
+    width: 100%;
+    height: 100%;
+    .mainMonitorSeriesList{
+        width: 735px;
+        height: calc(100% - 110px);
+        position: absolute;
+        top: 90px;
+        left: 13px;
+        background: rgba(17,52,115,.22);
+        .mainMonitorSeriesListHead{
+            height: 34px;
+            margin-bottom: 30px;
+            line-height: 34px;
+            display: flex;
+            font-size: 16px;
+            font-weight: 700;
+            .mainMonitorSeriesInfo{
+                flex: 5;
+                margin-left: 20px;
+                .infoChild{
+                    width: 115px;
+                    height: 30px;
+                    text-align: center;
+                    span{
+                        display: block;
+                        width: 100%;
+                        height: 2px;
+                        background: linear-gradient(to right,#02294F,#7ED7F4,#02294F);
+                    }
+                }
+            }
+            .mainMonitorSeriesMark{
+                flex: 2;
+                text-align: center;
+            }
+            .mainMonitorSeriesName{
+                flex: 3;
+                text-align: center;
+            }
+        }
+        .mainMonitorSeriesHomeBody{
+            width: 100%;
+            height: calc(100% - 64px);
+        }
+    }
+    .mainMonitorSeriesDrawingHome{
+        width: calc(100% - 761px);
+        height: calc(100% - 110px);
+        position: absolute;
+        top: 90px;
+        right: 0;
+        background: rgba(17,52,115,.22);
+        .mainMonitorSeriesHead{
+            width: 100%;
+            height: 88px;
+            .ant-select-selector{
+                height: 35px;
+                line-height: 35px;
+                background: #033653;
+                border-color:#1E4763;
+            }
+            .ant-select{
+                width: 273px;
+                position: absolute;
+                left: 35px;
+                top: 20px;
+                color: #fff;
+                font-weight: 700;
+            }
+            .ant-select-arrow{
+                position: absolute;
+                top: 51%;
+                color: #fff;
+            }
+            .ant-btn{
+                position: absolute;
+                top: 20px;
+                left: 315px;
+                width: 71px;
+                height: 35px;
+            }
+            .ant-select-single .ant-select-selector .ant-select-selection-item, .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+                padding: 1px;
+                line-height: 34px;
+                -webkit-transition: all 0.3s;
+                transition: all 0.3s;
+            }
+        }
+        .mainMonitorSeriesDrawing{
+            width: 100%;
+            height: calc(100% - 88px);
+            color: #62A8C5;
+            .greenWaveBox{
+                position: absolute;
+                left: 114px;
+                top: 231px;
+                border-left: 2px solid #25459A;
+                border-bottom: 2px solid #25459A;
+                transform: rotate(270deg);
+                // transform: scaleZ(-1);
+                .xAxisBox {
+                    position: absolute;
+                    bottom: -6px;
+                    height: 6px;    
+                    border-right: 2px solid #25459A;
+                }
+                .yAxisBox {
+                    position: absolute;
+                    left: -6px;
+                    width: 6px;
+                    border-top: 2px solid #25459A;
+                }
+                .yScaleText{
+                    color:#62A8C5;
+                    transform: rotate(90deg);
+                }
+                .xScalText{
+                    color:#62A8C5;
+                    transform: rotate(90deg);
+                }
+            }
+        }
+    }
+}

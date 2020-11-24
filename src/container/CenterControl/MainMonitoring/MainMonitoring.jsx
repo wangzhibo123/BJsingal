@@ -10,10 +10,17 @@ export default class MainMonitoring extends Component{
     this.state={
       displayPage:"1" ,   //3d => 1  2d =>  2  简洁 => 3  时序 => 4
       displayStrip:true,  //展示条
+      StripList:[{title:"3D",displayPage:"1",showStrip:true},{title:"2D",displayPage:"2"},{title:"简洁",displayPage:"3"},{title:"时序图",displayPage:"4"}]
     }
   }
   render(){
-    const {displayPage,displayStrip} =this.state;
+    const {displayPage,displayStrip,StripList} =this.state;
+    let li={
+    }
+    let playing={
+      color:"#fff",
+      fontSize:"13px"
+    }
       return (
         <div className="Main">
             {/* 3D */}
@@ -42,10 +49,13 @@ export default class MainMonitoring extends Component{
             }
             {
               displayStrip&&<div className="mainStrip">
-                <span onClick={()=>this.setState({displayPage:"1"})}>3D</span>
-                <span onClick={()=>this.setState({displayPage:"2"})}>2D</span>
-                <span onClick={()=>this.setState({displayPage:"3"})}>简洁</span>
-                <span onClick={()=>this.setState({displayPage:"4"})}>时序图</span>
+                {
+                  StripList.map((item,index)=>{
+                    return (
+                      <span onClick={()=>this.setState({displayPage:item.displayPage})} key={index} style={displayPage===item.displayPage?playing:li}>{item.title}</span>
+                    )
+                  })
+                }
               </div>
             }
         </div>

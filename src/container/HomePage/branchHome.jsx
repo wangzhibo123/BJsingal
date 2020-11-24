@@ -22,6 +22,8 @@ class branchHome extends Component {
       nodeSimulation: [0, 0, 0, 0],
       interNum: [0, 0, 0, 0],
       simulationPlanNum: [0, 0, 0, 0],
+      branchName: null,
+      statusType: '1',
     }
     this.trafficTimer = null
     this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
@@ -64,6 +66,40 @@ class branchHome extends Component {
       })
     }
   }
+  addInfoWindow = (marker) => {
+    console.log(marker.longitude, marker.latitude)
+    if (this.mapPopup) {
+      this.mapPopup.remove()
+    }
+    this.map.addControl(new window.mapabcgl.NavigationControl())
+    const popupOption = {
+      closeOnClick: false,
+      closeButton: true,
+      maxWidth: '1000px',
+      offset: [0,0]
+    }
+    this.mapPopup = new window.mapabcgl.Popup(popupOption)
+      .setLngLat( new window.mapabcgl.LngLat(marker.longitude, marker.latitude))
+      .setHTML(this.getInfoWindowHtml(marker))
+      .addTo(this.map)
+  }
+  getInfoWindowHtml = (interMsg) => {
+    return `
+      <div class="infoWindow">
+        <div class="infotitle">${interMsg.unit_name}</div>
+        <div class="interMessage">
+          <div class="message">设备类型：信号灯</div>
+          <div class="message">所属城区：${interMsg.district_name}</div>
+          <div class="message">控制状态：${interMsg.control_state}</div>
+          <div class="message">信号系统：${interMsg.signal_system_code || ''}</div>
+          <div class="message">信号机IP：${interMsg.signal_ip || ''}</div>
+          <div class="message">设备状态：${interMsg.alarm_state}</div>
+          <div class="message">运行阶段：${interMsg.stage_code || ''}</div>
+        </div>
+        <div class="interDetails"><div class="monitorBtn"><a style="color:#62bbff" href="#/interMonitor/${interMsg.id}">路口检测</a></div></div>
+      </div>
+    `
+  }
   // 添加实时路况
   addTrafficLayer = () => {
     if (this.trafficTimer) {
@@ -73,7 +109,7 @@ class branchHome extends Component {
     this.map.trafficLayer(true)
     this.trafficTimer = setTimeout(() => {
       this.addTrafficLayer()
-    }, 5 * 1000)
+    }, 30 * 1000)
   }
   // 地图点位
   getMapPoints = () => {
@@ -82,7 +118,7 @@ class branchHome extends Component {
       const { code, errline, offline, online, pointlist } = res.data
       if (code === '1') {
         this.pointLists = pointlist
-        this.setState({ errline, offline, online, pointlist })
+        this.setState({ errline, offline, online, pointlist, branchName: pointlist[0].district_name })
         this.addMarker(this.pointLists)
         let num = 0
         let numTwo = 0
@@ -98,7 +134,7 @@ class branchHome extends Component {
           if (numTwo >= (errline + offline + online)) { clearInterval(this.timeTwo) }
           const interNum = ('000' + numTwo).slice(-4).split('')
           this.setState({ interNum }, () => {
-            numTwo += 1
+            numTwo += (errline + offline + online)
           })
         }, 0)
         this.timeThree = setInterval(() => {
@@ -181,8 +217,8 @@ class branchHome extends Component {
     })
   }
   // 信号机实时状态统计
-  getSingalStatus = () => {
-    axiosInstance.post(this.staticUrl).then((res) => {
+  getSingalStatus = (type = 1) => {
+    axiosInstance.post(`${this.staticUrl}&type=${type}`).then((res) => {
       const { code, list } = res.data
       if (code === '1') {
         this.setState({ singalStatus: list })
@@ -190,6 +226,11 @@ class branchHome extends Component {
         this.setState({ singalStatus: [] })
       }
     })
+  }
+  handleToggleSingalStatus = (e) => {
+    const types = e.target.getAttribute('statustype')
+    this.getSingalStatus(types)
+    this.setState({ statusType: types })
   }
   renderMap = () => {
     mapConfiger.zoom = 11
@@ -210,7 +251,7 @@ class branchHome extends Component {
   render() {
     const {
       mainHomePage, congestionList, controlCount, singalStatus, oprationData, faultData, controlStatus,
-      nodeSimulation, interNum, simulationPlanNum,
+      nodeSimulation, interNum, simulationPlanNum, branchName, statusType
     } = this.state
     return (
       <div className="branchHomeWrapper">
@@ -300,7 +341,10 @@ class branchHome extends Component {
               <div className="title">信号机实时状态统计</div>
               <div className="itemContent">
                 <div className="singalStatus">
-                  <div className="statusEach"><span className="each">区域</span><span className="each">品牌</span></div>
+                  <div className="statusEach" onClick={this.handleToggleSingalStatus}>
+                    <span className={`each ${statusType === '1' ? 'eachActive' : ''}`} statustype="1">区域</span>
+                    <span className={`each ${statusType === '2' ? 'eachActive' : ''}`} statustype="2">品牌</span>
+                  </div>
                   <div className="statusDetails">
                     {
                       singalStatus &&
@@ -312,9 +356,9 @@ class branchHome extends Component {
                           <div className="singalMsg" key={item.code_name}>
                             <div className="singalName">{item.code_name}</div>
                             <div className="presents">
-                              <div className="nomals" style={{ width: `${onLineRate}%` }}><span>{onLineRate}%</span></div>
-                              <div className="faults" style={{ width: `${outLineRate}%` }}><span>{outLineRate}%</span></div>
-                              <div className="outlines" style={{ width: `${faultRate}%` }}><span>{faultRate}%</span></div>
+                              <div className="nomals" style={{ width: `${onLineRate}%` }}><span>{parseInt(onLineRate)}%</span></div>
+                              <div className="faults" style={{ width: `${outLineRate}%` }}><span>{parseInt(outLineRate)}%</span></div>
+                              <div className="outlines" style={{ width: `${faultRate}%` }}><span>{parseInt(faultRate)}%</span></div>
                             </div>
                           </div>
                         )
@@ -346,7 +390,7 @@ class branchHome extends Component {
                     <div className="topInfo">
                       <div className="info">
                         <div className="infoName">
-                          <span className="infoText">房山区</span>
+                          <span className="infoText">{branchName}</span>
                           <span>信号点位</span>
                         </div>
                         <div className="infoValue">

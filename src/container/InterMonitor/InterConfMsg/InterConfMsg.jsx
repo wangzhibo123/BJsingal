@@ -33,6 +33,8 @@ import TimePlan from './SingalParams/TimePlan/TimePlan'
 import DispathPlan from './SingalParams/DetectorPlan/DetectorPlan'
 import DayPlan from './SingalParams/DayPlan/DayPlan'
 
+import axiosInstance from '../../utils/getInterfaceData'
+
 class InterConfMsg extends Component {
   constructor(props) {
     super(props)
@@ -83,7 +85,8 @@ class InterConfMsg extends Component {
     this.turnPic = [
       { pic: goleft }, { pic: goright }, { pic: top }, { pic: bottom }, { pic: topleft }, { pic: topright }, { pic: bottomleft }, { pic: bottomright }
     ]
-    this.uploadPic = `/control-application-front/unitMontitor/uploadCanalizationFile?unitCode=${this.props.interId}`
+    this.uploadPic = '/control-application-front/file/upload'
+    this.updatePic = '/control-application-front/basic/info/unit/background'
   }
   componentDidMount = () => {
     const { configName, interInfo } = this.props
@@ -95,9 +98,17 @@ class InterConfMsg extends Component {
       this.setState({ configName, interInfo })
     }
   }
+  handleUpdateInterPic = (imgPath) => {
+    const savePathParams = { id: this.props.interInfo.id, backgroungImg: imgPath }
+    axiosInstance.post(this.updatePic, savePathParams).then((res) => {
+      console.log(res)
+    })
+  }
+  // 切换配置
   handleBaseItemChange = (currentItem, stateName) => {
     this.setState({ [stateName]: currentItem })
   }
+  
   handleUploadInterPic = () => {
     this.setState({ isUpload: true })
   }
@@ -114,6 +125,13 @@ class InterConfMsg extends Component {
     }
     if (info.file.status === 'done') {
       console.log(info.file)
+      const { response } = info.file
+      if (response.code === 200) {
+        message.info('上传成功')
+        this.handleUpdateInterPic(response.data)
+      } else {
+        message.info(response.message)
+      }
     }
   }
   handleDirDragStart = (ev) => {
@@ -122,7 +140,6 @@ class InterConfMsg extends Component {
     this.moveBeforeX = ev.clientX - BeforetargetLeft
     this.moveBeforeY = ev.clientY + 58
     const picname = ev.target.getAttribute('picname')
-    console.log(picname)
     const pic = this.dirPic.find(item => item.picname === picname)
     this.newConfPic = { picname, pic: pic.pic }
   }

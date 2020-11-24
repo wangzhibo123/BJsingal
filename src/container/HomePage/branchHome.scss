@@ -151,9 +151,10 @@
                                 padding-bottom: 1px;
                                 text-decoration: underline;
                                 cursor: pointer;
-                                &:hover {
-                                    color: #2AFAFD;
-                                }
+                                transition: all .2s;
+                            }
+                            .eachActive {
+                                color: #2AFAFD;
                             }
                             .legendInfo {
                                 margin-left: 20px;
@@ -239,6 +240,184 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            .interSearchBox {
+                z-index: 1;
+                position: absolute;
+                top: 20px;
+                left: 0;
+                .ant-select-selector {
+                    background-color: rgba(12,74,131, .6);
+                    border: 1px solid #0E6ABF;
+                    color: #fff;
+                }
+                .ant-select-arrow {
+                    color: #fff;
+                }
+            }
+            
+            .mapLegend {
+                position: absolute;
+                bottom: 5px;
+                right: 0;
+                height: 30px;
+                display: flex;
+                flex-direction: column;
+                background-color: rgba(12,74,131, .6);
+                border: 1px solid #0E6ABF;
+                .pointStatus, .legendBox {
+                    height: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    .statusItem {
+                        width: 80px;
+                        height: 30px;
+                        text-align: center;
+                        line-height: 30px;
+                        .pointIcon {
+                            display: inline-block;
+                            width: 8px;
+                            height: 8px;
+                            border-radius: 50%;
+                        }
+                        .onlineColor {
+                            background-color: #01FA00;
+                        }
+                        .offlineColor {
+                            background-color: #D7C19C;
+                        }
+                        .faultColor {
+                            background-color: #FF0200;
+                        }
+                    }
+                    .legendItem {
+                        width: 80px;
+                        height: 28px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        cursor: pointer;
+                        .legenIcon {
+                            display: inline-block;
+                            width: 20px;
+                            height: 20px;
+                            margin-right: 5px;
+                        }
+                        .coverage {
+                            background: url(../imgs/coverage.png) center center no-repeat;
+                            background-size: 100% 100%;
+                        }
+                        .condition {
+                            width: 10px;
+                            background: url(../imgs/condition.png) center center no-repeat;
+                            background-size: 100% 100%;
+                        }
+                        .minitor {
+                            width: 20px;
+                            height: 10px;
+                            background: url(../imgs/moni.png) center center no-repeat;
+                            background-size: 100% 100%;
+                        }
+                    }
+                    .legendActive {
+                        background-color: rgba(25,47,84,.8);
+                        opacity: .5;
+                    }
+                }
+                .singalModeBox {
+                    width: 180px;
+                    padding: 5px 10px;
+                    background-color: rgba(12,74,131, .6);
+                    border: 1px solid #0E6ABF;
+                    margin: 10px 0 0 -1px;
+                    .ant-checkbox-wrapper {
+                        font-size: 13px;
+                        color: #fff;
+                        .ant-checkbox-inner {
+                            width: 14px;
+                            height: 14px;
+                            background-color: transparent;
+                            border-color: #00A0E9;
+                        }
+                    }
+                    .checkMsg {
+                        height: 25px;
+                        display: flex;
+                        align-items: center;
+                    }
+                }
+            }
+            .mapabcgl-popup-anchor-bottom {
+                .mapabcgl-popup-tip {
+                    border-top-color: rgba(3, 38, 120, .8);
+                }
+            }
+            .mapabcgl-popup-anchor-top {
+                .mapabcgl-popup-tip {
+                    border-bottom-color: rgba(3, 38, 120, .8);
+                }
+            }
+            .mapabcgl-popup-anchor-left {
+                .mapabcgl-popup-tip {
+                    border-right-color: rgba(3, 38, 120, .8);
+                }
+            }
+            .mapabcgl-popup-anchor-right {
+                .mapabcgl-popup-tip {
+                    border-left-color: rgba(3, 38, 120, .8);
+                }
+            }
+            .mapabcgl-popup-content {
+                padding: 0;
+                background-color: transparent;
+                .mapabcgl-popup-close-button {
+                    right: 10px;
+                    top: 8px;
+                    font-size: 26px;
+                    color: #62bbff;
+                }
+                .infoWindow {
+                    width: 400px;
+                    height: 225px;
+                    background: rgba(3, 16, 96, 0.8);
+                    background-image: linear-gradient(to bottom, rgba(3, 38, 120, .8), rgba(0, 59, 129, .8), rgba(3, 38, 120, .8));
+                    font-size: 14px;
+                    color: #62bbff;
+                    border-radius: 4px;
+                    box-shadow: inset 0 0 10px rgba(62, 112, 255, .8);
+                    .infotitle {
+                        height: 40px;
+                        line-height: 40px;
+                        padding-left: 20px;
+                    }
+                    .interMessage {
+                        display: flex;
+                        flex-wrap: wrap;
+                        padding-left: 20px;
+                        justify-content: space-between;
+                        .message {
+                            width: 180px;
+                            height: 35px;
+                            text-align: left;
+                            line-height: 35px;
+                        }
+                    }
+                    .interDetails {
+                        height: 40px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        .monitorBtn {
+                            width: 80px;
+                            height: 28px;
+                            text-align: center;
+                            line-height: 28px;
+                            background-color: rgba(98, 187, 255, .4);
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
             .title {
                 height: 20px;
                 text-align: center;
