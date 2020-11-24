@@ -24,7 +24,6 @@ import singalIcon from '../imgs/hasence.png'
 import InterTimeList from './InterTimeList/InterTimeList'
 import Graph from './Graph/Graph'
 import InterConfMsg from './InterConfMsg/InterConfMsg'
-import globalVar from '../utils/globalVariable'
 
 const { Option } = Select
 class InterMonitor extends Component {
@@ -47,6 +46,7 @@ class InterMonitor extends Component {
       stageList: null,
       showInterMap: false,
       isResetStage: true,
+      stageIndexs: null,
     }
     this.confItems = [
       { confname: '基础信息', id: 'interBase' }, { confname: '信号参数', id: 'singalParams' },
@@ -73,10 +73,8 @@ class InterMonitor extends Component {
     this.trafficUrl = `/control-application-front/unitMontitor/getRealtimeTrafficById?unit_id=${this.interId}`
     this.trendUrl = `/control-application-front/unitMontitor/getRoadTrendById?unit_id=${this.interId}`
     this.messageUrl = `/control-application-front/unitMontitor/getUnitInfoById?unit_id=${this.interId}`
-    this.imgUrl = 'control-application-front/file/getTrackerUrl'
   }
   componentDidMount = () => {
-    console.log('受否存在context：：：', globalVar)
     this.getControlMode()
     this.getControlMode()
     this.getTrafficInfo()
@@ -225,7 +223,8 @@ class InterMonitor extends Component {
       .addTo(this.map);
   }
   // 修改阶段时间
-  handleModifyStageTime = (type, indexs) => {
+  handleModifyStageTime = (type, indexs, e) => {
+    e.stopPropagation()
     const defaultTime = parseInt(this.defaultStageList[indexs].modifyTime)
     this.defaultStageList[indexs].modifyTime = type === 'add' ? defaultTime + 1 : defaultTime - 1
     this.setState({ stageList: this.defaultStageList, isResetStage: false })
@@ -235,10 +234,14 @@ class InterMonitor extends Component {
     this.defaultStageList.forEach(item => item.modifyTime = item.stageTime)
     this.setState({ isResetStage: true })
   }
+  handleCheckStage = (indexs) => {
+    this.setState({ stageIndexs: indexs })
+  }
   render() {
+    const globalImgurl = localStorage.getItem('ImgUrl')
     const {
       confListLeft, modeIndex, moveLeft, moveRight, moveUp, moveDown, trafficInfoList, interConfigMsg, trendChartsData, interInfo, showSingalInfo,
-      phaseTime, statusControlData, stageList, showInterMap, isResetStage
+      phaseTime, statusControlData, stageList, showInterMap, isResetStage, stageIndexs
     } = this.state
     return (
       <div className="interMonitorBox">
@@ -254,7 +257,7 @@ class InterMonitor extends Component {
           </div>
           {
             !!interConfigMsg &&
-            <InterConfMsg closeInterConf={this.hanldleCloseInterConf} configName={interConfigMsg} interId={this.interId} interInfo={interInfo} />
+            <InterConfMsg closeInterConf={this.hanldleCloseInterConf} configName={interConfigMsg} interId={this.interId} interInfo={interInfo} {...this.props} />
           }
           <div className="titles">
             当前路口-{interInfo && interInfo.unit_name}
@@ -378,13 +381,13 @@ class InterMonitor extends Component {
                     stageList &&
                     stageList.map((item, index) => {
                       return (
-                        <div className="phaseTime" key={item.stageId + item.stageTime}>
-                          <div className="phaseinner"><img src={globalVar.imgUrl + item.stageImg} alt="" /></div>
+                        <div className={`phaseTime ${stageIndexs === index ? 'phaseActive' : ''}`} key={item.stageId + item.stageTime} onClick={() => { this.handleCheckStage(index) }}>
+                          <div className="phaseinner"><img src={globalImgurl + item.stageImg} alt="" /></div>
                           <div className="phaseinner times">
                             <span>{isResetStage ? item.stageTime : item.modifyTime}</span>
                             <div className="caculate">
-                              <CaretUpOutlined className="add" onClick={() => { this.handleModifyStageTime('add', index) }} />
-                              <CaretDownOutlined className="subtract" onClick={() => { this.handleModifyStageTime('subtract', index) }} />
+                              <CaretUpOutlined className="add" onClick={(e) => { this.handleModifyStageTime('add', index, e) }} />
+                              <CaretDownOutlined className="subtract" onClick={(e) => { this.handleModifyStageTime('subtract', index, e) }} />
                             </div>
                           </div>
                         </div>
