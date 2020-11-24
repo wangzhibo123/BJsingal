@@ -304,7 +304,6 @@ export default class MainMonitor3DPage extends Component{
         return [lng, lat]
       }
       ClickMessge = (index) => {
-        const { lineData } = this.state;
         if (this.mapPopup) {
           this.mapPopup.remove()
         }
@@ -330,13 +329,13 @@ export default class MainMonitor3DPage extends Component{
                           </div>
                           <div style="margin-top:5px">开启手动</div>
                         </div>
-                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  red;"><img src=${rightUpLeftDown} alt=""/></div>
-                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${leftRightPng} alt=""/></div>
-                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upDownPng} alt=""/></div>
-                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upLeftUp} alt=""/></div>
-                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upLeftDownRight} alt=""/></div>
-                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${yellow} alt=""/></div>
-                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${red} alt=""/></div>
+                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;border-top:1px solid  #3661E9;"><img src=${rightUpLeftDown} alt=""/></div>
+                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;border-top:1px solid  #3661E9;"><img src=${leftRightPng} alt=""/></div>
+                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;border-top:1px solid  #3661E9;"><img src=${upDownPng} alt=""/></div>
+                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;border-top:1px solid  #3661E9;"><img src=${upLeftUp} alt=""/></div>
+                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;border-top:1px solid  #3661E9;"><img src=${upLeftDownRight} alt=""/></div>
+                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;border-top:1px solid  #3661E9;"><img src=${yellow} alt=""/></div>
+                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;border-top:1px solid  #3661E9;"><img src=${red} alt=""/></div>
                     </div>`)
             .addTo(this.map);
       }
