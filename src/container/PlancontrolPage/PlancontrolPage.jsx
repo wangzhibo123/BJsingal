@@ -361,14 +361,14 @@ class Homepage extends Component {
     // console.log(this.interMonitorBtn)
   }
   getInfoWindowHtml = (list) => {
-    console.log(list, '363sss')
-    return (
-      list && list.map(item => `<div class="infoWindow">
-        <div class="infotitle">
-        ${item.stagename}
-        </div>
-      </div>`)
-    )
+    // console.log(list, '363sss')
+    // return (
+    //   list && list.map(item => `<div class="infoWindow">
+    //     <div class="infotitle">
+    //     ${item.stagename}
+    //     </div>
+    //   </div>`)
+    // )
   }
   changeLoadRouteDirectionSelect = (events, num, names) => { // 针对下拉框
     const { getDirectionList } = this.state
