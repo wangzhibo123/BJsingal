@@ -53,12 +53,11 @@ export default class MainMonitorConcisePage extends Component{
               clickCenterRenders: false,
               //视频
               url: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv2", name: "东", id: "my_E"  }, { url: "rtmp://58.200.131.2:1935/livetv/cctv3", name: "西", id: "my_W" , displayStyle:true }],
-              arl: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv13", name: "南", id: 'my_S'  }, { url: "rtmp://58.200.131.2:1935/livetv/cctv12", name: "北", id: "my_N" , displayStyle:true }],
+              arl: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv13", name: "南", id: 'my_S'  }, { url: "rtmp://58.200.131.2:1935/livetv/cctv6", name: "北", id: "my_N" , displayStyle:true }],
             };
             //接口
             this.videoState="/control-application-front/video/getLiveUrl/123";
         }
-    
     render(){
         return (
             <div className="modeMainMonitorHome">
