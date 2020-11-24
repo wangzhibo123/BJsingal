@@ -4,7 +4,6 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import './Login.scss'
 
 import axiosInstance from '../utils/getInterfaceData'
-import globalVar from '../utils/globalVariable'
 
 class Login extends Component {
   constructor(props) {
@@ -17,14 +16,14 @@ class Login extends Component {
   }
   getTrackerImgUrl = () => {
     axiosInstance.get(this.trackerImgurl).then((res) => {
-      const { code, data } = res.data
-      if (code === 200) {
-        globalVar.imgUrl = data
-      } else {
-        message.error(res.data.message)
-      }
-    })
-  }
+        const { code, data } = res.data
+        if (code === 200) {
+          localStorage.setItem('ImgUrl', data)
+        } else {
+          message.error(res.data.message)
+        }
+      })
+}
   handleLogin = () => {
     this.props.history.push('/home')
   }

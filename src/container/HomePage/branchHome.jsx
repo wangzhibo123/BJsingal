@@ -23,7 +23,6 @@ class branchHome extends Component {
       interNum: [0, 0, 0, 0],
       simulationPlanNum: [0, 0, 0, 0],
       branchName: null,
-      statusType: '1',
     }
     this.trafficTimer = null
     this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
@@ -217,7 +216,7 @@ class branchHome extends Component {
     })
   }
   // 信号机实时状态统计
-  getSingalStatus = (type = 1) => {
+  getSingalStatus = (type = 2) => {
     axiosInstance.post(`${this.staticUrl}&type=${type}`).then((res) => {
       const { code, list } = res.data
       if (code === '1') {
@@ -226,11 +225,6 @@ class branchHome extends Component {
         this.setState({ singalStatus: [] })
       }
     })
-  }
-  handleToggleSingalStatus = (e) => {
-    const types = e.target.getAttribute('statustype')
-    this.getSingalStatus(types)
-    this.setState({ statusType: types })
   }
   renderMap = () => {
     mapConfiger.zoom = 11
@@ -341,10 +335,6 @@ class branchHome extends Component {
               <div className="title">信号机实时状态统计</div>
               <div className="itemContent">
                 <div className="singalStatus">
-                  <div className="statusEach" onClick={this.handleToggleSingalStatus}>
-                    <span className={`each ${statusType === '1' ? 'eachActive' : ''}`} statustype="1">区域</span>
-                    <span className={`each ${statusType === '2' ? 'eachActive' : ''}`} statustype="2">品牌</span>
-                  </div>
                   <div className="statusDetails">
                     {
                       singalStatus &&

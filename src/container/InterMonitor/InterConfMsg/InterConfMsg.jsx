@@ -3,7 +3,6 @@ import { Upload, message } from 'antd'
 import { CloseOutlined } from '@ant-design/icons'
 import './InterConfMsg.scss'
 
-import interPic from '../../imgs/interPic.png'
 import left from '../../imgs/left.png'
 import right from '../../imgs/right.png'
 import straight from '../../imgs/straight.png'
@@ -38,9 +37,7 @@ import axiosInstance from '../../utils/getInterfaceData'
 class InterConfMsg extends Component {
   constructor(props) {
     super(props)
-    this.roadLists = [
-      // { picname: 'left', pic: left, posx: '20', posy: '20', angle: '', dir: '', flowDir: '' }
-    ]
+    this.roadLists = []
     this.state = {
       isUpload: false,
       currentConf: '',
@@ -49,7 +46,9 @@ class InterConfMsg extends Component {
       configName: null,
       interInfo: null,
       laneLists: this.roadLists,
+      interImage: null,
     }
+    this.globalImgurl = localStorage.getItem('ImgUrl')
     this.baseConfList = [
       { confName: '渠化信息', id: 'canalization', compos: null },
       { confName: '车道信息', id: 'channel', compos: ChannelTable },
@@ -91,11 +90,8 @@ class InterConfMsg extends Component {
   componentDidMount = () => {
     const { configName, interInfo } = this.props
     this.setState({ configName, interInfo })
-  }
-  componentDidUpdate = (prevState) => {
-    const { configName, interInfo } = this.props
-    if (prevState.configName !== configName) {
-      this.setState({ configName, interInfo })
+    if (interInfo.background_img) {
+      this.setState({ isUpload: true, interImage: interInfo.background_img })
     }
   }
   handleUpdateInterPic = (imgPath) => {
@@ -177,8 +173,7 @@ class InterConfMsg extends Component {
     this.newConfPic = this.roadLists[this.currentDragIndex]
   }
   render() {
-    const { isUpload, currentItem, configName, currentParams, laneLists, interInfo } = this.state
-    console.log(interInfo)
+    const { isUpload, currentItem, configName, currentParams, laneLists, interInfo, interImage } = this.state
     return (
       <div className="interConfMsg">
         <div className="confMsgBox">
@@ -226,7 +221,7 @@ class InterConfMsg extends Component {
                   <div className="interPicBox">
                     {
                       isUpload ?
-                        <img src={interPic} alt="" height="100%" /> :
+                        <img src={this.globalImgurl + interImage} alt="" height="100%" /> :
                         <span className="pleaseUpload">请上传该路口渠化图</span>
                     }
                     <Upload
@@ -275,7 +270,7 @@ class InterConfMsg extends Component {
                       </div>
                       <div className="picConfig">
                         <div style={{ width: '760px', height: '585px', position: 'relative' }} onDrop={this.handleDropPic} onDragOver={this.handleDragOver}>
-                          <img src={interPic} alt="" height="100%" draggable="false" />
+                          <img src={this.globalImgurl + interImage} alt="" height="100%" draggable="false" />
                           {
                             laneLists &&
                             laneLists.map((item, index) => (
@@ -295,7 +290,7 @@ class InterConfMsg extends Component {
                     <div className="confDetails">
                       {
                         currentItem === 'channel' &&
-                        <ChannelTable />
+                        <ChannelTable {...this.props} />
                       }
                       {
                         currentItem === 'inter' &&
