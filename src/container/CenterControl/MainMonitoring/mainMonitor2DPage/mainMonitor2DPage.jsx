@@ -81,7 +81,6 @@ export default class MainMonitor2DPage extends Component{
           modeMainTabTypeD: true
         }, () => {
           this.renderMap()
-          window.location.reload()
         })
       }
       addMenu = () => {
@@ -307,18 +306,22 @@ export default class MainMonitor2DPage extends Component{
         return [lng, lat]
       }
       ClickMessge = (index) => {
-        const { intersectioNodes } = this.state;
+        console.log(index,"index")
+        if (this.mapPopup) {
+          this.mapPopup.remove()
+        }
+        this.map.addControl(new window.mapabcgl.NavigationControl())
         var popupOption = {
-          closeOnClick: true,
-          closeButton: false,
+          closeOnClick: false,
+          closeButton: true,
           // anchor: "bottom-left",
           offset: [0, 25]
         }
-        this.state.clickCenterRenders ? this.setState({ clickCenterRenders: false }) : this.setState({ clickCenterRenders: true })
+        // this.state.clickCenterRenders ? this.setState({ clickCenterRenders: false }) : this.setState({ clickCenterRenders: true })
     //控制绿点弹出框
-    if (this.state.clickCenterRenders) {
-      this.popup = new window.mapabcgl.Popup(popupOption)
-        .setLngLat(new window.mapabcgl.LngLat(intersectioNodes[index].latitude, intersectioNodes[index].longitude))
+    // if (this.state.clickCenterRenders) {
+      this.mapPopup = new window.mapabcgl.Popup(popupOption) 
+        .setLngLat(new window.mapabcgl.LngLat(index[0], index[1]))
         .setHTML(`
                 <div style="width: 74px;color: #fff; font-size:12px;height: 486px;display:flex;flex-direction: column;">
                     <div style="flex:1;display:flex;flex-direction: column;justify-content: center;align-items: center;">
@@ -340,13 +343,13 @@ export default class MainMonitor2DPage extends Component{
                     <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${red} alt=""/></div>
                 </div>`)
         .addTo(this.map);
-    }
+    // }
   }
   //地图中心点
   addMarker = () => {
-    const {lineData,modeMainImgDisplay,modeMapFlyToZoom} =this.state;
+    const {lineData} =this.state;
     if (this.map) {
-      for (var i = 0; i < lineData.length; i++) {
+        lineData.map(item=>{
         const elParent = document.createElement('div')
         elParent.style.width = '40px'
         elParent.style.height = '20px'
@@ -364,14 +367,14 @@ export default class MainMonitor2DPage extends Component{
         new window.mapabcgl.Marker(el)
         el.setAttribute("title", '中心点')
         el.addEventListener('click', () => {
-          
+          this.ClickMessge(item.lnglat)
         })
         elParent.appendChild(elAnimation)
         elParent.appendChild(el)
         new window.mapabcgl.Marker(elParent)
-          .setLngLat(lineData[i].lnglat)
+          .setLngLat(item.lnglat)
           .addTo(this.map);
-      }
+      })
     }
   }
      //地图渲染

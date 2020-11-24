@@ -1,5 +1,6 @@
 import React , {Component} from "react"
 import "./mainMonitor3DPage.scss"
+import $ from "jquery"
 //引入图片
 import yellow from "../../../imgs/yellow.png"
 import red from "../../../imgs/red.png";
@@ -13,6 +14,7 @@ import endPng from '../../../imgs/end.png'
 import bascRightLeft from "../../../imgs/bascRightLeft.png"
 import bascRightUpLeft from "../../../imgs/bascRightUpLeft.png"
 import bascUpDown from "../../../imgs/bascUpDown.png"
+
 //引入地图
 import mapConfiger from "../../../utils/minemapConf";
 //引入antd
@@ -51,6 +53,7 @@ export default class MainMonitor3DPage extends Component{
               modeMainControlMapSign: true,
               //点击中心点渲染多次处理
               clickCenterRenders: false,
+              intersectioNodes:[{latitude:116.38151572176511,longitude:39.90708534816005},{latitude:116.38151572176511,longitude:39.90708534816005},{latitude:116.38151572176511,longitude:39.90708534816005}]
         };
             //接口
             this.videoState="/control-application-front/video/getLiveUrl/123";
@@ -77,7 +80,6 @@ export default class MainMonitor3DPage extends Component{
           modeMainTabTypeD: true
         }, () => {
           this.renderMap()
-          window.location.reload()
         })
       }
       addMenu = () => {
@@ -302,83 +304,81 @@ export default class MainMonitor3DPage extends Component{
         return [lng, lat]
       }
       ClickMessge = (index) => {
-        const { intersectioNodes } = this.state;
+        const { lineData } = this.state;
+        if (this.mapPopup) {
+          this.mapPopup.remove()
+        }
+        this.map.addControl(new window.mapabcgl.NavigationControl())
         var popupOption = {
-          closeOnClick: true,
-          closeButton: false,
+          closeOnClick: false,
+          closeButton: true,
           // anchor: "bottom-left",
           offset: [0, 25]
         }
-        this.state.clickCenterRenders ? this.setState({ clickCenterRenders: false }) : this.setState({ clickCenterRenders: true })
         //控制绿点弹出框
-        if (this.state.clickCenterRenders) {
-          this.popup = new window.mapabcgl.Popup(popupOption)
-          console.log(new window.mapabcgl.LngLat(116.38151572176511, 39.90708534816005),"_____-")
-            // .setLngLat(new window.mapabcgl.LngLat(intersectioNodes[index].latitude, intersectioNodes[index].longitude))
-            // .setHTML(`
-            //         <div style="width: 74px;color: #fff; font-size:12px;height: 486px;display:flex;flex-direction: column;">
-            //             <div style="flex:1;display:flex;flex-direction: column;justify-content: center;align-items: center;">
-            //               <div className="switch"> 
-            //                 <button type="button" role="switch" aria-checked="true" class="ant-switch ant-switch-checked" ant-click-animating="false" style="background:"#4A62E7">
-            //                     <div class="ant-switch-handle"> 
-            //                     </div>
-            //                     <span class="ant-switch-inner"></span>
-            //                 </button>
-            //               </div>
-            //               <div>开启手动</div>
-            //             </div>
-            //             <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  red;z-index:2"><img src=${rightUpLeftDown} alt=""/></div>
-            //             <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${leftRightPng} alt=""/></div>
-            //             <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upDownPng} alt=""/></div>
-            //             <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upLeftUp} alt=""/></div>
-            //             <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upLeftDownRight} alt=""/></div>
-            //             <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${yellow} alt=""/></div>
-            //             <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${red} alt=""/></div>
-            //         </div>`)
-            // .addTo(this.map);
-        }
+          this.mapPopup = new window.mapabcgl.Popup(popupOption)
+            .setLngLat(new window.mapabcgl.LngLat(index[0], index[1]))
+            .setHTML(`
+                    <div style="width: 74px;color: #fff; font-size:12px;height: 500px;display:flex;flex-direction: column;">
+                        <div style="flex:1;display:flex;flex-direction: column;justify-content: center;align-items: center;">
+                          <div className="switch"> 
+                            <button type="button" role="switch" aria-checked="true" class="ant-switch ant-switch-checked" ant-click-animating="false" style="background:#4A62E7">
+                                <div class="ant-switch-handle">
+                                </div>
+                                <span class="ant-switch-inner"></span>
+                            </button>
+                          </div>
+                          <div style="margin-top:5px">开启手动</div>
+                        </div>
+                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  red;"><img src=${rightUpLeftDown} alt=""/></div>
+                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${leftRightPng} alt=""/></div>
+                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upDownPng} alt=""/></div>
+                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upLeftUp} alt=""/></div>
+                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upLeftDownRight} alt=""/></div>
+                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${yellow} alt=""/></div>
+                        <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${red} alt=""/></div>
+                    </div>`)
+            .addTo(this.map);
       }
   //地图中心点
   addMarker = () => {
-    const {lineData,modeMainImgDisplay,modeMapFlyToZoom} =this.state;
+    const {lineData} =this.state;
     if (this.map) {
-      for (var i = 0; i < lineData.length; i++) {
-        const elParent = document.createElement('div')
-        elParent.style.width = '40px'
-        elParent.style.height = '20px'
-        const elAnimation = document.createElement('div')
-        elAnimation.setAttribute('class', 'animationS')
-        const el = document.createElement('div')
-        el.style.width = '40px'
-        el.style.height = '20px'
-        el.style.borderRadius = '50%'
-        el.style.backgroundColor = 'rgba(34,245,248)'
-        el.style.cursor = 'pointer'
-        el.style.position = 'absolute'
-        el.style.left = '0'
-        el.style.top = '0'
-        const al = document.createElement("div");
-        al.setAttribute('class', 'animationA')
-        if(modeMapFlyToZoom==15){
-          el.appendChild(al)
-          al.style.width = '118px'
-          al.style.height = '137px'
-          al.style.backgroundImage = `url(${lineData[i].img})`
-          al.style.position = "absolute"
-          al.style.top = "-133px"
-          al.style.left = "-38px"
-        }
-        new window.mapabcgl.Marker(el)
-        el.setAttribute("title", '中心点')
-        el.addEventListener('click', () => {
-          this.ClickMessge()
+        lineData.forEach((item)=>{
+          const elParent = document.createElement('div')
+          elParent.style.width = '40px'
+          elParent.style.height = '20px'
+          const elAnimation = document.createElement('div')
+          elAnimation.setAttribute('class', 'animationS')
+          const el = document.createElement('div')
+          el.style.width = '40px'
+          el.style.height = '20px'
+          el.style.borderRadius = '50%'
+          el.style.backgroundColor = 'rgba(34,245,248)'
+          el.style.cursor = 'pointer'
+          el.style.position = 'absolute'
+          el.style.left = '0'
+          el.style.top = '0'
+          const al = document.createElement("div");
+          al.setAttribute('class', 'animationA')
+            el.appendChild(al)
+            al.style.width = '118px'
+            al.style.height = '137px'
+            al.style.backgroundImage = `url(${item.img})`
+            al.style.position = "absolute"
+            al.style.top = "-133px"
+            al.style.left = "-38px"
+          new window.mapabcgl.Marker(el)
+          el.setAttribute("title", '路口节点')
+          el.addEventListener('click', () => {
+            this.ClickMessge(item.lnglat)
+          })
+          elParent.appendChild(elAnimation)
+          elParent.appendChild(el)
+          new window.mapabcgl.Marker(elParent)
+            .setLngLat(item.lnglat)
+            .addTo(this.map);
         })
-        elParent.appendChild(elAnimation)
-        elParent.appendChild(el)
-        new window.mapabcgl.Marker(elParent)
-          .setLngLat(lineData[i].lnglat)
-          .addTo(this.map);
-      }
     }
   }
      //地图渲染
