@@ -34,13 +34,13 @@ export default class AreaMonitoring extends Component {
         { name: "上地", id: "3", children: [{ name: "华联", id: "3_1" }, { name: "中关村", id: "3_2" }] },
         { name: "三里屯", id: "4", children: [{ name: "太里古", id: "4_1" }, { name: "乾坤大厦", id: "4_2" }] }
       ],
-      lineData: [{ lnglat: [116.383, 39.90706], img: bascRightLeft }, { lnglat: [116.389, 39.90723], img: bascRightUpLeft }, { lnglat: [116.399, 39.90753], img: bascUpDown }],
+      lineData: [{ lnglat: [116.385, 39.9071], img: bascRightLeft }, { lnglat: [116.389, 39.90723], img: bascRightUpLeft }, { lnglat: [116.3918, 39.905], img: bascUpDown }, { lnglat: [116.3959, 39.905], img: bascUpDown }],
       //地图默认中心点
       defaultCenterPoint: [116.396, 39.9075],
       //地图视角角度
       modeMapFlyToPitch: 60,
       //地图缩放倍率
-      modeMapFlyToZoom: 15,
+      modeMapFlyToZoom: 14,
       //展示开关
       modeNavShow: true,
       modeMapShow: true,
@@ -74,7 +74,7 @@ export default class AreaMonitoring extends Component {
     //默认起始点坐标
     await this.getstartpoint({ lng: 116.38151572176511, lat: 39.90708534816005 })
     //默认终止点坐标
-    await this.getendpoint({ lng: 116.41149060058893, lat: 39.90803874332477 })
+    await this.getendpoint({ lng: 116.38151572176511, lat: 39.90808534816005 })
     //默认途径点坐标
     // await this.getChannelpoint({ lng: 116.39934569026138, lat: 39.90753821453271 })
     // await this.getChannelpoint({ lng: 116.38315705392921, lat: 39.907079696277606 })
@@ -329,20 +329,21 @@ export default class AreaMonitoring extends Component {
     return [lng, lat]
   }
   ClickMessge = (index) => {
-    const { intersectioNodes } = this.state;
+    if (this.mapPopup) {
+      this.mapPopup.remove()
+    }
+    this.map.addControl(new window.mapabcgl.NavigationControl())
     var popupOption = {
-      closeOnClick: true,
-      closeButton: false,
+      closeOnClick: false,
+      closeButton: true,
       // anchor: "bottom-left",
       offset: [0, 25]
     }
-    this.state.clickCenterRenders ? this.setState({ clickCenterRenders: false }) : this.setState({ clickCenterRenders: true })
     //控制绿点弹出框
-    if (this.state.clickCenterRenders) {
-      this.popup = new window.mapabcgl.Popup(popupOption)
-        .setLngLat(new window.mapabcgl.LngLat(intersectioNodes[index].latitude, intersectioNodes[index].longitude))
+      this.mapPopup = new window.mapabcgl.Popup(popupOption)
+        .setLngLat(new window.mapabcgl.LngLat(index[0], index[1]))
         .setHTML(`
-      <div style="width: 74px;color: #fff; font-size:12px;height: 486px;display:flex;flex-direction: column;">
+      <div style="width: 74px;color: #fff; font-size:12px;height: 500px;display:flex;flex-direction: column;">
           <div style="flex:1;display:flex;flex-direction: column;justify-content: center;align-items: center;">
             <div className="switch"> 
               <button type="button" role="switch" aria-checked="true" class="ant-switch ant-switch-checked" ant-click-animating="false" style="background:"#4A62E7">
@@ -361,13 +362,13 @@ export default class AreaMonitoring extends Component {
           <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${yellow} alt=""/></div>
           <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${red} alt=""/></div>
       </div>`)
-        .addTo(this.map);
-    }
+        .addTo(this.map); 
   }
   //地图中心点
   addMarker = () => {
-    if (this.map) {
-      for (var i = 0; i < this.state.lineData.length; i++) {
+    const {lineData} =this.state;
+    if(this.map){
+      lineData.map(item=>{
         const elParent = document.createElement('div')
         elParent.style.width = '40px'
         elParent.style.height = '20px'
@@ -387,23 +388,21 @@ export default class AreaMonitoring extends Component {
         el.appendChild(al)
         al.style.width = '118px'
         al.style.height = '137px'
-        al.style.backgroundImage = `url(${this.state.lineData[i].img})`
+        al.style.backgroundImage = `url(${item.img})`
         al.style.position = "absolute"
         al.style.top = "-133px"
         al.style.left = "-38px"
         new window.mapabcgl.Marker(el)
         el.setAttribute("title", '中心点')
         el.addEventListener('click', () => {
-          // this.addInfoWindow(lineData[0], lineData[lineData.length - 1])
-          console.log("弹框")
+          this.ClickMessge(item.lnglat)
         })
         elParent.appendChild(elAnimation)
         elParent.appendChild(el)
         new window.mapabcgl.Marker(elParent)
-          .setLngLat(this.state.lineData[i].lnglat)
+          .setLngLat(item.lnglat)
           .addTo(this.map);
-      }
-
+      })
     }
   }
   gettitletops = (isShow) => {
@@ -490,7 +489,7 @@ export default class AreaMonitoring extends Component {
             </div>
             <div className="listNav">
               <Menu onClick={this.handleClick} style={{ width: 251, color: '#86b7fa', height: '100%', overflowY: 'auto', overflowX: "hidden", fontSize: '16px' }} mode="inline">
-                <SubMenu key="sub2" title="海淀区">
+                <SubMenu key="sub2" title="海淀区 ( 2 )">
                   {/* <Menu.Item key="5"></Menu.Item> */}
                   <SubMenu key="sub3" title="知春路拥堵应急">
                     <Menu.Item key="7">知春路与罗庄东路<EditOutlined /></Menu.Item>
@@ -500,14 +499,49 @@ export default class AreaMonitoring extends Component {
                   </SubMenu>
                   <SubMenu key="sub3-2" title="万泉庄路"></SubMenu>
                 </SubMenu>
-                <SubMenu key="sub4" title="房山区">
+                <SubMenu key="sub4" title="房山区 ( 4 )">
                   {/* <Menu.Item key="1-2-9">Option 9</Menu.Item> */}
+                  <SubMenu key="sub3" title="知春路拥堵应急">
+                    <Menu.Item key="7">知春路与罗庄东路<EditOutlined /></Menu.Item>
+                    <Menu.Item key="8">知春路与罗庄中路</Menu.Item>
+                    <Menu.Item key="9">知春路与罗庄西路</Menu.Item>
+                    <Menu.Item key="10">知春路与海淀黄庄路</Menu.Item>
+                  </SubMenu>
+                  <SubMenu key="sub3-2" title="万泉庄路"></SubMenu>
+                  <SubMenu key="sub3-2" title="万泉庄路"></SubMenu>
+                  <SubMenu key="sub3-2" title="万泉庄路"></SubMenu>
                 </SubMenu>
-                <SubMenu key="sub5" title="通州区">
+                <SubMenu key="sub5" title="通州区 ( 6 )">
+                <SubMenu key="sub3" title="知春路拥堵应急">
+                    <Menu.Item key="7">知春路与罗庄东路<EditOutlined /></Menu.Item>
+                    <Menu.Item key="8">知春路与罗庄中路</Menu.Item>
+                    <Menu.Item key="9">知春路与罗庄西路</Menu.Item>
+                    <Menu.Item key="10">知春路与海淀黄庄路</Menu.Item>
+                  </SubMenu>
+                  <SubMenu key="sub3-2" title="万泉庄路"></SubMenu>
+                  <SubMenu key="sub3-2" title="万泉庄路"></SubMenu>
+                  <SubMenu key="sub3-2" title="万泉庄路"></SubMenu>
+                  <SubMenu key="sub3-2" title="万泉庄路"></SubMenu>
+                  <SubMenu key="sub3-2" title="万泉庄路"></SubMenu>
                 </SubMenu>
-                <SubMenu key="sub6" title="门头沟区">
+                <SubMenu key="sub6" title="门头沟区 ( 2 )">
+                <SubMenu key="sub3" title="知春路拥堵应急">
+                    <Menu.Item key="7">知春路与罗庄东路<EditOutlined /></Menu.Item>
+                    <Menu.Item key="8">知春路与罗庄中路</Menu.Item>
+                    <Menu.Item key="9">知春路与罗庄西路</Menu.Item>
+                    <Menu.Item key="10">知春路与海淀黄庄路</Menu.Item>
+                  </SubMenu>
+                  <SubMenu key="sub3-2" title="万泉庄路"></SubMenu>
                 </SubMenu>
-                <SubMenu key="sub7" title="中关村东路">
+                <SubMenu key="sub7" title="中关村东路 ( 3 )">
+                <SubMenu key="sub3" title="知春路拥堵应急">
+                    <Menu.Item key="7">知春路与罗庄东路<EditOutlined /></Menu.Item>
+                    <Menu.Item key="8">知春路与罗庄中路</Menu.Item>
+                    <Menu.Item key="9">知春路与罗庄西路</Menu.Item>
+                    <Menu.Item key="10">知春路与海淀黄庄路</Menu.Item>
+                  </SubMenu>
+                  <SubMenu key="sub3-2" title="万泉庄路"></SubMenu>
+                  <SubMenu key="sub3-2" title="万泉庄路"></SubMenu>
                 </SubMenu>
               </Menu>
             </div>
