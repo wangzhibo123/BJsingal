@@ -323,7 +323,7 @@ export default class MainMonitor2DPage extends Component{
       this.mapPopup = new window.mapabcgl.Popup(popupOption) 
         .setLngLat(new window.mapabcgl.LngLat(index[0], index[1]))
         .setHTML(`
-                <div style="width: 74px;color: #fff; font-size:12px;height: 486px;display:flex;flex-direction: column;">
+                <div style="width: 74px;color: #fff; font-size:12px;height: 500px;display:flex;flex-direction: column;">
                     <div style="flex:1;display:flex;flex-direction: column;justify-content: center;align-items: center;">
                       <div className="switch"> 
                         <button type="button" role="switch" aria-checked="true" class="ant-switch ant-switch-checked" ant-click-animating="false" style="background:"#4A62E7">
@@ -334,13 +334,13 @@ export default class MainMonitor2DPage extends Component{
                       </div>
                       <div>开启手动</div>
                     </div>
-                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  red;z-index:2"><img src=${rightUpLeftDown} alt=""/></div>
-                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${leftRightPng} alt=""/></div>
-                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upDownPng} alt=""/></div>
-                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upLeftUp} alt=""/></div>
-                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${upLeftDownRight} alt=""/></div>
-                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${yellow} alt=""/></div>
-                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;borderBottom:1px solid  #3661E9;"><img src=${red} alt=""/></div>
+                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;border-top:1px solid  #3661E9;"><img src=${rightUpLeftDown} alt=""/></div>
+                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;border-top:1px solid  #3661E9;"><img src=${leftRightPng} alt=""/></div>
+                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;border-top:1px solid  #3661E9;"><img src=${upDownPng} alt=""/></div>
+                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;border-top:1px solid  #3661E9;"><img src=${upLeftUp} alt=""/></div>
+                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;border-top:1px solid  #3661E9;"><img src=${upLeftDownRight} alt=""/></div>
+                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;border-top:1px solid  #3661E9;"><img src=${yellow} alt=""/></div>
+                    <div style="flex:1;display: flex;justify-content: center;align-items: center;cursor: pointer;border-top:1px solid  #3661E9;"><img src=${red} alt=""/></div>
                 </div>`)
         .addTo(this.map);
     // }
