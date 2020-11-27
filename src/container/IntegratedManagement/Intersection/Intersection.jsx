@@ -221,7 +221,12 @@ class Intersection extends Component {
   getInfoWindowHtml = (interMsg) => {
     console.log(interMsg, 'qiaoss')
     const { UnitPosition, UnitType, UnitDistrict, UnitGroup } = this.state
-    const roadposition = UnitPosition && UnitPosition.find(item => item.c_code === interMsg.unit_position).code_name
+    let roadposition = UnitPosition && UnitPosition.find(item => item.c_code === interMsg.unit_position)
+    if (roadposition) {
+      roadposition = roadposition.code_name
+    } else {
+      roadposition = ''
+    }
     const roadunit_type_code = UnitType && UnitType.find(item => item.c_code === interMsg.unit_type_code).code_name
     const roaddistrict_id = UnitDistrict && UnitDistrict.find(item => item.id === interMsg.district_id).district_name
     const roaduser_group_id = UnitGroup && UnitGroup.find(item => item.id === interMsg.user_group_id).user_group_name
@@ -547,6 +552,9 @@ class Intersection extends Component {
     const { key, lng, lat } = options
     this.map.panTo([lng, lat])
     $('#marker' + key).trigger('click')
+  }
+  deleteList = () => { // 删除
+
   }
   render() {
     const { Option } = Select
