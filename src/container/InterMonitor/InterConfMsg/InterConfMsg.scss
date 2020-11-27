@@ -13,14 +13,14 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,.2);
+    background-color: rgba(0,0,0,.4);
     display: flex;
     justify-content: center;
     align-items: center;
     .confMsgBox {
         position: relative;
-        width: 80%;
-        height: 85%;
+        width: 95%;
+        height: 90%;
         padding: 15px;
         background-color: rgba(3, 16, 96, .7);
         border-radius: 0 0 6px 6px;
@@ -102,6 +102,7 @@
                 padding-top: 10px;
                 display: flex;
                 justify-content: center;
+                align-items: center;
                 .pleaseUpload {
                     display: flex;
                     align-items: center;
@@ -128,14 +129,19 @@
                 display: flex;
                 padding-top: 10px;
                 .confDetails {
+                    height: 100%;
                     flex: 0 500px;
                     padding-left: 15px;
                     border-left: 1px solid rgba(136, 175, 248, .2);
                     .confTable {
+                        height: 100%;
                         padding-bottom: 10px;
                         border-bottom: 1px solid rgba(136, 175, 248, .2);
                         .confThead {
                             background-color: rgba(0, 160, 233, .3);
+                        }
+                        .confTbody {
+                            height: calc(100% - 40px);
                         }
                         .confThead, .confTr {
                             display: flex;
@@ -173,6 +179,14 @@
                                     border: 1px solid rgba(136, 175, 248, .4);
                                     border-radius: 4px;
                                     outline: none;
+                                }
+                                .activeIcon {
+                                    font-size: 16px;
+                                    margin: 0 6px;
+                                    cursor: pointer;
+                                    &:hover {
+                                        color: #40E7FF;
+                                    }
                                 }
                             }
                         }
@@ -216,7 +230,100 @@
                         padding-top: 10px;
                         display: flex;
                         justify-content: center;
+                        // align-items: center;
+                        overflow: hidden;
                     }
+                }
+            }
+        }
+    }
+}
+.modalBox {
+    // background-color: (34, 42, 102, 0.6);
+    .ant-modal-content {
+        background-color: rgba(5, 34, 46, 0.7);
+    }
+    .editPelMsg {
+        color: #fff;
+        .editItem {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            .eitems {
+                flex: 1;
+                .itemTxt {
+                    display: inline-block;
+                    width: 100px;
+                    text-align: right;
+                }
+                .editInput {
+                    width: 100px;
+                    height: 30px;
+                    background-color: transparent;
+                    border: 1px solid #043e78;
+                    border-radius: 3px;
+                    outline: none;
+                    color: #fff;
+                    .ant-input-number-handler-wrap {
+                        background-color: #043e78;
+                        border: none;
+                        .ant-input-number-handler {
+                            .ant-input-number-handler-up-inner, .ant-input-number-handler-down-inner {
+                                color: #fff;
+                                font-size: 12px;
+                                border: none;
+                            }
+                        }
+                    }
+                    .ant-input-number-handler-down {
+                        border: none;
+                    }
+                }
+                .ant-select-multiple {
+                    .ant-select-selector {
+                        width: 300px;
+                        .ant-select-selection-item {
+                            margin-top: 0;
+                            background-color: transparent;
+                            border: none;
+                            .ant-select-selection-item-remove {
+                                color: #00ffff;
+                                &:hover {
+                                    color: #00ffff;
+                                }
+                            }
+                        }
+                    }
+                }
+                .ant-select-selector {
+                    width: 100px;
+                    height: 30px;
+                    background-color: transparent;
+                    border-color: #043e78;
+                    color: #fff;
+                }
+                .ant-select-arrow {
+                    color: #fff;
+                }
+            }
+        }
+        .editFoot {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #043e78;
+            .footBtn {
+                width: 65px;
+                height: 30px;
+                margin-right: 10px;
+                text-align: center;
+                line-height: 30px;
+                border-radius: 4px;
+                background-color: #043e78;
+                cursor: pointer;
+                &:hover {
+                    color: #00E5D3;
                 }
             }
         }

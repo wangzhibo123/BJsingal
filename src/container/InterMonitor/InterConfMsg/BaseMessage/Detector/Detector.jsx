@@ -5,10 +5,19 @@ const { Option } = Select
 class Detector extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      detectorList: null,
+    }
   }
-  componentDidMount = () => { }
+  componentDidMount = () => {
+    this.getDetectorList()
+  }
+  getDetectorList = () => {
+    const { primitiveInfo } = this.props.data
+    this.setState({ detectorList: primitiveInfo.Detector })
+  }
   render() {
+    const { detectorList } = this.state
     return (
       <>
         <div className="confTable">
@@ -20,20 +29,21 @@ class Detector extends Component {
             <div className="confTh">所属车道</div>
           </div>
           <div className="confTbody">
-            <div className="confTr">
-              <div className="confTd">130308</div>
-              <div className="confTd">30米</div>
-              <div className="confTd">5分钟</div>
-              <div className="confTd">地磁</div>
-              <div className="confTd">1</div>
-            </div>
-            <div className="confTr">
-              <div className="confTd">130308</div>
-              <div className="confTd">30米</div>
-              <div className="confTd">5分钟</div>
-              <div className="confTd">地磁</div>
-              <div className="confTd">1</div>
-            </div>
+            {
+              detectorList &&
+              detectorList.map((item) => {
+                const { detcycle, detid, dettype, distance } = item.cfgDetectorInfo
+                return (
+                  <div className="confTr" key={item.id}>
+                    <div className="confTd">{detid}</div>
+                    <div className="confTd">{distance}</div>
+                    <div className="confTd">{detcycle}</div>
+                    <div className="confTd">{dettype}</div>
+                    <div className="confTd">1</div>
+                  </div>
+                )
+              })
+            }
             <div className="confTr">
               <div className="confTd">
                 <Select defaultValue="0">

@@ -13,7 +13,7 @@ class Header extends Component {
       { name: '实时监视', id: '0-1', path: '/home', children: [] },
       {
         name: '中心控制', id: '0-2', path: '',
-        children: [{ name: '路口监控', id: '1-2', path: '/intermonitor/1' }, { name: '干线监控', id: '2-2', path: '/mainMon' }, { name: '子区监控', id: '3-2', path: '/areaMon' }, { name: '时间表控制', id: '4-2', path: '/timeControl' }]
+        children: [{ name: '路口监控', id: '1-2', path: '/intermonitor/1000084' }, { name: '干线监控', id: '2-2', path: '/mainMon' }, { name: '子区监控', id: '3-2', path: '/areaMon' }, { name: '时间表控制', id: '4-2', path: '/timeControl' }]
       },
       { name: '预案控制', id: '0-3', path: '/plancontrolpage', children: [] },
       {

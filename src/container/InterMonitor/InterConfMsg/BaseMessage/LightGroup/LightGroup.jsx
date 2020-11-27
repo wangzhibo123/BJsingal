@@ -5,10 +5,21 @@ const { Option } = Select
 class LightGroup extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      lampList: null,
+    }
   }
-  componentDidMount = () => { }
+  componentDidMount = () => {
+    this.getLampList()
+  }
+  getLampList = () => {
+    const { primitiveInfo } = this.props.data
+    this.setState({ lampList: primitiveInfo.LampGroup }, () => {
+      console.log(this.state.lampList)
+    })
+  }
   render() {
+    const { lampList } = this.state
     return (
       <>
         <div className="confTable">
@@ -18,16 +29,19 @@ class LightGroup extends Component {
             <div className="confTh">灯组类型</div>
           </div>
           <div className="confTbody">
-            <div className="confTr">
-              <div className="confTd">南向</div>
-              <div className="confTd">130308</div>
-              <div className="confTd">南向</div>
-            </div>
-            <div className="confTr">
-              <div className="confTd">南向</div>
-              <div className="confTd">130308</div>
-              <div className="confTd">南向</div>
-            </div>
+            {
+              lampList &&
+              lampList.map((item) => {
+                const { directionValue, lampgroupno, type } = item.cfgLampgroup
+                return (
+                  <div className="confTr" key={item.id}>
+                    <div className="confTd">{directionValue}</div>
+                    <div className="confTd">{lampgroupno}</div>
+                    <div className="confTd">{type}</div>
+                  </div>
+                )
+              })
+            }
             <div className="confTr">
               <div className="confTd">
                 <Select defaultValue="0">
