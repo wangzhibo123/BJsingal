@@ -36,7 +36,7 @@
                     left: -16px;
                     top: 20px;
                     width: 110px;
-                    background-color: #21425A;
+                    background-color: #05285e;
                     overflow: hidden;
                     transition: all .4s;
                     .innerItem {
@@ -47,10 +47,12 @@
                         transition: all .2s;
                         font-size: 13px;
                         a {
+                            display: inline-block;
+                            height: 100%;
                             color: #fff;
                         }
                         &:hover {
-                           background-color: #215F90; 
+                           background-color: #043e78; 
                         }
                     }
                 }

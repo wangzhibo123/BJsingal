@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Upload, message } from 'antd'
+import { Upload, message, Modal, Select, InputNumber } from 'antd'
 import { CloseOutlined } from '@ant-design/icons'
 import './InterConfMsg.scss'
 
@@ -34,6 +34,7 @@ import DayPlan from './SingalParams/DayPlan/DayPlan'
 
 import axiosInstance from '../../utils/getInterfaceData'
 
+const { Option } = Select
 class InterConfMsg extends Component {
   constructor(props) {
     super(props)
@@ -47,6 +48,7 @@ class InterConfMsg extends Component {
       interInfo: null,
       laneLists: this.roadLists,
       interImage: null,
+      editDeviceMsg: false,
     }
     this.globalImgurl = localStorage.getItem('ImgUrl')
     this.baseConfList = [
@@ -123,6 +125,7 @@ class InterConfMsg extends Component {
       console.log(info.file)
       const { response } = info.file
       if (response.code === 200) {
+        this.setState({ interImage: response.data })
         message.info('上传成功')
         this.handleUpdateInterPic(response.data)
       } else {
@@ -159,9 +162,9 @@ class InterConfMsg extends Component {
       this.newConfPic.posx = posX
       this.newConfPic.posy = posY
       this.roadLists.push(this.newConfPic)
+      this.setState({ editDeviceMsg: true })
     }
     this.setState({ laneLists: this.roadLists })
-    console.log(this.roadLists)
   }
   handleDragOver = (ev) => {
     ev.preventDefault();
@@ -172,8 +175,17 @@ class InterConfMsg extends Component {
     this.moveBeforeY = ev.clientY
     this.newConfPic = this.roadLists[this.currentDragIndex]
   }
+  handleConfpicUp = () => {
+    this.setState({ editDeviceMsg: true })
+  }
+  handleConfirmModal = () => {
+    this.setState({ editDeviceMsg: false })
+  }
+  handleCancelModal = () => {
+    this.setState({ editDeviceMsg: false })
+  }
   render() {
-    const { isUpload, currentItem, configName, currentParams, laneLists, interInfo, interImage } = this.state
+    const { isUpload, currentItem, configName, currentParams, laneLists, interInfo, interImage, editDeviceMsg } = this.state
     return (
       <div className="interConfMsg">
         <div className="confMsgBox">
@@ -221,7 +233,7 @@ class InterConfMsg extends Component {
                   <div className="interPicBox">
                     {
                       isUpload ?
-                        <img src={this.globalImgurl + interImage} alt="" height="100%" /> :
+                        <img src={this.globalImgurl + interImage} alt="" width="1200px" height="600px" /> :
                         <span className="pleaseUpload">请上传该路口渠化图</span>
                     }
                     <Upload
@@ -236,7 +248,6 @@ class InterConfMsg extends Component {
                         {isUpload ? <span>重新上传</span> : <span>上传</span>}
                       </div>
                     </Upload>
-                    
                   </div> :
                   <div className="interConfDetails">
                     <div className="deviceConf">
@@ -269,18 +280,20 @@ class InterConfMsg extends Component {
                         }
                       </div>
                       <div className="picConfig">
-                        <div style={{ width: '760px', height: '585px', position: 'relative' }} onDrop={this.handleDropPic} onDragOver={this.handleDragOver}>
-                          <img src={this.globalImgurl + interImage} alt="" height="100%" draggable="false" />
+                        <div style={{ width: '1200px', height: '600px', position: 'relative' }} onDrop={this.handleDropPic} onDragOver={this.handleDragOver}>
+                          <img src={this.globalImgurl + interImage} alt="" width="100%" height="100%" draggable="false" />
                           {
                             laneLists &&
                             laneLists.map((item, index) => (
                               <img
                                 key={item.picname + index}
-                                indexs={index} src={item.pic}
+                                indexs={index}
+                                src={item.pic}
                                 alt=""
                                 style={{ position: 'absolute', top: `${item.posy}px`, left: `${item.posx}px`, height: item.picname !== 'videos' ? '48px' : 'auto' }}
                                 draggable="true"
                                 onDragStart={this.handleDragConfPic}
+                                onMouseUp={this.handleConfpicUp}
                               />
                             ))
                           }
@@ -288,29 +301,74 @@ class InterConfMsg extends Component {
                       </div>
                     </div>
                     <div className="confDetails">
+                      <Modal
+                        visible={editDeviceMsg}
+                        wrapClassName="modalBox"
+                        footer={null}
+                        closable={false}
+                        maskStyle={{ backgroundColor: 'rgba(0,0,0,.2)' }}
+                      >
+                        <div className="editPelMsg">
+                          <div className="editItem">
+                            <div class="eitems"><span className="itemTxt">车道序号：</span><input type="text" className="editInput" /></div>
+                            <div class="eitems"><span className="itemTxt">角度：</span><InputNumber className="editInput" /></div>
+                          </div>
+                          <div className="editItem">
+                            <div class="eitems"><span className="itemTxt">水平位置：</span><InputNumber className="editInput" /></div>
+                            <div class="eitems"><span className="itemTxt">垂直位置：</span><InputNumber className="editInput" /></div>
+                          </div>
+                          <div className="editItem">
+                            <div class="eitems">
+                              <span className="itemTxt">车道方向：</span>
+                              <Select defaultValue="1">
+                                <Option key="1" value="1">1</Option>
+                              </Select>
+                            </div>
+                            <div class="eitems">
+                              <span className="itemTxt">车道标识：</span>
+                              <Select defaultValue="1" className="itemSelect">
+                                <Option key="1" value="1">1</Option>
+                              </Select>
+                            </div>
+                          </div>
+                          <div className="editItem">
+                            <div class="eitems">
+                              <span className="itemTxt">车道流向：</span>
+                              <Select mode="multiple">
+                                <Option key="1" value="1">1</Option>
+                                <Option key="2" value="2">2</Option>
+                              </Select>
+                            </div>
+                          </div>
+                          <div className="editFoot">
+                            <div className="footBtn" onClick={this.handleCancelModal}>取消</div>
+                            <div className="footBtn" onClick={this.handleConfirmModal}>确定</div>
+                          </div>
+                        </div>
+                      </Modal>
                       {
                         currentItem === 'channel' &&
                         <ChannelTable {...this.props} />
                       }
                       {
                         currentItem === 'inter' &&
-                        <InterRelation />
+                        <InterRelation {...this.props} />
                       }
                       {
                         currentItem === 'singal' &&
-                        <SingalMsg />
+                        <SingalMsg {...this.props} />
                       }
                       {
                         currentItem === 'lightGroup' &&
-                        <LightGroup />
+                        <LightGroup {...this.props} />
                       }
                       {
                         currentItem === 'detector' &&
-                        <Detector />
+                        <Detector {...this.props} />
                       }
                       {
                         currentItem === 'video' &&
-                        <VideoMsg />
+                        <VideoMsg {...this.props} />
                       }
                     </div>
                   </div>
