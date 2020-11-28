@@ -51,17 +51,17 @@ class ChannelModal extends Component {
             <input type="text" className="editInput" defaultValue={editInfo && editInfo.cfgLaneInfo.laneno} /></div>
           <div className="eitems">
             <span className="itemTxt">角度：</span>
-            <InputNumber className="editInput" defaultValue={editInfo && Number(editInfo.uiUnitConfig.rotationAngle)} />
+            <InputNumber className="editInput" key={editInfo && editInfo.uiUnitConfig.rotationAngle} defaultValue={editInfo && Number(editInfo.uiUnitConfig.rotationAngle)} />
           </div>
         </div>
         <div className="editItem">
           <div className="eitems">
             <span className="itemTxt">水平位置：</span>
-            <InputNumber className="editInput" defaultValue={editInfo && editInfo.uiUnitConfig.pLeft} />
+            <InputNumber className="editInput" key={editInfo && editInfo.uiUnitConfig.pLeft} defaultValue={editInfo && editInfo.uiUnitConfig.pLeft} />
           </div>
           <div className="eitems">
             <span className="itemTxt">垂直位置：</span>
-            <InputNumber className="editInput" defaultValue={editInfo && editInfo.uiUnitConfig.pTop} />
+            <InputNumber className="editInput" key={editInfo && editInfo.uiUnitConfig.pTop} defaultValue={editInfo && editInfo.uiUnitConfig.pTop} />
           </div>
         </div>
         <div className="editItem">
