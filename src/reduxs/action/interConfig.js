@@ -5,18 +5,16 @@
 import * as types from '../actionTypes/interConfig'
 import RestUtil from '../../container/utils/getInterfaceData'
 import {
-  API_CANALIZATION_ELEMENT,
+  API_CANALIZATION_ELEMENT, API_DEVICE_LIST,
 } from '../actionTypes/API'
 
 // 图元信息id
 export const getPrimitiveInfo = (interId) => {
   return async (dispatch) => {
     try {
-      console.log(API_CANALIZATION_ELEMENT)
       const result = await RestUtil.post(`${API_CANALIZATION_ELEMENT}?unit_id=${interId}`)
-      console.log(result)
-      if (result.data.code === '1') {
-        dispatch({ type: types.GET_CANALIZATION_ELEMENT, payload: result.data })
+      if (result.data.code === 200) {
+        dispatch({ type: types.GET_CANALIZATION_ELEMENT, payload: result.data.data })
       } else {
         console.error(result.data.message)
       }
@@ -25,3 +23,27 @@ export const getPrimitiveInfo = (interId) => {
     }
   }
 }
+
+// 图元列表
+export const getDevicePiclist = (ids = [1,3,6,7,9,10]) => {
+  return async (dispatch) => {
+    try {
+      const result = await RestUtil.post(API_DEVICE_LIST, ids)
+      if (result.data.code === 200) {
+        dispatch({ type: types.GET_DEVICE_PICLIST, payload: result.data.data })
+      } else {
+        console.error(result.data.message)
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+}
+
+// 发送编辑图元信息
+export const getEditDeviceInfo = (obj) => {
+  return (dispatch) => {
+    dispatch({ type: types.EDIT_DEVICE_INFO, payload: obj })
+  }
+}
+

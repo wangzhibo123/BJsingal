@@ -9,6 +9,10 @@ const interConfig = (state = {}, action) => {
   switch (type) {
     case types.GET_CANALIZATION_ELEMENT:
       return Object.assign({}, state, { primitiveInfo: payload })
+    case types.GET_DEVICE_PICLIST:
+      return Object.assign({}, state, { devicePiclist: payload })
+    case types.EDIT_DEVICE_INFO:
+      return Object.assign({}, state, { editDeviceInfo: payload })
     default:
       return state
   }

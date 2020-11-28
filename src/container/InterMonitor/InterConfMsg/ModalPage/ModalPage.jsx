@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
-class BaseMessage extends Component {
+
+class ModalPage extends Component {
   constructor(props) {
     super(props)
     this.state = {}
@@ -9,10 +10,10 @@ class BaseMessage extends Component {
   render() {
     return (
       <>
-        {this.props.renderComponent(this.props.paramsName)}
+        {this.props.renderComponent(this.props.modalName)}
       </>
     )
   }
 }
 
-export default BaseMessage
+export default ModalPage

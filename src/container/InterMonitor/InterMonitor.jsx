@@ -85,8 +85,11 @@ class InterMonitor extends Component {
   }
   // 获取图元信息
   getCanalizationMsg = (info) => {
-    console.log(info)
-    this.setState({ picConfig: info.CfgLaneInfo })
+    let uiConfigList = []
+    Object.values(info).forEach((item) => {
+      uiConfigList = [...uiConfigList, ...item]
+    })
+    this.setState({ picConfig: uiConfigList }) //info.CfgLaneInfo
   }
   // 路口信息
   getInterInfo = () => {
@@ -263,7 +266,7 @@ class InterMonitor extends Component {
                   const { pLeft, pTop, uiImageName } = item.uiUnitConfig
                   return (
                   <img
-                    key={item.id + index}
+                    key={item.uiId + index}
                     indexs={index}
                     src={globalImgurl + uiImageName}
                     alt=""
