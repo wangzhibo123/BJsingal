@@ -1,7 +1,6 @@
 import React from "react";
 import $ from "jquery";
 import "./GreenWaveCharts.css";
-import axiosInstance from '../../../../utils/getInterfaceData'
 
 class GreenWaveCharts extends React.Component{
     constructor(props){
@@ -15,15 +14,9 @@ class GreenWaveCharts extends React.Component{
             waveY:[{titleY:""},{titleY:"张自忠路"},{titleY:"段祺瑞执政府"},{titleY:"剪子巷"},{titleY:"宽街"},{titleY:"北河沿"},{titleY:"锣鼓巷"},{titleY:"东板桥胡同"},{titleY:"地安门"},{titleY:"北海后门"},{titleY:"郭沫若故居"}],
             waveStrip:[{},{},{},{},{},{},{}],
             waveStripCopy:[{},{},{},{},{},{},{},{},{},{}],
-            
         }
-        this.List="/video/rtspurl/v1.0 HTTP/1.1"
     }
-    // componentDidMount(){
-    //     axiosInstance.post(this.List).then(res=>{
-    //         console.log(res,"res")
-    //     })
-    // }
+    
     calWave(x){
         let onePoint=[x,0]
         let twoPoint=[x+100,0]
@@ -38,9 +31,9 @@ class GreenWaveCharts extends React.Component{
             <div style={{width:"100%",height:"100%"}}>
                 <div style={{position:"absolute"}}>
                     <svg style={{  zIndex: '1', opacity: '.8' }} width="1153px" height="771px" viewBox="0 0 1000 265">
-                             <polygon points="70,286 150,286 170,343 90,343" style={{fill:"rgba(0 ,89 ,51,.7)",strokeWidth:1}}/>
+                             <polygon points="70,286 150,286 170,343 90,343" style={{fill:"rgba(10 ,139, 49,.7)",strokeWidth:1}}/>
                              {/* 70,286 150,286 170,343 90,343 */}
-                             <polygon points="100,286 160,286 110,343 90,343" style={{fill:"red",strokeWidth:1}}/>
+                             <polygon points=" 110,286 170,286 150,343 90,343" style={{fill:"rgba(44, 170, 211,.4)",strokeWidth:1}}/>
                             <g key={1}>
                                 <line x1={initValueX} y1={initValueY} x2="1000" y2={initValueY} style={{fill: 'none', stroke: 'rgb(0,0,255)',strokeWidth:2}}/>
                             </g>
@@ -87,11 +80,6 @@ class GreenWaveCharts extends React.Component{
                                     )
                                 })
                             }
-                            <g>
-                                {
-                                    // this.calWave(300)
-                                }
-                            </g>
                     </svg>
                 </div>
             </div>
