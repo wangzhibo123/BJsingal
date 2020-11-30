@@ -263,14 +263,15 @@ class InterMonitor extends Component {
               {
                 picConfig &&
                 picConfig.map((item, index) => {
-                  const { pLeft, pTop, uiImageName } = item.uiUnitConfig
+                  const { pLeft, pTop, uiImageName, rotationAngle } = item.uiUnitConfig
                   return (
                   <img
+                    className="devicePic"
                     key={item.uiId + index}
                     indexs={index}
                     src={globalImgurl + uiImageName}
                     alt=""
-                    style={{ position: 'absolute', top: `${pTop}px`, left: `${pLeft}px` }}
+                    style={{ position: 'absolute', top: `${pTop}px`, left: `${pLeft}px`, transform: `rotate(${rotationAngle}deg)` }}
                     draggable="true"
                   />
                 )})

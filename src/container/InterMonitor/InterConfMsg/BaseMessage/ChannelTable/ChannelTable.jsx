@@ -35,7 +35,8 @@ class ChannelTable extends Component {
     })
   }
   getUnitConnector = (primitiveInfo) => {
-    this.setState({ channelList: primitiveInfo.CfgLaneInfo })
+    this.channelInfos = primitiveInfo.CfgLaneInfo
+    this.setState({ channelList: this.channelInfos })
   }
   handleDelete = (id, configId) => {
     const { confirm } = Modal
@@ -47,6 +48,13 @@ class ChannelTable extends Component {
         selfThis.getRemoveChannel(id, configId)
       },
     })
+  }
+  handleEditInfo = (e) => {
+    const indexs = e.currentTarget.getAttribute('indexs')
+    const currentInfo = this.channelInfos[indexs]
+    console.log(currentInfo)
+    this.props.showEditModal()
+    this.props.getEditDeviceInfo(currentInfo)
   }
   render() {
     const globalImgurl = localStorage.getItem('ImgUrl')
@@ -67,7 +75,7 @@ class ChannelTable extends Component {
               channelList.map((item, index) => {
                 return (
                   <div className="confTr" key={item.id}>
-                    <div className="confTd">{item.id}</div>
+                    <div className="confTd">{item.cfgLaneInfo.laneno}</div>
                     <div className="confTd">{item.cfgLaneInfo.directionValue}</div>
                     <div className="confTd">{item.cfgLaneInfo.movementValue}</div>
                     <div className="confTd">
@@ -76,7 +84,7 @@ class ChannelTable extends Component {
                       </div>
                     </div>
                     <div className="confTd">
-                      <EditOutlined className="activeIcon" />
+                      <EditOutlined className="activeIcon" indexs={index} onClick={this.handleEditInfo} />
                       <DeleteOutlined className="activeIcon" onClick={() => { this.handleDelete(item.id, item.uiUnitConfig.uiId) }} />
                     </div>
                   </div>

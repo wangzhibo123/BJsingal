@@ -16,6 +16,7 @@ class InterRelation extends Component {
     this.removeUrl = '/control-application-front/basic/info/connector/removeUnitConnector'
   }
   componentDidMount = () => {
+    console.log(this.props)
     const { primitiveInfo } = this.props.data
     this.getInterRelationList(primitiveInfo)
   }
@@ -65,13 +66,13 @@ class InterRelation extends Component {
             {
               relationList &&
               relationList.map((item, index) => {
-                const { id, roadDetail, unitDirectionValue, unitDirection } = item.unitConnector
+                const { roadDetail, unitDirectionValue, roadLength, connectorUnitId, connectorUnitDirectionValue } = item.unitConnector
                 return (
                   <div className="confTr" key={item.id}>
                     <div className="confTd">{unitDirectionValue}</div>
-                    <div className="confTd">{id}</div>
-                    <div className="confTd">{unitDirectionValue}</div>
-                    <div className="confTd">{unitDirection}</div>
+                    <div className="confTd">{connectorUnitId}</div>
+                    <div className="confTd">{connectorUnitDirectionValue}</div>
+                    <div className="confTd">{roadLength}</div>
                     <div className="confTd" style={{ flex: 1.3 }}>{roadDetail}</div>
                     <div className="confTd">
                       <EditOutlined className="activeIcon" />
