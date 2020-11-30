@@ -1,7 +1,6 @@
 import React , {Component} from "react";
 import "./mainMonitorConcisePage.scss"
 //引入视频
-import videojs from "video.js"
 import Video from '../../../utils/video/video'
 //引入图片
 import yellow from "../../../imgs/yellow.png"
@@ -17,10 +16,10 @@ import bascUpDown from "../../../imgs/bascUpDown.png"
 import ballP from "../../../imgs/ballP.png"
 import ballG from "../../../imgs/ballG.png"
 import ballRY from "../../../imgs/ballRY.png"
-import ballY from "../../../imgs/ballY.png"
 //引入antd
 import { Select, Switch, Menu } from "antd";
 import { SearchOutlined, CompassOutlined } from "@ant-design/icons";
+//引入axios
 export default class MainMonitorConcisePage extends Component{
     constructor(props){
         super(props)
@@ -38,11 +37,6 @@ export default class MainMonitorConcisePage extends Component{
               modeMapFlyToPitch: 60, //0 表示竖直状态视角 90表示水平状态视角
               //地图缩放倍率
               modeMapFlyToZoom: 15, //范围 0~17  17表示放大到最大 15及以上开始3D
-              //展示开关
-              modeNavShow: true,
-              modeMapShow: true,
-              modeMainMonitor: false,
-              modeMainTabShow: true,
               //切换到2D按钮
               modeMainTabTypeD: true,
               //2D到3D
@@ -51,14 +45,14 @@ export default class MainMonitorConcisePage extends Component{
               modeMainControlMapSign: true,
               //点击中心点渲染多次处理
               clickCenterRenders: false,
+              videoSentList:null,
               //视频
-              url: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv2", name: "东", id: "my_E"  }, { url: "rtmp://58.200.131.2:1935/livetv/cctv3", name: "西", id: "my_W" , displayStyle:true }],
-              arl: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv13", name: "南", id: 'my_S'  }, { url: "rtmp://58.200.131.2:1935/livetv/cctv6", name: "北", id: "my_N" , displayStyle:true }],
+              urlVideo: null,
+              // arlVideo: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv13", name: "南", id: 'my_S'  }, { url: "rtmp://58.200.131.2:1935/livetv/cctv6", name: "北", id: "my_N" , displayStyle:true }],
             };
-            //接口
-            this.videoState="/control-application-front/video/getLiveUrl/123";
-        }
-    render(){
+      }
+      render(){
+        const {videoStateBind} =this.state;
         return (
             <div className="modeMainMonitorHome">
             <div className="modeMainSlidMode">
@@ -82,14 +76,14 @@ export default class MainMonitorConcisePage extends Component{
               <div className="modeMainDirection">
                 <div className="modeMainEWMode">
                   {/* 东西走向 */}
-                  <div className="modeMainEWVideo">
-                    <Video url={this.state.url} showB={true}></Video>
-                  </div>
+                    <div className="modeMainEWVideo">
+                      <Video  showB={true}></Video>
+                    </div>
                 </div>
                 <div className="modeMainSNMode">
                   {/* 南北走向 */}
                   <div className="modeMainSNVideo">
-                    <Video url={this.state.arl} showB={true}></Video>
+                    <Video url={this.state.arlVideo} showB={true}></Video>
                   </div>
                 </div>
               </div>
