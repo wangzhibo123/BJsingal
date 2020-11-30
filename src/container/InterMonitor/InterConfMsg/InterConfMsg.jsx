@@ -22,6 +22,7 @@ import DayPlan from './SingalParams/DayPlan/DayPlan'
 
 import ModalPage from './ModalPage/ModalPage'
 import ChannelModal from './ModalPage/channelModal/ChannelModal'
+import RelationModal from './ModalPage/relationModal/relationModal'
 
 import axiosInstance from '../../utils/getInterfaceData'
 import { getDevicePiclist, getEditDeviceInfo } from '../../../reduxs/action/interConfig'
@@ -47,7 +48,7 @@ class InterConfMsg extends Component {
     this.baseConfList = [
       { confName: '渠化信息', id: 'canalization', num: '0', compos: null },
       { confName: '车道信息', id: 'channel', num: '6', compos: ChannelTable, modalCompos: ChannelModal },
-      { confName: '路口关系', id: 'inter', num: '7', compos: InterRelation },
+      { confName: '路口关系', id: 'inter', num: '7', compos: InterRelation, modalCompos: RelationModal },
       { confName: '信号机', id: 'singal', num: '1', compos: SingalMsg },
       { confName: '灯组', id: 'lightGroup', num: '10', compos: LightGroup },
       { confName: '检测器', id: 'detector', num: '3', compos: Detector },
@@ -142,34 +143,22 @@ class InterConfMsg extends Component {
   handleDirDragStart = (ev) => {
     this.newConfPic = {
       cfgLaneInfo: {
-        attribute: 1,
-        attributeValue: '',
-        detail: null,
-        direction: 2,
+        direction: 1,
         directionValue: '',
-        feature: 1,
-        featureValue: '',
-        id: 3,
-        laneno: 3,
-        movement: 21,
+        laneno: 0,
+        movement: 11,
         movementValue: '',
-        unitId: '',
+        unitId: this.props.interId,
       },
-      id: '',
       uiUnitConfig: {
-        configCode: 3,
-        detail: null,
-        deviceId: 3,
-        id: 3,
-        isView: 1,
         pLeft: 0,
         pTop: 0,
-        rotationAngle: null,
+        rotationAngle: 0,
         uiHight: 40,
-        uiId: 73,
         uiImageName: '',
         uiWidth: 40,
-        unitId: 1000084,
+        isView: 0,
+        unitId: this.props.interId,
       },
     }
     this.currentDragIndex = null
@@ -179,7 +168,7 @@ class InterConfMsg extends Component {
     const picname = ev.target.getAttribute('picname')
     const { currentDeviceList } = this.state
     const currentPic = currentDeviceList.find(item => item.id === parseInt(picname))
-    this.newConfPic.uiUnitConfig.uiId = picname
+    this.newConfPic.uiUnitConfig.uiId = Number(picname)
     this.newConfPic.uiUnitConfig.uiImageName = currentPic.uiImageName
   }
   handleDirDragEnd = (ev) => {
@@ -202,7 +191,7 @@ class InterConfMsg extends Component {
       this.newConfPic.uiUnitConfig.pLeft = posX
       this.newConfPic.uiUnitConfig.pTop = posY
       this.roadLists.push(this.newConfPic)
-      this.setState({ editDeviceMsg: true })
+      this.handleShowEditModal()
       this.props.getEditDeviceInfo(this.newConfPic)
     }
     this.setState({ laneLists: this.roadLists })
@@ -216,14 +205,18 @@ class InterConfMsg extends Component {
     this.moveBeforeY = ev.clientY
     this.newConfPic = this.roadLists[this.currentDragIndex]
   }
-  handleConfpicUp = () => {
+  handleConfpicUp = (ev) => {
+    this.currentDragIndex = ev.target.getAttribute('indexs')
+    console.log(this.currentDragIndex)
+    this.moveBeforeX = ev.clientX
+    this.moveBeforeY = ev.clientY
+    this.newConfPic = this.roadLists[this.currentDragIndex]
+    console.log(this.newConfPic)
+    this.handleShowEditModal()
+    this.props.getEditDeviceInfo(this.newConfPic)
+  }
+  handleShowEditModal = () => {
     this.setState({ editDeviceMsg: true })
-  }
-  handleConfirmModal = () => {
-    this.setState({ editDeviceMsg: false })
-  }
-  handleCancelModal = () => {
-    this.setState({ editDeviceMsg: false })
   }
   handleCloseEditModal = () => {
     this.setState({ editDeviceMsg: false })
@@ -323,7 +316,7 @@ class InterConfMsg extends Component {
                                   indexs={index}
                                   src={this.globalImgurl + uiImageName}
                                   alt=""
-                                  style={{ top: `${pTop}px`, left: `${pLeft}px`, transform: `rotate(${rotationAngle ? rotationAngle : 0})deg` }}
+                                  style={{ top: `${pTop}px`, left: `${pLeft}px`, transform: `rotate(${rotationAngle ? rotationAngle : 0}deg)` }}
                                   draggable="true"
                                   onDragStart={this.handleDragConfPic}
                                   onMouseUp={this.handleConfpicUp}
@@ -340,6 +333,7 @@ class InterConfMsg extends Component {
                         wrapClassName="modalBox"
                         footer={null}
                         closable={false}
+                        destroyOnClose={true}
                         maskStyle={{ backgroundColor: 'rgba(0,0,0,.2)' }}
                       >
                         <ModalPage modalName={currentItem} renderComponent={(params) => {
@@ -353,7 +347,7 @@ class InterConfMsg extends Component {
                         <BaseMessage paramsName={currentItem} renderComponent={(prams) => {
                           const ItemParams = this.baseConfList.find(item => item.id === prams)
                           const ItemComponent = ItemParams.compos
-                          return <ItemComponent {...this.props} />
+                          return <ItemComponent {...this.props} showEditModal={this.handleShowEditModal} />
                         }} />
                       }
                     </div>
