@@ -129,13 +129,72 @@ class OperationMonitoring extends Component {
                     <div className={styles.centerCpuBox}>
                     <Tabs defaultActiveKey="1" onChange={this.tabsCallback}>
                       <TabPane tab="程序" key="1">
-                        <div className={styles.tabListBox}>1</div>
+                        <div className={styles.tabListBox}>
+                          <dl className={styles.tHeadBox}>
+                            <dt>名称</dt>
+                            <dt>状态</dt>
+                            <dt>CPU</dt>
+                            <dt>内存</dt>
+                            <dt>磁盘</dt>
+                            <dt>网络</dt>
+                            <dt>CPU时间</dt>
+                            <dt>电源使用情况</dt>
+                            <dt>电源使用情况趋势</dt>
+                          </dl>
+                          <h5>应用（6）</h5>
+                          <div className={styles.tBodyBox}>
+                            {
+                              [0,1,2,3,4,5].map(item => {
+                                return  <dl className={styles.tHeadBox}>
+                                  <dt>名称</dt>
+                                  <dt>状态</dt>
+                                  <dt>CPU</dt>
+                                  <dt>内存</dt>
+                                  <dt>磁盘</dt>
+                                  <dt>网络</dt>
+                                  <dt>CPU时间</dt>
+                                  <dt>电源使用情况</dt>
+                                  <dt>电源使用情况趋势</dt>
+                                </dl> 
+                              })
+                            }
+                          </div>
+                        </div>
                       </TabPane>
                       <TabPane tab="性能" key="2">
-                        <div className={styles.tabListBox}>2</div>
+                        <div className={styles.tabListBox} style={{border:'none'}}>
+                          <div className={styles.computerPic}><div className={styles.computerImg} /></div>
+                        </div>
                       </TabPane>
                       <TabPane tab="用户" key="3">
-                        <div className={styles.tabListBox}>3</div>
+                      <div className={styles.tabListBox}>
+                        <dl className={styles.tHeadBox}>
+                          <dt>用户</dt>
+                          <dt>状态</dt>
+                          <dt>登入时间</dt>
+                          <dt>登出时间</dt>
+                          <dt>在线时长</dt>
+                          <dt>网络地址</dt>
+                          <dt>登录端口</dt>
+                          <dt>用户操作</dt>
+                        </dl>
+                        <div className={styles.tBodyBox} style={{height:'235px'}}>
+                          {
+                            [0,1,2,3,4,5,6,7].map(item => {
+                              return  <dl className={styles.tHeadBox}>
+                              <dt>用户</dt>
+                              <dt>状态</dt>
+                              <dt>登入时间</dt>
+                              <dt>登出时间</dt>
+                              <dt>在线时长</dt>
+                              <dt>网络地址</dt>
+                              <dt>登录端口</dt>
+                              <dt>用户操作</dt>
+                              </dl> 
+                            })
+                          }
+                        </div>
+                      </div>
                       </TabPane>
                     </Tabs>
                     </div>

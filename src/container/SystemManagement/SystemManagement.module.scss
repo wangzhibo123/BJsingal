@@ -255,11 +255,58 @@ $bg-color:#1A344F;
               :global(.ant-tabs-nav){
                 width:calc(100% - 30px);
                 left:15px;
+                user-select: none;
               }
               .tabListBox{
                 border:1px solid $bor-color;
                 width:calc(100% - 30px);
                 margin:70px auto 0;
+                dl.tHeadBox{
+                  line-height: 38px;
+                  margin-bottom: 0;
+                  background: #0D2242;
+                  border-bottom: 1px solid $bor-color;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  > dt{
+                    flex: 1;
+                    padding:0 15px;
+                    line-height: 38px;
+                    user-select: none;
+                  }
+                }
+                h5{
+                  color: #006BC3;
+                  font-size: 18px;
+                  font-weight: bold;
+                  padding:10px;
+                  display: block;
+                  margin: 0;
+                  border-bottom: 1px solid $bor-color;
+                }
+                .tBodyBox{
+                  height: 190px;
+                  overflow-y: auto;
+                  dl.tHeadBox{
+                    border-bottom:none;
+                    background: none;
+                    &:hover{
+                      background:rgba(12,33,66, .8);
+                    }
+                  }
+                }
+                .computerPic{
+                  width: 100%;
+                  height: 280px;
+                  overflow-y: auto;
+                  .computerImg{
+                    width: 100%;
+                    height: 403px;
+                    background: url(../imgs/computerPic.png) no-repeat;
+                    background-size: cover;
+                  }
+                }
               }
               .cpuItem{
                 display: flex;
