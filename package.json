@@ -28,31 +28,7 @@
     "video.js": "^7.10.2",
     "videojs-flash": "^2.2.1"
   },
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  "proxy": "http://192.168.1.124:20191",
-=======
   "proxy": "http://192.168.1.22:20191",
->>>>>>> 097117c6f8eb33c8ca201d93302aad68daeb66df
-=======
-  "proxy": "http://192.168.1.22:20191",
->>>>>>> 097117c6f8eb33c8ca201d93302aad68daeb66df
-=======
-  "proxy": "http://192.168.1.22:20191",
->>>>>>> 097117c6f8eb33c8ca201d93302aad68daeb66df
-=======
-  "proxy": "http://192.168.1.22:20191",
->>>>>>> 097117c6f8eb33c8ca201d93302aad68daeb66df
-=======
-  "proxy": "http://192.168.1.22:20191",
->>>>>>> 67a756b5171ca085f77d8bcf712ae49d0bc2c56c
-=======
-  "proxy": "http://192.168.1.22:20191",
->>>>>>> 67a756b5171ca085f77d8bcf712ae49d0bc2c56c
   "scripts": {
     "analyze": "source-map-explorer build/static/js/main.*",
     "start": "react-scripts start",
