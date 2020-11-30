@@ -125,7 +125,7 @@ $bor-color: #a5fcff;
                             .roadBoxLeft {
                                 width: 5px;
                                 height: 35px;
-                                margin-left: 25px;
+                                margin-left: 14px;
                                 background-color: #1df249;
                                 border-radius: 2px;
                             }
@@ -152,6 +152,21 @@ $bor-color: #a5fcff;
                                         padding-left: 5px;
                                     }
                                 }
+                            }
+                            &:first-child > .roadBoxLeft {
+                                margin-left: 0;
+                                width: 30px;
+                                background: url("../../imgs/startRoad.png") no-repeat;
+                                // background-size: 35%;
+                                background-position: center;
+                            }
+                            &:last-child > .roadBoxLeft {
+                                margin-left: 0;
+                                width: 30px;
+                                transform: rotate(180deg);
+                                background: url("../../imgs/endRoad.png") no-repeat;
+                                // background-size: 35%;
+                                background-position: center;
                             }
                         }
                     }
@@ -394,6 +409,9 @@ $bor-color: #a5fcff;
         bottom: 0;
         width: 100%;
         height: calc(100% - 70px);
+        .markers {
+            background-color: red !important;
+        }
         .mapabcgl-popup-close-button {
             top: 5px;
             color: #599fe0;

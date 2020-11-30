@@ -93,6 +93,7 @@ class Intersection extends Component {
     this.showName = 'add'
     this.mapaddOnclick = false
     this.interMarkers = []
+    this.switchViews = false
   }
   componentDidMount = () => {
     this.renderMap()
@@ -307,11 +308,20 @@ class Intersection extends Component {
         ismodify: false,
       })
     } else if (id === 3) {
-      this.map.flyTo({
-        // center: [116.391, 39.911], 
-        zoom: 14,
-        pitch: 60
-      })
+      this.switchViews = !this.switchViews
+      if (this.switchViews) {
+        this.map.flyTo({
+          // center: [116.391, 39.911], 
+          zoom: 14,
+          pitch: 60
+        })
+      } else {
+        this.map.flyTo({
+          // center: [116.391, 39.911], 
+          zoom: 11,
+          pitch: 0
+        })
+      }
     }
     this.setState({
       clickNum: id

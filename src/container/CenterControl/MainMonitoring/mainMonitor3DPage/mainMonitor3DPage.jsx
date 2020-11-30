@@ -41,7 +41,6 @@ export default class MainMonitor3DPage extends Component{
               //地图缩放倍率
               modeMapFlyToZoom: 15, //范围 0~17  17表示放大到最大 15及以上开始3D
               //展示开关
-              modeNavShow: true,
               modeMapShow: true,
               modeMainMonitor: false,
               modeMainTabShow: true,
@@ -73,7 +72,6 @@ export default class MainMonitor3DPage extends Component{
     }
     modeTabToMapPage = () => {	  //地图默认坐标
         this.setState({
-          modeNavShow: true,
           modeMapShow: true,
           modeMainMonitor: false,
           modeMainTabShow: true,
@@ -410,12 +408,12 @@ export default class MainMonitor3DPage extends Component{
         this.map = map
     }
     render () {
-        const { modeNavShow, modeMapShow } = this.state;
+        const {  modeMapShow } = this.state;
         return (
             <div className="mainMon3D">
               {
                 //左侧导航页面渲染
-                modeNavShow && <div className="NavMon">
+                 <div className="NavMon">
                   <div className="topNavMon">
                     <div className="selectNav">
                       <Select defaultValue="海淀区" style={{ width: 100, height: 30 }} size="middle">

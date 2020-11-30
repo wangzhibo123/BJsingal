@@ -50,6 +50,7 @@ class Region extends Component {
     this.interMarkers = []
     this.addRoad = false // 新增区域数组
     this.unitArr = []
+    this.switchViews = false
   }
   componentDidMount = () => {
     this.renderMap()
@@ -91,6 +92,9 @@ class Region extends Component {
     axiosInstance.post(`${this.loadSubDistrictTree}?id=${id}`).then(res => {
       const { code, treeList } = res.data
       if (code === '1') {
+        console.log(treeList, 'sdds')
+        this.unitArr = treeList
+        this.addRoadCircle(this.unitArr)
         const arr = treeList.map(item => item)
         const currentArea = this.treeListDatas.find((item) => item.id === Number(id))
         currentArea.childrens = treeList
@@ -105,7 +109,7 @@ class Region extends Component {
       const currentThis = this
       this.markers = []
       const interList = zoomVal < 13 ? points && points.filter(item => item.unit_grade <= 4) : points
-      console.log(points, zoomVal,interList,'sdfsdfds')
+      console.log(points, zoomVal, interList, 'sdfsdfds')
       interList && interList.forEach((item, index) => {
         const el = document.createElement('div')
         el.style.width = '20px'
@@ -115,8 +119,9 @@ class Region extends Component {
         el.style.cursor = 'pointer'
         el.id = 'marker' + item.unit_code
         el.addEventListener('click', function (e) {
-          console.log(item, currentThis.addRoad, '123456')
+          // console.log(item, currentThis.addRoad, '123456')
           if (currentThis.addRoad) {
+            $('#marker' + item.unit_code).addClass('markers')
             currentThis.unitArr.push(item)
             currentThis.setState({
               unitArr: currentThis.unitArr,
@@ -126,13 +131,27 @@ class Region extends Component {
         if (isNaN(item.longitude) || isNaN(item.latitude)) {
           console.log(index)
         }
-        console.log(item,item.longitude, item.latitude,'dfdfdfdfvvvvv::::')
+        console.log(item, item.longitude, item.latitude, 'dfdfdfdfvvvvv::::')
         const marker = new window.mapabcgl.Marker(el)
           .setLngLat([item.longitude, item.latitude])
           .addTo(this.map)
         this.interMarkers.push(marker)
       })
     }
+  }
+  removeOneCircle = (unit_code) => { // 删除单个点位颜色
+    $('#marker' + unit_code).removeClass('markers')
+  }
+  addRoadCircle = (Arr) => { // 渲染所有点位
+    Arr.forEach(item => {
+      $('#marker' + item.unit_code).addClass('markers')
+    })
+  }
+  removeRoadCircle = () => { // 清除颜色点位
+    this.unitArr.forEach(item => {
+      $('#marker' + item.unit_code).removeClass('markers')
+    })
+    this.unitArr = []
   }
   removeMarkers = () => {
     if (this.interMarkers.length) {
@@ -186,11 +205,20 @@ class Region extends Component {
         isAddEdit: true,
       })
     } else if (id === 3) {
-      this.map.flyTo({
-        // center: [116.391, 39.911], 
-        zoom: 14,
-        pitch: 60
-      })
+      this.switchViews = !this.switchViews
+      if (this.switchViews) {
+        this.map.flyTo({
+          // center: [116.391, 39.911], 
+          zoom: 14,
+          pitch: 60
+        })
+      } else {
+        this.map.flyTo({
+          // center: [116.391, 39.911], 
+          zoom: 11,
+          pitch: 0
+        })
+      }
     }
     this.setState({
       clickNum: id
@@ -200,7 +228,7 @@ class Region extends Component {
     console.log('click ', e);
   }
   onOpenChangeSubMenu = (eventKey) => { // SubMenu-ite触发
-    this.addRoad = true
+    this.addRoad = false
     if (eventKey.length === 0) {
       this.setState({ menuOpenkeys: [], rights: -300 })
     } else {
@@ -242,6 +270,7 @@ class Region extends Component {
     })
   }
   noneAddRoad = () => { // 取消添加修改
+    this.removeRoadCircle()
     this.addRoad = false
     this.setState({
       rights: -300
@@ -249,6 +278,7 @@ class Region extends Component {
   }
   getismodify = (isShowName) => { // 添加编辑
     this.showName = isShowName // 编辑
+    this.addRoad = true
     this.setState({
       ismodify: false,
       isAddEdit: true,
@@ -301,8 +331,10 @@ class Region extends Component {
           menuOpenkeys: [],
         })
         message.info(result)
+        this.addRoad = false
         this.getDataList()
         this.initializationState()
+        this.removeRoadCircle()
       } else {
         // this.setState({
         //   rights: -300,
@@ -315,13 +347,13 @@ class Region extends Component {
     })
   }
   delectroad = (id) => {
-    const { unitArr } = this.state
-    const index = unitArr.findIndex(item => item.id === id)
-    unitArr.splice(index, 1)
-    console.log(index, unitArr)
+    const index = this.unitArr.findIndex(item => item.id === id)
+    this.removeOneCircle(this.unitArr[index].unit_code)
+    this.unitArr.splice(index, 1)
     this.setState({
-      unitArr: unitArr,
+      unitArr: this.unitArr,
     })
+
   }
   FormData = (adj) => {
     let str = ''
