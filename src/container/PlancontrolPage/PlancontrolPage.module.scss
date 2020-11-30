@@ -194,6 +194,7 @@ $input-bac: rgba(0, 169, 192, 0.2);
                                     }
                                 }
                             }
+
                             &:last-child {
                                 > span {
                                     width: 25px;
@@ -309,14 +310,6 @@ $input-bac: rgba(0, 169, 192, 0.2);
                                     }
                                 }
                             }
-                            &:first-child {
-                                > span {
-                                    width: 25px;
-                                    margin-left: 0px;
-                                    background: url("../imgs/startRoad.png") no-repeat;
-                                    background-position: center;
-                                }
-                            }
                             &:last-child {
                                 > span {
                                     width: 25px;
@@ -326,6 +319,15 @@ $input-bac: rgba(0, 169, 192, 0.2);
                                     background-position: center;
                                 }
                             }
+                            &:first-child {
+                                > span {
+                                    width: 25px;
+                                    margin-left: 0px;
+                                    background: url("../imgs/startRoad.png") no-repeat;
+                                    background-position: center;
+                                }
+                            }
+
                         }
                         .roadBox {
                             height: 100%;

@@ -51,11 +51,10 @@ class LoadingPage extends React.Component {
         unit_order: this.props.unit_order,
       })
     }
-
   }
   render() {
     const { Option } = Select
-    const { interval_time, stage_id, lock_time, direction_entervalue, direction_exitvalue, unit_order } = this.state
+    const { interval_time, stage_id, lock_time, direction_entervalue, direction_exitvalue, disabled } = this.state
     const { getDirectionList } = this.props
     return (
       <div className={styles.boxCjild}>
