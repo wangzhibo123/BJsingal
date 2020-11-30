@@ -94,7 +94,8 @@ class PlancontrolPage extends Component {
       childArr: [],
       planname: '', // 特勤名称
       UnitStageAllList: [], //阶段所有
-      disabled: true // 控制预案回显是否能够编辑
+      disabled: true,// 控制预案回显是否能够编辑
+      childArrTwo: [], // 区域路口数组
     }
     this.defaultChildren = []
     this.interMarkers = []
@@ -134,6 +135,8 @@ class PlancontrolPage extends Component {
     this.ImgUrl = localStorage.getItem('ImgUrl')
     this.markersArr = [] // 所有回显小相位图
     this.handleShow = false // 预案回显修改相位图
+    this.childArrTwo = [] // 区域路口数组
+    this.addRoad = false
   }
   componentDidMount = () => {
     this.renderMap()
@@ -202,6 +205,7 @@ class PlancontrolPage extends Component {
   //   })
   // }
   getismodify = () => { // 编辑操作
+    this.addRoad = true
     this.setState({
       disabled: false,
     })
@@ -248,7 +252,6 @@ class PlancontrolPage extends Component {
           this.setState({
             rightsNew: -320,
           })
-          this.addroadLine()
         }
       })
     } else {
@@ -260,11 +263,12 @@ class PlancontrolPage extends Component {
     axiosInstance.post(this.addOrUpdateVipPlan, this.handclickAddEditObjs).then(res => {
       const { code } = res.data
       if (code == 1) {
+        this.addRoad = false
         this.getloadPlanTable(1)
         this.setState({
           rightsNew: -320,
+          disabled: true
         })
-        this.addlineroute =false
         this.roadCircle(this.childArr)
       }
     })
@@ -304,7 +308,7 @@ class PlancontrolPage extends Component {
         arrList.push(arrchild)
       })
       this.handclickAddEditObjs.list = this.childArr
-      this.drawLine(arrList, this.childArr)
+      this.drawLine(arrList, this.childArr, false)
 
     } else {
       this.childArr[this.childArr.length - 1].stage_id = stageno
@@ -341,47 +345,67 @@ class PlancontrolPage extends Component {
         el.id = 'marker' + item.id
         el.addEventListener('click', function (e) {
           // 点击获取当前点位所有锁定编号
-          if (!$('#marker' + item.id).hasClass('markers')) {
-            currentThis.shows = true
-            let objs = {
-              direction_enter: '',
-              direction_entervalue: '',
-              direction_exit: '',
-              direction_exitvalue: '',
-              id: '',
-              interval_time: '',
-              lock_time: '',
-              stage_id: '',
-              unit_id: '',
-              unit_order: '',
-              vip_road_id: ''
+          if (currentThis.addRoad) {
+            if (!$('#marker' + item.id).hasClass('markers')) {
+              if (currentThis.isreserveplan) { // 为应急预案添加
+                currentThis.shows = true
+                let objs = {
+                  direction_enter: '',
+                  direction_entervalue: '',
+                  direction_exit: '',
+                  direction_exitvalue: '',
+                  id: '',
+                  interval_time: '',
+                  lock_time: '',
+                  stage_id: '',
+                  unit_id: '',
+                  unit_order: '',
+                  vip_road_id: ''
+                }
+                $('#marker' + item.id).addClass('markers')
+                objs.unit_id = item.id
+                objs.unit_order = currentThis.childArr.length + 1
+                currentThis.childArrList.push(item)
+                currentThis.childArr.push(objs)
+                currentThis.start_unitId = currentThis.childArrList[0].id
+                currentThis.end_unitId = currentThis.childArrList[currentThis.childArrList.length - 1].id
+                currentThis.setState({
+                  childArr: currentThis.childArr,
+                  start_unit: currentThis.childArrList[0].unit_name,
+                  end_unit: currentThis.childArrList[currentThis.childArrList.length - 1].unit_name,
+                })
+                let arrList = []
+                currentThis.childArrList.forEach(item => {
+                  let arrchild = []
+                  arrchild[0] = item.longitude
+                  arrchild[1] = item.latitude
+                  arrList.push(arrchild)
+                })
+                if (currentThis.addlineroute) {
+                  currentThis.map.removeLayer("route")
+                  currentThis.map.removeSource("route")
+                  // console.log(arrList[0], 'one')
+                }
+                currentThis.drawLine(arrList)
+                currentThis.getphase(item) // 选择需求阶段
+              } else {
+                $('#marker' + item.id).addClass('markers')
+                console.log(item, 'ddddss')
+                let objser = {
+                  "area_contingency_id": "",
+                  "contingenct_type": 0,
+                  "contingency_type_value": "string",
+                  "cyclelen": 0,
+                  "id": "",
+                  "listArr": [],
+                  "unit_id": "string"
+                }
+                currentThis.childArrTwo.push(objser)
+                currentThis.setState({
+                  childArrTwo: currentThis.childArrTwo,
+                })
+              }
             }
-            $('#marker' + item.id).addClass('markers')
-            objs.unit_id = item.id
-            objs.unit_order = currentThis.childArr.length + 1
-            currentThis.childArrList.push(item)
-            currentThis.childArr.push(objs)
-            currentThis.start_unitId = currentThis.childArrList[0].id
-            currentThis.end_unitId = currentThis.childArrList[currentThis.childArrList.length - 1].id
-            currentThis.setState({
-              childArr: currentThis.childArr,
-              start_unit: currentThis.childArrList[0].unit_name,
-              end_unit: currentThis.childArrList[currentThis.childArrList.length - 1].unit_name,
-            })
-            let arrList = []
-            currentThis.childArrList.forEach(item => {
-              let arrchild = []
-              arrchild[0] = item.longitude
-              arrchild[1] = item.latitude
-              arrList.push(arrchild)
-            })
-            if (currentThis.addlineroute) {
-              currentThis.map.removeLayer("route")
-              currentThis.map.removeSource("route")
-              // console.log(arrList[0], 'one')
-            }
-            currentThis.drawLine(arrList)
-            currentThis.getphase(item) // 选择需求阶段
           }
           // currentThis.addInfoWindow(item)
           // this.handleClckMessge(true)
@@ -435,7 +459,7 @@ class PlancontrolPage extends Component {
   getInfoWindowHtml = (list, marker) => {
     var str = ''
     list && list.forEach(item => {
-      str += `<div onclick="selectPhase(${item.stageno},${marker.id},'${item.stage_image}')" class="infotitle"> <img src="${this.ImgUrl}${item.stage_image}"/></div>`
+      str += `<div key={${item.id}} onclick="selectPhase(${item.stageno},${marker.id},'${item.stage_image}')" class="infotitle"> <img src="${this.ImgUrl}${item.stage_image}"/></div>`
     })
     return (
       `<div class="infoWindow">
@@ -465,6 +489,9 @@ class PlancontrolPage extends Component {
         childArr: this.childArr
       })
     }
+  }
+  changeLoadRouteDirectionTwo = (events, num, names) => {
+
   }
   delectListChild = (event) => { // 333333
     // console.log(id, this.childArrList, this.childArr, 'sdsdsd')
@@ -940,6 +967,7 @@ class PlancontrolPage extends Component {
     if (name === 'add') { // 点击新增
       // console.log(this.isreserveplan, 'sdsff')
       if (this.isreserveplan) {
+        this.addRoad = true
         this.handleShow = false
         this.childArrList = []
         this.childArr = []
@@ -951,6 +979,7 @@ class PlancontrolPage extends Component {
           roadtitleNew: '新增特勤',
         })
       } else {
+        this.addRoad = false
         this.setState({
           rightsNew: -320,
           rights: 0,
@@ -981,13 +1010,16 @@ class PlancontrolPage extends Component {
     if (this.markersArr.length) {
       this.markersArr.forEach(item => item.remove())
     }
-    this.map.removeLayer("route")
-    this.map.removeSource("route")
+    if (this.addlineroute) {
+      this.map.removeLayer("route")
+      this.map.removeSource("route")
+    }
+    this.addlineroute = false
     list.forEach(item => $('#marker' + item.unit_id).removeClass('markers'))
 
   }
 
-  drawLine = (arr, list) => { // 页面连线f 1111111111111
+  drawLine = (arr, list, show = true) => { // 页面连线f 1111111111111
     if (this.map) {
       this.addlineroute = true
       // console.log(arr, ':::::::::vvv')
@@ -1016,7 +1048,10 @@ class PlancontrolPage extends Component {
       });
       if (list) {
         this.map.setZoom(13)
-        this.map.setCenter(this.returnCenterLnglat(arr[0], arr[arr.length - 1]))
+        if (show) {
+          this.map.setCenter(this.returnCenterLnglat(arr[0], arr[arr.length - 1]))
+        }
+
         this.addWin(list)
       }
     }
@@ -1053,11 +1088,10 @@ class PlancontrolPage extends Component {
   }
   handleShowInterConf = (item) => { // 点击回显编辑 1111111
     if (this.isreserveplan) {
-      if (this.addlineroute) {
-        this.map.removeLayer("route")
-        this.map.removeSource("route")
-        // console.log(arrList[0], 'one')
+      if (this.childArr) {
+        this.roadCircle(this.childArr)
       }
+      this.addRoad = false
       this.handleShow = true
       axiosInstance.post(`${this.loadPlanVipUnit}?id=${item.id}`).then(res => {
         const { code, list } = res.data
@@ -1143,6 +1177,9 @@ class PlancontrolPage extends Component {
     // console.log(num, ind, '修改间隔时间')
     this.childArr[ind].interval_time = num
   }
+  deleteList = () => {
+
+  }
   render() {
     const { Option } = Select
     const {
@@ -1216,16 +1253,16 @@ class PlancontrolPage extends Component {
                       <div>
                         <span></span>
                         <div className={styles.linboxer}>
-                          <p><span>关联路口：</span><input onChange={this.changeLoadRouteDirection} value={unit_id} intername='unit_id' type="text" className={styles.inputBox} placeholder="关联路口" /></p>
-                          <p><span>应急方式对应值：</span><input onChange={this.changeLoadRouteDirection} value={contingency_type_value} intername='contingency_type_value' type="text" className={styles.inputBox} placeholder="应急方式对应值" /></p>
-                          <p><span>配时周期：</span><input onChange={this.changeLoadRouteDirection} value={cyclelen} intername='cyclelen' type="text" className={styles.inputBox} placeholder="配时周期" /></p>
+                          <p><span>关联路口：</span><input onChange={this.changeLoadRouteDirectionTwo} value={unit_id} intername='unit_id' type="text" className={styles.inputBox} placeholder="关联路口" /></p>
+                          <p><span>应急方式对应值：</span><input onChange={this.changeLoadRouteDirectionTwo} value={contingency_type_value} intername='contingency_type_value' type="text" className={styles.inputBox} placeholder="应急方式对应值" /></p>
+                          <p><span>配时周期：</span><input onChange={this.changeLoadRouteDirectionTwo} value={cyclelen} intername='cyclelen' type="text" className={styles.inputBox} placeholder="配时周期" /></p>
                           <div className={styles.boxStyle}>
                             <span>应急方式：</span>
                             <Select
                               // defaultValue="海淀区"
                               value={emergencyMode}
                               style={{ width: 160, height: 30 }}
-                              onChange={this.changeLoadRouteDirection}
+                              onChange={this.changeLoadRouteDirectionTwo}
                             >
                               <Option addeditname='emergencyMode' intername='contingenct_type' style={{ width: 160, height: 30 }} >配时方案定义1</Option>
                               <Option addeditname='emergencyMode' intername='contingenct_type' style={{ width: 160, height: 30 }} >锁定控制方式2</Option>
@@ -1233,71 +1270,13 @@ class PlancontrolPage extends Component {
                             </Select>
                             {
                               boxStyleShow ? <div>
-                                <p><span>阶段编号：</span><input onChange={this.changeLoadRouteDirection} value={stage_id} intername='stage_id' type="text" className={styles.inputBox} placeholder="阶段编号" /></p>
-                                <p><span>阶段序号：</span><input onChange={this.changeLoadRouteDirection} value={stage_order} intername='stage_order' type="text" className={styles.inputBox} placeholder="阶段序号" /></p>
-                                <p><span>相序方案号：</span><input onChange={this.changeLoadRouteDirection} value={stage_plan_id} intername='stage_plan_id' type="text" className={styles.inputBox} placeholder="相序方案号" /></p>
-                                <p><span>阶段时间：</span><input onChange={this.changeLoadRouteDirection} value={stage_time} intername='stage_time' type="text" className={styles.inputBox} placeholder="阶段时间" /></p>
+                                <p><span>阶段编号：</span><input onChange={this.changeLoadRouteDirectionTwo} value={stage_id} intername='stage_id' type="text" className={styles.inputBox} placeholder="阶段编号" /></p>
+                                <p><span>阶段序号：</span><input onChange={this.changeLoadRouteDirectionTwo} value={stage_order} intername='stage_order' type="text" className={styles.inputBox} placeholder="阶段序号" /></p>
+                                <p><span>相序方案号：</span><input onChange={this.changeLoadRouteDirectionTwo} value={stage_plan_id} intername='stage_plan_id' type="text" className={styles.inputBox} placeholder="相序方案号" /></p>
+                                <p><span>阶段时间：</span><input onChange={this.changeLoadRouteDirectionTwo} value={stage_time} intername='stage_time' type="text" className={styles.inputBox} placeholder="阶段时间" /></p>
                               </div> : ''
                             }
                           </div>
-                        </div>
-                      </div>
-                      <div>
-                        <span></span>
-                        <div className={styles.linboxer}>
-                          <p><span>关联路口：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="关联路口" /></p>
-                          <p><span>应急方式对应值：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="应急方式对应值" /></p>
-                          <p><span>配时周期：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="配时周期" /></p>
-                          <div className={styles.boxStyle}>
-                            <span>应急方式：</span>
-                            <Select
-                              // defaultValue="海淀区"
-                              // value={ }
-                              style={{ width: 160, height: 30 }}
-                              onChange={this.changeLoadRouteDirection}
-                            >
-                              <Option addeditname='route_directionvalue' intername='route_direction' style={{ width: 160, height: 30 }} >配时方案定义1</Option>
-                              <Option addeditname='route_directionvalue' intername='route_direction' style={{ width: 160, height: 30 }} >锁定控制方式2</Option>
-                              <Option addeditname='route_directionvalue' intername='route_direction' style={{ width: 160, height: 30 }} >锁定交通流向3</Option>
-                            </Select>
-                            {
-                              boxStyleShow ? <div>
-                                <p><span>阶段编号：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="阶段编号" /></p>
-                                <p><span>阶段序号：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="阶段序号" /></p>
-                                <p><span>相序方案号：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="相序方案号" /></p>
-                                <p><span>阶段时间：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="阶段时间" /></p>
-                              </div> : ''
-                            }
-                          </div>
-                        </div>
-                      </div>
-                      <div>
-                        <span></span>
-                        <div className={styles.linboxer}>
-                          <p><span>关联路口：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="关联路口" /></p>
-                          <p><span>应急方式对应值：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="应急方式对应值" /></p>
-                          <p><span>配时周期：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="配时周期" /></p>
-                          <div className={styles.boxStyle}>
-                            <span>应急方式：</span>
-                            <Select
-                              // defaultValue="海淀区"
-                              // value={ }
-                              style={{ width: 160, height: 30 }}
-                              onChange={this.changeLoadRouteDirection}
-                            >
-                              <Option addeditname='route_directionvalue' intername='route_direction' style={{ width: 160, height: 30 }} >配时方案定义1</Option>
-                              <Option addeditname='route_directionvalue' intername='route_direction' style={{ width: 160, height: 30 }} >锁定控制方式2</Option>
-                              <Option addeditname='route_directionvalue' intername='route_direction' style={{ width: 160, height: 30 }} >锁定交通流向3</Option>
-                            </Select>
-                          </div>
-                          {
-                            boxStyleShow ? <div>
-                              <p><span>阶段编号：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="阶段编号" /></p>
-                              <p><span>阶段序号：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="阶段序号" /></p>
-                              <p><span>相序方案号：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="相序方案号" /></p>
-                              <p><span>阶段时间：</span><input onChange={this.changeLoadRouteDirection} value={route_name} intername='route_name' type="text" className={styles.inputBox} placeholder="阶段时间" /></p>
-                            </div> : ''
-                          }
                         </div>
                       </div>
 
@@ -1846,7 +1825,7 @@ class PlancontrolPage extends Component {
               {
                 ismodifyNew ?
                   <div className={styles.operationLine}>
-                    <span style={{ color: this.state.disabled ? "#05E5EB" : "#FFFFFF" }} onClick={this.getismodify}>编辑</span> <span onClick={this.handclickAddEditModify}>保存</span>
+                    <span style={{ color: !this.state.disabled ? "#05E5EB" : "#FFFFFF" }} onClick={this.getismodify}>编辑</span> <span onClick={this.handclickAddEditModify}>保存</span>
                   </div>
                   :
                   <div className={styles.operationLine}>
@@ -1969,7 +1948,9 @@ class PlancontrolPage extends Component {
                               <div className={styles.streetTitleBox}>
                                 <div>{item.unit_name}</div>
                                 <div><span>模式：</span></div>
-                                <div onClick={() => this.delectListChild(item)}><CloseOutlined /></div>
+                                {
+                                  !this.state.disabled ? <div onClick={() => this.delectListChild(item)}><CloseOutlined /></div> : ''
+                                }
                               </div>
                               <div className={styles.intersectionBox}>
                                 <div className={styles.mountingThead}>

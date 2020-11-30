@@ -413,6 +413,9 @@ $bor-color: #a5fcff;
         bottom: 0;
         width: 100%;
         height: calc(100% - 70px);
+        .markers {
+            background-color: red !important;
+        }
         .contentCenter {
             width: 100%;
             height: calc(100% - 20px);
