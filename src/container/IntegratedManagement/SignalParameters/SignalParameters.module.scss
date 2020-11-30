@@ -1,7 +1,7 @@
 .timingWrapper {
   height: 100%;
   width: 100%;
-  background-color: #021035;
+  background-color: #070d3f;
   display: flex;
   flex-direction: column;
 }
@@ -17,52 +17,61 @@
     line-height: 19px;
     background: url("../../imgs/smalltit.png") center 5px no-repeat;
     background-size: 100% 100%;
-}
+  }
   .title {
-    font-size: 16px;
+    font-size: 18px;
     color: whitesmoke;
     height: 40px;
   }
   .searchBox {
-    height: 35px;
+    height: 65px;
     display: flex;
+    border: 1px solid #2a384e;
+    padding-left: 25px;
     div {
-      flex: 1;
       display: flex;
       margin-right: 20px;
       align-items: center;
-      > span {
-        padding-right: 20px;
-        color: #92d1db;
-      }
       input {
-        flex: 1;
+        width: 140px;
       }
       &:last-child {
+        flex: 1;
         display: flex;
         justify-content: flex-end;
+        :global(.ant-btn-primary) {
+          height: 30px;
+          color: #217892;
+          border: 1px solid #217892;
+          background-color: #162f47;
+        }
       }
     }
   }
   .goExcal {
     height: 35px;
     margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     > span {
       padding-right: 6px;
-      color: #92d1db;
+      color: #3bd7ee;
     }
   }
   .mountingManage {
-    height: calc(100% - 150px);
+    height: calc(100% - 180px);
     .mountingTable {
       height: 100%;
       .mountingThead {
+        border: 1px solid #2a384e;
         font-size: 12px;
         height: 30px;
-        color: #95edf4;
+        border-bottom: none;
         display: flex;
       }
       .mountingTr {
+        border: 1px solid #2a384e;
         height: 30px;
         position: relative;
         display: flex;
@@ -83,15 +92,12 @@
           cursor: pointer;
         }
       }
+      .company {
+        flex: 1.5;
+      }
       .deviceMsg {
         margin: 0 10px;
         color: #07a8ff;
-      }
-      .mountingTr:nth-child(odd) {
-        background-color: rgba(14, 50, 98, 0.7);
-      }
-      .mountingTr:nth-child(even) {
-        background-color: rgba(14, 28, 63, 0.7);
       }
       .mountingTbody {
         // height: calc(100% - 50px);

@@ -234,7 +234,7 @@ class Homepage extends Component {
         el.style.width = '20px'
         el.style.height = '20px'
         el.style.borderRadius = '50%'
-        el.style.backgroundColor = 'rgba(0,255,0,.4)'
+        el.style.backgroundColor = 'rgba(8,194,8,.3)'
         el.style.display = 'flex'
         el.style.justifyContent = 'center'
         el.style.alignItems = 'center'
@@ -244,7 +244,7 @@ class Homepage extends Component {
         childEl.style.width = '10px'
         childEl.style.height = '10px'
         childEl.style.borderRadius = '50%'
-        childEl.style.backgroundColor = '#00FF00'
+        childEl.style.backgroundColor = '#08c208'
         el.appendChild(childEl)
         el.addEventListener('click',function(e){
           currentThis.addInfoWindow(item)

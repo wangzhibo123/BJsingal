@@ -51,11 +51,10 @@ class LoadingPage extends React.Component {
         unit_order: this.props.unit_order,
       })
     }
-
   }
   render() {
     const { Option } = Select
-    const { interval_time, stage_id, lock_time, direction_entervalue, direction_exitvalue, unit_order } = this.state
+    const { interval_time, stage_id, lock_time, direction_entervalue, direction_exitvalue, disabled } = this.state
     const { getDirectionList } = this.props
     return (
       <div className={styles.boxCjild}>
@@ -65,10 +64,9 @@ class LoadingPage extends React.Component {
           <p><span>间隔时间：</span><input onChange={(e) => this.props.changeLoadRouteDirection(e, this.props.index)} value={interval_time} intername='interval_time' type="text" className={styles.inputBox} placeholder="间隔时间" /></p>
           <p><span>锁定阶段编号：</span><input onChange={(e) => this.props.changeLoadRouteDirection(e, this.props.index)} value={stage_id} intername='stage_id' type="text" className={styles.inputBox} placeholder="锁定阶段编号" /></p>
           <p><span>锁定时长：</span><input onChange={(e) => this.props.changeLoadRouteDirection(e, this.props.index)} value={lock_time} intername='lock_time' type="text" className={styles.inputBox} placeholder="锁定时长" /></p>
-          <div className={styles.boxStyle}>
+          {/* <div className={styles.boxStyle}>
             <span>入口方向：</span>
             <Select
-              // defaultValue="海淀区"
               value={direction_entervalue}
               style={{ width: 160, height: 30 }}
               onChange={(e) => this.props.changeLoadRouteDirectionSelect(e, this.props.index, 'direction_entervalue')}
@@ -82,7 +80,6 @@ class LoadingPage extends React.Component {
           <div className={styles.boxStyle}>
             <span>出口方向：</span>
             <Select
-              // defaultValue="海淀区"
               value={direction_exitvalue}
               style={{ width: 160, height: 30 }}
               onChange={(e) => this.props.changeLoadRouteDirectionSelect(e, this.props.index, 'direction_exitvalue')}
@@ -92,10 +89,10 @@ class LoadingPage extends React.Component {
               }
 
             </Select>
-          </div>
+          </div> */}
           {/* <p><span>入口方向：</span><input onChange={(e) => this.props.changeLoadRouteDirection(e, this.props.index)} value={direction_enter} intername='direction_enter' type="text" className={styles.inputBox} placeholder="入口方向" /></p> */}
           {/* <p><span>出口方向：</span><input onChange={(e) => this.props.changeLoadRouteDirection(e, this.props.index)} value={direction_exit} intername='direction_exit' type="text" className={styles.inputBox} placeholder="出口方向" /></p> */}
-          <p><span>路口顺序号：</span><input onChange={(e) => this.props.changeLoadRouteDirection(e, this.props.index)} value={unit_order} intername='unit_order' type="text" className={styles.inputBox} placeholder="路口顺序号" /></p>
+          {/* <p><span>路口顺序号：</span><input onChange={(e) => this.props.changeLoadRouteDirection(e, this.props.index)} value={unit_order} intername='unit_order' type="text" className={styles.inputBox} placeholder="路口顺序号" /></p> */}
           {/* <p><span>所属特勤任务：</span><input onChange={() => this.props.changeLoadRouteDirection(this.props.index)} value={vip_road_id} intername='vip_road_id' type="text" className={styles.inputBox} placeholder="所属特勤任务" /></p> */}
         </div>
       </div>

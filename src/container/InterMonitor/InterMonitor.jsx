@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { Select } from 'antd'
 import {
   SearchOutlined, DoubleLeftOutlined, DoubleRightOutlined, CaretUpOutlined, CaretDownOutlined, LeftCircleOutlined,
   RightCircleOutlined, UpCircleOutlined, DownCircleOutlined, CloseOutlined, EnvironmentOutlined,
 } from '@ant-design/icons'
 import mapConfiger from '../utils/minemapConf'
+import { getPrimitiveInfo } from '../../reduxs/action/interConfig'
 import './InterMonitor.scss'
 
 import axiosInstance from '../utils/getInterfaceData'
@@ -46,7 +49,8 @@ class InterMonitor extends Component {
       stageList: null,
       showInterMap: false,
       isResetStage: true,
-      stageIndexs: null,
+      stageIndexs: 0,
+      picConfig: null,
     }
     this.confItems = [
       { confname: '基础信息', id: 'interBase' }, { confname: '信号参数', id: 'singalParams' },
@@ -58,28 +62,34 @@ class InterMonitor extends Component {
       { text: '中心控制', img: cneter },
       { text: '中心手控', img: hand },
     ]
-    this.defaultMarkers = [
-      [116.32346, 39.95645],
-      [116.32815, 39.95668],
-      [116.33536, 39.95711],
-      [116.33615, 39.95176],
-      [116.34108, 39.94728],
-      [116.34310, 39.93679],
-      [116.37923, 39.95809],
-    ]
     this.defaultStageList = []
     this.interId = this.props.match.params.id
     this.modeUrl = `/control-application-front/unitMontitor/getControlModeById?unit_id=${this.interId}`
     this.trafficUrl = `/control-application-front/unitMontitor/getRealtimeTrafficById?unit_id=${this.interId}`
     this.trendUrl = `/control-application-front/unitMontitor/getRoadTrendById?unit_id=${this.interId}`
     this.messageUrl = `/control-application-front/unitMontitor/getUnitInfoById?unit_id=${this.interId}`
+    this.canalizationUrl = `/control-application-front/unitMontitor/getCanalizationElementById?unit_id=${this.interId}`
   }
   componentDidMount = () => {
-    this.getControlMode()
+    this.props.getPrimitiveInfo(this.interId)
     this.getControlMode()
     this.getTrafficInfo()
     this.getRoadTrend()
     this.getInterInfo()
+  }
+  componentDidUpdate = (preveState) => {
+    const { primitiveInfo } = this.props.data
+    if (preveState.data.primitiveInfo !== primitiveInfo) {
+      this.getCanalizationMsg(primitiveInfo)
+    }
+  }
+  // 获取图元信息
+  getCanalizationMsg = (info) => {
+    let uiConfigList = []
+    Object.values(info).forEach((item) => {
+      uiConfigList = [...uiConfigList, ...item]
+    })
+    this.setState({ picConfig: uiConfigList }) //info.CfgLaneInfo
   }
   // 路口信息
   getInterInfo = () => {
@@ -96,16 +106,14 @@ class InterMonitor extends Component {
   getControlMode = () => {
     axiosInstance.post(this.modeUrl).then((res) => {
       const { code, list } = res.data
-      if (code === '1') {
+      if (code === '1' && list.stage_id.length) {
         const stageIds = list.stage_id.split(',')
-        if (stageIds.length) {
-          const stageTimes = list.stage_time.split(',')
-          const imgs = list.stage_image.split(',')
-          stageIds.forEach((item, index) => {
-            const obj = { stageId: item, stageTime: stageTimes[index], modifyTime: stageTimes[index], stageImg: imgs[index] }
-            this.defaultStageList.push(obj)
-          })
-        }
+        const stageTimes = list.stage_time.split(',')
+        const imgs = list.stage_image.split(',')
+        stageIds.forEach((item, index) => {
+          const obj = { stageId: item, stageTime: stageTimes[index], modifyTime: stageTimes[index], stageImg: imgs[index] }
+          this.defaultStageList.push(obj)
+        })
         this.setState({
           statusControlData: list,
           stageList: this.defaultStageList,
@@ -241,7 +249,7 @@ class InterMonitor extends Component {
     const globalImgurl = localStorage.getItem('ImgUrl')
     const {
       confListLeft, modeIndex, moveLeft, moveRight, moveUp, moveDown, trafficInfoList, interConfigMsg, trendChartsData, interInfo, showSingalInfo,
-      phaseTime, statusControlData, stageList, showInterMap, isResetStage, stageIndexs
+      phaseTime, statusControlData, stageList, showInterMap, isResetStage, stageIndexs, picConfig,
     } = this.state
     return (
       <div className="interMonitorBox">
@@ -250,10 +258,28 @@ class InterMonitor extends Component {
           <span className="slideUp slideIcon" dir="moveUp" onClick={this.handleToggleInter}><UpCircleOutlined /></span>
           <span className="slideDown slideIcon" dir="moveDown" onClick={this.handleToggleInter}><DownCircleOutlined /></span>
           <div className="interPic">
-            <img className={`${moveLeft ? 'slideInLeft' : moveRight ? 'slideInRight' : moveUp ? 'slideInUp' : moveDown ? 'slideInDown' : ''}`} src={test1} alt="" />
-            <div className="interPhaseTime">
-              <em><i>{phaseTime}s</i></em>
+            <div style={{ width: '1200px', height: '100%', position: 'relative' }}>
+              <img className={`${moveLeft ? 'slideInLeft' : moveRight ? 'slideInRight' : moveUp ? 'slideInUp' : moveDown ? 'slideInDown' : ''}`} width="1200px" height="100%" src={test1} alt="" />
+              {
+                picConfig &&
+                picConfig.map((item, index) => {
+                  const { pLeft, pTop, uiImageName } = item.uiUnitConfig
+                  return (
+                  <img
+                    key={item.uiId + index}
+                    indexs={index}
+                    src={globalImgurl + uiImageName}
+                    alt=""
+                    style={{ position: 'absolute', top: `${pTop}px`, left: `${pLeft}px` }}
+                    draggable="true"
+                  />
+                )})
+              }
+              <div className="interPhaseTime">
+                <em><i>{phaseTime}s</i></em>
+              </div>
             </div>
+            
           </div>
           {
             !!interConfigMsg &&
@@ -403,4 +429,14 @@ class InterMonitor extends Component {
     )
   }
 }
-export default InterMonitor
+const mapStateToProps = (state) => {
+  return {
+    data: state.interConfig,
+  }
+}
+const mapDisPatchToProps = (dispatch) => {
+  return {
+    getPrimitiveInfo: bindActionCreators(getPrimitiveInfo, dispatch),
+  }
+}
+export default connect(mapStateToProps, mapDisPatchToProps)(InterMonitor)

@@ -1,23 +1,11 @@
 import React, { Component } from 'react'
-import { Upload, message } from 'antd'
+import { Upload, message, Modal } from 'antd'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { CloseOutlined } from '@ant-design/icons'
 import './InterConfMsg.scss'
 
-import left from '../../imgs/left.png'
-import right from '../../imgs/right.png'
-import straight from '../../imgs/straight.png'
-import round from '../../imgs/round.png'
-import goleft from '../../imgs/goleft.png'
-import goright from '../../imgs/goright.png'
-import top from '../../imgs/top.png'
-import bottom from '../../imgs/bottom.png'
-import topleft from '../../imgs/topleft.png'
-import topright from '../../imgs/topright.png'
-import bottomleft from '../../imgs/bottomleft.png'
-import bottomright from '../../imgs/bottomright.png'
-import singal from '../../imgs/singal.png'
-import videoIcon from '../../imgs/moni.png'
-
+import BaseMessage from './BaseMessage/BaseMessage'
 import ChannelTable from './BaseMessage/ChannelTable/ChannelTable'
 import InterRelation from './BaseMessage/InterRelation/InterRelation'
 import SingalMsg from './BaseMessage/SingalMsg/SingalMsg'
@@ -32,7 +20,11 @@ import TimePlan from './SingalParams/TimePlan/TimePlan'
 import DispathPlan from './SingalParams/DetectorPlan/DetectorPlan'
 import DayPlan from './SingalParams/DayPlan/DayPlan'
 
+import ModalPage from './ModalPage/ModalPage'
+import ChannelModal from './ModalPage/channelModal/ChannelModal'
+
 import axiosInstance from '../../utils/getInterfaceData'
+import { getDevicePiclist, getEditDeviceInfo } from '../../../reduxs/action/interConfig'
 
 class InterConfMsg extends Component {
   constructor(props) {
@@ -47,16 +39,19 @@ class InterConfMsg extends Component {
       interInfo: null,
       laneLists: this.roadLists,
       interImage: null,
+      editDeviceMsg: false,
+      interDeviceList: null,
+      currentDeviceList: null,
     }
     this.globalImgurl = localStorage.getItem('ImgUrl')
     this.baseConfList = [
-      { confName: '渠化信息', id: 'canalization', compos: null },
-      { confName: '车道信息', id: 'channel', compos: ChannelTable },
-      { confName: '路口关系', id: 'inter', compos: InterRelation },
-      { confName: '信号机', id: 'singal', compos: SingalMsg },
-      { confName: '灯组', id: 'lightGroup', compos: LightGroup },
-      { confName: '检测器', id: 'detector', compos: Detector },
-      { confName: '视频', id: 'video', compos: VideoMsg },
+      { confName: '渠化信息', id: 'canalization', num: '0', compos: null },
+      { confName: '车道信息', id: 'channel', num: '6', compos: ChannelTable, modalCompos: ChannelModal },
+      { confName: '路口关系', id: 'inter', num: '7', compos: InterRelation },
+      { confName: '信号机', id: 'singal', num: '1', compos: SingalMsg },
+      { confName: '灯组', id: 'lightGroup', num: '10', compos: LightGroup },
+      { confName: '检测器', id: 'detector', num: '3', compos: Detector },
+      { confName: '视频', id: 'video', num: '9', compos: VideoMsg },
     ]
     this.singalParams = [
       { confName: '相位信息', id: 'phasemsg', compos: PhaseMsg },
@@ -64,25 +59,6 @@ class InterConfMsg extends Component {
       { confName: '配时方案', id: 'timeplan', compos: TimePlan },
       { confName: '日计划', id: 'dayplan', compos: DayPlan },
       { confName: '调度方案', id: 'dispathplan', compos: DispathPlan },
-    ]
-    this.dirPic = [
-      { pic: left, picname: 'left', confname: 'channel' },
-      { pic: right, picname: 'right', confname: 'channel' },
-      { pic: straight, picname: 'straight', confname: 'channel' },
-      { pic: round, picname: 'round', confname: 'channel' },
-      { pic: goleft, picname: 'goleft', confname: 'inter' },
-      { pic: goright, picname: 'goright', confname: 'inter' },
-      { pic: top, picname: 'gotop', confname: 'inter' },
-      { pic: bottom, picname: 'gobottom', confname: 'inter' },
-      { pic: topleft, picname: 'gotopleft', confname: 'inter' },
-      { pic: topright, picname: 'gotopright', confname: 'inter' },
-      { pic: bottomleft, picname: 'gobottomleft', confname: 'inter' },
-      { pic: bottomright, picname: 'gobottomright', confname: 'inter' },
-      { pic: singal, picname: 'light', confname: 'lightGroup' },
-      { pic: videoIcon, picname: 'videos', confname: 'video' },
-    ]
-    this.turnPic = [
-      { pic: goleft }, { pic: goright }, { pic: top }, { pic: bottom }, { pic: topleft }, { pic: topright }, { pic: bottomleft }, { pic: bottomright }
     ]
     this.uploadPic = '/control-application-front/file/upload'
     this.updatePic = '/control-application-front/basic/info/unit/background'
@@ -93,6 +69,18 @@ class InterConfMsg extends Component {
     if (interInfo.background_img) {
       this.setState({ isUpload: true, interImage: interInfo.background_img })
     }
+    const { primitiveInfo } = this.props.data
+    this.getPicDeviceInfo(primitiveInfo)
+    this.props.getDevicePiclist()
+  }
+  componentDidUpdate = (prevState) => {
+    const { devicePiclist, primitiveInfo } = this.props.data
+    if (prevState.data.devicePiclist !== devicePiclist) {
+      this.getInterDeviceList(devicePiclist)
+    }
+    if (prevState.data.primitiveInfo !== primitiveInfo) {
+      this.getPicDeviceInfo(primitiveInfo)
+    }
   }
   handleUpdateInterPic = (imgPath) => {
     const savePathParams = { id: this.props.interInfo.id, backgroungImg: imgPath }
@@ -100,9 +88,29 @@ class InterConfMsg extends Component {
       console.log(res)
     })
   }
+  // 图元配置信息
+  getPicDeviceInfo = (primitiveInfo) => {
+    this.primitiveList = primitiveInfo
+    this.roadLists = []
+    Object.values(primitiveInfo).forEach((item) => {
+      this.roadLists = [...this.roadLists, ...item]
+    })
+    this.setState({ laneLists: this.roadLists })
+  }
+  //
+  getInterDeviceList = (picList) => {
+    console.log(picList)
+  }
   // 切换配置
-  handleBaseItemChange = (currentItem, stateName) => {
+  handleBaseItemChange = (currentItem, stateName, listnum) => {
+    const { devicePiclist } = this.props.data
     this.setState({ [stateName]: currentItem })
+    if (listnum === '0') {
+
+    } else {
+      this.setState({ currentDeviceList: devicePiclist[listnum] })
+    }
+    
   }
   
   handleUploadInterPic = () => {
@@ -123,6 +131,7 @@ class InterConfMsg extends Component {
       console.log(info.file)
       const { response } = info.file
       if (response.code === 200) {
+        this.setState({ interImage: response.data })
         message.info('上传成功')
         this.handleUpdateInterPic(response.data)
       } else {
@@ -131,13 +140,47 @@ class InterConfMsg extends Component {
     }
   }
   handleDirDragStart = (ev) => {
+    this.newConfPic = {
+      cfgLaneInfo: {
+        attribute: 1,
+        attributeValue: '',
+        detail: null,
+        direction: 2,
+        directionValue: '',
+        feature: 1,
+        featureValue: '',
+        id: 3,
+        laneno: 3,
+        movement: 21,
+        movementValue: '',
+        unitId: '',
+      },
+      id: '',
+      uiUnitConfig: {
+        configCode: 3,
+        detail: null,
+        deviceId: 3,
+        id: 3,
+        isView: 1,
+        pLeft: 0,
+        pTop: 0,
+        rotationAngle: null,
+        uiHight: 40,
+        uiId: 73,
+        uiImageName: '',
+        uiWidth: 40,
+        unitId: 1000084,
+      },
+    }
     this.currentDragIndex = null
     const BeforetargetLeft = ev.target.offsetLeft
     this.moveBeforeX = ev.clientX - BeforetargetLeft
     this.moveBeforeY = ev.clientY + 58
     const picname = ev.target.getAttribute('picname')
-    const pic = this.dirPic.find(item => item.picname === picname)
-    this.newConfPic = { picname, pic: pic.pic }
+    const { currentDeviceList } = this.state
+    const currentPic = currentDeviceList.find(item => item.id === parseInt(picname))
+    this.newConfPic.uiUnitConfig.uiId = picname
+    this.newConfPic.uiUnitConfig.uiImageName = currentPic.uiImageName
   }
   handleDirDragEnd = (ev) => {
     console.log(ev.target, 'end:::')
@@ -148,20 +191,21 @@ class InterConfMsg extends Component {
     const moveAfterX = ev.clientX
     const moveAfterY = ev.clientY
     if (this.currentDragIndex) {
-      const { posx, posy } = this.newConfPic
-      const posX = posx + (moveAfterX - this.moveBeforeX)
-      const posY = posy + (moveAfterY - this.moveBeforeY)
-      this.newConfPic.posx = posX
-      this.newConfPic.posy = posY
+      const { pLeft, pTop } = this.newConfPic.uiUnitConfig
+      const posX = pLeft + (moveAfterX - this.moveBeforeX)
+      const posY = pTop + (moveAfterY - this.moveBeforeY)
+      this.newConfPic.uiUnitConfig.pLeft = posX
+      this.newConfPic.uiUnitConfig.pTop = posY
     } else {
       const posX = moveAfterX - this.moveBeforeX - dropBoxLeft
       const posY = moveAfterY - this.moveBeforeY
-      this.newConfPic.posx = posX
-      this.newConfPic.posy = posY
+      this.newConfPic.uiUnitConfig.pLeft = posX
+      this.newConfPic.uiUnitConfig.pTop = posY
       this.roadLists.push(this.newConfPic)
+      this.setState({ editDeviceMsg: true })
+      this.props.getEditDeviceInfo(this.newConfPic)
     }
     this.setState({ laneLists: this.roadLists })
-    console.log(this.roadLists)
   }
   handleDragOver = (ev) => {
     ev.preventDefault();
@@ -172,8 +216,20 @@ class InterConfMsg extends Component {
     this.moveBeforeY = ev.clientY
     this.newConfPic = this.roadLists[this.currentDragIndex]
   }
+  handleConfpicUp = () => {
+    this.setState({ editDeviceMsg: true })
+  }
+  handleConfirmModal = () => {
+    this.setState({ editDeviceMsg: false })
+  }
+  handleCancelModal = () => {
+    this.setState({ editDeviceMsg: false })
+  }
+  handleCloseEditModal = () => {
+    this.setState({ editDeviceMsg: false })
+  }
   render() {
-    const { isUpload, currentItem, configName, currentParams, laneLists, interInfo, interImage } = this.state
+    const { isUpload, currentItem, configName, currentParams, laneLists, interInfo, interImage, editDeviceMsg, currentDeviceList } = this.state
     return (
       <div className="interConfMsg">
         <div className="confMsgBox">
@@ -203,7 +259,11 @@ class InterConfMsg extends Component {
             {
               configName === 'interBase' &&
               this.baseConfList.map((item) => (
-                <div className={`baseItem ${currentItem === item.id ? 'activeItem' : ''}`} key={item.id} onClick={() => this.handleBaseItemChange(item.id, 'currentItem')}>{item.confName}</div>
+                <div
+                  className={`baseItem ${currentItem === item.id ? 'activeItem' : ''}`}
+                  key={item.id}
+                  onClick={() => this.handleBaseItemChange(item.id, 'currentItem', item.num)}
+                >{item.confName}</div>
               ))
             }
             {
@@ -221,7 +281,7 @@ class InterConfMsg extends Component {
                   <div className="interPicBox">
                     {
                       isUpload ?
-                        <img src={this.globalImgurl + interImage} alt="" height="100%" /> :
+                        <img src={this.globalImgurl + interImage} alt="" width="1200px" height="600px" /> :
                         <span className="pleaseUpload">请上传该路口渠化图</span>
                     }
                     <Upload
@@ -236,81 +296,65 @@ class InterConfMsg extends Component {
                         {isUpload ? <span>重新上传</span> : <span>上传</span>}
                       </div>
                     </Upload>
-                    
                   </div> :
                   <div className="interConfDetails">
                     <div className="deviceConf">
                       <div className="deviceList">
                         {
-                          (currentItem === 'channel' || currentItem === 'inter' || currentItem === 'lightGroup' || currentItem === 'video') &&
-                          this.dirPic.map((item, index) => {
-                            if (item.confname === currentItem) {
-                              return (
-                                <div className="devicePicBox" key={index}>
-                                  <img src={item.pic} alt="" height={item.picname !== 'videos' ? '100%' : 'auto'} picname={item.picname} draggable="true" onDragStart={this.handleDirDragStart} />
-                                </div>
-                              )
-                            }
-                          })
-                        }
-                        {
-                          currentItem === 'singal' &&
-                          <>
-                            <div className="devicePicBox">海信</div>
-                            <div className="devicePicBox">西门子</div>
-                          </>
-                        }
-                        {
-                          currentItem === 'detector' &&
-                          <>
-                            <div className="devicePicBox">地磁</div>
-                            <div className="devicePicBox">线圈</div>
-                          </>
+                          currentDeviceList &&
+                          currentDeviceList.map((item, index) => (
+                            <div className="devicePicBox" key={index}>
+                              <img src={this.globalImgurl + item.uiImageName} alt="" picname={item.id} draggable="true" onDragStart={this.handleDirDragStart} />
+                            </div>
+                          ))
                         }
                       </div>
                       <div className="picConfig">
-                        <div style={{ width: '760px', height: '585px', position: 'relative' }} onDrop={this.handleDropPic} onDragOver={this.handleDragOver}>
-                          <img src={this.globalImgurl + interImage} alt="" height="100%" draggable="false" />
+                        <div style={{ width: '1200px', height: '600px', position: 'relative' }} onDrop={this.handleDropPic} onDragOver={this.handleDragOver}>
+                          <img src={this.globalImgurl + interImage} alt="" width="100%" height="100%" draggable="false" />
                           {
                             laneLists &&
-                            laneLists.map((item, index) => (
-                              <img
-                                key={item.picname + index}
-                                indexs={index} src={item.pic}
-                                alt=""
-                                style={{ position: 'absolute', top: `${item.posy}px`, left: `${item.posx}px`, height: item.picname !== 'videos' ? '48px' : 'auto' }}
-                                draggable="true"
-                                onDragStart={this.handleDragConfPic}
-                              />
-                            ))
+                            laneLists.map((item, index) => {
+                              const { pTop, pLeft, rotationAngle, uiImageName } = item.uiUnitConfig
+                              return (
+                                <img
+                                  className="dragImgs"
+                                  key={item.id + index}
+                                  indexs={index}
+                                  src={this.globalImgurl + uiImageName}
+                                  alt=""
+                                  style={{ top: `${pTop}px`, left: `${pLeft}px`, transform: `rotate(${rotationAngle ? rotationAngle : 0})deg` }}
+                                  draggable="true"
+                                  onDragStart={this.handleDragConfPic}
+                                  onMouseUp={this.handleConfpicUp}
+                                />
+                              )}
+                            )
                           }
                         </div>
                       </div>
                     </div>
                     <div className="confDetails">
+                      <Modal
+                        visible={editDeviceMsg}
+                        wrapClassName="modalBox"
+                        footer={null}
+                        closable={false}
+                        maskStyle={{ backgroundColor: 'rgba(0,0,0,.2)' }}
+                      >
+                        <ModalPage modalName={currentItem} renderComponent={(params) => {
+                          const ItemParams = this.baseConfList.find(item => item.id === params)
+                          const ItemComponent = ItemParams.modalCompos
+                          return <ItemComponent closeEditModal={this.handleCloseEditModal} {...this.props} />
+                        }} />
+                      </Modal>
                       {
-                        currentItem === 'channel' &&
-                        <ChannelTable {...this.props} />
-                      }
-                      {
-                        currentItem === 'inter' &&
-                        <InterRelation />
-                      }
-                      {
-                        currentItem === 'singal' &&
-                        <SingalMsg />
-                      }
-                      {
-                        currentItem === 'lightGroup' &&
-                        <LightGroup />
-                      }
-                      {
-                        currentItem === 'detector' &&
-                        <Detector />
-                      }
-                      {
-                        currentItem === 'video' &&
-                        <VideoMsg />
+                        currentItem &&
+                        <BaseMessage paramsName={currentItem} renderComponent={(prams) => {
+                          const ItemParams = this.baseConfList.find(item => item.id === prams)
+                          const ItemComponent = ItemParams.compos
+                          return <ItemComponent {...this.props} />
+                        }} />
                       }
                     </div>
                   </div>
@@ -331,4 +375,15 @@ class InterConfMsg extends Component {
   }
 }
 
-export default InterConfMsg
+const mapStateToProps = (state) => {
+  return {
+    data: state.interConfig,
+  }
+}
+const mapDisPatchToProps = (dispatch) => {
+  return {
+    getDevicePiclist: bindActionCreators(getDevicePiclist, dispatch),
+    getEditDeviceInfo: bindActionCreators(getEditDeviceInfo, dispatch),
+  }
+}
+export default connect(mapStateToProps, mapDisPatchToProps)(InterConfMsg)

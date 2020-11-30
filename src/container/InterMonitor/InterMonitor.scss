@@ -47,7 +47,7 @@
     position: relative;
     width: 100%;
     height: 100%;
-    background-color: #02102b;
+    background-color: #070d3f;
     .interMessage {
         position: absolute;
         bottom: 0;
@@ -93,16 +93,14 @@
         }
         .interPic {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 40px;
+            left: 20px;
+            width: calc(100% - 448px);
+            height: 600px;
             display: flex;
             justify-content: center;
             align-items: center;
             img {
-                width: 100%;
-                height: 100%;
                 transition: all 0.3s;
             }
             .slideInLeft {
