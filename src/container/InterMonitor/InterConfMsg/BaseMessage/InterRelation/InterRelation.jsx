@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import { Select } from 'antd'
+import { Select, Modal, message } from 'antd'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import './InterRelation.scss'
+
+import axiosInstance from '../../../../utils/getInterfaceData'
 
 const { Option } = Select
 class InterRelation extends Component {
@@ -10,13 +12,41 @@ class InterRelation extends Component {
     this.state = {
       relationList: null,
     }
+    this.interId = this.props.match.params.id
+    this.removeUrl = '/control-application-front/basic/info/connector/removeUnitConnector'
   }
   componentDidMount = () => {
-    this.getInterRelationList()
-  }
-  getInterRelationList = () => {
     const { primitiveInfo } = this.props.data
+    this.getInterRelationList(primitiveInfo)
+  }
+  componentDidUpdate = (prevState) => {
+    const { primitiveInfo } = this.props.data
+    if (prevState.data.primitiveInfo !== primitiveInfo) {
+      this.getInterRelationList(primitiveInfo)
+    }
+  }
+  getRemoveRelation = (id, configId) => {
+    axiosInstance.post(`${this.removeUrl}?id=${id}&configId=${configId}`).then((res) => {
+      const { code } = res.data
+      if (code === 200) {
+        this.props.getPrimitiveInfo(this.interId)
+      }
+      message.info(res.data.message)
+    })
+  }
+  getInterRelationList = (primitiveInfo) => {
     this.setState({ relationList: primitiveInfo.UnitConnector })
+  }
+  handleDelete = (id, configId) => {
+    const { confirm } = Modal
+    const selfThis = this
+    confirm({
+      title: '确定要删除吗？',
+      className: 'confirmBox',
+      onOk() {
+        selfThis.getRemoveRelation(id, configId)
+      },
+    })
   }
   render() {
     const { relationList } = this.state
@@ -38,14 +68,14 @@ class InterRelation extends Component {
                 const { id, roadDetail, unitDirectionValue, unitDirection } = item.unitConnector
                 return (
                   <div className="confTr" key={item.id}>
-                    <div className="confTd">{unitDirection}</div>
+                    <div className="confTd">{unitDirectionValue}</div>
                     <div className="confTd">{id}</div>
                     <div className="confTd">{unitDirectionValue}</div>
                     <div className="confTd">{unitDirection}</div>
                     <div className="confTd" style={{ flex: 1.3 }}>{roadDetail}</div>
                     <div className="confTd">
                       <EditOutlined className="activeIcon" />
-                      <DeleteOutlined className="activeIcon" />
+                      <DeleteOutlined className="activeIcon" onClick={() => { this.handleDelete(item.id, item.uiUnitConfig.uiId) }} />
                     </div>
                   </div>
                 )

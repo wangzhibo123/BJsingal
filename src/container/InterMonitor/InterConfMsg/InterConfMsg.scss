@@ -142,6 +142,7 @@
                         }
                         .confTbody {
                             height: calc(100% - 40px);
+                            overflow-y: auto;
                         }
                         .confThead, .confTr {
                             display: flex;
@@ -168,8 +169,14 @@
                                 .identification {
                                     width: 35px;
                                     height: 35px;
-                                    text-align: center;
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
                                     background: rgba(136, 175, 248, 0.2);
+                                    img {
+                                        max-width: 100%;
+                                        max-height: 100%;
+                                    }
                                 }
                                 .relationInput {
                                     height: 28px;
@@ -223,6 +230,10 @@
                             display: flex;
                             justify-content: center;
                             align-items: center;
+                            img {
+                                max-width: 100%;
+                                max-height: 100%;
+                            }
                         }
                     }
                     .picConfig {
@@ -232,6 +243,12 @@
                         justify-content: center;
                         // align-items: center;
                         overflow: hidden;
+                        .dragImgs {
+                            position: absolute;
+                            max-width: 35px;
+                            max-height: 35px;
+                            // transition: all .2s;
+                        }
                     }
                 }
             }
@@ -328,4 +345,23 @@
             }
         }
     }
+}
+
+.confirmBox {
+    background-color: rgba(25,59,91, .8);
+    .ant-modal-content {
+        background-color: transparent;
+    }
+    .ant-modal-confirm-title {
+      color: #f1f1fb;
+    }
+}
+.ant-select-dropdown {
+    background-color: rgba(136, 175, 248, 0.4);
+}
+.ant-select-item {
+    color: #fff;
+}
+.ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+    background-color: rgba(136, 175, 248, 0.8);
 }

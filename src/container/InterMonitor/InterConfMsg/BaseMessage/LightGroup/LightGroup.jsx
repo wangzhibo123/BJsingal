@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
-import { Select } from 'antd'
+import { Select, message, Modal } from 'antd'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
+
+import axiosInstance from '../../../../utils/getInterfaceData'
 
 const { Option } = Select
 class LightGroup extends Component {
@@ -8,14 +11,40 @@ class LightGroup extends Component {
     this.state = {
       lampList: null,
     }
+    this.interId = this.props.match.params.id
+    this.removeUrl = '/control-application-front/basic/info/lampGroup/removeLampGroup'
   }
   componentDidMount = () => {
-    this.getLampList()
-  }
-  getLampList = () => {
     const { primitiveInfo } = this.props.data
-    this.setState({ lampList: primitiveInfo.LampGroup }, () => {
-      console.log(this.state.lampList)
+    this.getLampList(primitiveInfo)
+  }
+  componentDidUpdate = (prevState) => {
+    const { primitiveInfo } = this.props.data
+    if (prevState.data.primitiveInfo !== primitiveInfo) {
+      this.getLampList(primitiveInfo)
+    }
+  }
+  getRemoveLamp = (id, configId) => {
+    axiosInstance.post(`${this.removeUrl}?id=${id}&configId=${configId}`).then((res) => {
+      const { code } = res.data
+      if (code === 200) {
+        this.props.getPrimitiveInfo(this.interId)
+      }
+      message.info(res.data.message)
+    })
+  }
+  getLampList = (primitiveInfo) => {
+    this.setState({ lampList: primitiveInfo.LampGroup })
+  }
+  handleDelete = (id, configId) => {
+    const { confirm } = Modal
+    const selfThis = this
+    confirm({
+      title: '确定要删除吗？',
+      className: 'confirmBox',
+      onOk() {
+        selfThis.getRemoveLamp(id, configId)
+      },
     })
   }
   render() {
@@ -27,6 +56,7 @@ class LightGroup extends Component {
             <div className="confTh">灯组序号</div>
             <div className="confTh">方向</div>
             <div className="confTh">灯组类型</div>
+            <div className="confTh">操作</div>
           </div>
           <div className="confTbody">
             {
@@ -38,6 +68,10 @@ class LightGroup extends Component {
                     <div className="confTd">{directionValue}</div>
                     <div className="confTd">{lampgroupno}</div>
                     <div className="confTd">{type}</div>
+                    <div className="confTd">
+                      <EditOutlined className="activeIcon" />
+                      <DeleteOutlined className="activeIcon" onClick={() => { this.handleDelete(item.id, item.uiUnitConfig.uiId) }} />
+                    </div>
                   </div>
                 )
               })
@@ -58,10 +92,6 @@ class LightGroup extends Component {
               </div>
             </div>
           </div>
-        </div>
-        <div className="actionBtnBox">
-          <div className="saveBtn">取消</div>
-          <div className="saveBtn">保存</div>
         </div>
       </>
     )
