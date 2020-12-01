@@ -171,12 +171,401 @@ input[type="number"]{ -moz-appearance: textfield; }
         }
     }
   }
+  .WrapperContent{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #021027;
+    background: url(../imgs/sysbg.png) center center no-repeat;
+    background-size: cover;
+  }
 .specialTopicBox {
     position: relative;
     width: 100%;
     height: 100%;
     background-color: #021027;
     overflow: hidden;
+    .interRoadBoxBg{
+        width: 100%;
+        height: 100%;
+        background:url(../imgs/roadInterBg.png) no-repeat center center;
+        background-size: cover;
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        .leftInterRoadBox, .rightStageBox{
+            background:rgba(3, 22, 53, 0.7);
+            position: relative;
+        }
+        .leftInterRoadBox{
+            width: 430px;
+            height:calc(100% - 350px);
+            top:70px;
+            left:10px;
+            position: relative;
+            .PhaseSvgBox{
+                height:calc(100% - 70px);
+                overflow-y: auto;
+            }
+            .interSearch {
+                display: flex;
+                width: 410px;
+                margin: 10px auto;
+                height: 40px;
+                align-items: center;
+                .ant-select {
+                    width: 85px;
+                    color: #fff;
+                }
+                .ant-select-selector {
+                    border: none;
+                    background-color: #0a2967;
+                }
+                .ant-select-arrow {
+                    color: #fff;
+                }
+                .searchInput {
+                    width: 100%;
+                    position: relative;
+                    .inputBox {
+                        width:calc(100% - 5px);
+                        height: 32px;
+                        margin-left: 5px;
+                        padding-left: 5px;
+                        border: none;
+                        outline: none;
+                        border-radius: 4px;
+                        background-color: #0a2967;
+                    }
+                    .searchIcon {
+                        position: absolute;
+                        top: 7px;
+                        right: 10px;
+                        font-size: 18px;
+                        color: #09a4e7;
+                    }
+                }
+            }
+            .roadInterName{
+                width: 200%;
+                position: absolute;
+                left: 450px;
+                top: 0;
+                h5, h6{
+                    font-size: 14px;
+                    color:#04BAB1;
+                    margin-bottom: 5px;
+                    font-weight: bold;
+                }
+                h5{
+                    font-size: 20px;
+                }
+            }
+        }
+        .rightStageBox{
+            width: 390px;
+            top:70px;
+            right:10px;
+            h4{
+                padding:10px 0 0 15px;
+                font-size: 18px;
+                color:#ffffff;
+            }
+            .itemStageBox{
+                height: 50%;
+                overflow-y: auto;
+                >dl{
+                    margin: 0;
+                    padding: 0 10px 0 10px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    >dd{
+                        display: flex;
+                        justify-content: space-around;
+                        align-items: center;
+                        line-height: 20px;
+                        width: 49%;
+                        height: 60px;
+                        margin-bottom: 11px;
+                        >img {
+                            width: 60px;
+                            height: 60px;
+                            display: inline-block;
+                        }
+                        >span{
+                            padding-top:5px;
+                            font-size: 12px;
+                        }
+                    }
+                }
+
+            }
+            .itemPieBox{
+                height:330px;
+                width:100%;
+                margin: 0 auto;
+            }
+        }
+        > em {
+            width:109px;
+            height:109px;
+            text-align: center;
+            background:url(../imgs/timeBgText.png) no-repeat;
+            position: absolute;
+            top:50%;
+            left:50%;
+            transform: translate(-50%,-50%);
+            -webkit-transform: translate(-50%,-50%);
+            -moz-transform: translate(-50%,-50%);
+            -ms-transform: translate(-50%,-50%);
+            -o-transform: translate(-50%,-50%);
+            > i{
+                width:109px;
+                line-height: 109px;
+                font-size: 28px;
+                font-weight: bold;
+                color: #fff;
+                position: absolute;
+                top:0;
+                right:0;
+                bottom:0;
+                left:0;
+                z-index: 1; 
+            }                   
+        }
+        > em::after{
+            width:99px;
+            height:99px;
+            display: inline-block;
+            content: '';
+            position: absolute;
+            top:5px;
+            left:5px;
+            background: #051431;
+            border-radius: 100%;
+            -webkit-border-radius: 100%;
+            -moz-border-radius: 100%;
+            -ms-border-radius: 100%;
+            -o-border-radius: 100%;
+            z-index: 0;
+        }
+        > em::before{
+            width:114px;
+            height:114px;
+            display: inline-block;
+            content: '';
+            background: url(../imgs/timeCircle.png) no-repeat right center;
+            position: absolute;
+            top:-3px;
+            left:-3px;
+            animation: rotateDeg 1s infinite;
+            -webkit-animation: rotateDeg 1s infinite;
+        }
+    }
+    .controlExecute {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 850px;
+        height: 270px;
+        padding: 10px 0 0 20px;
+        background: linear-gradient(0deg, rgba(2, 15, 36, 0.4), rgba(0, 38, 120, 0.99), rgba(2, 15, 36, 0.4));
+        font-family: "MicrosoftYaHei";
+        z-index: 1;
+        .controlMsg {
+            height: 40px;
+            display: flex;
+            align-items: center;
+        }
+        .controlItems {
+            margin-right: 20px;
+            .itemsVal {
+                padding: 2px 10px;
+                border: 1px solid #3e70ff;
+                border-radius: 2px;
+                color: #87aef8;
+            }
+        }
+        .modifyBox {
+            position: absolute;
+            right: 0;
+            top: 15px;
+            display: flex;
+            .modifyBtn {
+                width: 65px;
+                height: 28px;
+                margin-right: 5px;
+                text-align: center;
+                line-height: 28px;
+                color: #87b1ff;
+                background-color: #3e70ff;
+                cursor: pointer;
+                border-radius: 3px;
+            }
+            .modify {
+                background: url(../imgs//kuang.png) center center no-repeat;
+                background-size: 100% 100%;
+            }
+        }
+        .controlMode {
+            display: flex;
+            align-items: center;
+            padding-top: 10px;
+            .modeItems {
+                // flex: 1;
+                width: 200px;
+                height: 156px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-wrap: wrap;
+                .controlItem {
+                    width: 90px;
+                    padding: 8px 0;
+                    margin-right: 10px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    color: #87aef8;
+                    background-color: #112954;
+                    cursor: pointer;
+                    .icon {
+                        height: 30px;
+                    }
+                }
+                .itemHover {
+                    background-color: rgba(0,160,233, .5);
+                }
+            }
+            .controlDetails {
+                height: 156px;
+                display: flex;
+                flex-wrap: wrap;
+                flex: 1;
+                overflow-y: auto;
+                .phaseTime {
+                    display: flex;
+                    width: 170px;
+                    height: 70px;
+                    margin: 0 35px 15px 0;
+                    background: url(../imgs/jiaoK.png) center center no-repeat;
+                    background-size: 100% 100%;
+                    .phaseinner {
+                        flex: 1;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                    .times {
+                        font-family: "FZLTTHJW";
+                        font-size: 32px;
+                        font-weight: bold;
+                        color: #00f0ff;
+                        background: linear-gradient(0deg, #0066b4 0%, #00f0ff 100%);
+                        background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        .caculate {
+                            height: 100%;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            font-size: 26px;
+                            .add,
+                            .subtract {
+                                cursor: pointer;
+                            }
+                        }
+                    }
+                }
+                .phaseActive {
+                    background-color: rgba(0,160,233, .5);
+                }
+            }
+        }
+        .excutePlan {
+            height: 40px;
+            line-height: 40px;
+            .planName {
+                padding-left: 30px;
+                color: #87aef8;
+                .ant-select-selector {
+                    background-color: #031b45;
+                    color: #87aef8;
+                    border-color: #3e70ff;
+                    border-radius: 4px;
+                }
+                .ant-select-arrow {
+                    color: #87aef8;
+                }
+            }
+        }
+        .controlContent {
+            display: flex;
+            flex-wrap: wrap;
+            padding-top: 10px;
+            .phaseMsg {
+                display: flex;
+                flex-wrap: wrap;
+                padding-top: 10px;
+                .phaseTime {
+                    display: flex;
+                    width: 160px;
+                    height: 70px;
+                    margin: 0 40px 15px 0;
+                    background: url(../imgs/jiaoK.png) center center no-repeat;
+                    background-size: 100% 100%;
+                    .phaseinner {
+                        flex: 1;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                    .times {
+                        font-family: "FZLTTHJW";
+                        font-size: 32px;
+                        font-weight: bold;
+                        color: #00f0ff;
+                        background: linear-gradient(0deg, #0066b4 0%, #00f0ff 100%);
+                        background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        .caculate {
+                            height: 100%;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            font-size: 26px;
+                            .add,
+                            .subtract {
+                                cursor: pointer;
+                            }
+                        }
+                    }
+                }
+            }
+            .lockPhase {
+                height: 150px;
+                display: flex;
+                .lockText {
+                    display: flex;
+                    align-items: center;
+                    padding-right: 30px;
+                }
+                .phaseList {
+                    flex: 1;
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    .itemPic {
+                        width: 58px;
+                        height: 58px;
+                        margin-right: 10px;
+                    }
+                }
+            }
+        }
+    }
     .maskPop{
         position: absolute;
         top:0;
