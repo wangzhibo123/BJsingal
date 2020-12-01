@@ -28,11 +28,7 @@
     "video.js": "^7.10.2",
     "videojs-flash": "^2.2.1"
   },
-<<<<<<< HEAD
-  "proxy": "http://192.168.1.124:20191",
-=======
   "proxy": "http://192.168.1.22:20191",
->>>>>>> fac7c0976811dac82518cfe12ff9dffecfbb0c5d
   "scripts": {
     "analyze": "source-map-explorer build/static/js/main.*",
     "start": "react-scripts start",
