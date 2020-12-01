@@ -1,7 +1,6 @@
 import React,{Component} from "react";
 import "./mainMonitorSeriesPage.scss";
 import SeriesMessage from "./seriesMessage/seriesMessage";
-import GreenWave from "../../../utils/GreenWaveCharts/GreenWaveCharts";
 import GreenWaveCharts from "./greenWaveCharts/GreenWaveCharts"
 import {Select,Button} from "antd";
 const {Option} =Select;
