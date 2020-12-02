@@ -272,7 +272,7 @@ input[type="number"]{ -moz-appearance: textfield; }
                 color:#ffffff;
             }
             .itemStageBox{
-                height: 50%;
+                height: calc(100% - 415px);
                 overflow-y: auto;
                 >dl{
                     margin: 0;
@@ -303,7 +303,7 @@ input[type="number"]{ -moz-appearance: textfield; }
 
             }
             .itemPieBox{
-                height:330px;
+                height:300px;
                 width:100%;
                 margin: 0 auto;
             }

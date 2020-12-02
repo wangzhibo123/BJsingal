@@ -40,6 +40,7 @@ class DirectionPie extends React.Component {
           type: 'pie',
           roseType: 'radius',
           radius: ['15%', '45%'],
+          top:-45,
           data: [{
                   value: 20,
                   name: '西向东直行'
