@@ -126,7 +126,7 @@ export default class MainMonitorConcisePage extends Component{
                     <div className="modeMainMonitorContentList">
                       <div className="modeMainMonitorContentListTop">
                         <div className="autoOper">自动运行</div>
-                        <div className="switch"><Switch defaultChecked onChange={this.onChange} style={{ background: "#4A62E7" }} /></div>
+                        <div className="switch"><Switch defaultChecked onChange={this.onChange}/></div>
                         <div className="openHand">开启手动</div>
                       </div>
                       <div className="modeMainMonitorContentListBottom">
@@ -168,7 +168,7 @@ export default class MainMonitorConcisePage extends Component{
                     <div className="modeMainMonitorContentList">
                       <div className="modeMainMonitorContentListTop">
                         <div className="autoOper">自动运行</div>
-                        <div className="switch"><Switch defaultChecked onChange={this.onChange} style={{ background: "#4A62E7" }} /></div>
+                        <div className="switch"><Switch defaultChecked onChange={this.onChange} /></div>
                         <div className="openHand">开启手动</div>
                       </div>
                       <div className="modeMainMonitorContentListBottom">
@@ -209,7 +209,7 @@ export default class MainMonitorConcisePage extends Component{
                     <div className="modeMainMonitorContentList">
                       <div className="modeMainMonitorContentListTop">
                         <div className="autoOper">自动运行</div>
-                        <div className="switch"><Switch defaultChecked onChange={this.onChange} style={{ background: "#4A62E7" }} /></div>
+                        <div className="switch"><Switch defaultChecked onChange={this.onChange}/></div>
                         <div className="openHand">开启手动</div>
                       </div>
                       <div className="modeMainMonitorContentListBottom">
@@ -250,7 +250,7 @@ export default class MainMonitorConcisePage extends Component{
                     <div className="modeMainMonitorContentList">
                       <div className="modeMainMonitorContentListTop">
                         <div className="autoOper">自动运行</div>
-                        <div className="switch"><Switch defaultChecked onChange={this.onChange} style={{ background: "#4A62E7" }} /></div>
+                        <div className="switch"><Switch defaultChecked onChange={this.onChange}/></div>
                         <div className="openHand">开启手动</div>
                       </div>
                       <div className="modeMainMonitorContentListBottom">
@@ -291,7 +291,7 @@ export default class MainMonitorConcisePage extends Component{
                     <div className="modeMainMonitorContentList">
                       <div className="modeMainMonitorContentListTop">
                         <div className="autoOper">自动运行</div>
-                        <div className="switch"><Switch defaultChecked onChange={this.onChange} style={{ background: "#4A62E7" }} /></div>
+                        <div className="switch"><Switch defaultChecked onChange={this.onChange}/></div>
                         <div className="openHand">开启手动</div>
                       </div>
                       <div className="modeMainMonitorContentListBottom">
@@ -331,7 +331,7 @@ export default class MainMonitorConcisePage extends Component{
                     <div className="modeMainMonitorContentList">
                       <div className="modeMainMonitorContentListTop">
                         <div className="autoOper">自动运行</div>
-                        <div className="switch"><Switch defaultChecked onChange={this.onChange} style={{ background: "#4A62E7" }} /></div>
+                        <div className="switch"><Switch defaultChecked onChange={this.onChange}/></div>
                         <div className="openHand">开启手动</div>
                       </div>
                       <div className="modeMainMonitorContentListBottom">
@@ -372,7 +372,7 @@ export default class MainMonitorConcisePage extends Component{
                     <div className="modeMainMonitorContentList">
                       <div className="modeMainMonitorContentListTop">
                         <div className="autoOper">自动运行</div>
-                        <div className="switch"><Switch defaultChecked onChange={this.onChange} style={{ background: "#4A62E7" }} /></div>
+                        <div className="switch"><Switch defaultChecked onChange={this.onChange}/></div>
                         <div className="openHand">开启手动</div>
                       </div>
                       <div className="modeMainMonitorContentListBottom">
