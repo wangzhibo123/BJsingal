@@ -13,6 +13,7 @@ class InterTimeList extends Component {
       timeTableData: null,
       timePlanDetails: null,
     }
+    this.globalImgurl = localStorage.getItem('ImgUrl')
     this.interId = this.props.match.params.id
     this.timeTableUrl = `/control-application-front/unitMontitor/getTimeTableById?unit_id=${this.interId}`
     this.planStageUrl = `/control-application-front/unitMontitor/getPlanStage`
@@ -31,7 +32,7 @@ class InterTimeList extends Component {
   }
   // 时间表方案详情
   handleTimeDetails = (planno) => {
-    axiosInstance.post(`${this.planStageUrl}?planno=${planno}&unit_id=${this.interId}`).then((res) => {
+    axiosInstance.post(`${this.planStageUrl}?unit_id=${this.interId}&planno=''`).then((res) => {
       console.log(res)
       const { code, list } = res.data
       if (code === '1') {
@@ -51,7 +52,7 @@ class InterTimeList extends Component {
     return (
       <div className="timeList">
         <div className="timeTitle">时间表</div>
-        <div className="listBox">
+        <div className="listBox" onClick={this.handleTimeDetails}>
           <div className="listTh">
             <span className="innterBorder" />
             <div className="listTd">时间</div>
@@ -62,7 +63,7 @@ class InterTimeList extends Component {
             {
               timeTableData &&
               timeTableData.map((item) => (
-                <div className="listTr" key={item.planno + item.starttime} onClick={() => { this.handleTimeDetails(item.planno) }}>
+                <div className="listTr" key={item.planno + item.starttime}>
                   <span className="innterBorder" />
                   <div className="listTd">{item.starttime}</div>
                   <div className="listTd">{item.planname}</div>
@@ -90,12 +91,22 @@ class InterTimeList extends Component {
                 {
                   timePlanDetails &&
                   timePlanDetails.map((item, index) => {
+                    const stageList = item.stage_image.split(',')
                     return (
                       <div className="detailsTr" key={item.planno + index}>
                         <span className="innterBorder" />
                         <div className="detailsTd" style={{ flex: 0.6 }}>{item.starttime}</div>
                         <div className="detailsTd" style={{ flex: 0.5 }}>{item.planno}</div>
-                        <div className="detailsTd" style={{ flex: 2 }}>123</div>
+                        <div className="detailsTd" style={{ flex: 2 }}>
+                          {
+                            stageList.length &&
+                            stageList.map((stage) => {
+                              return (
+                                <img src={this.globalImgurl + stage} width="36px" height="36px" alt=""/>
+                              )
+                            })
+                          }
+                        </div>
                         <div className="detailsTd" style={{ flex: 0.6 }}>{item.cyclelen}</div>
                         <div className="detailsTd">{item.phasename}</div>
                         <div className="detailsTd">{item.offset}</div>

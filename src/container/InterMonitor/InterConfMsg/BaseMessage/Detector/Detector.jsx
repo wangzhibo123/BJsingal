@@ -99,10 +99,6 @@ class Detector extends Component {
             </div>
           </div>
         </div>
-        <div className="actionBtnBox">
-          <div className="saveBtn">取消</div>
-          <div className="saveBtn">保存</div>
-        </div>
       </>
     )
   }
