@@ -20,6 +20,7 @@ import ballRY from "../../../imgs/ballRY.png"
 import { Select, Switch, Menu } from "antd";
 import { SearchOutlined, CompassOutlined } from "@ant-design/icons";
 //引入axios
+import axiosInstance from '../../../utils/getInterfaceData'
 export default class MainMonitorConcisePage extends Component{
     constructor(props){
         super(props)
@@ -45,11 +46,22 @@ export default class MainMonitorConcisePage extends Component{
               modeMainControlMapSign: true,
               //点击中心点渲染多次处理
               clickCenterRenders: false,
-              videoSentList:null,
               //视频
-              urlVideo: null,
-              // arlVideo: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv13", name: "南", id: 'my_S'  }, { url: "rtmp://58.200.131.2:1935/livetv/cctv6", name: "北", id: "my_N" , displayStyle:true }],
+              newState: null,
+              arlVideo: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv13", name: "南", id: 'my_S'  }],
             };
+            //视频接口
+            // this.videoState="/control-application-front/video/get/rtmp/url/400/300"
+      }
+      componentDidMount=()=>{
+          this.getVideoMonCarList()
+      }
+      getVideoMonCarList=()=>{
+        // axiosInstance.post(this.videoState,{"cameraCode": "08143150969233750102#f0dfa07ea18f4a5da535fd251bdc5569","mediaURLParam": {"broadCastType": 0,"packProtocolType": 1,"protocolType": 2,"serviceType": 1,"streamType": 1,"transMode": 0}}).then(res=>{
+        //   this.setState({
+        //     newState:res.data
+        //   })
+        // })
       }
       render(){
         const {videoStateBind} =this.state;
@@ -77,13 +89,13 @@ export default class MainMonitorConcisePage extends Component{
                 <div className="modeMainEWMode">
                   {/* 东西走向 */}
                     <div className="modeMainEWVideo">
-                      <Video  showB={true}></Video>
+                      <Video  showB={true} {...this.state}></Video>
                     </div>
                 </div>
                 <div className="modeMainSNMode">
                   {/* 南北走向 */}
                   <div className="modeMainSNVideo">
-                    <Video url={this.state.arlVideo} showB={true}></Video>
+                    {/* <Video url={this.state.arlVideo} showB={true}></Video> */}
                   </div>
                 </div>
               </div>

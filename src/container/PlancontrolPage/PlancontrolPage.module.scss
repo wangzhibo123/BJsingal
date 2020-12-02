@@ -327,7 +327,6 @@ $input-bac: rgba(0, 169, 192, 0.2);
                                     background-position: center;
                                 }
                             }
-
                         }
                         .roadBox {
                             height: 100%;
@@ -387,11 +386,29 @@ $input-bac: rgba(0, 169, 192, 0.2);
                         display: flex;
                         align-items: center;
                         justify-content: space-around;
-                        div {
+                        .boxoperationItem {
                             height: 45px;
-                            width: 45px;
+                            width: 50px;
                             cursor: pointer;
-                            background: #05e5eb;
+                            background-color: #0a3591;
+                            .boxoperationItemTop {
+                                height: 27px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                font-size: 20px;
+                                color: #00ffff;
+                                b {
+                                    width: 20px;
+                                    height: 20px;
+                                    background-color: #00ffff;
+                                }
+                            }
+                            .boxoperationItemBom {
+                                height: 18px;
+                                font-size: 12px;
+                                padding-bottom: 2px;
+                            }
                         }
                     }
                 }
@@ -430,11 +447,10 @@ $input-bac: rgba(0, 169, 192, 0.2);
                         display: flex;
                         align-items: center;
                         justify-content: space-around;
-                        div {
+                        > div {
                             height: 45px;
                             width: 45px;
                             cursor: pointer;
-                            background: #05e5eb;
                         }
                     }
                 }

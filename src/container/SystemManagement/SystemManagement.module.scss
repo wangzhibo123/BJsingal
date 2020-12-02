@@ -58,7 +58,31 @@ $bg-color:#1A344F;
     }
     .updateCon{
       padding:50px 80px;
-      
+      >span{
+        width: 100%;
+        display: inline-block;
+        line-height: 25px;
+        position: relative;
+        .updateIcon{
+          position: absolute;
+          left:0;
+          top:20px;
+          width: 58px;
+          height:59px;
+          display: inline-block;
+          background: url(../imgs/updateBtn.png) no-repeat;
+        }
+        >em{
+          color:#03E4F1;
+          text-decoration: underline;
+          margin:0 8px;
+          cursor: pointer;
+          user-select: none;
+          &:hover{
+            text-decoration: none;
+          }
+        }
+      }
     }
   }
   .contentBox{
@@ -223,6 +247,125 @@ $bg-color:#1A344F;
             display: flex;
             justify-content: center;
             padding: 10px 0 10px;
+            height:calc(100% - 20px);
+            .centerCpuBox{
+              height:calc(100% - 320px);
+              border:1px solid $bor-color;
+              position: relative;
+              :global(.ant-tabs-nav){
+                width:calc(100% - 30px);
+                left:15px;
+                user-select: none;
+              }
+              .tabListBox{
+                border:1px solid $bor-color;
+                width:calc(100% - 30px);
+                margin:70px auto 0;
+                dl.tHeadBox{
+                  line-height: 38px;
+                  margin-bottom: 0;
+                  background: #0D2242;
+                  border-bottom: 1px solid $bor-color;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  > dt{
+                    flex: 1;
+                    padding:0 15px;
+                    line-height: 38px;
+                    user-select: none;
+                  }
+                }
+                h5{
+                  color: #006BC3;
+                  font-size: 18px;
+                  font-weight: bold;
+                  padding:10px;
+                  display: block;
+                  margin: 0;
+                  border-bottom: 1px solid $bor-color;
+                }
+                .tBodyBox{
+                  height: 190px;
+                  overflow-y: auto;
+                  dl.tHeadBox{
+                    border-bottom:none;
+                    background: none;
+                    &:hover{
+                      background:rgba(12,33,66, .8);
+                    }
+                  }
+                }
+                .computerPic{
+                  width: 100%;
+                  height: 280px;
+                  overflow-y: auto;
+                  .computerImg{
+                    width: 100%;
+                    height: 403px;
+                    background: url(../imgs/computerPic.png) no-repeat;
+                    background-size: cover;
+                  }
+                }
+              }
+              .cpuItem{
+                display: flex;
+                justify-content: flex-start;
+                justify-items: flex-start;
+                flex-wrap: wrap;
+                position: relative;
+                padding:30px 0 30px 80px;
+                .dlPos{
+                  position: absolute;
+                  left:20px;
+                  top:30px;
+                }
+                >dl{
+                  margin:0 30px 10px 10px;
+                  dt{
+                    height: 20px;
+                    line-height: 20px;
+                    text-align: right;
+                    margin-bottom: 5px;
+                  }
+                }
+                .dlRel{
+                  width:100%;
+                  height:260px;
+                  max-height:280px;
+                  display: flex;
+                  justify-content: flex-start;
+                  justify-items: flex-start;
+                  flex-wrap: wrap;
+                  overflow-y: auto;
+                  >dl{
+                    margin:0 17px 10px 20px;
+                    dd{
+                      height: 20px;
+                      line-height: 20px;
+                    }
+                    >dd{
+                      text-align: center;
+                      margin-bottom: 5px;
+                    }
+                    .ddImg{
+                      width: 97px;
+                      height:103px;
+                      >img{
+                        display: inline-block;
+                        width: 97px;
+                        height:103px;
+                      }
+                    }
+                  }
+                }
+                }
+            }
+            .centerCpuBox:first-child{
+              height:320px;
+              border:1px solid $bor-color;
+              margin-bottom: 10px;
+            }
           }
           .versionUpdateBox{
             padding:10px 0;

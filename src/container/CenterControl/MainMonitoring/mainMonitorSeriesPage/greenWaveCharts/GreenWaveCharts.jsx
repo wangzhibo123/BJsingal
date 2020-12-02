@@ -23,7 +23,6 @@ class GreenWaveCharts extends React.Component{
         let numThere=Math.cos(500/300)
         let therePoint=[]
         console.log(numThere)
-        
     }
     render(){
         const {initValueX,initValueY,spaceX,spaceY,waveX,waveY,waveStrip,waveStripCopy} =this.state;
@@ -34,6 +33,10 @@ class GreenWaveCharts extends React.Component{
                              <polygon points="70,286 150,286 170,343 90,343" style={{fill:"rgba(10 ,139, 49,.7)",strokeWidth:1}}/>
                              {/* 70,286 150,286 170,343 90,343 */}
                              <polygon points=" 110,286 170,286 150,343 90,343" style={{fill:"rgba(44, 170, 211,.4)",strokeWidth:1}}/>
+
+                             <polygon points="215,286 295,286 315,343 235,343" style={{fill:"rgba(10 ,139, 49,.7)",strokeWidth:1}}/>
+                             {/* 70,286 150,286 170,343 90,343 */}
+                             <polygon points=" 255,286 315,286 295,343 235,343" style={{fill:"rgba(44, 170, 211,.4)",strokeWidth:1}}/>v
                             <g key={1}>
                                 <line x1={initValueX} y1={initValueY} x2="1000" y2={initValueY} style={{fill: 'none', stroke: 'rgb(0,0,255)',strokeWidth:2}}/>
                             </g>
