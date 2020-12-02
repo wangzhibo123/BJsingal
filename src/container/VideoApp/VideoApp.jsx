@@ -1,12 +1,17 @@
 import React , {Component} from "react"
 import "./VideoApp.scss"
+import moment from 'moment'
 import $ from "jquery"
-
-
-
+import Video from "../utils/video/video"
+//引入图片
+import share from "../imgs/share.png" //分享
+import transcribe from "../imgs/transcribe.png" //录制
+import playback from "../imgs/playback.png" //回放
+import derive from "../imgs/derive.png" //导出
+import rotateBtn from "../imgs/rotateBtn.png"
 //引入antd
-import { Select, Menu } from "antd";
-import { EditOutlined, SearchOutlined } from "@ant-design/icons";
+import { Select, Menu , DatePicker } from "antd";
+import { EditOutlined, SearchOutlined ,CloseOutlined } from "@ant-design/icons";
 //引用axios
 const { Option } = Select;
 const { SubMenu } = Menu;
@@ -20,6 +25,9 @@ export default class VideoApp extends Component{
                 { name: "上地", id: "3", children: [{ name: "华联", id: "3_1" }, { name: "中关村", id: "3_2" }] },
                 { name: "三里屯", id: "4", children: [{ name: "太里古", id: "4_1" }, { name: "乾坤大厦", id: "4_2" }] }
               ],
+            videoCameraState:[
+              {name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv1", id: 'my_S1'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv2", id: 'my_S2'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv3", id: 'my_S3'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv4", id: 'my_S4'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv5", id: 'my_S5'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv6", id: 'my_S6'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv7", id: 'my_S7'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv8", id: 'my_S8'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv9", id: 'my_S9'}
+            ],
               //展示开关
               modeMapShow: true,
               modeMainMonitor: false,
@@ -32,8 +40,7 @@ export default class VideoApp extends Component{
               modeMainControlMapSign: true,
               //点击中心点渲染多次处理
               clickCenterRenders: false,
-              intersectioNodes:[{latitude:116.38151572176511,longitude:39.90708534816005},{latitude:116.38151572176511,longitude:39.90708534816005},{latitude:116.38151572176511,longitude:39.90708534816005}]
-        };
+            };
             //接口
             this.videoState="/control-application-front/video/getLiveUrl/123";
     }
@@ -41,7 +48,7 @@ export default class VideoApp extends Component{
     }
    
     render () {
-        const {  modeMapShow } = this.state;
+        const {  modeMapShow ,videoCameraState } = this.state;
         return (
             <div className="videoApp">
                 <div className="mainVideoTop">
@@ -80,7 +87,84 @@ export default class VideoApp extends Component{
                 </div>
               }
               <div className="videoAppMon">
-
+                  {/* 日历 */}
+                  <div className="videoAppMonTopChunk">
+                    <div className="videoAppMonTopChunkO" style={{cursor:'pointer'}}>
+                       <div><img src={share} alt=""/></div>
+                        <div style={{marginLeft:"5px",lineHeight:'40px'}}>共享</div>
+                    </div>
+                    <div className="videoAppMonTopChunkT">
+                        <div><img src={transcribe} alt=""  style={{cursor:'pointer'}}/></div>
+                          <div style={{marginLeft:"5px",lineHeight:'44px',cursor:'pointer'}}>录制</div>
+                          <div className="videoAppMonTopChunkTPicker">
+                          <DatePicker
+                            indicatorname="nihao"
+                            style={{ minWidth: '150px' }}
+                            showTime
+                            format="YYYY-MM-DD HH:mm"
+                            defaultValue={moment('2020-07-11 00:00')}
+                            // onChange={(options, value) => { this.handleTimeChange(options, value, msgName, 'init_start_date') }}
+                          />
+                        </div>
+                    </div>
+                    <div  className="videoAppMonTopChunkTR">
+                        <div><img src={playback} alt="" style={{cursor:'pointer'}}/></div>
+                        <div style={{marginLeft:"5px",lineHeight:'44px',cursor:'pointer'}}>回放 </div>
+                        <div className="videoAppMonTopChunkTRPicker">
+                        <DatePicker
+                            indicatorname="nihao"
+                            style={{ minWidth: '150px' }}
+                            showTime
+                            format="YYYY-MM-DD HH:mm"
+                            defaultValue={moment('2020-12-1 19:56')}
+                            // onChange={(options, value) => { this.handleTimeChange(options, value, msgName, 'init_start_date') }}
+                          /> <span style={{textAlign:"center",marginLeft:"4px"}}>—</span>
+                           <DatePicker
+                          indicatorname="nihao"
+                          style={{ minWidth: '150px' }}
+                          showTime
+                          format="YYYY-MM-DD HH:mm"
+                          defaultValue={moment('2020-12-1 19:56')}
+                          // onChange={(options, value) => { this.handleTimeChange(options, value, msgName, 'init_start_date') }}
+                        />
+                        </div>
+                    </div>
+                    <div  className="videoAppMonTopChunkF">
+                        <div><img src={derive} alt=""  style={{cursor:'pointer'}}/></div>
+                        <div style={{marginLeft:"5px",lineHeight:'44px',cursor:'pointer'}}>导出</div>
+                    </div>
+                  </div>
+                  {/* 摄像头 */}
+                  <div className="videoAppMonCameraChunk">
+                    {
+                      videoCameraState.map((item,index)=>{
+                        return <div style={{width:"428px",height:"250px",border:"1px solid",border:"1px solid #214C87",borderRadius:"6px",margin:"44px",position:'relative'}}  key={index}>
+                            <div style={{height:"22px",width:"100%",display:'flex',position:"absolute",top:"0",left:"0"}}>
+                              <div style={{position:'absolute',left:"16px",top:"5px",color:"#5D81CC",fontSize:"17px"}}>{item.name}</div>
+                              <div style={{position:"absolute",left:'100px',top:"2px"}}>
+                                  <Select defaultValue="通道一" size="smiall" style={{ width: 100, height: 30 }}>
+                                      <Option value={index} style={{ width: 100, height: 30 }}>{item.name}</Option>
+                                  </Select>
+                              </div>
+                              <div style={{position:'absolute',top:"10px",right:"10px"}}>
+                                <CloseOutlined style={{cursor:"pointer"}}/>
+                              </div>
+                            </div>
+                            <div style={{width:"100%",height:"calc(100% - 22px)",position:"absolute",top:"26px",left:"0"}}>
+                              <Video showB={false} width="400px" height="200px" arlVideo={[{url:item.url,id:item.id}]}/>
+                            </div>
+                            <div style={{position:"absolute",right:"5px",bottom:"5px",cursor:"pointer"}}><img src={rotateBtn} alt=""/></div>
+                        </div>
+                      })
+                    }
+                    
+                  </div>
+                  {/* 日期 */}
+                  <div className="videoAppMonDateChunk" style={{position:"relative"}}>
+                      <div style={{position:"absolute",right:"200px",top:"25px"}}>2020年11月26日</div>
+                      <div style={{position:"absolute",right:"136px",top:"25px"}}>星期四</div>
+                      <div style={{position:"absolute",right:"50px",top:"25px"}}>20:29:21</div>
+                  </div>
               </div>
               
             </div >
