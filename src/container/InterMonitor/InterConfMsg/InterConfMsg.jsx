@@ -23,6 +23,8 @@ import DayPlan from './SingalParams/DayPlan/DayPlan'
 import ModalPage from './ModalPage/ModalPage'
 import ChannelModal from './ModalPage/channelModal/ChannelModal'
 import RelationModal from './ModalPage/relationModal/relationModal'
+import SingalModal from './ModalPage/singalModal/singalModal'
+import LampModal from './ModalPage/lampModal/lampModal'
 
 import axiosInstance from '../../utils/getInterfaceData'
 import { getDevicePiclist, getEditDeviceInfo } from '../../../reduxs/action/interConfig'
@@ -49,8 +51,8 @@ class InterConfMsg extends Component {
       { confName: '渠化信息', id: 'canalization', num: '0', compos: null },
       { confName: '车道信息', id: 'channel', num: '6', compos: ChannelTable, modalCompos: ChannelModal },
       { confName: '路口关系', id: 'inter', num: '7', compos: InterRelation, modalCompos: RelationModal },
-      { confName: '信号机', id: 'singal', num: '1', compos: SingalMsg },
-      { confName: '灯组', id: 'lightGroup', num: '10', compos: LightGroup },
+      { confName: '信号机', id: 'singal', num: '1', compos: SingalMsg, modalCompos: SingalModal },
+      { confName: '灯组', id: 'lightGroup', num: '10', compos: LightGroup, modalCompos: LampModal },
       { confName: '检测器', id: 'detector', num: '3', compos: Detector },
       { confName: '视频', id: 'video', num: '9', compos: VideoMsg },
     ]
@@ -140,27 +142,30 @@ class InterConfMsg extends Component {
       }
     }
   }
-  handleDirDragStart = (ev) => {
-    this.newConfPic = {
-      cfgLaneInfo: {
-        direction: 1,
-        directionValue: '',
-        laneno: 0,
-        movement: 11,
-        movementValue: '',
-        unitId: this.props.interId,
-      },
-      uiUnitConfig: {
-        pLeft: 0,
-        pTop: 0,
-        rotationAngle: 0,
-        uiHight: 40,
-        uiImageName: '',
-        uiWidth: 40,
-        isView: 0,
-        unitId: this.props.interId,
-      },
+  getDefaultEditInfo = (editname) => {
+    const { primitiveInfo } = this.props.data
+    const { interId } = this.props
+    console.log(primitiveInfo)
+    const singalInfo = primitiveInfo.SignalConfigInfo.length ? primitiveInfo.SignalConfigInfo[0] :
+    {
+      signalConfigInfo: { siganlSupplier: '', signalCode: '', signalGateway: '', signalIp: '', signalMask: '', signalModel: '', signalModelValue: '',
+        signalPort: '', sysServiceId: '', unitId: interId },
+      uiUnitConfig: { isView: 0, pLeft: 0, pTop: 0, rotationAngle: 0, uiHight: 0, uiImageName: '', uiWidth: 0, unitId: interId }
     }
+    return editname === 'channel' ? {
+      cfgLaneInfo: { direction: 1, directionValue: '', laneno: 0, movement: 11, movementValue: '', unitId: interId, },
+      uiUnitConfig: { pLeft: 0, pTop: 0, rotationAngle: 0, uiHight: 40, uiImageName: '', uiWidth: 40, isView: 0, unitId: interId, },
+    } : editname === 'inter' ? {
+      uiUnitConfig: { isView: 0, pLeft: 0, pTop: 0, rotationAngle: 0, uiImageName: '',uiHight: 0, uiWidth: 0, unitId: interId },
+      unitConnector: { connectorUnitDirection: 1, connectorUnitDirectionValue: '', connectorUnitId: '',
+        roadDetail: '', roadLength: 0, unitDirection: 1, unitDirectionValue: '', unitId: interId }
+    } : editname === 'singal' ? singalInfo : editname === 'lightGroup' ? {
+      cfgLampgroup: { direction: 1, directionValue: '', lampgroupno: '', signalId: '', type: 99, typeValue: '', unitId: interId },
+      uiUnitConfig: { pLeft: 0, pTop: 0, rotationAngle: 0, uiHight: 40, uiImageName: '', uiWidth: 40, isView: 0, unitId: interId, },
+    } : null
+  }
+  handleDirDragStart = (ev) => {
+    this.newConfPic = this.getDefaultEditInfo(this.state.currentItem)
     this.currentDragIndex = null
     const BeforetargetLeft = ev.target.offsetLeft
     this.moveBeforeX = ev.clientX - BeforetargetLeft

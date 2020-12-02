@@ -273,6 +273,12 @@
                     width: 100px;
                     text-align: right;
                 }
+                .longTxt {
+                    width: 120px;
+                }
+                .pl10 {
+                    padding-left: 10px;
+                }
                 .editInput {
                     width: 100px;
                     height: 30px;
@@ -295,6 +301,9 @@
                     .ant-input-number-handler-down {
                         border: none;
                     }
+                }
+                .longInput {
+                    width: 260px;
                 }
                 .ant-select-multiple {
                     .ant-select-selector {

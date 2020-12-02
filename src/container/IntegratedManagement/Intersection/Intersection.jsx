@@ -389,7 +389,12 @@ class Intersection extends Component {
     $('#marker' + data_item.unit_code).trigger('click')
     this.roaddId = data_item.id
     // console.log(UnitPosition, data_item.unit_position, '121321324564')
-    const roadposition = UnitPosition && UnitPosition.find(item => item.c_code === data_item.unit_position).code_name
+    let roadposition = UnitPosition && UnitPosition.find(item => item.c_code === data_item.unit_position)
+    if (roadposition) {
+      roadposition = roadposition.code_name
+    } else {
+      roadposition = ''
+    }
     const roadunit_type_code = UnitType && UnitType.find(item => item.c_code === data_item.unit_type_code).code_name
     const roaddistrict_id = UnitDistrict && UnitDistrict.find(item => item.id === data_item.district_id).district_name
     const roaduser_group_id = UnitGroup && UnitGroup.find(item => item.id === data_item.user_group_id).user_group_name
