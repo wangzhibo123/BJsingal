@@ -13,6 +13,7 @@ import rotateBtn from "../imgs/rotateBtn.png"
 import { Select, Menu , DatePicker } from "antd";
 import { EditOutlined, SearchOutlined ,CloseOutlined } from "@ant-design/icons";
 //引用axios
+import axiosInstance from "../utils/getInterfaceData"
 const { Option } = Select;
 const { SubMenu } = Menu;
 export default class VideoApp extends Component{
@@ -26,9 +27,9 @@ export default class VideoApp extends Component{
                 { name: "三里屯", id: "4", children: [{ name: "太里古", id: "4_1" }, { name: "乾坤大厦", id: "4_2" }] }
               ],
             videoCameraState:[
-              {name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv1", id: 'my_S1'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv2", id: 'my_S2'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv3", id: 'my_S3'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv4", id: 'my_S4'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv5", id: 'my_S5'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv6", id: 'my_S6'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv7", id: 'my_S7'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv8", id: 'my_S8'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv9", id: 'my_S9'}
+              {name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv13", id: 'my_S1'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv2", id: 'my_S2'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv13", id: 'my_S3'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv2", id: 'my_S4'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv13", id: 'my_S5'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv13", id: 'my_S6'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv13", id: 'my_S7'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv2", id: 'my_S8'},{name:"汉源宾馆",url: "rtmp://58.200.131.2:1935/livetv/cctv13", id: 'my_S9'}
             ],
-              //展示开关
+              //展示开关  
               modeMapShow: true,
               modeMainMonitor: false,
               modeMainTabShow: true,
@@ -41,12 +42,10 @@ export default class VideoApp extends Component{
               //点击中心点渲染多次处理
               clickCenterRenders: false,
             };
-            //接口
-            this.videoState="/control-application-front/video/getLiveUrl/123";
     }
     componentDidMount () {
+      
     }
-   
     render () {
         const {  modeMapShow ,videoCameraState } = this.state;
         return (
