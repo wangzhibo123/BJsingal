@@ -1077,9 +1077,9 @@ class PlancontrolPage extends Component {
                                   style={{ width: 160, height: 30 }}
                                   onChange={(e) => this.changeLoadRouteDirectionTwo(e, num)}
                                 >
-                                  <Option key={1} addeditname='emergencyMode' intername='contingenct_type' style={{ width: 160, height: 30 }} >配时方案定义1</Option>
-                                  <Option key={2} addeditname='emergencyMode' intername='contingenct_type' style={{ width: 160, height: 30 }} >锁定控制方式2</Option>
-                                  <Option key={3} addeditname='emergencyMode' intername='contingenct_type' style={{ width: 160, height: 30 }} >锁定交通流向3</Option>
+                                  <Option key={1} addeditname='emergencyMode' names='配时方案定义' intername='contingenct_type' style={{ width: 160, height: 30 }} >配时方案定义1</Option>
+                                  <Option key={2} addeditname='emergencyMode' names='锁定控制方式' intername='contingenct_type' style={{ width: 160, height: 30 }} >锁定控制方式2</Option>
+                                  <Option key={3} addeditname='emergencyMode' names='锁定交通流向' intername='contingenct_type' style={{ width: 160, height: 30 }} >锁定交通流向3</Option>
                                 </Select>
                                 {
                                   item.listArr.length ? <div>

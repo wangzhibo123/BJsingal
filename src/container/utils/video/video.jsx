@@ -86,7 +86,6 @@ class VideoApp extends Component{
                   </ul>
                   {
                     this.state.newState.map((item,index)=>{
-                      console.log(item.id.slice(0,6))
                       return <video key={index} style={{width:this.state.width,height:this.state.height,borderRadius:"6px",textAlign:"center",marginTop:"15px",marginLeft:'15px'}} id={item.id.slice(0,6)} className="video-js vjs-default-skin">
                       </video>
                     })
