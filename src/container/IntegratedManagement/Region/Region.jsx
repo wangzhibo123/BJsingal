@@ -148,10 +148,12 @@ class Region extends Component {
     })
   }
   removeRoadCircle = () => { // 清除颜色点位
-    this.unitArr.forEach(item => {
-      $('#marker' + item.unit_code).removeClass('markers')
-    })
-    this.unitArr = []
+    if (this.unitArr.length) {
+      this.unitArr.forEach(item => {
+        $('#marker' + item.unit_code).removeClass('markers')
+      })
+      this.unitArr = []
+    }
   }
   removeMarkers = () => {
     if (this.interMarkers.length) {
@@ -229,6 +231,7 @@ class Region extends Component {
   }
   onOpenChangeSubMenu = (eventKey) => { // SubMenu-ite触发
     this.addRoad = false
+    this.removeRoadCircle()
     if (eventKey.length === 0) {
       this.setState({ menuOpenkeys: [], rights: -300 })
     } else {
@@ -241,6 +244,7 @@ class Region extends Component {
     }
   }
   onOpeSubMenu = (e, SubMenuItem) => { // 数据回显
+
     this.isAddEdit = false
     this.roaddId = SubMenuItem.id
     this.setState({

@@ -55,8 +55,10 @@
     align-items: center;
     justify-content: flex-end;
     > span {
-      padding-right: 6px;
       color: #3bd7ee;
+      border-bottom: 1px solid #3bd7ee;
+      margin-right: 15px;
+      cursor: pointer;
     }
   }
   .mountingManage {
@@ -80,7 +82,7 @@
         height: 175px;
       }
       .mountingThead {
-        background-color: rgba(14, 28, 63, 0.7);
+        background-color: #162f47;
       }
       .mountingTh,
       .mountingTd {
