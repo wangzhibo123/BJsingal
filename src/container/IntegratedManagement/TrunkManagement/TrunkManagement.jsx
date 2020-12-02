@@ -94,7 +94,6 @@ class TrunkManagement extends Component {
   // }
   // 获取干线子集
   getLoadChildTree = (id) => {
-    this.roadCircle(this.chidArrs) // 清空上次点击划线
     axiosInstance.post(`${this.loadRouteTree}?id=${id}`).then(res => {
       const { code, treeList } = res.data
       // console.log(treeList, 'vssksnf')
@@ -499,6 +498,7 @@ class TrunkManagement extends Component {
   onOpenChangeSubMenu = (eventKey) => { // SubMenu-ite触发
     this.isAddEdit = false
     this.unitArr = ''
+    this.roadCircle(this.chidArrs) // 清空上次点击划线
     if (eventKey.length === 0) {
       this.setState({
         menuOpenkeys: [],
