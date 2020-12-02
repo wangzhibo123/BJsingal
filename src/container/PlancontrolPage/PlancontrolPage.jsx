@@ -97,7 +97,7 @@ class PlancontrolPage extends Component {
       disabled: true,// 控制预案回显是否能够编辑
 
       treeChild: [], // 区域预案子集列表
-
+      indId: 0,
     }
     this.defaultChildren = []
     this.interMarkers = []
@@ -253,6 +253,7 @@ class PlancontrolPage extends Component {
       axiosInstance.post(this.addOrUpdateVipPlan, handclickAddEditObjs).then(res => {
         const { code } = res.data
         if (code == 1) {
+          this.roadCircle(this.childArr)
           this.childArr = []
           this.childArrList = []
           this.getloadPlanTable(1)
@@ -263,7 +264,8 @@ class PlancontrolPage extends Component {
         }
       })
     } else {
-
+      const { plan_name, make_time, area_id } = this.state
+      console.log(this.treeChild, plan_name, make_time._i, area_id, '添加内容')
     }
   }
   handclickAddEditModify = () => {
@@ -508,25 +510,6 @@ class PlancontrolPage extends Component {
       })
     }
   }
-  changeLoadRouteDirectionTwo = (events, num, names) => {
-    console.log(events, num, names, 'dffff')
-    // const { getDirectionList } = this.state
-    // if (getDirectionList.length) {
-    //   if (names === 'direction_entervalue') {
-    //     const direction_entervalue = getDirectionList.find(item => item.id == events).code_name
-    //     this.childArr[num].direction_entervalue = direction_entervalue
-    //     this.childArr[num].direction_enter = events
-    //   }
-    //   if (names === 'direction_exitvalue') {
-    //     const direction_exitvalue = getDirectionList.find(item => item.id == events).code_name
-    //     this.childArr[num].direction_exitvalue = direction_exitvalue
-    //     this.childArr[num].direction_exit = events
-    //   }
-    //   this.setState({
-    //     childArr: this.childArr
-    //   })
-    // }
-  }
   delectListChild = (event) => { // 333333
     // console.log(id, this.childArrList, this.childArr, 'sdsdsd')
     $('#marker' + event.unit_id).removeClass('markers')
@@ -550,8 +533,29 @@ class PlancontrolPage extends Component {
     })
     this.drawLine(arrList, this.childArr)
   }
+  changeLoadRouteDirectionTwo = (events, num) => { // 应急预案修改
+    if (num) { //下拉
+      const { Indx, names, } = num
+      this.treeChild[Indx].contingenct_type = events
+      this.treeChild[Indx].contingency_type_value = names
+      if (events == 1) {
+        const objs = {
+          area_contingency_id: '', //所属应急区域路口ID
+          id: '',
+          stage_id: '', //阶段编号
+          stage_order: '',// 阶段序号
+          stage_plan_id: '', //相序方案号
+          stage_time: '', //阶段时间
+        }
+      }
+    } else { // input输入框
+      const { value } = events.target
+      const Indx = events.target.getAttribute('Indx')
+      this.treeChild[Indx].cyclelen = value
+    }
+  }
   changeLoadRouteDirection = (e, options, ind) => { // 添加修改input selecct
-    console.log(e, options, ind, typeof (options), 'dfdsfdsfds')
+    // console.log(e, options, ind, typeof (options), 'dfdsfdsfds')
     if (typeof (options) === 'object') {
       const { addeditname, intername, children } = options.props
       // console.log(intername, children, e)
@@ -883,7 +887,7 @@ class PlancontrolPage extends Component {
     // }
   }
   handleShowInterConf = (item) => { // 点击回显编辑 1111111
-    console.log(item, 'dsdds')
+    // console.log(item, 'dsdds')
     if (this.isreserveplan) {
       if (this.childArr) {
         this.roadCircle(this.childArr)
@@ -930,6 +934,7 @@ class PlancontrolPage extends Component {
           scheduled_time: item.scheduled_time,
           plan_name: item.plan_name,
           disabled: true,
+          indId: item.id,
         })
       })
     } else {
@@ -997,10 +1002,10 @@ class PlancontrolPage extends Component {
       pointlist, reserveplanName, addReserveplan, rightsNew, boxStyleShow,
       make_user, task_state, make_time, area_id, emergencyMode, contingency_type_value,
       cyclelen, unit_id, stage_id, stage_order, stage_plan_id, stage_time, listTree,
-      roadtitleNew, isAddEditNew, ismodifyNew,
+      roadtitleNew, isAddEditNew, ismodifyNew, indId,
       scheduled_time, district_id, district_idvalue, start_unit, end_unit, interval_time, lock_time, direction_enter, unit_order, vip_road_id, direction_exit,
       childArr, getDirectionList, getTaskStatusList, task_statevalue, getUnitDistrictList, planname, IsvideoBox, plan_name,
-      treeChild
+      treeChild,
     } = this.state
     return (
       <div className={styles.PlancontrolPageWrapper}>
@@ -1068,25 +1073,25 @@ class PlancontrolPage extends Component {
                             <span></span>
                             <div className={styles.linboxer}>
                               {/* <p><span>关联路口：</span><input onChange={this.changeLoadRouteDirectionTwo} defaultValue={unit_id} intername='unit_id' type="text" className={styles.inputBox} placeholder="关联路口" /></p> */}
-                              <p><span>配时周期：</span><input onChange={(e) => this.changeLoadRouteDirectionTwo(e, num)} defaultValue={cyclelen} intername='cyclelen' type="text" className={styles.inputBox} placeholder="配时周期" /></p>
+                              <p><span>配时周期：</span><input Indx={num} onChange={this.changeLoadRouteDirectionTwo} defaultValue={cyclelen} intername='cyclelen' type="text" className={styles.inputBox} placeholder="配时周期" /></p>
                               <div className={styles.boxStyle}>
                                 <span>应急方式：</span>
                                 <Select
                                   // defaultValue="海淀区"
                                   defaultValue={emergencyMode}
                                   style={{ width: 160, height: 30 }}
-                                  onChange={(e) => this.changeLoadRouteDirectionTwo(e, num)}
+                                  onChange={this.changeLoadRouteDirectionTwo}
                                 >
-                                  <Option key={1} addeditname='emergencyMode' names='配时方案定义' intername='contingenct_type' style={{ width: 160, height: 30 }} >配时方案定义1</Option>
-                                  <Option key={2} addeditname='emergencyMode' names='锁定控制方式' intername='contingenct_type' style={{ width: 160, height: 30 }} >锁定控制方式2</Option>
-                                  <Option key={3} addeditname='emergencyMode' names='锁定交通流向' intername='contingenct_type' style={{ width: 160, height: 30 }} >锁定交通流向3</Option>
+                                  <Option key={1} Indx={num} names='配时方案定义' style={{ width: 160, height: 30 }} >配时方案定义1</Option>
+                                  <Option key={2} Indx={num} names='锁定控制方式' style={{ width: 160, height: 30 }} >锁定控制方式2</Option>
+                                  <Option key={3} Indx={num} names='锁定交通流向' style={{ width: 160, height: 30 }} >锁定交通流向3</Option>
                                 </Select>
                                 {
                                   item.listArr.length ? <div>
-                                    <p><span>阶段编号：</span><input onChange={this.changeLoadRouteDirectionTwo} value={stage_id} intername='stage_id' type="text" className={styles.inputBox} placeholder="阶段编号" /></p>
-                                    <p><span>阶段序号：</span><input onChange={this.changeLoadRouteDirectionTwo} value={stage_order} intername='stage_order' type="text" className={styles.inputBox} placeholder="阶段序号" /></p>
-                                    <p><span>相序方案号：</span><input onChange={this.changeLoadRouteDirectionTwo} value={stage_plan_id} intername='stage_plan_id' type="text" className={styles.inputBox} placeholder="相序方案号" /></p>
-                                    <p><span>阶段时间：</span><input onChange={this.changeLoadRouteDirectionTwo} value={stage_time} intername='stage_time' type="text" className={styles.inputBox} placeholder="阶段时间" /></p>
+                                    <p><span>阶段编号：</span><input onChange={this.changeLoadRouteDirectionTree} value={stage_id} intername='stage_id' type="text" className={styles.inputBox} placeholder="阶段编号" /></p>
+                                    <p><span>阶段序号：</span><input onChange={this.changeLoadRouteDirectionTree} value={stage_order} intername='stage_order' type="text" className={styles.inputBox} placeholder="阶段序号" /></p>
+                                    <p><span>相序方案号：</span><input onChange={this.changeLoadRouteDirectionTree} value={stage_plan_id} intername='stage_plan_id' type="text" className={styles.inputBox} placeholder="相序方案号" /></p>
+                                    <p><span>阶段时间：</span><input onChange={this.changeLoadRouteDirectionTree} value={stage_time} intername='stage_time' type="text" className={styles.inputBox} placeholder="阶段时间" /></p>
                                   </div> : ''
                                 }
                               </div>
@@ -1977,7 +1982,7 @@ class PlancontrolPage extends Component {
             <ul className={styles.confUl}>
               {
 
-                listTree && listTree.map(item => <li key={item.id} className={styles.confLi} onClick={() => this.handleShowInterConf(item)}>{item.plan_name}<span className={styles.innterBorder} /></li>)
+                listTree && listTree.map(item => <li key={item.id} className={`${styles.confLi} ${indId === item.id ? styles.active : ''}`} onClick={() => this.handleShowInterConf(item)}>{item.plan_name}<span className={styles.innterBorder} /></li>)
               }
             </ul>
           </div>
