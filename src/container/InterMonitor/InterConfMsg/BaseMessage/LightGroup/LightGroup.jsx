@@ -34,7 +34,8 @@ class LightGroup extends Component {
     })
   }
   getLampList = (primitiveInfo) => {
-    this.setState({ lampList: primitiveInfo.LampGroup })
+    this.lampInfos = primitiveInfo.LampGroup
+    this.setState({ lampList: this.lampInfos })
   }
   handleDelete = (id, configId) => {
     const { confirm } = Modal
@@ -46,6 +47,12 @@ class LightGroup extends Component {
         selfThis.getRemoveLamp(id, configId)
       },
     })
+  }
+  handleEditInfo = (e) => {
+    const indexs = e.currentTarget.getAttribute('indexs')
+    const currentInfo = this.lampInfos[indexs]
+    this.props.showEditModal()
+    this.props.getEditDeviceInfo(currentInfo)
   }
   render() {
     const { lampList } = this.state
@@ -61,36 +68,21 @@ class LightGroup extends Component {
           <div className="confTbody">
             {
               lampList &&
-              lampList.map((item) => {
-                const { directionValue, lampgroupno, type } = item.cfgLampgroup
+              lampList.map((item, index) => {
+                const { directionValue, lampgroupno, typeValue } = item.cfgLampgroup
                 return (
                   <div className="confTr" key={item.id}>
-                    <div className="confTd">{directionValue}</div>
                     <div className="confTd">{lampgroupno}</div>
-                    <div className="confTd">{type}</div>
+                    <div className="confTd">{directionValue}</div>
+                    <div className="confTd">{typeValue}</div>
                     <div className="confTd">
-                      <EditOutlined className="activeIcon" />
+                      <EditOutlined className="activeIcon" indexs={index} onClick={this.handleEditInfo} />
                       <DeleteOutlined className="activeIcon" onClick={() => { this.handleDelete(item.id, item.uiUnitConfig.uiId) }} />
                     </div>
                   </div>
                 )
               })
             }
-            <div className="confTr">
-              <div className="confTd">
-                <Select defaultValue="0">
-                  <Option key="0" vlaue="0">请选择</Option>
-                  <Option key="1" vlaue="1">1</Option>
-                </Select>
-              </div>
-              <div className="confTd"><input className="relationInput" type="text" /></div>
-              <div className="confTd">
-                <Select defaultValue="0">
-                  <Option key="0" vlaue="0">请选择</Option>
-                  <Option key="1" vlaue="1">1</Option>
-                </Select>
-              </div>
-            </div>
           </div>
         </div>
       </>

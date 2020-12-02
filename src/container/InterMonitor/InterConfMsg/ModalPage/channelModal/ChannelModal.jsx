@@ -24,7 +24,6 @@ class ChannelModal extends Component {
     const lengths = this.currentDeviceList.length
     const editNo = lengths === 0 ? 1 : this.currentDeviceList[lengths - 1].cfgLaneInfo.laneno + 1
     this.editInfo.cfgLaneInfo.laneno = editNo
-    console.log(this.editInfo)
     this.setState({ editInfo: this.editInfo, channelIcon: devicePiclist['6'] })
     this.getInterDirMoveList(6)
     this.getInterDirMoveList(16)
@@ -60,7 +59,6 @@ class ChannelModal extends Component {
     console.log(this.editInfo)
   }
   handleSelectChange = (val, options) => {
-    console.log(val, options)
     if (options.pname === 'uiId') {
       this.editInfo.uiUnitConfig.uiId = val
     } else {
@@ -92,7 +90,7 @@ class ChannelModal extends Component {
         </div>
         <div className="editItem">
           <div className="eitems">
-            <span className="itemTxt">水平位置：</span>
+            <span className="itemTxt">X：</span>
             <InputNumber
               className="editInput"
               key={editInfo && editInfo.uiUnitConfig.pLeft}
@@ -102,7 +100,7 @@ class ChannelModal extends Component {
             />
           </div>
           <div className="eitems">
-            <span className="itemTxt">垂直位置：</span>
+            <span className="itemTxt">Y：</span>
             <InputNumber
               className="editInput"
               key={editInfo && editInfo.uiUnitConfig.pTop}

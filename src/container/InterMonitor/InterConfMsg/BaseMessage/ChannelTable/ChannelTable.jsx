@@ -52,7 +52,6 @@ class ChannelTable extends Component {
   handleEditInfo = (e) => {
     const indexs = e.currentTarget.getAttribute('indexs')
     const currentInfo = this.channelInfos[indexs]
-    console.log(currentInfo)
     this.props.showEditModal()
     this.props.getEditDeviceInfo(currentInfo)
   }

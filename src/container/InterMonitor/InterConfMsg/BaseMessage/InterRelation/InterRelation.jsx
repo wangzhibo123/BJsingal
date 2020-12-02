@@ -16,7 +16,6 @@ class InterRelation extends Component {
     this.removeUrl = '/control-application-front/basic/info/connector/removeUnitConnector'
   }
   componentDidMount = () => {
-    console.log(this.props)
     const { primitiveInfo } = this.props.data
     this.getInterRelationList(primitiveInfo)
   }
@@ -36,6 +35,7 @@ class InterRelation extends Component {
     })
   }
   getInterRelationList = (primitiveInfo) => {
+    this.relationInfos = primitiveInfo.UnitConnector
     this.setState({ relationList: primitiveInfo.UnitConnector })
   }
   handleDelete = (id, configId) => {
@@ -48,6 +48,12 @@ class InterRelation extends Component {
         selfThis.getRemoveRelation(id, configId)
       },
     })
+  }
+  handleEditInfo = (e) => {
+    const indexs = e.currentTarget.getAttribute('indexs')
+    const currentInfo = this.relationInfos[indexs]
+    this.props.showEditModal()
+    this.props.getEditDeviceInfo(currentInfo)
   }
   render() {
     const { relationList } = this.state
@@ -75,36 +81,15 @@ class InterRelation extends Component {
                     <div className="confTd">{roadLength}</div>
                     <div className="confTd" style={{ flex: 1.3 }}>{roadDetail}</div>
                     <div className="confTd">
-                      <EditOutlined className="activeIcon" />
+                      <EditOutlined className="activeIcon" indexs={index} onClick={this.handleEditInfo} />
                       <DeleteOutlined className="activeIcon" onClick={() => { this.handleDelete(item.id, item.uiUnitConfig.uiId) }} />
                     </div>
                   </div>
                 )
               })
             }
-            <div className="confTr">
-              <div className="confTd">
-                <Select defaultValue="0">
-                  <Option key="0" vlaue="0">请选择</Option>
-                  <Option key="1" vlaue="1">1</Option>
-                </Select>
-              </div>
-              <div className="confTd"><input className="relationInput" type="text" /></div>
-              <div className="confTd">
-                <Select defaultValue="0">
-                  <Option key="0" vlaue="0">请选择</Option>
-                  <Option key="1" vlaue="1">1</Option>
-                </Select>
-              </div>
-              <div className="confTd"><input className="relationInput" type="text" /></div>
-              <div className="confTd"><input className="relationInput" type="text" /></div>
-            </div>
           </div>
         </div>
-        {/* <div className="actionBtnBox">
-          <div className="saveBtn">取消</div>
-          <div className="saveBtn">保存</div>
-        </div> */}
       </>
     )
   }
