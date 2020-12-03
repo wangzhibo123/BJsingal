@@ -184,6 +184,9 @@
         .ant-switch-checked .ant-switch-handle {
             left: calc(100% - 18px - 2px);
         }
+        .ant-switch-checked{
+            background-color: #4A62E7;
+        }
         .ant-switch-handle::before {
             position: absolute;
             top: 0;
@@ -210,9 +213,7 @@
             -webkit-transition: all 0.2s ease-in-out;
             transition: all 0.2s ease-in-out;
         }
-        .ant-switch-checked {
-            background-color: #1890ff;
-        }
+        
         .ant-switch-checked .ant-switch-inner {
             margin: 0 25px 0 7px;
         }

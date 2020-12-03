@@ -18,7 +18,7 @@ class Header extends Component {
       { name: '预案控制', id: '0-3', path: '/plancontrolpage', children: [] },
       {
         name: '信号优化', id: '0-4',
-        children: [{ name: '局信号优化', id: '1-4', path: 'office' }, { name: '区信号优化', id: '2-4', path: 'districtOpt' }, { name: '路口优化', id: '3-4', path: 'interOpt' }, { name: '区域优化', id: '4-4', path: 'regionOpt' }]
+        children: [{ name: '局信号优化', id: '1-4', path: '/office' }, { name: '区信号优化', id: '2-4', path: '/districtOpt' }, { name: '路口优化', id: '3-4', path: '/interOpt' }, { name: '区域优化', id: '4-4', path: '/regionOpt' }]
       },
       { name: '效果评价', id: '0-5', children: [{ name: '路口评价', id: '1-5', path: '/inter' }, { name: '干线评价', id: '2-5', path: '/artery' }, { name: '区域评价', id: '3-5', path: '/area' }] },
       {
