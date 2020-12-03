@@ -92,21 +92,8 @@ class VideoApp extends Component{
        <div className="VideoAppBox">
               <div>
                   {
-<<<<<<< HEAD
-                    this.state.showButton && this.state.newState && this.state.newState.map((item,index)=>{
-                          return <Button  key={item.name} onClick={()=>this.handleClick(item)} style={{width:"66px",height:"40px",background: "#010F46",border: "1px solid #4289E1",color: "#515A8B",fontSize: "20px",boxShadow:"inset 0px 0px 1.7px 1px #4289E1"}}>
-                                      <span style={this.state.displayStyle === item.displayStyle ? playing : li }>{item.name}</span>
-                                  </Button>
-                      })
-                  }
-                  </ul>
-                  {
-                    this.state.newState && this.state.newState.map((item,index)=>{
-                      return <video key={index} style={{width:this.state.width,height:this.state.height,borderRadius:"6px",textAlign:"center",marginTop:"15px",marginLeft:'15px'}} id={item.id.slice(0,6)} className="video-js vjs-default-skin">
-=======
-                    newState.map((item,index)=>{
+                    newState && newState.map((item,index)=>{
                       return <video key={index} style={{width:width,height:height,borderRadius:"6px",textAlign:"center",marginLeft:'15px'}} id={item.id.slice(0,6)} className="video-js vjs-default-skin">
->>>>>>> 52473582c624288da03934a4928e61c4b440a694
                       </video>
                     })
                   }

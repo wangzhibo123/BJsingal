@@ -91,9 +91,7 @@ export default class MainMonitorConcisePage extends Component{
                 <div className="modeMainEWMode">
                   {/* 东西走向 */}
                     <div className="modeMainEWVideo">
-<<<<<<< HEAD
                       <Video showB={true} url={'/control-application-front/video/get/rtmp/url/400/300'} ></Video>
-=======
                       <div className="modeMainEWVideoSelect">
                         <div style={{height:"40px",margin:"0 17px",lineHeight:'40px',fontSize:"18px",color:"#567AC4"}}>中关村大街东</div>
                         <div style={{height:"40px"}}>
@@ -106,7 +104,6 @@ export default class MainMonitorConcisePage extends Component{
                         </div>
                       </div>
                       <Video {...this.state}></Video>
->>>>>>> 52473582c624288da03934a4928e61c4b440a694
                     </div>
                 </div>
                 <div className="modeMainSNMode">
