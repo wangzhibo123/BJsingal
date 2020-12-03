@@ -89,7 +89,7 @@ export default class MainMonitorConcisePage extends Component{
                 <div className="modeMainEWMode">
                   {/* 东西走向 */}
                     <div className="modeMainEWVideo">
-                      <Video  showB={true} {...this.state}></Video>
+                      <Video showB={true} url={'/control-application-front/video/get/rtmp/url/400/300'} ></Video>
                     </div>
                 </div>
                 <div className="modeMainSNMode">

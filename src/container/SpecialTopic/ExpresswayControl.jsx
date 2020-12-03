@@ -24,7 +24,6 @@ class ExpresswayControl extends Component {
       roadInterFlag: true, // 路口的显示隐藏状态
     }
     this.mapPopup = null
-    
   }
   componentDidMount = () => {
     this.renderMap()
