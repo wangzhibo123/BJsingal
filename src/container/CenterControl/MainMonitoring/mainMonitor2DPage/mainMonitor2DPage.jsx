@@ -32,13 +32,13 @@ export default class MainMonitor2DPage extends Component{
                 { name: "上地", id: "3", children: [{ name: "华联", id: "3_1" }, { name: "中关村", id: "3_2" }] },
                 { name: "三里屯", id: "4", children: [{ name: "太里古", id: "4_1" }, { name: "乾坤大厦", id: "4_2" }] }
               ],
-              lineData: [{ lnglat: [116.383, 39.90706], img: bascRightLeft }, { lnglat: [116.389, 39.90723], img: bascRightUpLeft }, { lnglat: [116.399, 39.90753], img: bascUpDown }],
+              lineData: [{ lnglat: [116.383, 39.90709], img: bascRightLeft }, { lnglat: [116.389, 39.90725], img: bascRightUpLeft }, { lnglat: [116.399, 39.90756], img: bascUpDown }],
               //地图默认中心点
               defaultCenterPoint: [116.396, 39.9075],
               //地图视角角度
               modeMapFlyToPitch: 0, //0 表示竖直状态视角 90表示水平状态视角
               //地图缩放倍率
-              modeMapFlyToZoom: 14, //范围 0~17  17表示放大到最大 15及以上开始3D
+              modeMapFlyToZoom: 14.99, //范围 0~17  17表示放大到最大 15及以上开始3D
               //展示开关
               modeNavShow: true,
               modeMapShow: true,
