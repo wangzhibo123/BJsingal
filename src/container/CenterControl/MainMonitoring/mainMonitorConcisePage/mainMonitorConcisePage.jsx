@@ -21,6 +21,7 @@ import { Select, Switch, Menu } from "antd";
 import { SearchOutlined, CompassOutlined } from "@ant-design/icons";
 //引入axios
 import axiosInstance from '../../../utils/getInterfaceData'
+const { Option } =Select
 export default class MainMonitorConcisePage extends Component{
     constructor(props){
         super(props)
@@ -51,17 +52,18 @@ export default class MainMonitorConcisePage extends Component{
               arlVideo: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv13", name: "南", id: 'my_S'  }],
             };
             //视频接口
-            // this.videoState="/control-application-front/video/get/rtmp/url/400/300"
+            this.videoState="/control-application-front/video/get/rtmp/url/400/300"
       }
       componentDidMount=()=>{
           this.getVideoMonCarList()
       }
       getVideoMonCarList=()=>{
-        // axiosInstance.post(this.videoState,{"cameraCode": "08143150969233750102#f0dfa07ea18f4a5da535fd251bdc5569","mediaURLParam": {"broadCastType": 0,"packProtocolType": 1,"protocolType": 2,"serviceType": 1,"streamType": 1,"transMode": 0}}).then(res=>{
-        //   this.setState({
-        //     newState:res.data
-        //   })
-        // })
+        axiosInstance.post(this.videoState,{"cameraCode": "08143150969233750102#f0dfa07ea18f4a5da535fd251bdc5569","mediaURLParam": {"broadCastType": 0,"packProtocolType": 1,"protocolType": 2,"serviceType": 1,"streamType": 1,"transMode": 0}}).then(res=>{
+          // this.setState({
+          //   newState:res.data
+          // })
+          console.log(res,"------res")
+        })
       }
       render(){
         const {videoStateBind} =this.state;
@@ -89,13 +91,35 @@ export default class MainMonitorConcisePage extends Component{
                 <div className="modeMainEWMode">
                   {/* 东西走向 */}
                     <div className="modeMainEWVideo">
-                      <Video  showB={false} {...this.state}></Video>
+                      <div className="modeMainEWVideoSelect">
+                        <div style={{height:"40px",margin:"0 17px",lineHeight:'40px',fontSize:"18px",color:"#567AC4"}}>中关村大街东</div>
+                        <div style={{height:"40px"}}>
+                          <Select defaultValue="通道一" size="middle">
+                            <Option value="1" key="1">通道一</Option>
+                            <Option value="2" key="2">通道二</Option>
+                            <Option value="3" key="3">通道三</Option>
+                            <Option value="4" key="4">通道四</Option>
+                          </Select>
+                        </div>
+                      </div>
+                      <Video {...this.state} url={'/control-application-front/video/get/rtmp/url/400/300'}></Video>
                     </div>
                 </div>
                 <div className="modeMainSNMode">
                   {/* 南北走向 */}
                   <div className="modeMainSNVideo">
-                    {/* <Video url={this.state.arlVideo} showB={true}></Video> */}
+                  <div className="modeMainEWVideoSelect">
+                  <div style={{height:"40px",margin:"0 17px",lineHeight:'40px',fontSize:"18px",color:"#567AC4"}}>中关村大街东</div>
+                    <div style={{height:"40px"}}>
+                      <Select defaultValue="通道一" size="middle">
+                        <Option value="1" key="1">通道一</Option>
+                        <Option value="2" key="2">通道二</Option>
+                        <Option value="3" key="3">通道三</Option>
+                        <Option value="4" key="4">通道四</Option>
+                      </Select>
+                    </div>
+                  </div>
+                      <Video {...this.state}></Video>
                   </div>
                 </div>
               </div>

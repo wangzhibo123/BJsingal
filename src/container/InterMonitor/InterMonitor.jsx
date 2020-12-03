@@ -382,7 +382,7 @@ class InterMonitor extends Component {
               <div className="controlMsg">
                 <span className="controlItems">网络状态：<span className="itemsVal">在线</span></span>
                 <span className="controlItems">控制模式：<span className="itemsVal">{statusControlData && statusControlData.control_state_txt}</span></span>
-                <span className="controlItems">是否锁定：<span className="itemsVal">未锁</span></span>
+                {/* <span className="controlItems">是否锁定：<span className="itemsVal">未锁</span></span> */}
                 <span className="controlItems">方案号：<span className="itemsVal">{statusControlData && statusControlData.planno}</span></span>
                 <span className="controlItems">周期：<span className="itemsVal">{statusControlData && statusControlData.cyclelen}</span></span>
               </div>
