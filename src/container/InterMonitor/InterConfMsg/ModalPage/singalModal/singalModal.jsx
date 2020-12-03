@@ -1,24 +1,35 @@
 import React, { Component } from 'react'
-import { InputNumber, message } from 'antd'
+import { InputNumber, message, Select } from 'antd'
 
 import axiosInstance from '../../../../utils/getInterfaceData'
 
+const { Option } = Select
 class SingalModal extends Component {
   constructor(props) {
     super(props)
     this.state = {
       editInfo: null,
+      singalTypeList: null,
     }
     this.saveUrl = '/control-application-front/basic/info/signal/saveSignalConfigInfo'
+    this.singlTypeUrl = '/control-application-front/basic/info/listCodeByCodeType?codeType=22' // 信号机类型22
   }
   componentDidMount = () => {
+    this.getSingalTypeLists()
     const { editDeviceInfo } = this.props.data
     this.editInfo = editDeviceInfo
     this.setState({ editInfo: this.editInfo })
   }
+  getSingalTypeLists = () => {
+    axiosInstance.get(this.singlTypeUrl).then((res) => {
+      const { code, data } = res.data
+      if (code === 200) {
+        this.setState({ singalTypeList: data })
+      }
+    })
+  }
   handleSaveEditInfo = () => {
     axiosInstance.post(this.saveUrl, [this.editInfo]).then((res) => {
-      console.log(res)
       const { code } = res.data
       if (code === 200) {
         this.props.getPrimitiveInfo(this.props.interId)
@@ -37,12 +48,16 @@ class SingalModal extends Component {
     const pname = e.target.getAttribute('pname')
     const { value } = e.target
     this.editInfo.signalConfigInfo[pname] = value
+    this.editInfo.signalConfigInfo['signalModelValue'] = value
   }
   handleCancelModal = () => {
     this.props.closeEditModal()
   }
+  handleSelectChange = (val, options) => {
+    this.editInfo.signalConfigInfo[options.pname] = val
+  }
   render() {
-    const { editInfo } = this.state
+    const { editInfo, singalTypeList } = this.state
     return (
       <div className="editPelMsg">
         <div className="editItem">
@@ -84,7 +99,14 @@ class SingalModal extends Component {
           </div>
           <div className="eitems">
             <span className="itemTxt longTxt">信号机型号：</span>
-            <input type="text" className="editInput pl10" defaultValue={editInfo && editInfo.signalConfigInfo.signalModelValue} pname="signalModelValue" onChange={this.handleInputChange} />
+            <Select key={editInfo && editInfo.signalConfigInfo.signalModel} defaultValue={editInfo && editInfo.signalConfigInfo.signalModel} onChange={this.handleSelectChange}>
+              {
+                singalTypeList &&
+                singalTypeList.map((item) => (
+                  <Option key={item.id} value={item.cCode} pname="signalModel">{item.codeName}</Option>
+                ))
+              }
+            </Select>
           </div>
         </div>
         <div className="editItem">

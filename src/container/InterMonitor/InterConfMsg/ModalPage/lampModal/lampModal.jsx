@@ -20,10 +20,12 @@ class LampModal extends Component {
     this.getInterDirMoveList(21)
     const { editDeviceInfo, primitiveInfo } = this.props.data
     this.editInfo = editDeviceInfo
-    this.currentDeviceList = primitiveInfo.LampGroup
-    const lengths = this.currentDeviceList.length
-    const editNo = lengths === 0 ? 1 : this.currentDeviceList[lengths - 1].cfgLampgroup.lampgroupno + 1
-    this.editInfo.cfgLampgroup.lampgroupno = editNo
+    if (!this.editInfo.cfgLampgroup.lampgroupno) {
+      this.currentDeviceList = primitiveInfo.LampGroup
+      const lengths = this.currentDeviceList.length
+      const editNo = lengths === 0 ? 1 : this.currentDeviceList[lengths - 1].cfgLampgroup.lampgroupno + 1
+      this.editInfo.cfgLampgroup.lampgroupno = editNo
+    }
     this.setState({ editInfo: this.editInfo })
   }
   getInterDirMoveList = (type) => {

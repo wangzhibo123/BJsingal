@@ -25,6 +25,8 @@ import ChannelModal from './ModalPage/channelModal/ChannelModal'
 import RelationModal from './ModalPage/relationModal/relationModal'
 import SingalModal from './ModalPage/singalModal/singalModal'
 import LampModal from './ModalPage/lampModal/lampModal'
+import DetectorModal from './ModalPage/detectorModal/detectorModal'
+import VideoModal from './ModalPage/videoModal/videoModal'
 
 import axiosInstance from '../../utils/getInterfaceData'
 import { getDevicePiclist, getEditDeviceInfo } from '../../../reduxs/action/interConfig'
@@ -53,8 +55,8 @@ class InterConfMsg extends Component {
       { confName: '路口关系', id: 'inter', num: '7', compos: InterRelation, modalCompos: RelationModal },
       { confName: '信号机', id: 'singal', num: '1', compos: SingalMsg, modalCompos: SingalModal },
       { confName: '灯组', id: 'lightGroup', num: '10', compos: LightGroup, modalCompos: LampModal },
-      { confName: '检测器', id: 'detector', num: '3', compos: Detector },
-      { confName: '视频', id: 'video', num: '9', compos: VideoMsg },
+      { confName: '检测器', id: 'detector', num: '3', compos: Detector, modalCompos: DetectorModal },
+      { confName: '视频', id: 'video', num: '9', compos: VideoMsg, modalCompos: VideoModal },
     ]
     this.singalParams = [
       { confName: '相位信息', id: 'phasemsg', compos: PhaseMsg },
@@ -113,7 +115,6 @@ class InterConfMsg extends Component {
     } else {
       this.setState({ currentDeviceList: devicePiclist[listnum] })
     }
-    
   }
   
   handleUploadInterPic = () => {
@@ -142,10 +143,10 @@ class InterConfMsg extends Component {
       }
     }
   }
+  // 获取弹窗默认编辑参数
   getDefaultEditInfo = (editname) => {
     const { primitiveInfo } = this.props.data
     const { interId } = this.props
-    console.log(primitiveInfo)
     const singalInfo = primitiveInfo.SignalConfigInfo.length ? primitiveInfo.SignalConfigInfo[0] :
     {
       signalConfigInfo: { siganlSupplier: '', signalCode: '', signalGateway: '', signalIp: '', signalMask: '', signalModel: '', signalModelValue: '',
@@ -162,8 +163,17 @@ class InterConfMsg extends Component {
     } : editname === 'singal' ? singalInfo : editname === 'lightGroup' ? {
       cfgLampgroup: { direction: 1, directionValue: '', lampgroupno: '', signalId: '', type: 99, typeValue: '', unitId: interId },
       uiUnitConfig: { pLeft: 0, pTop: 0, rotationAngle: 0, uiHight: 40, uiImageName: '', uiWidth: 40, isView: 0, unitId: interId, },
+    } : editname === 'detector' ? {
+      cfgDetectorInfo: {detcycle: 0, dettype: 1, distance: 3, lanenolist: "3,4", detid: 0, unitId: interId },
+      uiUnitConfig: { pLeft: 0, pTop: 0, rotationAngle: 0, uiHight: 40, uiImageName: '', uiWidth: 40, isView: 0, unitId: interId, },
+    } : editname === 'video' ? {
+      deviceInfo: { deviceModel: '', deviceName: '', deviceState: 0, deviceStateValue: '', deviceType: 0, deviceTypeValue: '', factoryDay: '',
+        factoryName: '', factoryTel: '', flag: 0, installDay: '', installLocation: 0, installLocationValue: '', maintenanceUnitTel: '', unitId: interId,
+      },
+      uiUnitConfig: { isView: 0, pLeft: 0, pTop: 0, pleft: 0, ptop: 0, rotationAngle: 0, uiHight: 0, uiId: 0, uiWidth: 0, unitId: interId }
     } : null
   }
+  // 拖拽新增图元配置
   handleDirDragStart = (ev) => {
     this.newConfPic = this.getDefaultEditInfo(this.state.currentItem)
     this.currentDragIndex = null
@@ -179,6 +189,7 @@ class InterConfMsg extends Component {
   handleDirDragEnd = (ev) => {
     console.log(ev.target, 'end:::')
   }
+  // 拖拽放置后调用
   handleDropPic = (ev) => {
     ev.preventDefault();
     const dropBoxLeft = ev.currentTarget.offsetLeft
@@ -204,12 +215,14 @@ class InterConfMsg extends Component {
   handleDragOver = (ev) => {
     ev.preventDefault();
   }
+  // 拖拽编辑图元信息
   handleDragConfPic = (ev) => {
     this.currentDragIndex = ev.target.getAttribute('indexs')
     this.moveBeforeX = ev.clientX
     this.moveBeforeY = ev.clientY
     this.newConfPic = this.roadLists[this.currentDragIndex]
   }
+  // 点击编辑图元信息
   handleConfpicUp = (ev) => {
     this.currentDragIndex = ev.target.getAttribute('indexs')
     console.log(this.currentDragIndex)
