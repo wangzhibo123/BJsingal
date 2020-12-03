@@ -8,13 +8,13 @@ class GreenWaveCharts extends React.Component {
     super(props)
     this.state = {
       svgs: null,
-      reverseSvgs: null,  
+      reverseSvgs: null,
       publicSvgs: null,
       reversePlubSvgs: null,
     }
     this.W = 940 // 容器width
     this.H = 265 // 容器height
-    this.xAxis =960|| this.props.totleDistance  // x轴的总距离（后期表示数据中各个路口距离之和）
+    this.xAxis =960  // x轴的总距离（后期表示数据中各个路口距离之和）
     this.yAxis = 900 // y轴的总时间s
     this.Hs = this.H / this.yAxis // 每秒所占px值
     this.Ws = this.W / this.xAxis // 每千米所占px值

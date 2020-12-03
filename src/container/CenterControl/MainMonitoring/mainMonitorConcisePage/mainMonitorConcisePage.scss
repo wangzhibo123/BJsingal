@@ -99,6 +99,40 @@
                     height: 100%;
                     margin-left:10px;
                     margin-top: 20px;
+                    .modeMainEWVideoSelect{
+                        height: 40px;
+                        display: flex;
+                        margin-bottom: 15px;
+                        .ant-select-selector{
+                            height: 35px;
+                            line-height: 35px;
+                            background: #033653;
+                            border-color:#1E4763;
+                        }
+                        .ant-select{
+                            width: 135px;
+                            color: #fff;
+                            font-weight: 700;
+                        }
+                        .ant-select-arrow{
+                            position: absolute;
+                            top: 51%;
+                            color: #fff;
+                        }
+                        .ant-btn{
+                            position: absolute;
+                            top: 20px;
+                            left: 315px;
+                            width: 71px;
+                            height: 35px;
+                        }
+                        .ant-select-single .ant-select-selector .ant-select-selection-item, .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+                            padding: 1px;
+                            line-height: 34px;
+                            -webkit-transition: all 0.3s;
+                            transition: all 0.3s;
+                        }
+                    }
                 }
             }
             .modeMainSNMode{
@@ -109,6 +143,40 @@
                     height: 100%;
                     margin-left:10px;
                     margin-top: 20px;
+                    .modeMainEWVideoSelect{
+                        height: 40px;
+                        display: flex;
+                        margin-bottom: 15px;
+                        .ant-select-selector{
+                            height: 35px;
+                            line-height: 35px;
+                            background: #033653;
+                            border-color:#1E4763;
+                        }
+                        .ant-select{
+                            width: 135px;
+                            color: #fff;
+                            font-weight: 700;
+                        }
+                        .ant-select-arrow{
+                            position: absolute;
+                            top: 51%;
+                            color: #fff;
+                        }
+                        .ant-btn{
+                            position: absolute;
+                            top: 20px;
+                            left: 315px;
+                            width: 71px;
+                            height: 35px;
+                        }
+                        .ant-select-single .ant-select-selector .ant-select-selection-item, .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+                            padding: 1px;
+                            line-height: 34px;
+                            -webkit-transition: all 0.3s;
+                            transition: all 0.3s;
+                        }
+                    }
                 }
             }
         }
