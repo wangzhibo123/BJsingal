@@ -5,7 +5,7 @@
 import * as types from '../actionTypes/interConfig'
 import RestUtil from '../../container/utils/getInterfaceData'
 import {
-  API_CANALIZATION_ELEMENT, API_DEVICE_LIST,
+  API_CANALIZATION_ELEMENT, API_DEVICE_LIST, API_IMGURL,
 } from '../actionTypes/API'
 
 // 图元信息id
@@ -46,4 +46,5 @@ export const getEditDeviceInfo = (obj) => {
     dispatch({ type: types.EDIT_DEVICE_INFO, payload: obj })
   }
 }
+
 

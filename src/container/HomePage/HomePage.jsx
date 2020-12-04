@@ -417,7 +417,6 @@ class Homepage extends Component {
       const indexs = showArr.indexOf(checkId)
       showArr.splice(indexs, 1)
     }
-    console.log(this.showSingal)
     if (this.pointLists.length) {
       this.addMarker(this.pointLists, this.zoomLev)
     }
