@@ -43,7 +43,7 @@ export default class VideoApp extends Component{
               clickCenterRenders: false,
               //摄像头放大值
               inputValue: 1,
-            };
+        };
     }
     onChange = value => {
       this.setState({
@@ -54,10 +54,10 @@ export default class VideoApp extends Component{
       
     }
     relief=()=>{
-      console.log(1111)
+      // console.log(1111)
     }
     gagarin=()=>{
-      console.log(2222)
+      // console.log(2222)
     }
     render () {
         const {  modeMapShow ,videoCameraState ,inputValue} = this.state;
