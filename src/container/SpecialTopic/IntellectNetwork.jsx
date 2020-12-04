@@ -16,6 +16,7 @@ import allred from '../imgs/iconR.png'
 import yellow from '../imgs/IconY.png'
 import $ from 'jquery'
 import '../utils/updatePhase/jqueryPhaseSvg' 
+import Websocket from 'react-websocket'
 const { Option } = Select
 class IntellectNetwork extends Component {
   constructor(props) {
@@ -25,14 +26,18 @@ class IntellectNetwork extends Component {
       stageIndexs: 0,
       timeNum: 30,
       modeIndex: null,
+      resetFlag: null,
       statusControlData: null,
       isResetStage: true,
+      timeMinutesIndex: null,
+      modeTimeFlag: null,
       realTimeStatus: [{"SIGNAL_SYSTEM_CODE":4,"UNNORMALSIZE":239,"CODE_NAME":"海信","NORMALSIZE":0},{"SIGNAL_SYSTEM_CODE":3,"UNNORMALSIZE":100,"CODE_NAME":"中控","NORMALSIZE":4}],
     }
     this.defaultStageList = []
     // this.interId = this.props.match.params.id
     this.interId = 1000084
     this.modeUrl = `/control-application-front/unitMontitor/getControlModeById?unit_id=${this.interId}`
+    this.timeMinutes = ['5分钟', '15分钟', '30分钟', '不限制', '自定义']
     this.controlItems = [
       { text: '全红控制', img: allred, },
       { text: '闪黄控制', img: yellow },
@@ -42,7 +47,7 @@ class IntellectNetwork extends Component {
   }
   componentDidMount = () => {
     this.props.getPrimitiveInfo(this.interId)
-    this.getControlMode()
+    // this.getControlMode()
     this.timeCountdown(this.state.timeNum)
     this.phaseInit()
   }
@@ -107,61 +112,182 @@ class IntellectNetwork extends Component {
     })
   }
   handleControlMode = (indexs) => {
-    this.setState({ modeIndex: indexs })
+    this.setState({ modeIndex: indexs, resetFlag: null })
   }
-  // 获取实时状态控制模式
-  getControlMode = () => {
-    axiosInstance.post(this.modeUrl).then((res) => {
-      const { code, list } = res.data
-      if (code === '1' && list.stage_id.length) {
-        const stageIds = list.stage_id.split(',')
-        const stageTimes = list.stage_time.split(',')
-        const imgs = list.stage_image.split(',')
-        stageIds.forEach((item, index) => {
-          const obj = { stageId: item, stageTime: stageTimes[index], modifyTime: stageTimes[index], stageImg: imgs[index] }
-          this.defaultStageList.push(obj)
-        })
-        this.setState({
-          statusControlData: list,
-          stageList: this.defaultStageList,
-          isResetStage: true,
-        })
-      }
-    })
-  }
+  // // 获取实时状态控制模式
+  // getControlMode = () => {
+  //   axiosInstance.post(this.modeUrl).then((res) => {
+  //     const { code, list } = res.data
+  //     if (code === '1' && list.stage_id.length) {
+  //       const stageIds = list.stage_id.split(',')
+  //       const stageTimes = list.stage_time.split(',')
+  //       const imgs = list.stage_image.split(',')
+  //       stageIds.forEach((item, index) => {
+  //         const obj = { stageId: item, stageTime: stageTimes[index], modifyTime: stageTimes[index], stageImg: imgs[index] }
+  //         this.defaultStageList.push(obj)
+  //       })
+  //       this.setState({
+  //         statusControlData: list,
+  //         stageList: this.defaultStageList,
+  //         isResetStage: true,
+  //       })
+  //     }
+  //   })
+  // }
   // 修改阶段时间
   handleModifyStageTime = (type, indexs, e) => {
     e.stopPropagation()
+    const stageListOld = JSON.parse(JSON.stringify(this.defaultStageList))
     const defaultTime = parseInt(this.defaultStageList[indexs].modifyTime)
     this.defaultStageList[indexs].modifyTime = type === 'add' ? defaultTime + 1 : defaultTime - 1
-    this.setState({ stageList: this.defaultStageList, isResetStage: false })
+    this.setState({ stageList: this.defaultStageList, stageListOld, isResetStage: false, resetFlag: null })
+    console.log(this.state.stageListOld)
   }
+  // 取消
+  handleCancelStage  = () => {
+    this.setState({
+      modeIndex: null,
+      isResetStage: true,
+    })
+    this.defaultStageList = JSON.parse(JSON.stringify(this.state.stageListOld))
+  }    
+  // 执行
+  handleRunStage  = () => {
+    this.setState({
+      resetFlag: true
+    })
+    if (this.state.modeIndex === 2) {
+      this.setState({
+        modeTimeFlag: true
+      })
+    }
+  }    
+  // 步进
+  handleStepStage  = (stageIndexs) => {
+    const stageList = JSON.parse(JSON.stringify(this.state.stageList))
+    let nowIndex = null
+    stageList.map((item, i) => {
+      if (stageIndexs == item.stageId){
+        stageList[i+1] ? this.setState({ stageIndexs: stageList[i+1].stageId }) : this.setState({ stageIndexs: stageList[0].stageId })
+      }
+    })
+    
+  }   
+  // 锁定
+  handleLockedStage  = () => {
+    console.log('锁定')
+  }   
   // 复位
   handleResetStage = () => {
     this.defaultStageList.forEach(item => item.modifyTime = item.stageTime)
-    this.setState({ isResetStage: true })
+    this.setState({ isResetStage: true, modeIndex: null, resetFlag: null })
   }
+  // 选时间
+  timeGetItem = (e, timeMinutesIndex) => {
+    e.stopPropagation()
+    this.setState({ timeMinutesIndex })
+    switch(timeMinutesIndex){
+      case 0:
+        console.log('选择的是5分钟');
+        break;
+      case 1:
+          console.log('选择的是15分钟');
+        break;
+      case 2:
+        console.log('选择的是30分钟');
+        break;
+      case 3:
+        console.log('选择的是不限制');
+        break;
+      case 4:
+
+        console.log('选择的是自定义');
+        break;
+    }
+  }
+    // 是否执行
+    goImplement = (e, flag) => {
+      e.stopPropagation()
+      if (flag){
+        this.setState({
+          modeTimeFlag: !flag
+        })
+        console.log('确认执行')
+      } else {
+        this.setState({
+          modeTimeFlag:flag
+        })
+        console.log('取消执行')
+  
+      }
+    }
   handleCheckStage = (indexs) => {
     this.setState({ stageIndexs: indexs })
   }
+  // webSocketData 获取实时状态控制模式
+  webSocketData = (e) => {
+    let result = JSON.parse(e);
+    console.log(result)
+    this.defaultStageList = []
+    result.stageTimeS.forEach((item, index) => {
+      const obj = { stageId: item.stage_id, stageTime: item.stage_time, modifyTime: item.stage_time, stageImg: item.stage_image }
+      this.defaultStageList.push(obj)
+    })
+    console.log(this.defaultStageList)
+    this.setState({
+      statusControlData: result,
+      stageList: this.defaultStageList,
+      isResetStage: true,
+      stageIndexs: result.stage_code,
+    })
+  }
   render() {
-    const { stageList, stageIndexs, statusControlData, modeIndex, isResetStage, timeNum } = this.state
+    const { stageList, stageIndexs, statusControlData, modeIndex, resetFlag, isResetStage, timeNum, timeMinutesIndex, modeTimeFlag } = this.state
     const globalImgurl = localStorage.getItem('ImgUrl')
     return (
       <div className='WrapperContent'>
+        { modeIndex !== null || !isResetStage ? null : <Websocket
+          url={`ws://192.168.1.22:20194/engine-monitor/webSocket/1000084`} onMessage={this.webSocketData.bind(this)} />
+        }
         <div className='specialTopicBox' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none' }}>
+          { resetFlag && modeIndex === 2 && modeTimeFlag ? <div className="MaskBox"></div> : null}
           <div className="controlExecute">
             <div className="controlMsg">
-              <span className="controlItems">网络状态：<span className="itemsVal">在线</span></span>
-              <span className="controlItems">控制模式：<span className="itemsVal">{statusControlData && statusControlData.control_state_txt}</span></span>
-              <span className="controlItems">是否锁定：<span className="itemsVal">未锁</span></span>
-              <span className="controlItems">方案号：<span className="itemsVal">{statusControlData && statusControlData.planno}</span></span>
-              <span className="controlItems">周期：<span className="itemsVal">{statusControlData && statusControlData.cyclelen}</span></span>
+              <span className="controlItems">网络状态：<span className="itemsVal">{statusControlData && statusControlData.alarm_state_txt}</span></span>
+              <span className="controlItems">控制模式：<span className="itemsVal">{statusControlData && statusControlData.manual_control_state_txt}</span></span>
+              {/* <span className="controlItems">是否锁定：<span className="itemsVal">未锁</span></span> */}
+              <span className="controlItems">方案号：<span className="itemsVal">{statusControlData && statusControlData.plan_id}</span></span>
+              <span className="controlItems">周期：<span className="itemsVal">{statusControlData && statusControlData.cycle_run_time}</span></span>
             </div>
-            <div className="modifyBox">
-              <div className="modifyBtn modify">运行</div>
-              <div className="modifyBtn modify" onClick={this.handleResetStage}>复位</div>
-            </div>
+              {
+                modeIndex !== null || !isResetStage ? 
+                <div className="modifyBox">
+                  { !resetFlag ? <div className="modifyBtn modify" onClick={this.handleCancelStage}>取消</div> : null }
+                  { !resetFlag ? <div className="modifyBtn modify" onClick={this.handleRunStage}>执行</div> : null }
+                  { resetFlag && modeIndex === 3 ? <div className="modifyBtn modify" onClick={() => this.handleStepStage(stageIndexs)}>步进</div> : null }
+                  { resetFlag && modeIndex === 3 ? <div className="modifyBtn modify" onClick={this.handleLockedStage}>锁定</div> : null }
+                  { resetFlag ? <div className="modifyBtn modify" onClick={this.handleResetStage}>复位
+                  { modeIndex === 2 && modeTimeFlag ?
+                      <div className="timePopBox" onClick={(e) => { e.stopPropagation()}}>
+                          <dl>
+                            <dt>请选择方案运行时间</dt>
+                            <dd>
+                              {
+                                this.timeMinutes.map((item, index) => {
+                                  return <em className={`${timeMinutesIndex === index ? 'emCurrent' : ''}`} onClick={(e) => this.timeGetItem(e, index)}>{item}</em>
+                                })
+                              }
+                              { timeMinutesIndex === 4 ? <i><input type="number" className="inputBox" placeholder="请输入" />分钟</i> : null }
+                            </dd>
+                            <dd>
+                              <span onClick={(e) => this.goImplement(e, null)}>取消</span>
+                              <span onClick={(e) => this.goImplement(e, true)}>确认执行</span>              
+                            </dd>
+                          </dl>
+                        </div> : null }
+                  </div> : null }
+                </div> : null
+              }
             <div className="controlMode">
               <div className="modeItems">
                 {
@@ -180,14 +306,16 @@ class IntellectNetwork extends Component {
                   stageList &&
                   stageList.map((item, index) => {
                     return (
-                      <div className={`phaseTime ${stageIndexs === index ? 'phaseActive' : ''}`} key={item.stageId + item.stageTime} onClick={() => { this.handleCheckStage(index) }}>
+                      <div className={`phaseTime ${stageIndexs == item.stageId ? 'phaseActive' : ''}`} key={'stateList' + item.stageId} onClick={() => { this.handleCheckStage(item.stageId) }}>
                         <div className="phaseinner"><img src={globalImgurl + item.stageImg} alt="" /></div>
                         <div className="phaseinner times">
                           <span>{isResetStage ? item.stageTime : item.modifyTime}</span>
-                          <div className="caculate">
-                            <CaretUpOutlined className="add" onClick={(e) => { this.handleModifyStageTime('add', index, e) }} />
-                            <CaretDownOutlined className="subtract" onClick={(e) => { this.handleModifyStageTime('subtract', index, e) }} />
-                          </div>
+                          { modeIndex !== 3 ?
+                            <div className="caculate">
+                              <CaretUpOutlined className="add" onClick={(e) => { this.handleModifyStageTime('add', index, e) }} />
+                              <CaretDownOutlined className="subtract" onClick={(e) => { this.handleModifyStageTime('subtract', index, e) }} />
+                            </div> : null
+                            }
                         </div>
                       </div>
                     )
