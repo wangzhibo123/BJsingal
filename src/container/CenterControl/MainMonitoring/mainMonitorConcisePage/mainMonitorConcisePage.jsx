@@ -102,7 +102,7 @@ export default class MainMonitorConcisePage extends Component{
                           </Select>
                         </div>
                       </div>
-                      <Video {...this.state} url={'/control-application-front/video/get/rtmp/url/400/300'}></Video>
+                      <Video {...this.state} url={this.videoState}></Video>
                     </div>
                 </div>
                 <div className="modeMainSNMode">
@@ -119,7 +119,7 @@ export default class MainMonitorConcisePage extends Component{
                       </Select>
                     </div>
                   </div>
-                      <Video {...this.state}></Video>
+                      <Video {...this.state} url={this.videoState}></Video>
                   </div>
                 </div>
               </div>

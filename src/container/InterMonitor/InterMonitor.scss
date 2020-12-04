@@ -1,3 +1,5 @@
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; }
+input[type="number"]{ -moz-appearance: textfield; }
 @keyframes slideRight {
     0% {
         opacity: 0;
@@ -42,7 +44,15 @@
         transform: rotate(-360deg);
     }
 }
-
+.MaskBox{
+    background:rgba(4,24,54, .1);
+    position:fixed;
+    left:0;
+    top:0;
+    right:0;
+    bottom:0;
+    z-index:10;
+  }
 .interMonitorBox {
     position: relative;
     width: 100%;
@@ -449,6 +459,7 @@
                 padding: 10px 0 0 20px;
                 background: linear-gradient(0deg, rgba(2, 15, 36, 0.4), rgba(0, 38, 120, 0.99), rgba(2, 15, 36, 0.4));
                 font-family: "MicrosoftYaHei";
+                user-select: none;
                 .controlMsg {
                     height: 40px;
                     display: flex;
@@ -478,6 +489,77 @@
                         background-color: #3e70ff;
                         cursor: pointer;
                         border-radius: 3px;
+                        .timePopBox{
+                            background:rgba(3, 22, 53, 0.7);
+                            padding:20px;
+                            cursor:default;
+                            position:absolute;
+                            left:-580px;
+                            bottom:35px;
+                            z-index:11;
+                            border:1px solid #63676C;
+                            border-radius: 4px;
+                            -webkit-border-radius: 4px;
+                            -moz-border-radius: 4px;
+                            -ms-border-radius: 4px;
+                            -o-border-radius: 4px;
+
+                            dl > dt {
+                                font-size: 16px;
+                                padding-bottom:30px;
+                            }
+                            dl > dd {
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;                                
+                                em{
+                                    width:70px;
+                                    line-height: 30px;
+                                    cursor: pointer;
+                                    margin:0 5px;
+                                    border:1px transparent solid;
+                                    &:hover{
+                                        color:#fff;
+                                        border:1px #63676C solid;
+                                    }
+                                }
+                                i{
+                                    position: relative;
+                                    .inputBox {
+                                        width: 60px;
+                                        height: 30px;
+                                        margin:0 5px;
+                                        padding-left: 5px;
+                                        border: none;
+                                        outline: none;
+                                        background-color: transparent;
+                                        border-bottom: 1px #63676C solid;
+                                    }
+                                }
+                                .emCurrent{
+                                    color:#fff;
+                                    border:1px #63676C solid;
+                                }
+                                span{
+                                    width:100px;
+                                    margin: 50px 10px 0;
+                                    line-height: 30px;
+                                    padding:0 15px;
+                                    color:#434343;
+                                    background: #fff;
+                                    cursor: pointer;
+                                    border-radius: 4px;
+                                    -webkit-border-radius: 4px;
+                                    -moz-border-radius: 4px;
+                                    -ms-border-radius: 4px;
+                                    -o-border-radius: 4px;
+                                }
+                                span:nth-child(2){
+                                    color:#ffffff;
+                                    background: #169BD5;
+                                }
+                            }
+                        }
                     }
                     .modify {
                         background: url(../imgs//kuang.png) center center no-repeat;
@@ -541,6 +623,10 @@
                                 background: linear-gradient(0deg, #0066b4 0%, #00f0ff 100%);
                                 background-clip: text;
                                 -webkit-text-fill-color: transparent;
+                                span{
+                                    border-bottom: 2px solid #3e70ff;
+                                    user-select: none;
+                                }
                                 .caculate {
                                     height: 100%;
                                     display: flex;
@@ -550,6 +636,10 @@
                                     .add,
                                     .subtract {
                                         cursor: pointer;
+                                    }
+                                    span{
+                                        border-bottom: none;
+                                        
                                     }
                                 }
                             }

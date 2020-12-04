@@ -8,7 +8,6 @@ import 'video.js/dist/video-js.css'
 import 'videojs-flash'
 import videojs from 'video.js'
 
-
 class VideoApp extends Component{
   constructor(props){
     super(props)
@@ -85,7 +84,7 @@ class VideoApp extends Component{
         const player = videojs(newState[0].id.slice(0,6));
         player.dispose();
     }
-  } 
+  }
   render(){
       const { newState, width ,height} =this.state;
     return(
