@@ -14,22 +14,6 @@ const { Option } = Select
 class Homepage extends Component {
   constructor(props) {
     super(props)
-    this.controlMode = [
-      { controlName: '时间表控制', isShow: true, code: '' },
-      { controlName: '感应控制', isShow: true, code: '' },
-      { controlName: '平台优化控制', isShow: true, code: '' },
-      { controlName: '中心手动控制', isShow: true, code: '' },
-      { controlName: '路口手动控制', isShow: true, code: '' },
-      { controlName: '其他', isShow: true, code: '' },
-    ]
-    this.singalType = [
-      { controlName: '西门子', isShow: true, code: '' },
-      { controlName: '海信', isShow: true, code: '' },
-      { controlName: '易华录', isShow: true, code: '' },
-      { controlName: '千方', isShow: true, code: '' },
-      { controlName: '中兴', isShow: true, code: '' },
-      { controlName: '其他', isShow: true, code: '' },
-    ]
     this.state = {
       mainHomePage: true,
       congestionList: null,
@@ -48,14 +32,18 @@ class Homepage extends Component {
       nodeSimulation: [0, 0, 0, 0],
       interNum: [0, 0, 0, 0],
       simulationPlanNum: [0, 0, 0, 0],
-      controlModes: this.controlMode,
-      singalTypes: this.singalType,
+      controlModes: null,
+      singalTypes: null,
       allControlMode: true,
       allSingalType: true,
       legendMinitor: null,
       legendCondition: null,
       statusType: '1',
+      interSingal: null,
+      interControlMode: null,
     }
+    this.showMode = []
+    this.showSingal = []
     this.mapLegend = { condition: true, minitor: true }
     this.interMarkers = []
     this.trafficTimer = null
@@ -71,8 +59,11 @@ class Homepage extends Component {
     this.faultUrl = '/control-application-front/index/getFaultStatistics?user_id=1'
     this.areaList = '/control-application-front/index/getRealTimeMonitoring?user_id=1'
     this.pointLists = '/control-application-front/index/getPointByFault?user_id=1'
+    this.dirMoveList = '/control-application-front/basic/info/listCodeByCodeType' // 方向是6， 灯组类型21
   }
   componentDidMount = () => {
+    this.getInterDirMoveList(1)
+    this.getInterDirMoveList(13)
     this.getMapPoints()
     this.getAreaMsgLists()
     this.getCongestionList()
@@ -81,6 +72,22 @@ class Homepage extends Component {
     this.getCloudSource()
     this.getOprationEfficiency()
     this.getFaultStatistics()
+  }
+  // 字典查询，控制模式，信号机
+  getInterDirMoveList = (type) => {
+    axiosInstance.get(`${this.dirMoveList}?codeType=${type}`).then((res) => {
+      const { code, data } = res.data
+      if (code === 200 && data) {
+        if (type === 1) {
+          this.controlMode = data.map(item => Object.assign(item, { isShow: true }))
+          this.setState({ controlModes: this.controlMode })
+        } else {
+          this.singalType = data.map(item => Object.assign(item, { isShow: true }))
+          this.setState({ singalTypes: this.singalType })
+        }
+        
+      }
+    })
   }
   // 添加实时路况
   addTrafficLayer = () => {
@@ -230,29 +237,33 @@ class Homepage extends Component {
       const currentThis = this
       const interList = zoomVal < 13 ? points.filter(item => item.unit_grade <= 4) : points
       interList.forEach((item, index) => {
-        const el = document.createElement('div')
-        el.style.width = '20px'
-        el.style.height = '20px'
-        el.style.borderRadius = '50%'
-        el.style.backgroundColor = 'rgba(8,194,8,.3)'
-        el.style.display = 'flex'
-        el.style.justifyContent = 'center'
-        el.style.alignItems = 'center'
-        el.style.cursor = 'pointer'
-        el.id = 'marker' + item.unit_code
-        const childEl = document.createElement('div')
-        childEl.style.width = '10px'
-        childEl.style.height = '10px'
-        childEl.style.borderRadius = '50%'
-        childEl.style.backgroundColor = '#08c208'
-        el.appendChild(childEl)
-        el.addEventListener('click',function(e){
-          currentThis.addInfoWindow(item)
-        });
-        const marker = new window.mapabcgl.Marker(el)
-          .setLngLat([item.longitude, item.latitude])
-        .addTo(this.map)
-        this.interMarkers.push(marker)
+        const hasMode = this.showMode.indexOf(item.control_state) < 0
+        const hasSingal = this.showSingal.indexOf(item.signal_system_codes) < 0
+        if (hasMode && hasSingal) {
+          const el = document.createElement('div')
+          el.style.width = '20px'
+          el.style.height = '20px'
+          el.style.borderRadius = '50%'
+          el.style.backgroundColor = 'rgba(8,194,8,.3)'
+          el.style.display = 'flex'
+          el.style.justifyContent = 'center'
+          el.style.alignItems = 'center'
+          el.style.cursor = 'pointer'
+          el.id = 'marker' + item.unit_code
+          const childEl = document.createElement('div')
+          childEl.style.width = '10px'
+          childEl.style.height = '10px'
+          childEl.style.borderRadius = '50%'
+          childEl.style.backgroundColor = '#08c208'
+          el.appendChild(childEl)
+          el.addEventListener('click',function(e){
+            currentThis.addInfoWindow(item)
+          });
+          const marker = new window.mapabcgl.Marker(el)
+            .setLngLat([item.longitude, item.latitude])
+          .addTo(this.map)
+          this.interMarkers.push(marker)
+        }
       })
     }
   }
@@ -339,6 +350,7 @@ class Homepage extends Component {
       }
       this.zoomTimer = setTimeout(() => {
         const zoomLev = Math.round(this.map.getZoom())
+        this.zoomLev = zoomLev
         if (this.pointLists.length) {
           this.addMarker(this.pointLists, zoomLev)
         }
@@ -390,7 +402,7 @@ class Homepage extends Component {
   }
   // 图层控制
   handleControlChange = (e) => {
-    const { checked, indexs, mode, all } = e.target
+    const { checked, indexs, mode, all, checkId } = e.target
     const checkList = all === 'allSingalType' ? this.singalType : this.controlMode
     checkList[indexs].isShow = checked
     const isAllCheck = checkList.filter(item => item.isShow === false)
@@ -398,6 +410,17 @@ class Homepage extends Component {
       [mode]: checkList,
       [all]: isAllCheck.length ? false : true,
     })
+    const showArr = all === 'allSingalType' ? this.showSingal : this.showMode
+    if (!checked) {
+      showArr.push(checkId)
+    } else {
+      const indexs = showArr.indexOf(checkId)
+      showArr.splice(indexs, 1)
+    }
+    console.log(this.showSingal)
+    if (this.pointLists.length) {
+      this.addMarker(this.pointLists, this.zoomLev)
+    }
   }
   // 图层控制全选
   handleAllCheckChange = (e) => {
@@ -408,6 +431,15 @@ class Homepage extends Component {
       [all]: e.target.checked,
       [mode]: checkList,
     })
+    const { controlModes, singalTypes } = this.state
+    if (all === 'allSingalType') {
+      this.showSingal = checked ? [] : singalTypes.map(item => item.cCode)
+    } else {
+      this.showMode = checked ? [] : controlModes.map(item => item.cCode)
+    }
+    if (this.pointLists.length) {
+      this.addMarker(this.pointLists, this.zoomLev)
+    }
   }
   handleToggleSingalStatus = (e) => {
     const types = e.target.getAttribute('statustype')
@@ -685,15 +717,17 @@ class Homepage extends Component {
                     </div>
                     <ul style={{ paddingLeft: '20px' }}>
                       {
+                        controlModes &&
                         controlModes.map((item, index) => (
-                          <li key={item.controlName} className="checkMsg">
+                          <li key={item.codeName} className="checkMsg">
                             <Checkbox
                               checked={item.isShow}
                               indexs={index}
                               mode="controlModes"
                               all="allControlMode"
+                              checkId={item.cCode}
                               onChange={this.handleControlChange}
-                            >{item.controlName}</Checkbox>
+                            >{item.codeName}</Checkbox>
                           </li>
                         ))
                       }
@@ -708,15 +742,17 @@ class Homepage extends Component {
                     </div>
                     <ul style={{ paddingLeft: '20px' }}>
                       {
+                        singalTypes &&
                         singalTypes.map((item, index) => (
-                          <li key={item.controlName} className="checkMsg">
+                          <li key={item.codeName} className="checkMsg">
                             <Checkbox
                               checked={item.isShow}
                               indexs={index}
                               mode="singalTypes"
                               all="allSingalType"
+                              checkId={item.cCode}
                               onChange={this.handleControlChange}
-                            >{item.controlName}</Checkbox></li>
+                            >{item.codeName}</Checkbox></li>
                         ))
                       }
                     </ul>

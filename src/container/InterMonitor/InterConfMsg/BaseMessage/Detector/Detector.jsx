@@ -80,23 +80,6 @@ class Detector extends Component {
                 )
               })
             }
-            <div className="confTr">
-              <div className="confTd">
-                <Select defaultValue="0">
-                  <Option key="0" vlaue="0">请选择</Option>
-                  <Option key="1" vlaue="1">1</Option>
-                </Select>
-              </div>
-              <div className="confTd"><input className="relationInput" type="text" /></div>
-              <div className="confTd">
-                <Select defaultValue="0">
-                  <Option key="0" vlaue="0">请选择</Option>
-                  <Option key="1" vlaue="1">1</Option>
-                </Select>
-              </div>
-              <div className="confTd"><input className="relationInput" type="text" /></div>
-              <div className="confTd"><input className="relationInput" type="text" /></div>
-            </div>
           </div>
         </div>
       </>
