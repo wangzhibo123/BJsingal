@@ -808,7 +808,7 @@ class TrunkManagement extends Component {
                           <div key={item.id} className='lineBoxer_item'>
                             <span></span>
                             <div className='streetBox'>
-                              <p className='street'><span>{index < 9 ? ('0' + (index + 1)) : index}</span>{item.unit_name}</p>
+                              <p title={item.unit_name} className='street'><span>{index < 9 ? ('0' + (index + 1)) : index}</span>{item.unit_name}</p>
                               <div className='intersectionBox'>
                                 <p className='intersection'><span>{item.unit_name}</span><span>{item.district_name}</span></p>
                               </div>
