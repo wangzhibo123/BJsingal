@@ -317,13 +317,13 @@ class InterMonitor extends Component {
   // webSocketData 获取实时状态控制模式
   webSocketData = (e) => {
     let result = JSON.parse(e);
-    console.log(result)
+    // console.log(result)
     this.defaultStageList = []
     result.stageTimeS.forEach((item, index) => {
       const obj = { stageId: item.stage_id, stageTime: item.stage_time, modifyTime: item.stage_time, stageImg: item.stage_image }
       this.defaultStageList.push(obj)
     })
-    console.log(this.defaultStageList)
+    // console.log(this.defaultStageList)
     this.setState({
       statusControlData: result,
       stageList: this.defaultStageList,

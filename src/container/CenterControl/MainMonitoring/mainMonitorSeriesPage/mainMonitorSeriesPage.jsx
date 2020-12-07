@@ -13,7 +13,7 @@ export default class MainMonitorSeriesPage extends Component{
             showForwordWave: true,
             showReverseWave: false,
             showControlRecord: false,
-            totleDistance: 3000,
+            totleDistance: 1000,
         }
     }
     render(){
