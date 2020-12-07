@@ -9,19 +9,23 @@ class DetectorModal extends Component {
     super(props)
     this.state = {
       editInfo: null,
+      detectorList: null,
     }
+    this.globalImgurl = localStorage.getItem('ImgUrl')
     this.saveUrl = '/control-application-front/basic/info/detector/saveDetector'
   }
   componentDidMount = () => {
-    const { editDeviceInfo, primitiveInfo } = this.props.data
+    const { editDeviceInfo, primitiveInfo, devicePiclist } = this.props.data
     this.editInfo = editDeviceInfo
     if (!this.editInfo.cfgDetectorInfo.detid) {
-      this.currentDeviceList = primitiveInfo.Detector
-      const lengths = this.currentDeviceList.length
-      const editNo = lengths === 0 ? 1 : this.currentDeviceList[lengths - 1].cfgDetectorInfo.detid + 1
-      this.editInfo.cfgDetectorInfo.detid = editNo
+      if (!this.editInfo.cfgDetectorInfo.detid) {
+        this.currentDeviceList = primitiveInfo.Detector
+        const lengths = this.currentDeviceList.length
+        const editNo = lengths === 0 ? 1 : this.currentDeviceList[lengths - 1].cfgDetectorInfo.detid + 1
+        this.editInfo.cfgDetectorInfo.detid = editNo
+      }
     }
-    this.setState({ editInfo: this.editInfo })
+    this.setState({ editInfo: this.editInfo, detectorList: devicePiclist['3'] })
   }
   handleSaveEditInfo = () => {
     axiosInstance.post(this.saveUrl, [this.editInfo]).then((res) => {
@@ -33,11 +37,26 @@ class DetectorModal extends Component {
       message.info(res.data.message)
     })
   }
+  handleStyleChange = (val, pname) => {
+    this.editInfo.uiUnitConfig[pname] = val
+  }
+  handleNumStep = (val, opt, pname) => {
+    this.editInfo.uiUnitConfig[pname] = val
+    console.log(this.editInfo)
+  }
+  handleSelectChange = (val, options) => {
+    this.editInfo.uiUnitConfig.id = options.key
+    this.editInfo.uiUnitConfig.uiImageName = options.imgurl
+  }
+  handleEditinfoChange = (e) => {
+    const pname = e.target.getAttribute('pname')
+    this.editInfo.cfgDetectorInfo[pname] = e.target.value
+  }
   handleCancelModal = () => {
     this.props.closeEditModal()
   }
   render() {
-    const { editInfo } = this.state
+    const { editInfo, detectorList } = this.state
     return (
       <div className="editPelMsg">
         <div className="editItem">
@@ -65,30 +84,34 @@ class DetectorModal extends Component {
         <div className="editItem">
           <div className="eitems">
             <span className="itemTxt">检测器编号：</span>
-            {/* <Select defaultValue="1">
-              <Option key="1" value="1">1</Option>
-            </Select> */}
             <input type="text" className="editInput pl10" defaultValue={editInfo && editInfo.cfgDetectorInfo.detid} />
           </div>
           <div className="eitems">
             <span className="itemTxt">类型：</span>
-            <input type="text" className="editInput pl10" defaultValue={editInfo && editInfo.cfgDetectorInfo.dettype} />
+            <Select key={editInfo && editInfo.uiUnitConfig.uiId} defaultValue={editInfo && editInfo.uiUnitConfig.uiId} onChange={this.handleSelectChange}>
+              {
+                detectorList &&
+                detectorList.map((item) => (
+                  <Option key={item.id} value={item.id} imgulr={item.uiImageName}><img height="30px" src={this.globalImgurl + item.uiImageName} alt=""/></Option>
+                ))
+              }
+            </Select>
           </div>
         </div>
         <div className="editItem">
           <div className="eitems">
             <span className="itemTxt">统计周期：</span>
-            <input type="text" className="editInput pl10" defaultValue={editInfo && editInfo.cfgDetectorInfo.detcycle} />
+            <input type="text" className="editInput pl10" pname="detcycle" defaultValue={editInfo && editInfo.cfgDetectorInfo.detcycle} onChange={this.handleEditinfoChange} />
           </div>
           <div className="eitems">
             <span className="itemTxt">所属车道：</span>
-            <input type="text" className="editInput pl10" defaultValue={editInfo && editInfo.cfgDetectorInfo.lanenolist} />
+            <input type="text" className="editInput pl10" pname="lanenolist" defaultValue={editInfo && editInfo.cfgDetectorInfo.lanenolist} onChange={this.handleEditinfoChange} />
           </div>
         </div>
         <div className="editItem">
           <div className="eitems">
             <span className="itemTxt">距停车线距离：</span>
-            <input type="text" className="editInput pl10" defaultValue={editInfo && editInfo.cfgDetectorInfo.distance} />
+            <input type="text" className="editInput pl10" pname="distance" defaultValue={editInfo && editInfo.cfgDetectorInfo.distance} onChange={this.handleEditinfoChange} />
           </div>
         </div>
         <div className="editFoot">

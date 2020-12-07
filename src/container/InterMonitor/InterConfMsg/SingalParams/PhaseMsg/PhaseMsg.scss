@@ -1,0 +1,17 @@
+.paramsTable{
+    .paramsTbody{
+        .paramsTr{
+            .paramsTd{
+                input{
+                    height: 28px;
+                    width: 40%;
+                    text-align: center;
+                    background-color: transparent;
+                    border: 1px solid rgba(136, 175, 248, 0.4);
+                    border-radius: 4px;
+                    outline: none
+                }
+            }
+        }
+    }
+}

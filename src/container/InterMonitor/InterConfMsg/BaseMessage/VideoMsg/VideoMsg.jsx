@@ -25,7 +25,8 @@ class VideoMsg extends Component {
     }
   }
   getVideoDeviceList = (primitiveInfo) => {
-    this.setState({ DeviceList: primitiveInfo.Device })
+    this.deviceInfos = primitiveInfo.Device
+    this.setState({ DeviceList: this.deviceInfos })
   }
   getRemoveDevice = (id, configId) => {
     axiosInstance.post(`${this.removeUrl}?id=${id}&configId=${configId}`).then((res) => {
@@ -46,7 +47,12 @@ class VideoMsg extends Component {
         selfThis.getRemoveDevice(id, configId)
       },
     })
-    // onClick={() => { this.handleDelete(item.id, item.uiUnitConfig.uiId) }}
+  }
+  handleEditInfo = (e) => {
+    const indexs = e.currentTarget.getAttribute('indexs')
+    const currentInfo = this.deviceInfos[indexs]
+    this.props.showEditModal()
+    this.props.getEditDeviceInfo(currentInfo)
   }
   render() {
     const { DeviceList } = this.state
@@ -62,35 +68,21 @@ class VideoMsg extends Component {
           <div className="confTbody">
             {
               DeviceList &&
-              DeviceList.map((item) => {
+              DeviceList.map((item, index) => {
+                const { deviceCode, deviceStateValue, installLocationValue } = item.deviceInfo
                 return (
                   <div className="confTr">
-                    <div className="confTd">130308</div>
-                    <div className="confTd">南向</div>
-                    <div className="confTd">南向</div>
+                    <div className="confTd">{deviceCode}</div>
+                    <div className="confTd">{deviceStateValue}</div>
+                    <div className="confTd">{installLocationValue}</div>
                     <div className="confTd">
-                      <EditOutlined className="activeIcon" />
-                      <DeleteOutlined className="activeIcon" />
+                      <EditOutlined className="activeIcon" indexs={index} onClick={this.handleEditInfo} />
+                      <DeleteOutlined className="activeIcon" onClick={() => { this.handleDelete(item.id, item.uiUnitConfig.uiId) }} />
                     </div>
                   </div>
                 )
               })
             }
-            <div className="confTr">
-              <div className="confTd"><input className="relationInput" type="text" /></div>
-              <div className="confTd">
-                <Select defaultValue="0">
-                  <Option key="0" vlaue="0">请选择</Option>
-                  <Option key="1" vlaue="1">1</Option>
-                </Select>
-              </div>
-              <div className="confTd">
-                <Select defaultValue="0">
-                  <Option key="0" vlaue="0">请选择</Option>
-                  <Option key="1" vlaue="1">1</Option>
-                </Select>
-              </div>
-            </div>
           </div>
         </div>
       </>

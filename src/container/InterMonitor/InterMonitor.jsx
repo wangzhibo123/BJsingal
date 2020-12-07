@@ -77,6 +77,7 @@ class InterMonitor extends Component {
     this.canalizationUrl = `/control-application-front/unitMontitor/getCanalizationElementById?unit_id=${this.interId}`
   }
   componentDidMount = () => {
+    console.log(this.props, 'test refresh')
     this.props.getPrimitiveInfo(this.interId)
     // this.getControlMode()
     this.getTrafficInfo()
@@ -355,7 +356,7 @@ class InterMonitor extends Component {
                   return (
                   <img
                     className="devicePic"
-                    key={'icon' + index}
+                    key={uiImageName + index}
                     indexs={index}
                     src={globalImgurl + uiImageName}
                     alt=""
