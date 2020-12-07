@@ -228,6 +228,9 @@ $bor-color: #a5fcff;
                                 }
                                 .street {
                                     height: 20px;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                    white-space: nowrap;
                                     span {
                                         display: inline-block;
                                         width: 20px;
