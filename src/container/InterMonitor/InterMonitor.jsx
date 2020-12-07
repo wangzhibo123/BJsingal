@@ -276,7 +276,7 @@ class InterMonitor extends Component {
   timeGetItem = (e, timeMinutesIndex) => {
     e.stopPropagation()
     this.setState({ timeMinutesIndex })
-    switch(timeMinutesIndex){
+    switch (timeMinutesIndex) {
       case 0:
         console.log('选择的是5分钟');
         break;
@@ -290,8 +290,9 @@ class InterMonitor extends Component {
         console.log('选择的是不限制');
         break;
       case 4:
-
         console.log('选择的是自定义');
+        break;
+      default:
         break;
     }
   }
