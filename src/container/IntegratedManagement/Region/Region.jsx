@@ -438,7 +438,9 @@ class Region extends Component {
                         unitArr && unitArr.map((item, index) =>
                           <div key={item.id} className='lineBoxer_item'>
                             <div className='streetBox'>
-                              <p title={item.unit_name} className='street'><span>{index < 9 ? ('0' + (index + 1)) : index}</span>{item.unit_name}<b><DeleteOutlined onClick={() => this.delectroad(item.id)} /></b></p>
+                              <p title={item.unit_name} className='street'><span>{index < 9 ? ('0' + (index + 1)) : index}</span>
+                                <li>{item.unit_name}</li>
+                                <b><DeleteOutlined onClick={() => this.delectroad(item.id)} /></b></p>
                               <div className='intersectionBox'>
                                 <p className='intersection'><span>{item.unit_name}</span><span>{item.org_area}</span></p>
                               </div>

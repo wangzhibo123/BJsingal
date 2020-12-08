@@ -18,6 +18,7 @@ import phase4 from '../imgs/03.png'
 import phase11 from '../imgs/03.png'
 import yellowPag from '../imgs/yellow.png'
 import redPag from '../imgs/red.png'
+import Websocket from 'react-websocket'
 import AddOrUpdateVipPlanList from './AddOrUpdateVipPlanList/AddOrUpdateVipPlanList'
 const { SubMenu } = Menu;
 class PlancontrolPage extends Component {
@@ -276,6 +277,7 @@ class PlancontrolPage extends Component {
       rightsNew: -320,
       isaddlistTreeLi: false,
       isaddlistTree: false,
+      socketChild: [],
     })
   }
   // 显示提示框
@@ -315,6 +317,7 @@ class PlancontrolPage extends Component {
           childArrList: [],
           indId: 0,
           deleteConfirm: false,
+          socketChild: [],
         })
       }
     })
@@ -347,6 +350,7 @@ class PlancontrolPage extends Component {
           childArr: [],
           childArrList: [],
           isaddlistTreeL: false,
+          socketChild: [],
         })
         this.roadCircle(this.childArr)
       }
@@ -848,26 +852,26 @@ class PlancontrolPage extends Component {
   //       .addTo(this.map);
   //   }
   // }
-  addMarkersTwo = (arr) => {
-    if (this.map) {
-      var marker = ''
-      if (marker) {
-        marker.remove()
-      }
-      const el = document.createElement('div')
-      el.style.width = '20px'
-      el.style.height = '20px'
-      el.style.borderRadius = '50%'
-      el.style.backgroundColor = '#02FB09'
-      el.addEventListener('click', () => {
-        this.phaseChange()
-      })
-      marker = new window.mapabcgl.Marker(el)
-        .setLngLat(arr)
-        .addTo(this.map);
-      this.addWin()
-    }
-  }
+  // addMarkersTwo = (arr) => {
+  //   if (this.map) {
+  //     var marker = ''
+  //     if (marker) {
+  //       marker.remove()
+  //     }
+  //     const el = document.createElement('div')
+  //     el.style.width = '20px'
+  //     el.style.height = '20px'
+  //     el.style.borderRadius = '50%'
+  //     el.style.backgroundColor = '#02FB09'
+  //     el.addEventListener('click', () => {
+  //       this.phaseChange()
+  //     })
+  //     marker = new window.mapabcgl.Marker(el)
+  //       .setLngLat(arr)
+  //       .addTo(this.map);
+  //     this.addWin()
+  //   }
+  // }
   phaseChange = () => {
     var popupOption = {
       closeOnClick: false,
@@ -904,19 +908,19 @@ class PlancontrolPage extends Component {
     </div>`)
       .addTo(this.map);
   }
-  gettitletops = (isShow) => {
-    this.setState({
-      Istitletops: isShow,
-    })
-    if (!isShow) {
-      this.getstartpoint({ lng: 116.38261247568647, lat: 39.92257376086323 })
-      this.getendpoint({ lng: 116.39008337019641, lat: 39.922239886918305 })
-      this.addMarkersTwo([116.38384768997417, 39.92253455638905])
-    } else {
-      this.getstartpoint({ lng: 116.39171507191793, lat: 39.910732551600205 })
-      this.getendpoint({ lng: 116.3909904231216, lat: 39.9223143411036 })
-    }
-  }
+  // gettitletops = (isShow) => {
+  //   this.setState({
+  //     Istitletops: isShow,
+  //   })
+  //   if (!isShow) {
+  //     this.getstartpoint({ lng: 116.38261247568647, lat: 39.92257376086323 })
+  //     this.getendpoint({ lng: 116.39008337019641, lat: 39.922239886918305 })
+  //     this.addMarkersTwo([116.38384768997417, 39.92253455638905])
+  //   } else {
+  //     this.getstartpoint({ lng: 116.39171507191793, lat: 39.910732551600205 })
+  //     this.getendpoint({ lng: 116.3909904231216, lat: 39.9223143411036 })
+  //   }
+  // }
   renderMap = () => {
     mapConfiger.zoom = 11
     const map = new window.mapabcgl.Map(mapConfiger)
@@ -991,6 +995,7 @@ class PlancontrolPage extends Component {
         rightsNew: -320,
         isaddlistTreeLi: false,
         isaddlistTree: false,
+        socketChild: [],
       })
     }
     if (name === 'add') {
@@ -1007,6 +1012,7 @@ class PlancontrolPage extends Component {
         indId: 0,
         isaddlistTreeLi: false,
         isaddlistTree: false,
+        socketChild: [],
       })
     }
     // if (name === 'reserveplan') {
@@ -1131,7 +1137,7 @@ class PlancontrolPage extends Component {
           this.map.setCenter(this.returnCenterLnglat(arr[0], arr[arr.length - 1]))
         }
 
-        this.addWin(list)
+        // this.addWin(list)
       }
     }
   }
@@ -1165,6 +1171,24 @@ class PlancontrolPage extends Component {
       this.markersArr.push(marker)
     })
     // }
+  }
+  socketShow = () => { // 实时推送socket
+    // return (
+    //   <Websocket
+    //     url='ws://192.168.1.22:20194/engine-monitor/webSocket/1000084' onMessage={this.webSocketData}/>
+    // )
+  }
+  webSocketData = (e) => {
+    const { socketChild } = this.state
+    const { stageTimeS, stage_code } =JSON.parse(e) 
+    console.log(socketChild, stageTimeS, stage_code, e, '实时数据')
+    const stageTimeSind = stageTimeS.find(item => item.stage_id == stage_code)
+    let [...socketChildList] = socketChild
+    socketChildList.forEach(item => {
+      item.stage_image = stageTimeSind.stage_image
+    })
+    this.addWin(socketChildList)
+
   }
   handleShowInterConf = (item) => { // 点击回显编辑 1111111
     const _this = this
@@ -1205,6 +1229,7 @@ class PlancontrolPage extends Component {
           arrchild[0] = item.longitude
           arrchild[1] = item.latitude
           arrList.push(arrchild)
+          this.socketShow(item.id)
           // $('#marker' + item.id).on('click', () => {
           //   this.shows = false
           //   if (this.handleShow && this.addRoad) {
@@ -1259,6 +1284,7 @@ class PlancontrolPage extends Component {
           planname: item.plan_name,
           scheduled_time: moment(item.scheduled_time),
           treeListChild: list,
+          socketChild: list,
           // disabled: true,
           indId: item.id,
           isaddlistTree: false,
@@ -1338,6 +1364,7 @@ class PlancontrolPage extends Component {
       indId: 0,
       isaddlistTreeLi: false,
       rightsNew: -320,
+      socketChild: [],
     })
   }
   addItem = () => { // 点击保存左侧列表增加一列  99999
@@ -1393,11 +1420,14 @@ class PlancontrolPage extends Component {
       scheduled_time, district_id, district_idvalue, start_unit, end_unit, interval_time, lock_time, direction_enter, unit_order, vip_road_id, direction_exit,
       childArr, getDirectionList, getTaskStatusList, task_statevalue, getUnitDistrictList, planname, IsvideoBox, plan_name,
       treeChild, deleteConfirm,
-      isaddlistTree, isaddlistTreeLi,
+      isaddlistTree, isaddlistTreeLi, socketChild,
     } = this.state
     return (
       <div className={styles.PlancontrolPageWrapper}>
         {/* <div className={styles.openEdit}><Switch checkedChildren="编辑模式" unCheckedChildren="正常模式" defaultChecked /></div> */}
+        {
+          socketChild && socketChild.map(item => <Websocket url={`ws://192.168.1.22:20194/engine-monitor/webSocket/1000084`} onMessage={this.webSocketData.bind(this)} />)
+        }
         {
           IsvideoBox ? <div className={styles.videoBox}>
             <div className={styles.videoBoxer}>
