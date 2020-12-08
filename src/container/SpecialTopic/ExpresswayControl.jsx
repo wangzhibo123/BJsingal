@@ -8,12 +8,26 @@ import busPopImg from '../imgs/icon_bus_pop_bg.png'
 import hand from '../imgs/icon_bus_hand.png'
 import lightGreen from '../imgs/icon_bus_light_green.png'
 import lightRed from '../imgs/icon_bus_light_red.png'
+import lightRectangle from '../imgs/icon_bus_Rectangle.png'
+import laneArrowBLeft from '../imgs/icon_arrow_bottm_left.png'
+import laneArrowBRight from '../imgs/icon_arrow_bottm_right.png'
+import laneArrowTLeft from '../imgs/icon_arrow_top_left.png'
+import laneArrowTRight from '../imgs/icon_arrow_top_right.png'
 import mapConfiger from '../utils/minemapConf'
 const { SubMenu } = Menu;
 const lineData = [
   [116.33625304425573, 39.976441853446744],
   [116.33878504956658, 39.976441853446744],
-  [116.34399926389074, 39.976441853446744]
+  [116.34399926389074, 39.976441853446744],
+  [116.33375322545487, 39.976441853446744],
+  [116.32868921483447, 39.976441853446744]
+]
+const lineDatas = [
+  [116.33375322545487, 39.98396257498689],
+  [116.33375322545487, 39.97974391515476],
+  [116.33375322545487, 39.976441853446744],
+  [116.33375322545487, 39.97264462081506],
+  [116.33375322545487, 39.968587550079974]
 ]
 class ExpresswayControl extends Component {
   constructor(props) {
@@ -40,20 +54,23 @@ class ExpresswayControl extends Component {
     this.setState({ cloudSource: { xData: areaList, harddisks, memeries } })
     setTimeout(() => {
       this.drawLine(lineData)
+      this.drawLine(lineDatas, 'demo2')
     }, 500)
   }
-  addBus = (points) => {
-    this.addMarker()
-    if (this.map) {
+  addBus = (points, flag) => {
+    if (flag !== 'demo2'){
+      this.addMarker()
+    } 
+    if (this.map && flag === 'demo2') {
       const currentThis = this
       this.markers = []
       points.forEach((item, index) => {
         if (index !== points.length) {
           const el = document.createElement('div')
-          el.style.width = '54px'
-          el.style.height = '32px'
-          el.style.margin = '-17px 0 0 0'
-          el.style.background = `url(${iconLeftBus})`;
+          el.style.width = '63px'
+          el.style.height = '15px'
+          el.style.margin = '0 0 0 0'
+          el.style.background = `url(${lightRectangle})`;
           el.style.cursor = 'pointer'
           $(el).attr('rotateRset', 'reset')
           new window.mapabcgl.Marker(el)
@@ -104,31 +121,34 @@ class ExpresswayControl extends Component {
   }
   addMarker = () => {
     if (this.map) {
-      const elParent = document.createElement('div')
-      elParent.style.width = '40px'
-      elParent.style.height = '20px'
-      elParent.style.position = 'relative'
-      const elAnimation = document.createElement('div')
-      elAnimation.setAttribute('class','animationS')
-      const el = document.createElement('div')
-      el.style.width = '40px'
-      el.style.height = '20px'
-      el.style.borderRadius = '50%'
-      el.style.backgroundColor = 'rgba(34,245,248)'
-      el.style.cursor = 'pointer'
-      el.style.position = 'absolute'
-      el.style.left = '0'
-      el.style.top = '0'
-      el.setAttribute("title", '中心点')
-      el.addEventListener('click', () => {
-        this.addInfoWindow(this.returnCenterLnglat(lineData[0], lineData[lineData.length - 1]))
-      })
-      elParent.appendChild(elAnimation)
-      elParent.appendChild(el)
-      new window.mapabcgl.Marker(elParent)
-        .setLngLat(this.returnCenterLnglat(lineData[0], lineData[lineData.length - 1]))
-        .addTo(this.map);
-    }
+      lineData.map(item => {
+        const elParent = document.createElement('div')
+        elParent.style.width = '40px'
+        elParent.style.height = '20px'
+        elParent.style.position = 'relative'
+        const elAnimation = document.createElement('div')
+        elAnimation.setAttribute('class','animationS')
+        const el = document.createElement('div')
+        el.style.width = '40px'
+        el.style.height = '20px'
+        el.style.borderRadius = '50%'
+        el.style.backgroundColor = 'rgba(34,245,248)'
+        el.style.cursor = 'pointer'
+        el.style.position = 'absolute'
+        el.style.left = '0'
+        el.style.top = '0'
+        el.setAttribute("title", '中心点')
+        // el.addEventListener('click', () => {
+        //   this.addInfoWindow(this.returnCenterLnglat(lineData[0], lineData[lineData.length - 1]))
+        // })
+        elParent.appendChild(elAnimation)
+        elParent.appendChild(el)
+        console.log(item, '是啥子？')
+        new window.mapabcgl.Marker(elParent)
+          .setLngLat([item[0], item[1]])
+          .addTo(this.map);
+        })
+      }
   }
   renderMap = () => {
     mapConfiger.zoom = 11
@@ -195,7 +215,7 @@ class ExpresswayControl extends Component {
       });
       this.map.setCenter(this.returnCenterLnglat(lineData[0], lineData[lineData.length - 1]))
     }
-    this.addBus(lineData)
+    this.addBus(lineData, lineId)
   }
   handleClick = e => {
     console.log('click ', e);
