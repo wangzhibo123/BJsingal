@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Select } from 'antd'
+import { Select, message } from 'antd'
 import {
   SearchOutlined, DoubleLeftOutlined, DoubleRightOutlined, CaretUpOutlined, CaretDownOutlined, LeftCircleOutlined,
   RightCircleOutlined, UpCircleOutlined, DownCircleOutlined, CloseOutlined, EnvironmentOutlined,
 } from '@ant-design/icons'
 import './Region.scss'
-import { getPrimitiveInfo } from '../../reduxs/action/interConfig'
+import { getStartControl } from '../../reduxs/action/interConfig'
 import axiosInstance from '../utils/getInterfaceData'
 import DirectionPie from '../../components/DirectionPie/DirectionPie'
 import cneter from '../imgs/iconM.png'
@@ -39,17 +39,34 @@ class IntellectNetwork extends Component {
     this.modeUrl = `/control-application-front/unitMontitor/getControlModeById?unit_id=${this.interId}`
     this.timeMinutes = ['5分钟', '15分钟', '30分钟', '不限制', '自定义']
     this.controlItems = [
-      { text: '全红控制', img: allred, },
-      { text: '闪黄控制', img: yellow },
-      { text: '中心控制', img: cneter },
-      { text: '中心手控', img: hand },
+      { text: '全红控制', img: allred, id: 'allred' },
+      { text: '闪黄控制', img: yellow, id: 'yellow' },
+      { text: '中心控制', img: cneter, id: 'center' },
+      { text: '中心手控', img: hand, id: 'hand' },
     ]
+    this.controlParams = {
+      "centerId": "center001",
+      "cmd": "Start",
+      "crossIds": "10001",
+      "dataMap": {"CrossID": "10001", "StageNo": "1"},
+      "serverId": "node-001",
+      "typeName": "CrossStage"
+    }
   }
   componentDidMount = () => {
-    this.props.getPrimitiveInfo(this.interId)
     // this.getControlMode()
     this.timeCountdown(this.state.timeNum)
     this.phaseInit()
+  }
+  componentDidUpdate = (preveState) => {
+    const { startControl } = this.props.data
+    if (preveState.data.startControl !== startControl) {
+      this.startControlMessage(startControl)
+    }
+  }
+  // 执行结果提示
+  startControlMessage = (data) => {
+    message.info(data.detail)
   }
   timeCountdown = (timeNum) => {
     setTimeout( () => {
@@ -111,8 +128,28 @@ class IntellectNetwork extends Component {
       modeIndex: null,
     })
   }
-  handleControlMode = (indexs) => {
+  handleControlMode = (indexs, id) => {
     this.setState({ modeIndex: indexs, resetFlag: null })
+    const controlParams = JSON.parse(JSON.stringify(this.controlParams))
+    switch(id){
+      case 'allred':
+        console.log(controlParams,'allred')
+        break;
+      case 'yellow':
+        controlParams.centerId = 2
+        console.log(controlParams,'yellow')
+        break;
+      case 'center':
+        controlParams.centerId = 3
+        console.log(controlParams,'center')
+        break;
+        case 'hand':
+          controlParams.centerId = 4
+          console.log(controlParams,'hand')
+        break;
+    }
+    this.nowControlParams = controlParams
+
   }
   // // 获取实时状态控制模式
   // getControlMode = () => {
@@ -161,6 +198,7 @@ class IntellectNetwork extends Component {
         modeTimeFlag: true
       })
     }
+    this.props.getStartControl(this.nowControlParams)
   }    
   // 步进
   handleStepStage  = (stageIndexs) => {
@@ -176,6 +214,9 @@ class IntellectNetwork extends Component {
   // 锁定
   handleLockedStage  = () => {
     console.log('锁定')
+    const goControlParams = JSON.parse(JSON.stringify(this.nowControlParams))
+    goControlParams.centerId = 'lockedId'
+    this.props.getStartControl(goControlParams)    
   }   
   // 复位
   handleResetStage = () => {
@@ -213,6 +254,9 @@ class IntellectNetwork extends Component {
           modeTimeFlag: !flag
         })
         console.log('确认执行')
+        const goControlParams = JSON.parse(JSON.stringify(this.nowControlParams))
+        goControlParams.centerId = 'rightId'
+        this.props.getStartControl(goControlParams)
       } else {
         this.setState({
           modeTimeFlag:flag
@@ -293,7 +337,7 @@ class IntellectNetwork extends Component {
                 {
                   this.controlItems.map((item, index) => {
                     return (
-                      <div className={`controlItem ${modeIndex === index && 'itemHover'}`} key={item.text} onClick={() => this.handleControlMode(index)}>
+                      <div className={`controlItem ${modeIndex === index && 'itemHover'}`} key={item.text} onClick={() => this.handleControlMode(index, item.id)}>
                         <div className="icon"><img src={item.img} alt="" /></div>
                         <div className="text">{item.text}</div>
                       </div>
@@ -436,7 +480,7 @@ const mapStateToProps = (state) => {
 }
 const mapDisPatchToProps = (dispatch) => {
   return {
-    getPrimitiveInfo: bindActionCreators(getPrimitiveInfo, dispatch),
+    getStartControl: bindActionCreators(getStartControl, dispatch),
   }
 }
 export default connect(mapStateToProps, mapDisPatchToProps)(IntellectNetwork)

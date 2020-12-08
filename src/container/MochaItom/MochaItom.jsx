@@ -192,32 +192,32 @@ class MochaItom extends Component {
             <div className="centerMain">
               <div className="itemDom itemColor1">
                 <span>故障数</span>
-                <em>8</em>
+                <em>439</em>
                 <i>个</i>
               </div>
               <div className="itemDom itemColor2">
                 <span>运维单</span>
-                <em>8</em>
+                <em>14</em>
                 <i>个</i>
               </div>
               <div className="itemDom itemColor3">
                 <span>待派发</span>
-                <em>8</em>
+                <em>20</em>
                 <i>个</i>
               </div>
               <div className="itemDom itemColor4">
                 <span>待接单</span>
-                <em>8</em>
+                <em>59</em>
                 <i>个</i>
               </div>
               <div className="itemDom itemColor5">
                 <span>待维护</span>
-                <em>8</em>
+                <em>2</em>
                 <i>个</i>
               </div>
               <div className="itemDom itemColor6">
                 <span>待审核</span>
-                <em>8</em>
+                <em>21</em>
                 <i>个</i>
               </div>
             </div>
