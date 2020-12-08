@@ -6,8 +6,11 @@ class DetectorPlan extends Component {
   constructor(props) {
     super(props)
     this.state = {}
+    this.listUrl = '/control-application-front/signal/config/schedule/listSchedule?unitId=1000084'
   }
-  componentDidMount = () => { }
+  componentDidMount = () => {
+    console.log(this.props)
+  }
   render() {
     return (
       <div className="paramsTable">

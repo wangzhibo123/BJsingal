@@ -239,12 +239,14 @@ class Homepage extends Component {
       interList.forEach((item, index) => {
         const hasMode = this.showMode.indexOf(item.control_state) < 0
         const hasSingal = this.showSingal.indexOf(item.signal_system_codes) < 0
+        const innerBgcolor = item.alarm_state === 1 ? '#08c208' : item.alarm_state === 2 ? '#D7C19C' : '#FF0200'
+        const bgColor = item.alarm_state === 1 ? 'rgba(8,194,8,.3)' : item.alarm_state === 2 ? 'rgba(215,193,156,.3)' : 'rgba(255,2,0,.3)'
         if (hasMode && hasSingal) {
           const el = document.createElement('div')
           el.style.width = '20px'
           el.style.height = '20px'
           el.style.borderRadius = '50%'
-          el.style.backgroundColor = 'rgba(8,194,8,.3)'
+          el.style.backgroundColor = bgColor
           el.style.display = 'flex'
           el.style.justifyContent = 'center'
           el.style.alignItems = 'center'
@@ -254,7 +256,7 @@ class Homepage extends Component {
           childEl.style.width = '10px'
           childEl.style.height = '10px'
           childEl.style.borderRadius = '50%'
-          childEl.style.backgroundColor = '#08c208'
+          childEl.style.backgroundColor = innerBgcolor
           el.appendChild(childEl)
           el.addEventListener('click',function(e){
             currentThis.addInfoWindow(item)

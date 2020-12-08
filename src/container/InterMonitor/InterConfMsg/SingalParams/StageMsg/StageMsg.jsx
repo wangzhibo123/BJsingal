@@ -31,7 +31,7 @@ class StageMsg extends Component {
   }
   getInterDirPhaseList = (type) => {
     axiosInstance.get(`${this.dirPhaseList}?unitId=${type}`).then((res) => {
-      console.log(res.data,"列表数据")
+      // console.log(res.data,"列表数据")
       const { code, data } = res.data
       if (code === 200 && data) {
         const stateName = type === 1000084 ? 'interStageList' : 'interMoveList'
