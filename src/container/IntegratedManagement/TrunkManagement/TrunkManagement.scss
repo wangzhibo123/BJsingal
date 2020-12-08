@@ -20,7 +20,7 @@ $bor-color: #a5fcff;
             height: 100%;
             width: 100%;
             .addMainLine {
-                height: 60px;
+                height: 55px;
                 display: flex;
                 .newLine {
                     font-size: 18px;
@@ -139,9 +139,11 @@ $bor-color: #a5fcff;
                                     margin-bottom: 0;
                                     align-items: center;
                                     justify-content: space-around;
-                                    span {
+                                    > span {
                                         width: 55px;
                                         height: 55px;
+                                        font-size: 20px;
+                                        text-align: center;
                                     }
                                     .inputBox {
                                         width: 195px;
@@ -175,7 +177,7 @@ $bor-color: #a5fcff;
             .slideRightBoxEditBox {
                 height: calc(100% - 60px);
                 > p {
-                    height: 25px;
+                    height: 30px;
                     color: #5f9ef2;
                     padding-left: 15px;
                     display: flex;
@@ -194,7 +196,7 @@ $bor-color: #a5fcff;
                     }
                 }
                 .lineBox {
-                    height: calc(100% - 150px);
+                    height: calc(100% - 185px);
                     overflow-y: auto;
                     .lineBoxer {
                         display: flex;
@@ -221,7 +223,6 @@ $bor-color: #a5fcff;
                             .streetBox {
                                 width: 215px;
                                 height: 55px;
-                                padding-left: 15px;
                                 margin: 5px 0;
                                 p {
                                     margin-bottom: 0;
@@ -245,20 +246,29 @@ $bor-color: #a5fcff;
                                     width: 100%;
                                     overflow-x: auto;
                                     .intersection {
-                                        height: 35px;
-                                        line-height: 35px;
                                         display: flex;
-                                        width: 300px;
-                                        max-width: 800px;
                                         align-items: center;
                                         span {
-                                            color: #02bde3;
-                                            margin-left: 20px;
-                                            padding: 0px 5px;
                                             height: 16px;
                                             line-height: 16px;
+                                            color: #02c6e8;
                                             background-color: #0668c2;
+                                            margin-left: 20px;
+                                            margin-top: 10px;
+                                            padding: 0px 5px;
                                             border-radius: 5px;
+                                            &:nth-child(1) {
+                                                width: 115px;
+                                                overflow: hidden;
+                                                text-overflow: ellipsis;
+                                                white-space: nowrap;
+                                            }
+                                            &:nth-child(2) {
+                                                max-width: 115px;
+                                                overflow: hidden;
+                                                text-overflow: ellipsis;
+                                                white-space: nowrap;
+                                            }
                                         }
                                     }
                                 }

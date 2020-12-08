@@ -94,6 +94,7 @@ class TrunkManagement extends Component {
   // }
   // 获取干线子集
   getLoadChildTree = (id) => {
+    const _this = this
     axiosInstance.post(`${this.loadRouteTree}?id=${id}`).then(res => {
       const { code, treeList } = res.data
       // console.log(treeList, 'vssksnf')
@@ -111,6 +112,33 @@ class TrunkManagement extends Component {
           arrList.push(arrchild)
           $('#marker' + item.id).addClass('markers')
         })
+
+        if (this.startmarker) {
+          this.startmarker.remove();
+        }
+        this.startmarker = addMarkerStart(startPng, [treeList[0].longitude, treeList[0].latitude], 0);
+        if (this.endmarker) {
+          this.endmarker.remove();
+        }
+
+        this.endmarker = addMarkerStart(endPng, [treeList[treeList.length - 1].longitude, treeList[treeList.length - 1].latitude], 0);
+
+        function addMarkerStart(img, point, position) {
+          var marker = '', html = ''
+          html = document.createElement('div');
+          html.style.cssText = 'background:url(' + img + ')' + position + 'px 0px no-repeat;width:80px;height:50px;';
+          html.style.backgroundSize = '100% 100%';
+          // html.style.position = 'relative';
+          // html.style.top = '-20px';
+          marker = new window.mapabcgl.Marker(html)
+            .setLngLat(point)
+            .setDraggable(true)
+            .setOffset([0, -20])
+            .addTo(_this.map);
+          return marker;
+
+        };
+
         this.drawLine(arrList, true)
         this.setState({
           treeList: this.treeListDatas,
@@ -316,6 +344,7 @@ class TrunkManagement extends Component {
   }
   addMarker = (points, zoomVal) => {
     this.removeMarkers()
+    const _this = this
     if (this.map) {
       const currentThis = this
       this.markers = []
@@ -334,7 +363,7 @@ class TrunkManagement extends Component {
           if (currentThis.isAddEdit) {
             if (!$('#marker' + item.id).hasClass('markers')) {
               $('#marker' + item.id).addClass('markers')
-              currentThis.treeListChild.push(item)
+              currentThis.treeListChild.splice(currentThis.treeListChild.length - 1, 0, item)
               currentThis.setState({
                 treeListChild: currentThis.treeListChild
               })
@@ -351,6 +380,103 @@ class TrunkManagement extends Component {
           }
           // currentThis.addInfoWindow(item)
         });
+        el.addEventListener('contextmenu', function (event) {
+          if (_this.markerLier) {
+            _this.markerLier.remove();
+          }
+          // console.log(item, event,'sddsd')
+          // var lnglat = item.lngLat;
+          var style = 'background:#fff;color:#000;';
+          var html = document.createElement('div');
+          var contextmenu = `<div class="context_menu" style="padding:5px 10px;${style}"><li id="start" style="cursor:point;">起点</li><li style="cursor:point;" id="end">终点</li></div>`;
+          html.innerHTML = contextmenu;
+          _this.markerLier = new window.mapabcgl.Marker(html)
+            .setLngLat([item.longitude, item.latitude])
+            .setOffset([30, 0])
+            .addTo(_this.map);
+          var start = document.getElementById('start');
+          var end = document.getElementById('end');
+          // var clear = document.getElementById('clearmap');
+          start.addEventListener('click', function (e) {
+            _this.getstartpoint(item);
+            // _this.arrStart = item
+          })
+          end.addEventListener('click', function (e) {
+            _this.getendpoint(item)
+            // _this.arrEnd = item
+          })
+        })
+
+        this.getstartpoint = (item) => {
+          // console.log(lnglat, '开始')
+          if (currentThis.isAddEdit && !$('#marker' + item.id).hasClass('markers')) {
+            $('#marker' + item.id).addClass('markers')
+            currentThis.treeListChild.push(item)
+            currentThis.setState({
+              treeListChild: currentThis.treeListChild
+            })
+            currentThis.delectlineroute() // 取消划线
+            let arrList = []
+            currentThis.treeListChild.forEach(item => {
+              let arrchild = []
+              arrchild[0] = item.longitude
+              arrchild[1] = item.latitude
+              arrList.push(arrchild)
+            })
+            currentThis.drawLine(arrList) // 调用划线
+            if (_this.markerLier) {
+              _this.markerLier.remove();
+            }
+            if (currentThis.endmarker) {
+              currentThis.endmarker.remove();
+            }
+            currentThis.endmarker = addMarkerStart(endPng, [item.longitude, item.latitude], 0);
+          }
+
+          // plan()
+          // startmarker.on('dragend', plan);
+        }
+        this.getendpoint = (item) => {
+          // console.log(item, '结束')
+          if (currentThis.isAddEdit && !$('#marker' + item.id).hasClass('markers')) {
+            $('#marker' + item.id).addClass('markers')
+            currentThis.treeListChild.push(item)
+            currentThis.setState({
+              treeListChild: currentThis.treeListChild
+            })
+            currentThis.delectlineroute() // 取消划线
+            let arrList = []
+            currentThis.treeListChild.forEach(item => {
+              let arrchild = []
+              arrchild[0] = item.longitude
+              arrchild[1] = item.latitude
+              arrList.push(arrchild)
+            })
+            currentThis.drawLine(arrList) // 调用划线
+            if (_this.markerLier) {
+              _this.markerLier.remove();
+            }
+            if (currentThis.startmarker) {
+              currentThis.startmarker.remove();
+            }
+            currentThis.startmarker = addMarkerStart(startPng, [item.longitude, item.latitude], 0);
+          }
+        }
+        function addMarkerStart(img, point, position) {
+          var marker = '', html = ''
+          html = document.createElement('div');
+          html.style.cssText = 'background:url(' + img + ')' + position + 'px 0px no-repeat;width:80px;height:50px;';
+          html.style.backgroundSize = '100% 100%';
+          // html.style.position = 'relative';
+          // html.style.top = '-20px';
+          marker = new window.mapabcgl.Marker(html)
+            .setLngLat(point)
+            .setDraggable(true)
+            .setOffset([0, -20])
+            .addTo(_this.map);
+          return marker;
+
+        };
         // el.addEventListener('contextmenu', function (e) {
         //   currentThis.addRoadLine = true
         //   // 新增干线时添加路线
@@ -364,6 +490,14 @@ class TrunkManagement extends Component {
           .addTo(this.map)
         this.interMarkers.push(marker)
       })
+    }
+  }
+  delectStartEnd = () => {
+    if (this.startmarker) {
+      this.startmarker.remove();
+    }
+    if (this.endmarker) {
+      this.endmarker.remove();
     }
   }
   removeMarkers = () => {
@@ -468,10 +602,12 @@ class TrunkManagement extends Component {
   noneAddRoad = () => { // 取消添加修改
     this.removeRoadCircle() // 取消点位
     this.delectlineroute() // 取消线
+    this.delectStartEnd() // 清除开始结束图标
     this.addlineroute = false
     this.addRoad = false
     this.setState({
-      rights: -300
+      rights: -300,
+      menuOpenkeys: []
     })
   }
   changeLoadRouteDirection = (e, s) => { // 选择干线方向
@@ -515,7 +651,8 @@ class TrunkManagement extends Component {
   onOpeSubMenu = (e, SubMenuItem) => {
     this.isAddEdit = false
     this.roaddId = SubMenuItem.id
-    console.log(SubMenuItem, '回显数据')
+    this.delectStartEnd()
+    // console.log(SubMenuItem, '回显数据')
     const { loadRouteDirectionList, loadRouteTypeList } = this.state
     const route_direction = loadRouteDirectionList && loadRouteDirectionList.find(item => item.c_code === SubMenuItem.route_direction).code_name
     const route_type = loadRouteTypeList && loadRouteTypeList.find(item => item.c_code === SubMenuItem.route_type).code_name
@@ -586,6 +723,9 @@ class TrunkManagement extends Component {
           rights: -300,
           menuOpenkeys: [],
         })
+        this.removeRoadCircle() // 取消点位
+        this.delectlineroute() // 取消线
+        this.delectStartEnd()
         message.info(result)
         this.getDataList()
       }
@@ -651,6 +791,7 @@ class TrunkManagement extends Component {
         this.initializationState()
         this.delectlineroute()
         this.removeRoadCircle()
+        this.delectStartEnd()
         this.addlineroute = false
       } else {
         // this.setState({
@@ -782,7 +923,7 @@ class TrunkManagement extends Component {
                               <div className="roadBoxLeft">
                               </div>
                               <div className="roadBoxRight">
-                                <p><input type="text" onChange={this.getChangeValue} className='inputBox' value={item.unit_name} /><span><CloseOutlined onClick={() => this.delectroad(item.id)} /></span></p>
+                                <p><input type="text" onChange={this.getChangeValue} className='inputBox' disabled={true} value={item.unit_name} /><span><DeleteOutlined onClick={() => this.delectroad(item.id)} /></span></p>
                               </div>
                             </div>
                           )
@@ -831,7 +972,7 @@ class TrunkManagement extends Component {
             </div>
           </div> */}
         </div>
-        <div className="interSearchBox">
+        {/* <div className="interSearchBox"> // 下拉框搜索点位
           <Select
             showSearch
             style={{ width: 200 }}
@@ -846,7 +987,7 @@ class TrunkManagement extends Component {
               ))
             }
           </Select>
-        </div>
+        </div> */}
         <div className='sidebarLeft'>
           <div className='tabLeft'>
             {

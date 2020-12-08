@@ -79,77 +79,157 @@ $bor-color: #a5fcff;
                 .lineBox {
                     height: calc(100% - 320px);
                     overflow-y: auto;
-                    .lineBoxRight {
+                    .lineBoxer {
                         width: 100%;
-                        padding-left: 15px;
-                        > p {
-                            width: 100%;
-                            height: 55px;
-                            color: #5f9ef2;
+                        display: flex;
+                        flex-direction: column;
+                        .lineBoxer_item,
+                        .lineBoxer_itemP {
                             display: flex;
-                            margin-bottom: 0;
                             align-items: center;
-                            justify-content: space-around;
-                            b {
-                                flex: 1;
-                                font-weight: normal;
-                                overflow-y: auto;
-                            }
-                            span {
-                                width: 55px;
-                                height: 55px;
-                                display: flex;
-                                align-items: center;
-                                font-size: 16px;
-                                justify-content: center;
-                            }
-                            .inputBox {
-                                width: 195px;
-                                height: 30px;
-                                outline: none;
-                                border: 1px solid #1c59ce;
-                                background-color: #18346a;
-                                padding-left: 5px;
-                            }
-                        }
-                        .roadBox {
-                            height: 100%;
-                            display: flex;
                             justify-content: space-between;
-                            align-items: center;
-                            .roadBoxLeft {
+                            > span {
                                 width: 5px;
                                 height: 35px;
-                                margin-left: 18px;
+                                margin-left: 25px;
                                 background-color: #1df249;
                                 border-radius: 2px;
                             }
-                            .roadBoxRight {
-                                width: 195px;
+                            > .streetBoxLeft {
+                                width: 5px;
+                                height: 35px;
+                                margin-left: 25px;
+                                background-color: #1df249;
+                                border-radius: 2px;
+                            }
+                            .streetBox {
+                                width: 100%;
+                                height: 55px;
+                                margin: 5px 0;
                                 p {
-                                    width: 100%;
-                                    height: 55px;
-                                    color: #5f9ef2;
-                                    display: flex;
                                     margin-bottom: 0;
-                                    align-items: center;
-                                    justify-content: space-around;
+                                }
+                                .street {
+                                    height: 20px;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                    white-space: nowrap;
+                                    padding-right: 40px;
                                     span {
-                                        width: 55px;
-                                        height: 55px;
+                                        display: inline-block;
+                                        width: 20px;
+                                        color: #15e94f;
                                     }
-                                    .inputBox {
-                                        width: 195px;
-                                        height: 30px;
-                                        outline: none;
-                                        border: 1px solid #1c59ce;
-                                        background-color: #18346a;
-                                        padding-left: 5px;
+                                    b{
+                                        float: right;
+                                        height: 20px;
+                                        font-size: 14px;
+                                    }
+                                }
+                                .intersectionBox {
+                                    width: 100%;
+                                    overflow-x: auto;
+                                    .intersection {
+                                        display: flex;
+                                        align-items: center;
+                                        span {
+                                            height: 16px;
+                                            line-height: 16px;
+                                            color: #02C6E8;
+                                            background-color: #0668c2;
+                                            margin-left: 20px;
+                                            margin-top: 10px;
+                                            padding: 0px 5px;
+                                            border-radius: 5px;
+                                            &:nth-child(1){
+                                                width: 115px;
+                                                overflow: hidden;
+                                                text-overflow: ellipsis;
+                                                white-space: nowrap;
+                                            }
+                                            &:nth-child(2){
+                                                max-width: 115px;
+                                                overflow: hidden;
+                                                text-overflow: ellipsis;
+                                                white-space: nowrap;
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+                    // .lineBoxRight {
+                    //     width: 100%;
+                    //     padding-left: 15px;
+                    //     > p {
+                    //         width: 100%;
+                    //         height: 55px;
+                    //         color: #5f9ef2;
+                    //         display: flex;
+                    //         margin-bottom: 0;
+                    //         align-items: center;
+                    //         justify-content: space-around;
+                    //         b {
+                    //             flex: 1;
+                    //             font-weight: normal;
+                    //             overflow-y: auto;
+                    //         }
+                    //         span {
+                    //             width: 55px;
+                    //             height: 55px;
+                    //             display: flex;
+                    //             align-items: center;
+                    //             font-size: 16px;
+                    //             justify-content: center;
+                    //         }
+                    //         .inputBox {
+                    //             width: 195px;
+                    //             height: 30px;
+                    //             outline: none;
+                    //             border: 1px solid #1c59ce;
+                    //             background-color: #18346a;
+                    //             padding-left: 5px;
+                    //         }
+                    //     }
+                    //     .roadBox {
+                    //         height: 100%;
+                    //         display: flex;
+                    //         justify-content: space-between;
+                    //         align-items: center;
+                    //         .roadBoxLeft {
+                    //             width: 5px;
+                    //             height: 35px;
+                    //             margin-left: 18px;
+                    //             background-color: #1df249;
+                    //             border-radius: 2px;
+                    //         }
+                    //         .roadBoxRight {
+                    //             width: 195px;
+                    //             p {
+                    //                 width: 100%;
+                    //                 height: 55px;
+                    //                 color: #5f9ef2;
+                    //                 display: flex;
+                    //                 margin-bottom: 0;
+                    //                 align-items: center;
+                    //                 justify-content: space-around;
+                    //                 span {
+                    //                     width: 55px;
+                    //                     height: 55px;
+                    //                 }
+                    //                 .inputBox {
+                    //                     width: 195px;
+                    //                     height: 30px;
+                    //                     outline: none;
+                    //                     border: 1px solid #1c59ce;
+                    //                     background-color: #18346a;
+                    //                     padding-left: 5px;
+                    //                 }
+                    //             }
+                    //         }
+                    //     }
+                    // }
                 }
             }
             .roadDetailBox {
@@ -175,74 +255,152 @@ $bor-color: #a5fcff;
                     }
                 }
                 .lineBox {
-                    height: calc(100% - 170px);
+                    height: calc(100% - 100px);
                     overflow-y: auto;
                     display: flex;
-                    .lineBoxLeft {
-                        width: 50px;
-                        height: 100%;
-                    }
-                    .lineBoxRight {
+                    // .lineBoxLeft {
+                    //     width: 50px;
+                    //     height: 100%;
+                    // }
+                    .lineBoxer {
                         width: 100%;
-                        padding-left: 15px;
-                        > p {
-                            width: 100%;
-                            height: 40px;
-                            color: #5f9ef2;
+                        display: flex;
+                        flex-direction: column;
+                        .lineBoxer_item,
+                        .lineBoxer_itemP {
                             display: flex;
-                            margin-bottom: 0;
                             align-items: center;
-                            justify-content: space-around;
-                            b {
-                                flex: 1;
-                                font-weight: normal;
-                                overflow-y: auto;
+                            justify-content: space-between;
+                            > span {
+                                width: 5px;
+                                height: 35px;
+                                margin-left: 25px;
+                                background-color: #1df249;
+                                border-radius: 2px;
                             }
-                            span {
-                                width: 55px;
+                            > .streetBoxLeft {
+                                width: 5px;
+                                height: 35px;
+                                margin-left: 25px;
+                                background-color: #1df249;
+                                border-radius: 2px;
+                            }
+                            .streetBox {
+                                width: 100%;
                                 height: 55px;
-                                display: flex;
-                                align-items: center;
-                                font-size: 16px;
-                                justify-content: center;
-                            }
-                            .inputBox {
-                                width: 195px;
-                                height: 30px;
-                                outline: none;
-                                border: 1px solid #1c59ce;
-                                background-color: #18346a;
-                                padding-left: 5px;
-                            }
-                        }
-                        .street {
-                            height: 20px;
-                            span {
-                                display: inline-block;
-                                width: 20px;
-                                color: #15e94f;
-                                &:nth-child(2) {
-                                    color: #0570ad;
-                                    cursor: pointer;
+                                margin: 5px 0;
+                                p {
+                                    margin-bottom: 0;
+                                }
+                                .street {
+                                    height: 20px;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                    white-space: nowrap;
+                                    span {
+                                        display: inline-block;
+                                        width: 20px;
+                                        color: #15e94f;
+                                        &:nth-child(2) {
+                                            color: #0570ad;
+                                            cursor: pointer;
+                                        }
+                                    }
+                                }
+                                .intersectionBox {
+                                    width: 100%;
+                                    overflow-x: auto;
+                                    .intersection {
+                                        display: flex;
+                                        align-items: center;
+                                        span {
+                                            height: 16px;
+                                            line-height: 16px;
+                                            color: #02C6E8;
+                                            background-color: #0668c2;
+                                            margin-left: 20px;
+                                            margin-top: 10px;
+                                            padding: 0px 5px;
+                                            border-radius: 5px;
+                                            &:nth-child(1){
+                                                width: 115px;
+                                                overflow: hidden;
+                                                text-overflow: ellipsis;
+                                                white-space: nowrap;
+                                            }
+                                            &:nth-child(2){
+                                                max-width: 115px;
+                                                overflow: hidden;
+                                                text-overflow: ellipsis;
+                                                white-space: nowrap;
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
-                        .intersection {
-                            height: 35px;
-                            line-height: 35px;
-                            display: flex;
-                            align-items: center;
-                            span {
-                                color: #02bde3;
-                                margin-left: 20px;
-                                padding: 0px 5px;
-                                height: 16px;
-                                line-height: 16px;
-                                background-color: #0668c2;
-                                border-radius: 5px;
-                            }
-                        }
                     }
+                    // .lineBoxRight {
+                    //     width: 100%;
+                    //     padding-left: 15px;
+                    //     > p {
+                    //         width: 100%;
+                    //         height: 40px;
+                    //         color: #5f9ef2;
+                    //         display: flex;
+                    //         margin-bottom: 0;
+                    //         align-items: center;
+                    //         justify-content: space-around;
+                    //         b {
+                    //             flex: 1;
+                    //             font-weight: normal;
+                    //             overflow-y: auto;
+                    //         }
+                    //         span {
+                    //             width: 55px;
+                    //             height: 55px;
+                    //             display: flex;
+                    //             align-items: center;
+                    //             font-size: 16px;
+                    //             justify-content: center;
+                    //         }
+                    //         .inputBox {
+                    //             width: 195px;
+                    //             height: 30px;
+                    //             outline: none;
+                    //             border: 1px solid #1c59ce;
+                    //             background-color: #18346a;
+                    //             padding-left: 5px;
+                    //         }
+                    //     }
+                    //     .street {
+                    //         height: 20px;
+                    //         span {
+                    //             display: inline-block;
+                    //             width: 20px;
+                    //             color: #15e94f;
+                    //             &:nth-child(2) {
+                    //                 color: #0570ad;
+                    //                 cursor: pointer;
+                    //             }
+                    //         }
+                    //     }
+                    //     .intersection {
+                    //         height: 35px;
+                    //         line-height: 35px;
+                    //         display: flex;
+                    //         align-items: center;
+                    //         span {
+                    //             color: #02bde3;
+                    //             margin-left: 20px;
+                    //             padding: 0px 5px;
+                    //             height: 16px;
+                    //             line-height: 16px;
+                    //             background-color: #0668c2;
+                    //             border-radius: 5px;
+                    //         }
+                    //     }
+                    // }
                 }
             }
         }
