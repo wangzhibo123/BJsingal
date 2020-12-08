@@ -22,6 +22,8 @@ class PhaseMsg extends Component {
     this.redyellow=null
     this.yellow=null
     this.allred=null
+    this.peddirlist=null
+    this.lanenolist=null
     this.dirInfoList="/control-application-front/basic/info/listCodeByCodeType"
     this.dirPhaseList=`/control-application-front/signal/config/phase/listPhaseInfo?unitId=${this.interId}`
     this.dirPhaseSave="/control-application-front/signal/config/phase/savePhaseInfo"
@@ -75,7 +77,7 @@ class PhaseMsg extends Component {
       const getInterInfoNexList=direCode.split(",")[1]
       let getInterInfoFirTit=interInfoList.find(item=>{if(item.cCode==getInterInfoFirList){return item} })
       let getInterInfoNexTit=interInfoList.find(item=>{if(item.cCode==getInterInfoNexList){return item} })
-      return document.innerHTML=`${getInterInfoFirTit.codeName} ， ${getInterInfoNexTit.codeName}`
+      return document.innerHTML=`${getInterInfoFirTit&&getInterInfoFirTit.codeName} ， ${getInterInfoNexTit&&getInterInfoNexTit.codeName}`
     }else {
       return document.innerHTML=null
     }
@@ -98,8 +100,8 @@ class PhaseMsg extends Component {
       greenmax: this.greenmax,
       greenmin: this.greenmin,
       id: null,
-      lanenolist: "",
-      peddirlist: "3,7", //所属车道
+      lanenolist: this.lanenolist,
+      peddirlist: this.peddirlist, //所属车道
       phasename: this.phasename,
       phaseno: this.phaseno,
       redyellow: this.redyellow,
@@ -121,7 +123,7 @@ class PhaseMsg extends Component {
   }
   //删除
   bindDeleteParse=(id)=>{
-    axiosInstance.post(`${this.dirPhaseDelete}?phaseNo=${id}&unitId=${this.interId}`).then(res=>{
+    axiosInstance.post(`${this.dirPhaseDelete}?id=${id}`).then(res=>{
       if(res.data.code === 200){
         this.getInterDirPhaseList()
       }
@@ -139,8 +141,13 @@ class PhaseMsg extends Component {
       },
     })
   }
-  aaa=(value)=>{
-    console.log(value,"value值")
+  onInterInfoList=(value)=>{
+    let newValue=value.join()
+    this.peddirlist=newValue
+  }
+  onDirPhaseSelectIden=(value)=>{
+    let newValue=value.join()
+    this.lanenolist=newValue
   }
   render() {
     const { interPhaseList ,interDirDisplay, interInfoList ,dirPhaseSelectIden} =this.state;
@@ -169,7 +176,7 @@ class PhaseMsg extends Component {
                 <div className="paramsTr" key={item.id}>
                     <div className="paramsTd">{item.phaseno}</div>
                     <div className="paramsTd">{item.phasename}</div>
-                    <div className="paramsTd"><img src={`${imgPreFix}${img ? img.split(",")[0] : null}`} width="17px" height="35px" alt="" /></div>
+                    <div className="paramsTd"><img src={`${imgPreFix}${img ? img.split(",")[0]: null}`} width="17px" height="35px" alt="" /></div>
                     <div className="paramsTd">{this.getInterDirInfoListProperty(item.peddirlist)}</div>
                     <div className="paramsTd">{item.greenmax}</div>
                     <div className="paramsTd">{item.greenmin}</div>
@@ -190,22 +197,26 @@ class PhaseMsg extends Component {
                   <div className="paramsTd"><input type="text" onChange={e=>this.phaseno=e.target.value}/></div>
                   <div className="paramsTd"><input type="text" onChange={e=>this.phasename=e.target.value}/></div>
                   <div className="paramsTd">
-                    <Select defaultValue="请选择">
+                    <Select defaultValue="请选择" mode="multiple" onChange={this.onDirPhaseSelectIden}>
                       {
                         dirPhaseSelectIden && dirPhaseSelectIden.map(item=>{
                           return (
-                            <Option key={item.id} vlaue={item.id}>{item.id}</Option>
+                            <Option key={item.laneno} vlaue={item.laneno}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt="" height="30px"/></Option>
                           )
                         })
                       }
                     </Select>
                   </div>
                   <div className="paramsTd">
-                    <Select defaultValue="请选择" onChange={this.aaa}>
+                    <Select defaultValue="东" onChange={this.onInterInfoList} mode="multiple">
                       {
                         interInfoList && interInfoList.map(item=>{
                           return (
-                            <Option key={item.id} vlaue={item.codeName}>{item.codeName}</Option>
+                            <Option key={item.cCode} vlaue={item.codeName}>
+                              <div className="demo-option-label-item" style={{color:"#032473"}}>
+                                {item.codeName}
+                              </div>
+                            </Option>
                           )
                         })
                       }
