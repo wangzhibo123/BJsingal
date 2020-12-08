@@ -7,8 +7,13 @@ class DayPlan extends Component {
   constructor(props) {
     super(props)
     this.state = {}
+    this.interId = this.props.interId
+    this.listUrl = `/control-application-front/signal/config/dailyPlan/listDailyPlan?unitId=${this.interId}`
   }
   componentDidMount = () => { }
+  getDailyPlanList = () => {
+    
+  }
   render() {
     return (
       <div className="paramsTable">
