@@ -377,7 +377,7 @@ class InterConfMsg extends Component {
             <SingalParams paramsName={currentParams} renderComponent={(prams) => {
               const ItemParams = this.singalParams.find(item => item.id === prams)
               const ItemComponent = ItemParams.compos
-              return <ItemComponent />
+              return <ItemComponent {...this.props} />
             }} />
           }
         </div>
