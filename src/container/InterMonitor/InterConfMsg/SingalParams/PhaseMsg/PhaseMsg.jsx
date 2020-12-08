@@ -11,7 +11,8 @@ class PhaseMsg extends Component {
       interInfoList: null,  //字典数据
       interPhaseList: null,   //列表数据
       interMoveList: null,  //空
-      interDirDisplay:false
+      dirPhaseSelectIden: null,
+      interDirDisplay: false
     }
     this.interId = this.props.interId
     this.phaseno=null
@@ -25,15 +26,16 @@ class PhaseMsg extends Component {
     this.dirPhaseList=`/control-application-front/signal/config/phase/listPhaseInfo?unitId=${this.interId}`
     this.dirPhaseSave="/control-application-front/signal/config/phase/savePhaseInfo"
     this.dirPhaseDelete="/control-application-front/signal/config/phase/removePhaseInfo"
+    this.dirPhaseSelectIden=`/control-application-front/signal/config/phase/phaseImage?unitId=${this.interId}`
   }
   componentDidMount = () => {
-    console.log(this.props)
+    // console.log(this.props)
     this.getInterDirInfoList(6)
     this.getInterDirPhaseList(1000084)
   }
   getInterDirInfoList=(type)=>{
     axiosInstance.get(`${this.dirInfoList}?codeType=${type}`).then((res) => {
-      console.log(res,"字典")
+      // console.log(res,"字典")
       const { code , data} = res.data
       if (code === 200 && data) {
         this.setState({ interInfoList: data })
@@ -42,10 +44,23 @@ class PhaseMsg extends Component {
       }
     })
   }
+  // 相位标识下拉 
+  getInterDirSelectIden=()=>{
+    axiosInstance.post(`${this.dirPhaseSelectIden}`).then((res) => {
+      const { code , data} = res.data
+      console.log(data,"相位标识数据")
+      if (code === 200 && data) {
+        this.setState({ dirPhaseSelectIden: data })
+      } else {
+        this.setState({ dirPhaseSelectIden: null })
+      }
+    })
+  }
   // 列表
   getInterDirPhaseList = () => {
     axiosInstance.get(this.dirPhaseList).then((res) => {
       const { code, data } = res.data
+      // console.log(data,"liebiaoData")
       if (code === 200 && data) {
         this.setState({ interPhaseList: data })
       } else {
@@ -68,6 +83,7 @@ class PhaseMsg extends Component {
   //添加
   bindDirPhase=()=>{
     this.setState({interDirDisplay:true})
+    this.getInterDirSelectIden()
   }
   //取消
   bindCancelParse=()=>{
@@ -92,7 +108,7 @@ class PhaseMsg extends Component {
     }
     if(this.phasename!==null && this.phaseno!==null){
       axiosInstance.post(this.dirPhaseSave,transmitPara).then(res=>{
-        console.log(res,"保存")
+        // console.log(res,"保存")
         if(res.data.code === 200 && res.data){
           this.getInterDirPhaseList()
           this.setState({interDirDisplay:false})
@@ -107,7 +123,6 @@ class PhaseMsg extends Component {
   bindDeleteParse=(id)=>{
     axiosInstance.post(`${this.dirPhaseDelete}?phaseNo=${id}&unitId=${this.interId}`).then(res=>{
       if(res.data.code === 200){
-        console.log(res,"删除")
         this.getInterDirPhaseList()
       }
     })
@@ -128,7 +143,7 @@ class PhaseMsg extends Component {
     console.log(value,"value值")
   }
   render() {
-    const { interPhaseList ,interDirDisplay, interInfoList} =this.state;
+    const { interPhaseList ,interDirDisplay, interInfoList ,dirPhaseSelectIden} =this.state;
     return (
       <div className="paramsTable">
         <span className="addBtn" onClick={this.bindDirPhase}>新增相位</span>
@@ -148,11 +163,13 @@ class PhaseMsg extends Component {
           {
             interPhaseList&&
             interPhaseList.map(item=>{
+              let img=item.ui_image_name;
+              let imgPreFix=localStorage.getItem("ImgUrl");
               return (
                 <div className="paramsTr" key={item.id}>
                     <div className="paramsTd">{item.phaseno}</div>
                     <div className="paramsTd">{item.phasename}</div>
-                    <div className="paramsTd"><img src={phasePic} width="35px" height="35px" alt="" /></div>
+                    <div className="paramsTd"><img src={`${imgPreFix}${img ? img.split(",")[0] : null}`} width="17px" height="35px" alt="" /></div>
                     <div className="paramsTd">{this.getInterDirInfoListProperty(item.peddirlist)}</div>
                     <div className="paramsTd">{item.greenmax}</div>
                     <div className="paramsTd">{item.greenmin}</div>
@@ -174,13 +191,24 @@ class PhaseMsg extends Component {
                   <div className="paramsTd"><input type="text" onChange={e=>this.phasename=e.target.value}/></div>
                   <div className="paramsTd">
                     <Select defaultValue="请选择">
-                      <Option key="1" vlaue="1">东向执行</Option>
-                      <Option key="2" vlaue="2">东向左转</Option>
+                      {
+                        dirPhaseSelectIden && dirPhaseSelectIden.map(item=>{
+                          return (
+                            <Option key={item.id} vlaue={item.id}>{item.id}</Option>
+                          )
+                        })
+                      }
                     </Select>
                   </div>
                   <div className="paramsTd">
                     <Select defaultValue="请选择" onChange={this.aaa}>
-                      <Option key="aa" vlaue="东">东</Option>
+                      {
+                        interInfoList && interInfoList.map(item=>{
+                          return (
+                            <Option key={item.id} vlaue={item.codeName}>{item.codeName}</Option>
+                          )
+                        })
+                      }
                     </Select>
                   </div>
                   <div className="paramsTd"><input type="text" onChange={e=>this.greenmax=e.target.value}/></div>

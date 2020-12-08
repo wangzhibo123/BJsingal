@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Select } from 'antd'
+import { message, Select } from 'antd'
 import Websocket from 'react-websocket'
 import {
   SearchOutlined, DoubleLeftOutlined, DoubleRightOutlined, CaretUpOutlined, CaretDownOutlined, LeftCircleOutlined,
   RightCircleOutlined, UpCircleOutlined, DownCircleOutlined, CloseOutlined, EnvironmentOutlined,
 } from '@ant-design/icons'
 import mapConfiger from '../utils/minemapConf'
-import { getPrimitiveInfo } from '../../reduxs/action/interConfig'
+import { getPrimitiveInfo, getStartControl } from '../../reduxs/action/interConfig'
 import './InterMonitor.scss'
 
 import axiosInstance from '../utils/getInterfaceData'
@@ -63,11 +63,19 @@ class InterMonitor extends Component {
     ]
     this.timeMinutes = ['5分钟', '15分钟', '30分钟', '不限制', '自定义']
     this.controlItems = [
-      { text: '全红控制', img: allred, },
-      { text: '闪黄控制', img: yellow },
-      { text: '中心控制', img: cneter },
-      { text: '中心手控', img: hand },
+      { text: '全红控制', img: allred, id: 'allred' },
+      { text: '闪黄控制', img: yellow, id: 'yellow' },
+      { text: '中心控制', img: cneter, id: 'center' },
+      { text: '中心手控', img: hand, id: 'hand' },
     ]
+    this.controlParams = {
+      "centerId": "center001",
+      "cmd": "Start",
+      "crossIds": "10001",
+      "dataMap": {"CrossID": "10001", "StageNo": "1"},
+      "serverId": "node-001",
+      "typeName": "CrossStage"
+    }
     this.defaultStageList = []
     this.interId = this.props.match.params.id
     this.modeUrl = `/control-application-front/unitMontitor/getControlModeById?unit_id=${this.interId}`
@@ -85,10 +93,17 @@ class InterMonitor extends Component {
     this.getInterInfo()
   }
   componentDidUpdate = (preveState) => {
-    const { primitiveInfo } = this.props.data
+    const { primitiveInfo, startControl } = this.props.data
     if (preveState.data.primitiveInfo !== primitiveInfo) {
       this.getCanalizationMsg(primitiveInfo)
     }
+    if (preveState.data.startControl !== startControl) {
+      this.startControlMessage(startControl)
+    }
+  }
+  // 执行结果提示
+  startControlMessage = (data) => {
+    message.info(data.detail)
   }
   // 获取图元信息
   getCanalizationMsg = (info) => {
@@ -160,8 +175,27 @@ class InterMonitor extends Component {
     const { confListLeft } = this.state
     this.setState({ confListLeft: confListLeft === 0 ? '-260px' : 0 })
   }
-  handleControlMode = (indexs) => {
+  handleControlMode = (indexs, id) => {
     this.setState({ modeIndex: indexs, resetFlag: null })
+    const controlParams = JSON.parse(JSON.stringify(this.controlParams))
+    switch(id){
+      case 'allred':
+        console.log(controlParams,'allred')
+        break;
+      case 'yellow':
+        controlParams.centerId = 2
+        console.log(controlParams,'yellow')
+        break;
+      case 'center':
+        controlParams.centerId = 3
+        console.log(controlParams,'center')
+        break;
+        case 'hand':
+          controlParams.centerId = 4
+          console.log(controlParams,'hand')
+        break;
+    }
+    this.nowControlParams = controlParams
   }
   // 切换路口
   handleToggleInter = (e) => {
@@ -251,6 +285,7 @@ class InterMonitor extends Component {
         modeTimeFlag: true
       })
     }
+    this.props.getStartControl(this.nowControlParams)
   }   
   // 步进
   handleStepStage  = (stageIndexs) => {
@@ -266,6 +301,9 @@ class InterMonitor extends Component {
   // 锁定
   handleLockedStage  = () => {
     console.log('锁定')
+    const goControlParams = JSON.parse(JSON.stringify(this.nowControlParams))
+    goControlParams.centerId = 'lockedId'
+    this.props.getStartControl(goControlParams)
   }   
   // 复位
   handleResetStage = () => {
@@ -304,6 +342,9 @@ class InterMonitor extends Component {
         modeTimeFlag: !flag
       })
       console.log('确认执行')
+      const goControlParams = JSON.parse(JSON.stringify(this.nowControlParams))
+      goControlParams.centerId = 'rightId'
+      this.props.getStartControl(goControlParams)
     } else {
       this.setState({
         modeTimeFlag:flag
@@ -512,7 +553,7 @@ class InterMonitor extends Component {
                   {
                     this.controlItems.map((item, index) => {
                       return (
-                        <div className={`controlItem ${modeIndex === index && 'itemHover'}`} key={item.text} onClick={() => this.handleControlMode(index)}>
+                        <div className={`controlItem ${modeIndex === index && 'itemHover'}`} key={item.text} onClick={() => this.handleControlMode(index, item.id)}>
                           <div className="icon"><img src={item.img} alt="" /></div>
                           <div className="text">{item.text}</div>
                         </div>
@@ -557,6 +598,7 @@ const mapStateToProps = (state) => {
 const mapDisPatchToProps = (dispatch) => {
   return {
     getPrimitiveInfo: bindActionCreators(getPrimitiveInfo, dispatch),
+    getStartControl: bindActionCreators(getStartControl, dispatch),
   }
 }
 export default connect(mapStateToProps, mapDisPatchToProps)(InterMonitor)
