@@ -13,6 +13,8 @@ const interConfig = (state = {}, action) => {
       return Object.assign({}, state, { devicePiclist: payload })
     case types.EDIT_DEVICE_INFO:
       return Object.assign({}, state, { editDeviceInfo: payload })
+    case types.POST_START_CONTROL:
+      return Object.assign({}, state, { startControl: payload })
     default:
       return state
   }
