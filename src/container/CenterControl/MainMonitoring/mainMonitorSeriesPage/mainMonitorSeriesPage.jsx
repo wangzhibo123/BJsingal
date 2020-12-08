@@ -1,7 +1,7 @@
 import React,{Component} from "react";
 import "./mainMonitorSeriesPage.scss";
 import SeriesMessage from "./seriesMessage/seriesMessage";
-import GreenWaveCharts from "../../../utils/GreenWaveCharts/GreenWaveCharts"
+import GreenWaveCharts from "../../../../components/GreenWaveCharts/GreenWaveCharts"
 import {Select,Button} from "antd";
 const {Option} =Select;
 export default class MainMonitorSeriesPage extends Component{
@@ -13,7 +13,7 @@ export default class MainMonitorSeriesPage extends Component{
             showForwordWave: true,
             showReverseWave: false,
             showControlRecord: false,
-            totleDistance: 3000,
+            totleDistance: 1000,
         }
     }
     render(){

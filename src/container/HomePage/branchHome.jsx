@@ -24,6 +24,9 @@ class branchHome extends Component {
       simulationPlanNum: [0, 0, 0, 0],
       branchName: null,
     }
+    this.interMarkers = []
+    this.showMode = []
+    this.showSingal = []
     this.trafficTimer = null
     this.sortColors = ['#00BAFF', '#FF8400', '#9600FF', '#00FFD8', '#FF8400', '#00BAFF']
     this.rateColors = ['#FF0000', '#FF7800', '#FFD800', '#0CB424']
@@ -45,23 +48,49 @@ class branchHome extends Component {
     this.getFaultStatistics()
     this.getSingalControl()
   }
-  addMarker = (points) => {
+  addMarker = (points, zoomVal = 8) => {
+    this.removeMarkers()
     if (this.map) {
+      this.interMarkers = []
       const currentThis = this
-      this.markers = []
-      points.forEach((item, index) => {
-        const el = document.createElement('div')
-        el.style.width = '20px'
-        el.style.height = '20px'
-        el.style.borderRadius = '50%'
-        el.style.backgroundColor = 'green'
-        el.style.cursor = 'pointer'
-        el.addEventListener('click',function(e){
-          currentThis.addInfoWindow(item) 
-        });
-        new window.mapabcgl.Marker(el)
-          .setLngLat([item.longitude, item.latitude])
+      const interList = zoomVal < 13 ? points.filter(item => item.unit_grade <= 4) : points
+      interList.forEach((item, index) => {
+        const hasMode = this.showMode.indexOf(item.control_state) < 0
+        const hasSingal = this.showSingal.indexOf(item.signal_system_codes) < 0
+        const innerBgcolor = item.alarm_state === 1 ? '#08c208' : item.alarm_state === 2 ? '#D7C19C' : '#FF0200'
+        const bgColor = item.alarm_state === 1 ? 'rgba(8,194,8,.3)' : item.alarm_state === 2 ? 'rgba(215,193,156,.3)' : 'rgba(255,2,0,.3)'
+        if (hasMode && hasSingal) {
+          const el = document.createElement('div')
+          el.style.width = '20px'
+          el.style.height = '20px'
+          el.style.borderRadius = '50%'
+          el.style.backgroundColor = bgColor
+          el.style.display = 'flex'
+          el.style.justifyContent = 'center'
+          el.style.alignItems = 'center'
+          el.style.cursor = 'pointer'
+          el.id = 'marker' + item.unit_code
+          const childEl = document.createElement('div')
+          childEl.style.width = '10px'
+          childEl.style.height = '10px'
+          childEl.style.borderRadius = '50%'
+          childEl.style.backgroundColor = innerBgcolor
+          el.appendChild(childEl)
+          el.addEventListener('click',function(e){
+            currentThis.addInfoWindow(item)
+          });
+          const marker = new window.mapabcgl.Marker(el)
+            .setLngLat([item.longitude, item.latitude])
           .addTo(this.map)
+          this.interMarkers.push(marker)
+        }
+      })
+    }
+  }
+  removeMarkers = () => {
+    if (this.interMarkers.length) {
+      this.interMarkers.forEach((item) => {
+        item.remove()
       })
     }
   }
@@ -118,7 +147,7 @@ class branchHome extends Component {
       if (code === '1') {
         this.pointLists = pointlist
         this.setState({ errline, offline, online, pointlist, branchName: pointlist[0].district_name })
-        this.addMarker(this.pointLists)
+        // this.addMarker(this.pointLists)
         let num = 0
         let numTwo = 0
         let numThree = 0
@@ -126,7 +155,7 @@ class branchHome extends Component {
           if (num >= online) { clearInterval(this.timeOne) }
           const nodeSimulation = ('000' + num).slice(-4).split('')
           this.setState({ nodeSimulation }, () => {
-            num += 1
+            num += online
           })
         }, 0)
         this.timeTwo = setInterval(() => {
@@ -140,7 +169,7 @@ class branchHome extends Component {
           if (numThree >= offline) { clearInterval(this.timeThree) }
           const simulationPlanNum = ('000' + numThree).slice(-4).split('')
           this.setState({ simulationPlanNum }, () => {
-            numThree += 1
+            numThree += offline
           })
         }, 0)
       }
@@ -232,6 +261,22 @@ class branchHome extends Component {
     this.map.addControl(new window.mapabcgl.NavigationControl());
     this.map.on('load', () => {
       this.addTrafficLayer()
+      setTimeout(() => {
+        this.addMarker(this.pointLists)
+      }, 500)
+    })
+    this.map.on('zoom', () => {
+      if (this.zoomTimer) {
+        clearTimeout(this.zoomTimer)
+        this.zoomTimer = null
+      }
+      this.zoomTimer = setTimeout(() => {
+        const zoomLev = Math.round(this.map.getZoom())
+        this.zoomLev = zoomLev
+        if (this.pointLists.length) {
+          this.addMarker(this.pointLists, zoomLev)
+        }
+      }, 700)
     })
   }
   randomData = () => {
@@ -414,6 +459,13 @@ class branchHome extends Component {
                 </div>
               </div>
               <div id="mapContainer" className="map-container" style={{ height: 'calc(100% - 5px)' }}></div>
+              <div className="mapLegend">
+                <div className="pointStatus">
+                  <div className="statusItem"><span className="pointIcon onlineColor"></span> 在线</div>
+                  <div className="statusItem"><span className="pointIcon offlineColor"></span> 离线</div>
+                  <div className="statusItem"><span className="pointIcon faultColor"></span> 故障</div>
+                </div>
+              </div>
             </div>
           }
         </div>

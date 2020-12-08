@@ -164,13 +164,12 @@ class InterConfMsg extends Component {
       cfgLampgroup: { direction: 1, directionValue: '', lampgroupno: '', signalId: '', type: 99, typeValue: '', unitId: interId },
       uiUnitConfig: { pLeft: 0, pTop: 0, rotationAngle: 0, uiHight: 40, uiImageName: '', uiWidth: 40, isView: 0, unitId: interId, },
     } : editname === 'detector' ? {
-      cfgDetectorInfo: {detcycle: 0, dettype: 1, distance: 3, lanenolist: "3,4", detid: 0, unitId: interId },
+      cfgDetectorInfo: {detcycle: 0, dettype: 1, distance: 3, lanenolist: '3,4', detid: 0, unitId: interId },
       uiUnitConfig: { pLeft: 0, pTop: 0, rotationAngle: 0, uiHight: 40, uiImageName: '', uiWidth: 40, isView: 0, unitId: interId, },
     } : editname === 'video' ? {
-      deviceInfo: { deviceModel: '', deviceName: '', deviceState: 0, deviceStateValue: '', deviceType: 0, deviceTypeValue: '', factoryDay: '',
-        factoryName: '', factoryTel: '', flag: 0, installDay: '', installLocation: 0, installLocationValue: '', maintenanceUnitTel: '', unitId: interId,
-      },
-      uiUnitConfig: { isView: 0, pLeft: 0, pTop: 0, pleft: 0, ptop: 0, rotationAngle: 0, uiHight: 0, uiId: 0, uiWidth: 0, unitId: interId }
+      deviceInfo: { deviceCode: 0, deviceModel: '1111', deviceName: '摄像头', deviceType: 5, unitId: interId },
+      uiUnitConfig: { isView: 0, pLeft: 0, pTop: 0, rotationAngle: 0, uiHight: 0, uiId: 0, uiWidth: 0, unitId: interId },
+      videoDeviceConfig: { deviceId: 0, installationDirection: 1, monitorDirection: 11, unitId: interId }
     } : null
   }
   // 拖拽新增图元配置
@@ -330,7 +329,7 @@ class InterConfMsg extends Component {
                               return (
                                 <img
                                   className="dragImgs"
-                                  key={item.id + index}
+                                  key={item.id + uiImageName}
                                   indexs={index}
                                   src={this.globalImgurl + uiImageName}
                                   alt=""
@@ -378,7 +377,7 @@ class InterConfMsg extends Component {
             <SingalParams paramsName={currentParams} renderComponent={(prams) => {
               const ItemParams = this.singalParams.find(item => item.id === prams)
               const ItemComponent = ItemParams.compos
-              return <ItemComponent />
+              return <ItemComponent {...this.props} />
             }} />
           }
         </div>

@@ -91,10 +91,13 @@
             width: 100%;
             height: calc(100% - 88px);
             color: #62A8C5;
+            overflow: auto;
             .greenWaveBox{
+                width: calc(100% - 114px);
+                height: 403px;
                 position: absolute;
                 left: 114px;
-                top: 231px;
+                top: 200px;
                 border-left: 2px solid #25459A;
                 border-bottom: 2px solid #25459A;
                 // transform: scaleZ(-1);

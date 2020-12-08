@@ -11,10 +11,12 @@ class Detector extends Component {
     this.state = {
       detectorList: null,
     }
-    this.interId = this.props.match.params.id
+    this.interId = this.props.interId
+    this.globalImgurl = localStorage.getItem('ImgUrl')
     this.removeUrl = '/control-application-front/basic/info/detector/removeDetector'
   }
   componentDidMount = () => {
+    console.log(this.props)
     const { primitiveInfo } = this.props.data
     this.getDetectorList(primitiveInfo)
   }
@@ -25,7 +27,8 @@ class Detector extends Component {
     }
   }
   getDetectorList = (primitiveInfo) => {
-    this.setState({ detectorList: primitiveInfo.Detector })
+    this.detectorInfos = primitiveInfo.Detector
+    this.setState({ detectorList: this.detectorInfos })
   }
   getRemoveDetector = (id, configId) => {
     axiosInstance.post(`${this.removeUrl}?id=${id}&configId=${configId}`).then((res) => {
@@ -47,6 +50,12 @@ class Detector extends Component {
       },
     })
   }
+  handleEditInfo = (e) => {
+    const indexs = e.currentTarget.getAttribute('indexs')
+    const currentInfo = this.detectorInfos[indexs]
+    this.props.showEditModal()
+    this.props.getEditDeviceInfo(currentInfo)
+  }
   render() {
     const { detectorList } = this.state
     return (
@@ -63,17 +72,17 @@ class Detector extends Component {
           <div className="confTbody">
             {
               detectorList &&
-              detectorList.map((item) => {
-                const { detcycle, detid, dettype, distance } = item.cfgDetectorInfo
+              detectorList.map((item, index) => {
+                const { detcycle, detid, distance, lanenolist } = item.cfgDetectorInfo
                 return (
                   <div className="confTr" key={item.id}>
                     <div className="confTd">{detid}</div>
-                    <div className="confTd">{distance}</div>
-                    <div className="confTd">{detcycle}</div>
-                    <div className="confTd">{dettype}</div>
-                    <div className="confTd">1</div>
+                    <div className="confTd">{distance}米</div>
+                    <div className="confTd">{detcycle}分钟</div>
+                    <div className="confTd" style={{ flex: 0.5 }}> <img height="30px" src={this.globalImgurl + item.uiUnitConfig.uiImageName} alt=""/> </div>
+                    <div className="confTd">{lanenolist}</div>
                     <div className="confTd">
-                      <EditOutlined className="activeIcon" />
+                      <EditOutlined className="activeIcon" indexs={index} onClick={this.handleEditInfo} />
                       <DeleteOutlined className="activeIcon" onClick={() => { this.handleDelete(item.id, item.uiUnitConfig.uiId) }} />
                     </div>
                   </div>
