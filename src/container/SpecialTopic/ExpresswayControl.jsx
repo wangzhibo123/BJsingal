@@ -16,18 +16,16 @@ import laneArrowTRight from '../imgs/icon_arrow_top_right.png'
 import mapConfiger from '../utils/minemapConf'
 const { SubMenu } = Menu;
 const lineData = [
-  [116.33625304425573, 39.976441853446744],
-  [116.33878504956658, 39.976441853446744],
-  [116.34399926389074, 39.976441853446744],
-  [116.33375322545487, 39.976441853446744],
-  [116.32868921483447, 39.976441853446744]
+  [116.33025304425573, 39.976441853446744],
+  [116.34025304425573, 39.976441853446744],
+  [116.34568921483447, 39.976441853446744]
 ]
 const lineDatas = [
-  [116.33375322545487, 39.98396257498689],
-  [116.33375322545487, 39.97974391515476],
-  [116.33375322545487, 39.976441853446744],
-  [116.33375322545487, 39.97264462081506],
-  [116.33375322545487, 39.968587550079974]
+  [116.33335322545487, 39.98396257498689],
+  [116.33345322545487, 39.97974391515476],
+  [116.33365322545487, 39.976441853446744],
+  [116.33387322545487, 39.97264462081506],
+  [116.33410322545487, 39.968587550079974]
 ]
 class ExpresswayControl extends Component {
   constructor(props) {
@@ -66,12 +64,43 @@ class ExpresswayControl extends Component {
       this.markers = []
       points.forEach((item, index) => {
         if (index !== points.length) {
+          const elArrow1 = document.createElement('div')
+          elArrow1.style.width = '31px'
+          elArrow1.style.height = '33px'
+          elArrow1.style.position = 'absolute'
+          elArrow1.style.top = '-33px'
+          elArrow1.style.background = `url(${laneArrowTLeft})`;
+          const elArrow2 = document.createElement('div')
+          elArrow2.style.width = '31px'
+          elArrow2.style.height = '33px'
+          elArrow2.style.position = 'absolute'
+          elArrow2.style.top = '15px'
+          elArrow2.style.background = `url(${laneArrowBLeft})`;
+          const elArrow3 = document.createElement('div')
+          elArrow3.style.width = '31px'
+          elArrow3.style.height = '33px'
+          elArrow3.style.position = 'absolute'
+          elArrow3.style.top = '-33px'
+          elArrow3.style.left = '31px'
+          elArrow3.style.background = `url(${laneArrowTRight})`;
+          const elArrow4 = document.createElement('div')
+          elArrow4.style.width = '31px'
+          elArrow4.style.height = '33px'
+          elArrow4.style.position = 'absolute'
+          elArrow4.style.left = '31px'
+          elArrow4.style.top = '15px'
+          elArrow4.style.background = `url(${laneArrowBRight})`;
           const el = document.createElement('div')
           el.style.width = '63px'
           el.style.height = '15px'
-          el.style.margin = '0 0 0 0'
-          el.style.background = `url(${lightRectangle})`;
+          el.style.position = 'absolute'
+          el.style.background = `url(${lightRectangle})`
+          el.style.backgroundSize='cover'
           el.style.cursor = 'pointer'
+          el.appendChild(elArrow1)
+          el.appendChild(elArrow2)
+          el.appendChild(elArrow3)
+          el.appendChild(elArrow4)
           $(el).attr('rotateRset', 'reset')
           new window.mapabcgl.Marker(el)
             .setLngLat([item[0], item[1]])
@@ -121,11 +150,12 @@ class ExpresswayControl extends Component {
   }
   addMarker = () => {
     if (this.map) {
-      lineData.map(item => {
+      lineData.map((item, i) => {
         const elParent = document.createElement('div')
         elParent.style.width = '40px'
         elParent.style.height = '20px'
-        elParent.style.position = 'relative'
+        elParent.style.position = 'absolute'
+        elParent.style.display = 'inline-block'
         const elAnimation = document.createElement('div')
         elAnimation.setAttribute('class','animationS')
         const el = document.createElement('div')
@@ -143,7 +173,6 @@ class ExpresswayControl extends Component {
         // })
         elParent.appendChild(elAnimation)
         elParent.appendChild(el)
-        console.log(item, '是啥子？')
         new window.mapabcgl.Marker(elParent)
           .setLngLat([item[0], item[1]])
           .addTo(this.map);
@@ -170,8 +199,8 @@ class ExpresswayControl extends Component {
     map.on('click', (e) => {
       console.log('地图触发点：', e.lngLat.lng, e.lngLat.lat)
     })
-    map.setZoom(15)
-    map.setCenter([116.33861338819071, 39.97636785900676])
+    map.setZoom(14)
+    map.setCenter([116.33375322545487, 39.976441853446744])
     this.map = map
   }
   // 计算起始与终点之间的中心点 > 用于重置地图中心点
@@ -213,7 +242,7 @@ class ExpresswayControl extends Component {
           "line-width": lineWidth ? lineWidth : 6
         }
       });
-      this.map.setCenter(this.returnCenterLnglat(lineData[0], lineData[lineData.length - 1]))
+      // this.map.setCenter(this.returnCenterLnglat(lineData[0], lineData[lineData.length - 1]))
     }
     this.addBus(lineData, lineId)
   }

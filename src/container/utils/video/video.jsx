@@ -23,11 +23,11 @@ class VideoApp extends Component{
     const _this = this
     const resultP = Promise.resolve(_this.getVideoMonCarList())
     resultP.then(()=>{
-      console.log(_this.state.newState, '看看结果是啥？')
       if(!_this.state.newState){
         _this.setState({
           newState: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv13", name: "南", id: 'my_S'  }]
         })
+        console.log(_this.state.newState, '现在是网络地址')
       }
       const { newState } = this.state;
       if(newState !== null){
@@ -59,6 +59,7 @@ class VideoApp extends Component{
         this.setState({
           newState:res.data
         })
+        console.log(this.state.newState, '现在请求地址')
       }
     })
   }
