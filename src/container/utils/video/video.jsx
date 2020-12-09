@@ -15,51 +15,66 @@ class VideoApp extends Component{
       nowPlay:"",
       width: this.props.width || "483px",
       height: this.props.height || "300px",
-      newState: null,
+      newState: this.props.url ? null : [{ url: "rtmp://58.200.131.2:1935/livetv/cctv13", name: "南", id: 'my_S' }],
     }
   }
-//组件挂载完成之后初始化播放控件
+  //组件挂载完成之后初始化播放控件
   componentDidMount=()=>{
-    const _this = this
-    const resultP = Promise.resolve(_this.getVideoMonCarList())
-    resultP.then(()=>{
-      if(!_this.state.newState){
-        _this.setState({
-          newState: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv13", name: "南", id: 'my_S'  }]
-        })
-        console.log(_this.state.newState, '现在是网络地址')
-      }
-      const { newState } = this.state;
-      if(newState !== null){
-        const videoJsOptions = {
-          autoplay: true,
-          controls: true,
-          sources: [{
-            // src: 'rtmp://192.168.1.124:9999/live/31434',
-            src: newState[0].url,
-            type: 'rtmp/flv'
-          }]
-      }
-      this.player = videojs(newState[0].id.slice(0,6), videoJsOptions , function onPlayerReady() { //(id或者refs获取节点，options，回调函数)
-          videojs.log('Your player is ready!');
-          // In this context, `this` is the player that was created by Video.js.
-          this.play();
-          // How about an event listener?
-          this.on('ended', function() {
-            videojs.log('Awww...over so soon?!');
+    this.getVideoMonCarList()
+    setTimeout(() =>{
+      if (true) {
+        const { newState } = this.state;
+        if (newState !== null) {
+          const videoJsOptions = {
+            autoplay: true,
+            controls: true,
+            sources: [{
+              // src: 'rtmp://192.168.1.124:9999/live/31434',
+              src: newState[0].url,
+              type: 'rtmp/flv'
+            }]
+          }
+          this.player = videojs(newState[0].id.slice(0, 6), videoJsOptions, function onPlayerReady() { //(id或者refs获取节点，options，回调函数)
+            videojs.log('Your player is ready!');
+            // In this context, `this` is the player that was created by Video.js.
+            this.play();
+            // How about an event listener?
+            this.on('ended', function () {
+              videojs.log('Awww...over so soon?!');
+            });
           });
-        });
+        }
       }
-
-    })
+    },300)
   }
-  getVideoMonCarList=()=>{
+  getVideoMonCarList = () =>{
     axiosInstance.post(this.props.url,{"cameraCode": "08143150969233750102#f0dfa07ea18f4a5da535fd251bdc5569","mediaURLParam": {"broadCastType": 0,"packProtocolType": 1,"protocolType": 2,"serviceType": 1,"streamType": 1,"transMode": 0}}).then(res=>{
       if(res.code === 200){
         this.setState({
           newState:res.data
+        },() => {
+          const { newState } = this.state;
+          if(newState !== null){
+            const videoJsOptions = {
+              autoplay: true,
+              controls: true,
+              sources: [{
+                // src: 'rtmp://192.168.1.124:9999/live/31434',
+                src: newState[0].url,
+                type: 'rtmp/flv'
+              }]
+          }
+          this.player = videojs(newState[0].id.slice(0,6), videoJsOptions , function onPlayerReady() { //(id或者refs获取节点，options，回调函数)
+              videojs.log('Your player is ready!');
+              // In this context, `this` is the player that was created by Video.js.
+              this.play();
+              // How about an event listener?
+              this.on('ended', function() {
+                videojs.log('Awww...over so soon?!');
+              });
+            });
+          }
         })
-        console.log(this.state.newState, '现在请求地址')
       }
     })
   }
