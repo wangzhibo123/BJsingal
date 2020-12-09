@@ -20,10 +20,12 @@ class ChannelModal extends Component {
   componentDidMount = () => {
     const { editDeviceInfo, devicePiclist, primitiveInfo } = this.props.data
     this.editInfo = editDeviceInfo
-    this.currentDeviceList = primitiveInfo.CfgLaneInfo
-    const lengths = this.currentDeviceList.length
-    const editNo = lengths === 0 ? 1 : this.currentDeviceList[lengths - 1].cfgLaneInfo.laneno + 1
-    this.editInfo.cfgLaneInfo.laneno = editNo
+    if (!this.editInfo.cfgLaneInfo.laneno) {
+      this.currentDeviceList = primitiveInfo.CfgLaneInfo
+      const lengths = this.currentDeviceList.length
+      const editNo = lengths === 0 ? 1 : this.currentDeviceList[lengths - 1].cfgLaneInfo.laneno + 1
+      this.editInfo.cfgLaneInfo.laneno = editNo
+    }
     this.setState({ editInfo: this.editInfo, channelIcon: devicePiclist['6'] })
     this.getInterDirMoveList(6)
     this.getInterDirMoveList(16)

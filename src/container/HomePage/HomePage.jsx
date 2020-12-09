@@ -226,7 +226,7 @@ class Homepage extends Component {
           <div class="message">设备状态：${interMsg.alarm_state}</div>
           <div class="message">运行阶段：${interMsg.stage_code || ''}</div>
         </div>
-        <div class="interDetails"><div class="monitorBtn"><a style="color:#62bbff" href="#/interMonitor/${interMsg.id}">路口检测</a></div></div>
+        <div class="interDetails"><div class="monitorBtn"><a style="color:#fff" href="#/interMonitor/${interMsg.id}">路口检测</a></div></div>
       </div>
     `
   }
@@ -235,7 +235,8 @@ class Homepage extends Component {
     if (this.map) {
       this.interMarkers = []
       const currentThis = this
-      const interList = zoomVal < 13 ? points.filter(item => item.unit_grade <= 4) : points
+      const interList = (zoomVal < 13 && zoomVal > 12) ? points.filter(item => item.unit_imports >= 3) :
+                        zoomVal <= 12 ? points.filter(item => item.unit_imports >= 4) : points
       interList.forEach((item, index) => {
         const hasMode = this.showMode.indexOf(item.control_state) < 0
         const hasSingal = this.showSingal.indexOf(item.signal_system_codes) < 0
@@ -351,7 +352,7 @@ class Homepage extends Component {
         this.zoomTimer = null
       }
       this.zoomTimer = setTimeout(() => {
-        const zoomLev = Math.round(this.map.getZoom())
+        const zoomLev = this.map.getZoom()
         this.zoomLev = zoomLev
         if (this.pointLists.length) {
           this.addMarker(this.pointLists, zoomLev)

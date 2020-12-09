@@ -604,7 +604,7 @@ class TrunkManagement extends Component {
     this.delectlineroute() // 取消线
     this.delectStartEnd() // 清除开始结束图标
     this.addlineroute = false
-    this.addRoad = false
+    this.isAddEdit = false
     this.setState({
       rights: -300,
       menuOpenkeys: []

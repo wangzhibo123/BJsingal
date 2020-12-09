@@ -22,10 +22,10 @@
         width: 95%;
         height: 90%;
         padding: 15px;
-        background-color: rgba(3, 16, 96, .7);
+        background-color: rgba(16, 22, 56, .7);
         border-radius: 0 0 6px 6px;
-        background-image: linear-gradient(0deg, rgba(0, 59, 129, 0), rgba(0, 38, 120, 0.99), rgba(0, 46, 146, 0.02));
-        box-shadow: inset 0 0 10px #13419B;
+        background-image: linear-gradient(0deg, rgba(0, 59, 129, 0), rgba(7, 33, 88, 0.99), rgba(0, 46, 146, 0.02));
+        box-shadow: inset 0 0 10px #092357;
         .closeBox {
             position: absolute;
             top: 0;
@@ -35,7 +35,7 @@
             text-align: center;
             line-height: 25px;
             cursor: pointer;
-            box-shadow: inset 0 0 10px #13419B;
+            box-shadow: inset 0 0 10px #0b2966;
             .closeIcon {
                 font-size: 16px;
                 color:#7ED7FF;
@@ -53,7 +53,7 @@
             padding: 0 15px;
             line-height: 30px;
             background-color: RGBA(4, 47, 106, .5);
-            box-shadow: inset 0 0 15px #0A3E82;
+            box-shadow: inset 0 0 15px #052958;
             border-radius: 5px 5px 0 0;
             font-size: 16px;
             color: #7ED7FF;

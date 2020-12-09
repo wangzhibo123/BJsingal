@@ -437,7 +437,7 @@ $input-bac: rgba(0, 169, 192, 0.2);
                 .dateOperation {
                     height: 130px;
                     .datatime {
-                        >div {
+                        > div {
                             color: #325b93;
                             height: 37px;
                             line-height: 37px;
@@ -499,7 +499,7 @@ $input-bac: rgba(0, 169, 192, 0.2);
                             height: 110px;
                             display: flex;
                             align-items: center;
-                            justify-content: space-between;
+                            justify-content: center;
                             margin-bottom: 10px;
                             > span {
                                 // position: absolute;
@@ -512,7 +512,6 @@ $input-bac: rgba(0, 169, 192, 0.2);
                             }
                             .streetBox {
                                 width: 260px;
-                                padding-left: 10px;
                                 margin: 5px 0;
                                 .streetTitleBox {
                                     color: #67a5f2;
@@ -525,10 +524,11 @@ $input-bac: rgba(0, 169, 192, 0.2);
                                     }
                                 }
                                 .intersectionBox {
+                                    width: 260px;
                                     font-size: 12px;
                                     height: 90px;
                                     border: 1px solid #064393;
-                                    padding: 2px;
+                                    padding: 5px 8px;
                                     .mountingThead {
                                         height: 20px;
                                         display: flex;
@@ -540,7 +540,13 @@ $input-bac: rgba(0, 169, 192, 0.2);
                                             background-color: #0055b8;
                                             padding: 1px 3px;
                                             border-radius: 8px;
+                                            cursor: pointer;
+                                            margin-right: 10px;
+                                            &:hover {
+                                                color: white;
+                                            }
                                         }
+
                                         div {
                                             color: #1df249;
                                         }
@@ -551,6 +557,16 @@ $input-bac: rgba(0, 169, 192, 0.2);
                                         flex-wrap: wrap;
                                         flex: 1 1;
                                         overflow-y: auto;
+                                        > .phaseinner {
+                                            width: 25px;
+                                            height: 25px;
+                                            margin-right: 3px;
+                                            cursor: pointer;
+                                            img {
+                                                width: 100%;
+                                                height: 100%;
+                                            }
+                                        }
                                         .phaseTime {
                                             display: flex;
                                             width: 60px;
@@ -562,10 +578,6 @@ $input-bac: rgba(0, 169, 192, 0.2);
                                                     width: 100%;
                                                     height: 100%;
                                                 }
-                                                // flex: 1;
-                                                // display: flex;
-                                                // justify-content: center;
-                                                // align-items: center;
                                             }
                                             .times {
                                                 width: 30px;

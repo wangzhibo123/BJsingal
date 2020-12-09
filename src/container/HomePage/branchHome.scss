@@ -372,21 +372,22 @@
                     right: 10px;
                     top: 8px;
                     font-size: 26px;
-                    color: #62bbff;
+                    color: #02a4fb;
                 }
                 .infoWindow {
                     width: 400px;
-                    height: 225px;
-                    background: rgba(3, 16, 96, 0.8);
-                    background-image: linear-gradient(to bottom, rgba(3, 38, 120, .8), rgba(0, 59, 129, .8), rgba(3, 38, 120, .8));
+                    height: 205px;
                     font-size: 14px;
-                    color: #62bbff;
-                    border-radius: 4px;
-                    box-shadow: inset 0 0 10px rgba(62, 112, 255, .8);
+                    color: #fff;
+                    background: url(../imgs/mapInfobg.png) center center no-repeat;
+                    background-size: 100% 100%;
                     .infotitle {
                         height: 40px;
                         line-height: 40px;
                         padding-left: 20px;
+                        font-size: 16px;
+                        color: #02a4fb;
+                        text-decoration: underline;
                     }
                     .interMessage {
                         display: flex;
@@ -395,9 +396,9 @@
                         justify-content: space-between;
                         .message {
                             width: 180px;
-                            height: 35px;
+                            height: 30px;
                             text-align: left;
-                            line-height: 35px;
+                            line-height: 30px;
                         }
                     }
                     .interDetails {
@@ -410,7 +411,8 @@
                             height: 28px;
                             text-align: center;
                             line-height: 28px;
-                            background-color: rgba(98, 187, 255, .4);
+                            background: url(../imgs//mapInfobtn.png) center center no-repeat;
+                            background-size: 100% 100%;
                             cursor: pointer;
                         }
                     }
