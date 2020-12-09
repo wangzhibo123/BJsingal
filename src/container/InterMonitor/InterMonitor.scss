@@ -105,8 +105,8 @@ input[type="number"]{ -moz-appearance: textfield; }
             position: absolute;
             top: 40px;
             left: 20px;
-            width: calc(100% - 448px);
-            height: 600px;
+            width: 100%;
+            height: calc(100% - 200px);
             display: flex;
             justify-content: center;
             align-items: center;

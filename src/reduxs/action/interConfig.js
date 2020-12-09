@@ -40,7 +40,7 @@ export const getPrimitiveInfo = (interId) => {
 }
 
 // 图元列表
-export const getDevicePiclist = (ids = [1,3,6,7,9,10]) => {
+export const getDevicePiclist = (ids = [1,3,5,6,7,9,10]) => {
   return async (dispatch) => {
     try {
       const result = await RestUtil.post(API_DEVICE_LIST, ids)
