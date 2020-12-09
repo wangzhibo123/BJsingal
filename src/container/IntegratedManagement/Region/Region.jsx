@@ -185,16 +185,16 @@ class Region extends Component {
         map.removeLayerAndSource('icon');
       };
     })
-    map.on('zoom', () => {
-      if (this.zoomTimer) {
-        clearTimeout(this.zoomTimer)
-        this.zoomTimer = null
-      }
-      this.zoomTimer = setTimeout(() => {
-        const zoomLev = Math.round(this.map.getZoom())
-        this.addMarker(this.pointLists, zoomLev)
-      }, 700)
-    })
+    // map.on('zoom', () => {
+    //   if (this.zoomTimer) {
+    //     clearTimeout(this.zoomTimer)
+    //     this.zoomTimer = null
+    //   }
+    //   this.zoomTimer = setTimeout(() => {
+    //     const zoomLev = Math.round(this.map.getZoom())
+    //     this.addMarker(this.pointLists, zoomLev)
+    //   }, 700)
+    // })
     this.map = map
   }
   clickOperationNum = (id) => {
@@ -277,7 +277,8 @@ class Region extends Component {
     this.removeRoadCircle()
     this.addRoad = false
     this.setState({
-      rights: -300
+      rights: -300,
+      menuOpenkeys: []
     })
   }
   getismodify = (isShowName) => { // 添加编辑
@@ -286,7 +287,7 @@ class Region extends Component {
     this.setState({
       ismodify: false,
       isAddEdit: true,
-      roadtitle: '干线修改',
+      roadtitle: '区域修改',
     })
   }
   changeLoadRouteDirection = (e, options) => { // 添加修改input selecct
@@ -327,7 +328,7 @@ class Region extends Component {
     if (this.showName === 'edit') {
       addobjs.id = JSON.stringify(this.roaddId)
     }
-    axiosInstance.post(`${this.saveOrUpdateSubDistrict}?${this.FormData(addobjs)}`,).then(res => { // 干线
+    axiosInstance.post(`${this.saveOrUpdateSubDistrict}?${this.FormData(addobjs)}`,).then(res => { // 区域
       const { code, result } = res.data
       if (code === '1') {
         this.setState({
@@ -432,15 +433,31 @@ class Region extends Component {
                   <p><span>区域创建者：</span><input onChange={this.changeLoadRouteDirection} value={sub_district_user} intername='sub_district_user' type="text" className='inputBox' placeholder="区域创建者" /></p>
                   <p><span>区域描述：</span><input onChange={this.changeLoadRouteDirection} value={detail} intername='detail' type="text" className='inputBox' placeholder="区域描述" /></p>
                   <div className='lineBox'>
-                    <div className="lineBoxRight">
+                    <div className='lineBoxer'>
+                      {
+                        unitArr && unitArr.map((item, index) =>
+                          <div key={item.id} className='lineBoxer_item'>
+                            <div className='streetBox'>
+                              <p title={item.unit_name} className='street'><span>{index < 9 ? ('0' + (index + 1)) : index}</span>
+                                <li>{item.unit_name}</li>
+                                <b><DeleteOutlined onClick={() => this.delectroad(item.id)} /></b></p>
+                              <div className='intersectionBox'>
+                                <p className='intersection'><span>{item.unit_name}</span><span>{item.org_area}</span></p>
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      }
+                    </div>
+                    {/* <div className="lineBoxRight">
                       {
                         unitArr && unitArr.map((item, index) => {
                           return (
-                            <p key={item + index}><b>{item.unit_name}</b><span><CloseOutlined onClick={() => this.delectroad(item.id)} /></span></p>
+                            <p key={item + index}><b>{item.unit_name}</b></p>
                           )
                         })
                       }
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 :
@@ -450,13 +467,18 @@ class Region extends Component {
                   <p>区域创建者：{sub_district_user}</p>
                   <p>区域描述：{detail}</p>
                   <div className='lineBox'>
-                    <div className="lineBoxRight">
+                    <div className='lineBoxer'>
                       {
-                        unitArr && unitArr.map((item, index) => {
-                          return (
-                            <p key={item + index}><b>{item.unit_name}</b></p>
-                          )
-                        })
+                        unitArr && unitArr.map((item, index) =>
+                          <div key={item.id} className='lineBoxer_item'>
+                            <div className='streetBox'>
+                              <p title={item.unit_name} className='street'><span>{index < 9 ? ('0' + (index + 1)) : index}</span>{item.unit_name}</p>
+                              <div className='intersectionBox'>
+                                <p className='intersection'><span>{item.unit_name}</span><span>{item.org_area}</span></p>
+                              </div>
+                            </div>
+                          </div>
+                        )
                       }
                     </div>
                   </div>
@@ -464,7 +486,7 @@ class Region extends Component {
             }
           </div>
         </div>
-        <div className="interSearchBox">
+        {/* <div className="interSearchBox"> // 搜索输入框
           <Select
             showSearch
             style={{ width: 200 }}
@@ -479,7 +501,7 @@ class Region extends Component {
               ))
             }
           </Select>
-        </div>
+        </div> */}
         <div className='sidebarLeft'>
           <div className='tabLeft'>
             {
