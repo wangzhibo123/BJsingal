@@ -51,12 +51,12 @@ class InterConfMsg extends Component {
     this.globalImgurl = localStorage.getItem('ImgUrl')
     this.baseConfList = [
       { confName: '渠化信息', id: 'canalization', num: '0', compos: null },
-      { confName: '车道信息', id: 'channel', num: '6', compos: ChannelTable, modalCompos: ChannelModal },
-      { confName: '路口关系', id: 'inter', num: '7', compos: InterRelation, modalCompos: RelationModal },
-      { confName: '信号机', id: 'singal', num: '1', compos: SingalMsg, modalCompos: SingalModal },
-      { confName: '灯组', id: 'lightGroup', num: '10', compos: LightGroup, modalCompos: LampModal },
-      { confName: '检测器', id: 'detector', num: '3', compos: Detector, modalCompos: DetectorModal },
-      { confName: '视频', id: 'video', num: '9', compos: VideoMsg, modalCompos: VideoModal },
+      { confName: '车道信息', id: 'channel', num: '6', dataName: 'CfgLaneInfo', compos: ChannelTable, modalCompos: ChannelModal },
+      { confName: '路口关系', id: 'inter', num: '7', dataName: 'UnitConnector', compos: InterRelation, modalCompos: RelationModal },
+      { confName: '信号机', id: 'singal', num: '1', dataName: 'SignalConfigInfo', compos: SingalMsg, modalCompos: SingalModal },
+      { confName: '灯组', id: 'lightGroup', num: '10', dataName: 'LampGroup', compos: LightGroup, modalCompos: LampModal },
+      { confName: '检测器', id: 'detector', num: '3', dataName: 'Detector', compos: Detector, modalCompos: DetectorModal },
+      { confName: '视频', id: 'video', num: '9', dataName: 'Device', compos: VideoMsg, modalCompos: VideoModal },
     ]
     this.singalParams = [
       { confName: '相位信息', id: 'phasemsg', compos: PhaseMsg },
@@ -71,7 +71,7 @@ class InterConfMsg extends Component {
   componentDidMount = () => {
     const { configName, interInfo } = this.props
     this.setState({ configName, interInfo })
-    if (interInfo.background_img) {
+    if (interInfo && interInfo.background_img) {
       this.setState({ isUpload: true, interImage: interInfo.background_img })
     }
     const { primitiveInfo } = this.props.data
@@ -107,12 +107,13 @@ class InterConfMsg extends Component {
     console.log(picList)
   }
   // 切换配置
-  handleBaseItemChange = (currentItem, stateName, listnum) => {
-    const { devicePiclist } = this.props.data
+  handleBaseItemChange = (currentItem, stateName, listnum, dataName) => {
+    const { devicePiclist, primitiveInfo } = this.props.data
     this.setState({ [stateName]: currentItem })
     if (listnum === '0') {
 
     } else {
+      this.currentConfData = primitiveInfo[dataName]
       this.setState({ currentDeviceList: devicePiclist[listnum] })
     }
   }
@@ -228,9 +229,13 @@ class InterConfMsg extends Component {
     this.moveBeforeX = ev.clientX
     this.moveBeforeY = ev.clientY
     this.newConfPic = this.roadLists[this.currentDragIndex]
+    const isCurrentConf = this.currentConfData.filter(item => item.uiUnitConfig.id === this.newConfPic.uiUnitConfig.id)
+    if (isCurrentConf.length) {
+      this.handleShowEditModal()
+      this.props.getEditDeviceInfo(this.newConfPic)
+    }
     console.log(this.newConfPic)
-    this.handleShowEditModal()
-    this.props.getEditDeviceInfo(this.newConfPic)
+    console.log(this.roadLists)
   }
   handleShowEditModal = () => {
     this.setState({ editDeviceMsg: true })
@@ -272,7 +277,7 @@ class InterConfMsg extends Component {
                 <div
                   className={`baseItem ${currentItem === item.id ? 'activeItem' : ''}`}
                   key={item.id}
-                  onClick={() => this.handleBaseItemChange(item.id, 'currentItem', item.num)}
+                  onClick={() => this.handleBaseItemChange(item.id, 'currentItem', item.num, item.dataName)}
                 >{item.confName}</div>
               ))
             }

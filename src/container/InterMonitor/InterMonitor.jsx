@@ -389,7 +389,7 @@ class InterMonitor extends Component {
           <span className="slideUp slideIcon" dir="moveUp" onClick={this.handleToggleInter}><UpCircleOutlined /></span>
           <span className="slideDown slideIcon" dir="moveDown" onClick={this.handleToggleInter}><DownCircleOutlined /></span>
           <div className="interPic">
-            <div style={{ width: '1200px', height: '100%', position: 'relative' }}>
+            <div style={{ width: '1200px', height: '600px', position: 'relative' }}>
               <img className={`${moveLeft ? 'slideInLeft' : moveRight ? 'slideInRight' : moveUp ? 'slideInUp' : moveDown ? 'slideInDown' : ''}`} width="1200px" height="100%" src={test1} alt="" />
               {
                 picConfig &&

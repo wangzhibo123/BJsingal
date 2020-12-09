@@ -23,3 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 debug.log
 .rar
+*[copy].scss
+*[Copy].scss
+*[copy].jsx
+*[Copy].jsx
