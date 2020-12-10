@@ -243,9 +243,10 @@ class Intersection extends Component {
           <div class="message">管理单位：${roaduser_group_id}</div>
           <div class="message">主路口编号：${interMsg.main_unit_id}</div>
         </div>
-        <div class="interDetails"><div class="monitorBtn">路口检测</div></div>
+
       </div>
     `
+    // <div class="interDetails"><div class="monitorBtn">路口检测</div></div>
   }
   gettitletops = (isShow) => {
     this.setState({

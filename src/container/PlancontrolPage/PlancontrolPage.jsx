@@ -10,14 +10,9 @@ import styles from './PlancontrolPage.module.scss'
 import mapConfiger from '../utils/minemapConf'
 import startPng from '../imgs/start.png'
 import endPng from '../imgs/end.png'
-import carPng from '../imgs/car.png'
-import phase1 from '../imgs/01.png'
-import phase2 from '../imgs/03.png'
 import phase3 from '../imgs/03.png'
-import phase4 from '../imgs/03.png'
-import phase11 from '../imgs/03.png'
-import yellowPag from '../imgs/yellow.png'
-import redPag from '../imgs/red.png'
+import allRed from '../imgs/allRed.png'
+import llY from '../imgs/allY.png'
 import Websocket from 'react-websocket'
 import AddOrUpdateVipPlanList from './AddOrUpdateVipPlanList/AddOrUpdateVipPlanList'
 const { SubMenu } = Menu;
@@ -205,28 +200,10 @@ class PlancontrolPage extends Component {
   //     }
   //   })
   // }
-  getismodify = () => { // 编辑操作
-    // this.addRoad = true
-    // this.setState({
-    //   disabled: false,
-    // })
-    // if (this.isreserveplan) {
-    //   this.setState({
-    //     rightsNew: 0,
-    //     rights: -320,
-    //     ismodifyNew: false,
-    //     isAddEditNew: true,
-    //     roadtitleNew: '查看特勤',
-    //   })
-    // } else {
-    //   this.setState({
-    //     rightsNew: -320,
-    //     rights: 0,
-    //     ismodify: false,
-    //     isAddEdit: true,
-    //     roadtitleNew: '查看应急',
-    //   })
-    // }
+  getismodify = () => { // 保存应急预案添加修改
+    this.reservePlanObjs.list = this.treeChild
+    console.log(this.reservePlanObjs, 'dfdfsss')
+
   }
   handclickAddEdit = () => { // 保存操作11111
     if (this.isreserveplan) {
@@ -349,8 +326,9 @@ class PlancontrolPage extends Component {
           rightsNew: -320,
           childArr: [],
           childArrList: [],
-          isaddlistTreeL: false,
           socketChild: [],
+          isaddlistTreeLi: false,
+          isaddlistTree: false,
         })
         this.roadCircle(this.childArr)
       }
@@ -597,7 +575,7 @@ class PlancontrolPage extends Component {
         };
         el.addEventListener('click', function (e) {
           // 点击获取当前点位所有锁定编号
-          console.log(currentThis.addRoad, currentThis.isreserveplan, currentThis.childArr, currentThis.childArrList, '435qiaossss')
+          // console.log(currentThis.addRoad, currentThis.isreserveplan, currentThis.childArr, currentThis.childArrList, '435qiaossss')
           if (currentThis.addRoad) {
             if (!$('#marker' + item.id).hasClass('markers')) {
               if (currentThis.isreserveplan) { // 为特勤预案添加
@@ -644,27 +622,27 @@ class PlancontrolPage extends Component {
                 }
                 currentThis.drawLine(arrList)
                 currentThis.getphase(item) // 选择需求阶段
-              } else { // 应急预案添加
+              } else { // 应急预案添加 qiao1
                 $('#marker' + item.id).addClass('markers')
-                console.log(item, 'ddddss')
                 let objser = {
                   "area_contingency_id": "",
-                  "contingenct_type": 0,
+                  "contingenct_type": 1, // 2 阶段锁定
                   "contingency_type_value": "",
-                  "cyclelen": 0,
+                  "cyclelen": 0, // 周期
                   "id": "",
                   "listArr": [],
-                  "unit_id": ""
+                  "unit_id": "",
                 }
                 objser.unit_id = item.id
                 currentThis.treeChild.push(objser)
                 currentThis.treeChildItem.push(item)
+                currentThis.getphase(item) // 添加所有相位
                 currentThis.setState({
                   treeChild: currentThis.treeChild,
                 })
               }
             } else {
-              if (currentThis.isreserveplan) { // 为特勤预案添加
+              if (currentThis.isreserveplan) { // 为活动预案修改相位阶段 
                 const eventL = currentThis.childArr.find(itemR => itemR.unit_id === item.id)
                 // console.log(item, currentThis.childArr,eventL, '为特勤预案添加')
                 currentThis.shows = false
@@ -690,12 +668,31 @@ class PlancontrolPage extends Component {
       })
     }
   }
-  getphase = (item) => { // 获取阶段地图弹窗
+  getphase = (item) => { // 获取阶段地图弹窗 qiao1
     axiosInstance.post(`${this.getUnitStageAll}?id=${1000084}`).then(res => { // 模拟固定
       const { code, list } = res.data
       if (code === '1') {
-        this.paseListAll = list
-        this.addInfoWindow(item, list)
+        if (this.isreserveplan) { //活动预案
+          this.paseListAll = list
+          this.addInfoWindow(item, list)
+        } else { // 应急预案
+          console.log(list)
+          let arrAll = []
+          list.forEach(item => {
+            let objser = {
+              "area_contingency_unit_id": "",
+              "id": "",
+              "stage_id": "",
+              "stage_order": 0,
+              "stage_plan_id": "",
+              "stage_time": 0
+            }
+          })
+
+          const ind = this.treeChild.findIndex(items => items.unit_id === item.id)
+          console.log(this.treeChild, ind, item, 'ddddddddddds')
+          this.treeChild[ind].listArr = list
+        }
       }
     })
   }
@@ -784,27 +781,27 @@ class PlancontrolPage extends Component {
     })
     this.drawLine(arrList, this.childArr)
   }
-  changeLoadRouteDirectionTwo = (events, num) => { // 应急预案修改
-    if (num) { //下拉
-      const { Indx, names, } = num
-      this.treeChild[Indx].contingenct_type = events
-      this.treeChild[Indx].contingency_type_value = names
-      if (events == 1) {
-        const objs = {
-          area_contingency_id: '', //所属应急区域路口ID
-          id: '',
-          stage_id: '', //阶段编号
-          stage_order: '',// 阶段序号
-          stage_plan_id: '', //相序方案号
-          stage_time: '', //阶段时间
-        }
-      }
-    } else { // input输入框
-      const { value } = events.target
-      const Indx = events.target.getAttribute('Indx')
-      this.treeChild[Indx].cyclelen = value
-    }
-  }
+  // changeLoadRouteDirectionTwo = (events, num) => { // 应急预案修改
+  //   if (num) { //下拉
+  //     const { Indx, names, } = num
+  //     this.treeChild[Indx].contingenct_type = events
+  //     this.treeChild[Indx].contingency_type_value = names
+  //     if (events == 1) {
+  //       const objs = {
+  //         area_contingency_id: '', //所属应急区域路口ID
+  //         id: '',
+  //         stage_id: '', //阶段编号
+  //         stage_order: '',// 阶段序号
+  //         stage_plan_id: '', //相序方案号
+  //         stage_time: '', //阶段时间
+  //       }
+  //     }
+  //   } else { // input输入框
+  //     const { value } = events.target
+  //     const Indx = events.target.getAttribute('Indx')
+  //     this.treeChild[Indx].cyclelen = value
+  //   }
+  // }
   changeLoadRouteDirection = (e, options, ind) => { // 添加修改input selecct
     // console.log(e, options, ind, typeof (options), 'dfdsfdsfds')
     if (typeof (options) === 'object') {
@@ -872,42 +869,6 @@ class PlancontrolPage extends Component {
   //     this.addWin()
   //   }
   // }
-  phaseChange = () => {
-    var popupOption = {
-      closeOnClick: false,
-      closeButton: true,
-      anchor: "bottom-left",
-      offset: [-25, 350]
-    }
-    // <img width="36px" height="36px" src="${}" />
-    const popup = new window.mapabcgl.Popup(popupOption)
-      .setLngLat(new window.mapabcgl.LngLat(116.38384768997417, 39.92253455638905))
-      .setHTML(`<div style="width: 125px;height: 335px;background-color: rgba(21,42,149, 0.5);">
-      <div style="height: 50px;">
-        <div style="color: #4f6db6;height: 20px;text-align: right;">
-          方案运行
-        </div>
-        <div style="height: 30px;line-height: 30px;text-align: center;">
-          阶段锁定
-        </div>
-      </div>
-      <div style="height: 285px;display: flex;flex-wrap: wrap;" className={styles.phaseMessageBox}>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src="${yellowPag}" alt="" /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src="${redPag}" alt="" /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src="${phase1}" alt="" /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;">3</li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src="${phase3}" alt="" /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><InputNumber min={1} max={10} defaultValue="3" /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src="${phase4}" alt="" /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><InputNumber min={1} max={10} defaultValue="3" /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src="${phase11}" alt="" /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><InputNumber min={1} max={10} defaultValue="3" /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><img style="width: 90%;height: 100%;" src="${phase2}" alt="" /></li>
-        <li style="width: 60px;height: 40px;display: flex;align-items: center;justify-content: center;"><InputNumber min={1} max={10} defaultValue="3" /></li>
-      </div>
-    </div>`)
-      .addTo(this.map);
-  }
   // gettitletops = (isShow) => {
   //   this.setState({
   //     Istitletops: isShow,
@@ -1172,22 +1133,16 @@ class PlancontrolPage extends Component {
     })
     // }
   }
-  socketShow = () => { // 实时推送socket
-    // return (
-    //   <Websocket
-    //     url='ws://192.168.1.22:20194/engine-monitor/webSocket/1000084' onMessage={this.webSocketData}/>
-    // )
-  }
   webSocketData = (e) => {
     const { socketChild } = this.state
-    const { stageTimeS, stage_code } =JSON.parse(e) 
-    console.log(socketChild, stageTimeS, stage_code, e, '实时数据')
+    const { stageTimeS, stage_code } = JSON.parse(e)
+    // console.log(socketChild, stageTimeS, stage_code, e, '实时数据')
     const stageTimeSind = stageTimeS.find(item => item.stage_id == stage_code)
-    let [...socketChildList] = socketChild
-    socketChildList.forEach(item => {
+    let arrs = JSON.parse(JSON.stringify(socketChild))
+    arrs.forEach(item => {
       item.stage_image = stageTimeSind.stage_image
     })
-    this.addWin(socketChildList)
+    this.addWin(arrs)
 
   }
   handleShowInterConf = (item) => { // 点击回显编辑 1111111
@@ -1229,7 +1184,6 @@ class PlancontrolPage extends Component {
           arrchild[0] = item.longitude
           arrchild[1] = item.latitude
           arrList.push(arrchild)
-          this.socketShow(item.id)
           // $('#marker' + item.id).on('click', () => {
           //   this.shows = false
           //   if (this.handleShow && this.addRoad) {
@@ -1367,7 +1321,7 @@ class PlancontrolPage extends Component {
       socketChild: [],
     })
   }
-  addItem = () => { // 点击保存左侧列表增加一列  99999
+  addItem = () => { // 点击保存左侧列表增加一列  99999 qiao1
     this.IsleShow = true
     if (this.isreserveplan) {
       this.handclickAddEditObjs = {
@@ -1383,7 +1337,7 @@ class PlancontrolPage extends Component {
         "id": '',
         "list": []
       }
-      this.addRoad = true
+      this.addRoad = true // 地图点位能够选中
       this.isreserveplan = true
       this.childArr = []
       this.setState({
@@ -1398,6 +1352,28 @@ class PlancontrolPage extends Component {
         plan_name: this.state.planname,
         childArr: [],
         treeListChild: []
+      })
+    } else {
+      this.reservePlanObjs = { // qiao1
+        "area_id": "",
+        "detail": "",
+        "id": "",
+        "list": [],
+        "make_time": "",
+        "make_user": 1,
+        "plan_name": "",
+        "task_state": 1
+      }
+      this.addRoad = true
+      this.isreserveplan = false
+      this.setState({
+        rightsNew: -320,
+        rights: 0,
+        ismodify: true,
+        isAddEdit: false,
+        ismodifyNew: true,
+        isAddEditNew: false,
+        roadtitle: '新增应急',
       })
     }
   }
@@ -1458,7 +1434,7 @@ class PlancontrolPage extends Component {
               {
                 ismodify ?
                   <div className={styles.operationLine}>
-                    <span onClick={() => this.deleteList()} >删除</span><span onClick={() => this.getismodify('edit')}>编辑</span>
+                    <span onClick={() => this.deleteList()} >取消</span><span onClick={() => this.getismodify('edit')}>保存</span>
                   </div>
                   :
                   <div className={styles.operationLine}>
@@ -1485,17 +1461,15 @@ class PlancontrolPage extends Component {
                   {/* <p><span>描述：</span><input onChange={this.changeLoadRouteDirection} value={detail} intername='detail' type="text" className={styles.inputBox} placeholder="描述" /></p> */}
                   <div className={styles.lineBox}>
                     <div className={styles.lineBoxRight}>
-                      {
+                      {/* {
                         treeChild && treeChild.map((item, num) =>
                           <div key={num}>
                             <span></span>
                             <div className={styles.linboxer}>
-                              {/* <p><span>关联路口：</span><input onChange={this.changeLoadRouteDirectionTwo} defaultValue={unit_id} intername='unit_id' type="text" className={styles.inputBox} placeholder="关联路口" /></p> */}
                               <p><span>配时周期：</span><input Indx={num} onChange={this.changeLoadRouteDirectionTwo} defaultValue={cyclelen} intername='cyclelen' type="text" className={styles.inputBox} placeholder="配时周期" /></p>
                               <div className={styles.boxStyle}>
                                 <span>应急方式：</span>
                                 <Select
-                                  // defaultValue="海淀区"
                                   defaultValue={emergencyMode}
                                   style={{ width: 160, height: 30 }}
                                   onChange={this.changeLoadRouteDirectionTwo}
@@ -1516,7 +1490,7 @@ class PlancontrolPage extends Component {
                             </div>
                           </div>
                         )
-                      }
+                      } */}
 
 
                       {/* {
@@ -1567,7 +1541,7 @@ class PlancontrolPage extends Component {
                       {/* {
                       treeListChild && treeListChild.map((item, index) => */}
                       <div className={styles.lineBoxer_item}>
-                        <span ></span>
+                        {/* <span ></span> */}
                         <div className={styles.streetBox}>
                           <div className={styles.streetTitleBox}>
                             <div>西安长街-金融街</div>
@@ -1575,9 +1549,7 @@ class PlancontrolPage extends Component {
                           </div>
                           <div className={styles.intersectionBox}>
                             <div className={styles.mountingThead}>
-                              <span>阶段绑定</span>
-                              <span>临时方案</span>
-                              <span>默认方案</span>
+                              <li><span>阶段锁定</span><span>临时方案</span></li>
                               <div>周期：50秒</div>
                             </div>
                             <div className={styles.mountingTh}>
@@ -1616,144 +1588,23 @@ class PlancontrolPage extends Component {
                                   <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
                                 </div>
                               </div>
-
                               <div className={styles.phaseTime}>
                                 <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
                                 <div className={`${styles.phaseinner} ${styles.times}`}>
                                   <span>40</span>
                                   <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
                                 </div>
+                              </div>
+                              <div className={styles.phaseinner}>
+                                <img src={allRed} alt="" />
+                              </div>
+                              <div className={styles.phaseinner}>
+                                <img src={llY} alt="" />
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div className={styles.lineBoxer_item}>
-                        <span ></span>
-                        <div className={styles.streetBox}>
-                          <div className={styles.streetTitleBox}>
-                            <div>西安长街-金融街</div>
-                            <div><span>模式：</span>中心控制</div>
-                          </div>
-                          <div className={styles.intersectionBox}>
-                            <div className={styles.mountingThead}>
-                              <span>阶段绑定</span>
-                              <span>临时方案</span>
-                              <span>默认方案</span>
-                              <div>周期：50秒</div>
-                            </div>
-                            <div className={styles.mountingTh}>
-                              <div className={styles.phaseTime}>
-                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
-                                <div className={`${styles.phaseinner} ${styles.times}`}>
-                                  <span>40</span>
-                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
-                                </div>
-                              </div>
-                              <div className={styles.phaseTime}>
-                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
-                                <div className={`${styles.phaseinner} ${styles.times}`}>
-                                  <span>40</span>
-                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
-                                </div>
-                              </div>
-                              <div className={styles.phaseTime}>
-                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
-                                <div className={`${styles.phaseinner} ${styles.times}`}>
-                                  <span>40</span>
-                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
-                                </div>
-                              </div>
-                              <div className={styles.phaseTime}>
-                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
-                                <div className={`${styles.phaseinner} ${styles.times}`}>
-                                  <span>40</span>
-                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
-                                </div>
-                              </div>
-                              <div className={styles.phaseTime}>
-                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
-                                <div className={`${styles.phaseinner} ${styles.times}`}>
-                                  <span>40</span>
-                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
-                                </div>
-                              </div>
-
-                              <div className={styles.phaseTime}>
-                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
-                                <div className={`${styles.phaseinner} ${styles.times}`}>
-                                  <span>40</span>
-                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div >
-                      </div >
-                      <div className={styles.lineBoxer_item}>
-                        <span ></span>
-                        <div className={styles.streetBox}>
-                          <div className={styles.streetTitleBox}>
-                            <div>西安长街-金融街</div>
-                            <div><span>模式：</span>中心控制</div>
-                          </div>
-                          <div className={styles.intersectionBox}>
-                            <div className={styles.mountingThead}>
-                              <span>阶段绑定</span>
-                              <span>临时方案</span>
-                              <span>默认方案</span>
-                              <div>周期：50秒</div>
-                            </div>
-                            <div className={styles.mountingTh}>
-                              <div className={styles.phaseTime}>
-                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
-                                <div className={`${styles.phaseinner} ${styles.times}`}>
-                                  <span>40</span>
-                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
-                                </div>
-                              </div>
-                              <div className={styles.phaseTime}>
-                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
-                                <div className={`${styles.phaseinner} ${styles.times}`}>
-                                  <span>40</span>
-                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
-                                </div>
-                              </div>
-                              <div className={styles.phaseTime}>
-                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
-                                <div className={`${styles.phaseinner} ${styles.times}`}>
-                                  <span>40</span>
-                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
-                                </div>
-                              </div>
-                              <div className={styles.phaseTime}>
-                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
-                                <div className={`${styles.phaseinner} ${styles.times}`}>
-                                  <span>40</span>
-                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
-                                </div>
-                              </div>
-                              <div className={styles.phaseTime}>
-                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
-                                <div className={`${styles.phaseinner} ${styles.times}`}>
-                                  <span>40</span>
-                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
-                                </div>
-                              </div>
-
-                              <div className={styles.phaseTime}>
-                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
-                                <div className={`${styles.phaseinner} ${styles.times}`}>
-                                  <span>40</span>
-                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div >
-                      </div >
-                      {/* )
-                    } */}
                     </div >
                   </div >
                 </div >
@@ -1826,7 +1677,7 @@ class PlancontrolPage extends Component {
                   </div>
                   :
                   <div className={styles.operationLine}>
-                    <span onClick={this.handclickAddEdit}>保存</span><span onClick={this.noneAddRoad}>取消</span>
+                    {/* <span onClick={this.handclickAddEdit}>保存</span><span onClick={this.noneAddRoad}>取消</span> */}
                   </div>
               }
             </div>

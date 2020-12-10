@@ -38,6 +38,12 @@
                     width: 100px;
                     text-align: center;
                 }
+                .selectLength{
+                    width: 150px;
+                    input{
+                        display: none;
+                    }
+                }
                 .editBtn {
                     margin: 0 5px;
                     cursor: pointer;
@@ -47,7 +53,7 @@
                     display: inline-block;
                     height: 40px;
                     line-height: 35px;
-                    font-size: 35px;
+                    font-size: 15px;
                     color: #3C5F79;
                 }
                 .ant-select-selector {

@@ -9,10 +9,10 @@ class PhaseMsg extends Component {
     super(props)
     this.state = {
       interInfoList: null,  //字典数据
-      interPhaseList: null,   //列表数据
-      interMoveList: null,  //空
-      dirPhaseSelectIden: null,
-      interDirDisplay: false
+      interPhaseList: null,  //列表数据
+      dirPhaseSelectIden: null, //下拉数据
+      interDirDisplay: false,
+      editIndex: null,
     }
     this.interId = this.props.interId
     this.phaseno=null
@@ -24,6 +24,7 @@ class PhaseMsg extends Component {
     this.allred=null
     this.peddirlist=null
     this.lanenolist=null
+    this.phase_image=null
     this.dirInfoList="/control-application-front/basic/info/listCodeByCodeType"
     this.dirPhaseList=`/control-application-front/signal/config/phase/listPhaseInfo?unitId=${this.interId}`
     this.dirPhaseSave="/control-application-front/signal/config/phase/savePhaseInfo"
@@ -62,7 +63,7 @@ class PhaseMsg extends Component {
   getInterDirPhaseList = () => {
     axiosInstance.get(this.dirPhaseList).then((res) => {
       const { code, data } = res.data
-      // console.log(data,"liebiaoData")
+      console.log(data,"liebiaoData")
       if (code === 200 && data) {
         this.setState({ interPhaseList: data })
       } else {
@@ -84,6 +85,10 @@ class PhaseMsg extends Component {
   }
   //添加
   bindDirPhase=()=>{
+    const { interPhaseList } =this.state;
+    const listLen = interPhaseList ? interPhaseList.length : 0
+    const defaultNo = listLen > 0 ? interPhaseList[listLen - 1].phaseno + 1 : 1
+    interPhaseList.phaseno=defaultNo
     this.setState({interDirDisplay:true})
     this.getInterDirSelectIden()
   }
@@ -102,11 +107,12 @@ class PhaseMsg extends Component {
       id: null,
       lanenolist: this.lanenolist,
       peddirlist: this.peddirlist, //所属车道
+      phase_image: this.phase_image,
       phasename: this.phasename,
       phaseno: this.phaseno,
       redyellow: this.redyellow,
       unitId: this.interId,
-      yellow: this.yellow
+      yellow: this.yellow,
     }
     if(this.phasename!==null && this.phaseno!==null){
       axiosInstance.post(this.dirPhaseSave,transmitPara).then(res=>{
@@ -141,6 +147,14 @@ class PhaseMsg extends Component {
       },
     })
   }
+  //编辑
+  handleEdit=(e)=>{
+    const indexs = parseInt(e.target.getAttribute('indexs'))
+    this.saveParams = this.state.interPhaseList[indexs]
+    this.setState({ editIndex: indexs })
+    this.getInterDirSelectIden()
+    this.getInterDirInfoList()
+  }
   onInterInfoList=(value)=>{
     let newValue=value.join()
     this.peddirlist=newValue
@@ -149,15 +163,19 @@ class PhaseMsg extends Component {
     let newValue=value.join()
     this.lanenolist=newValue
   }
+  bindRemoveParse=()=>{
+    this.setState({ editIndex: null })
+  }
   render() {
-    const { interPhaseList ,interDirDisplay, interInfoList ,dirPhaseSelectIden} =this.state;
+    const { interPhaseList ,interDirDisplay, interInfoList ,dirPhaseSelectIden ,editIndex} =this.state;
     return (
       <div className="paramsTable">
         <span className="addBtn" onClick={this.bindDirPhase}>新增相位</span>
         <div className="paramsThead">
           <div className="paramsTh">相位序号</div>
           <div className="paramsTh">相位名称</div>
-          <div className="paramsTh">相位标识</div>
+          <div className="paramsTh">关联车道</div>
+          <div className="paramsTh">相位图标</div>
           <div className="paramsTh">放行人行道方向</div>
           <div className="paramsTh">最大率</div>
           <div className="paramsTh">最小率</div>
@@ -169,23 +187,52 @@ class PhaseMsg extends Component {
         <div className="paramsTbody">
           {
             interPhaseList&&
-            interPhaseList.map(item=>{
+            interPhaseList.map((item,index)=>{
               let img=item.ui_image_name;
               let imgPreFix=localStorage.getItem("ImgUrl");
               return (
                 <div className="paramsTr" key={item.id}>
-                    <div className="paramsTd">{item.phaseno}</div>
-                    <div className="paramsTd">{item.phasename}</div>
-                    <div className="paramsTd"><img src={`${imgPreFix}${img ? img.split(",")[0]: null}`} width="17px" height="35px" alt="" /></div>
-                    <div className="paramsTd">{this.getInterDirInfoListProperty(item.peddirlist)}</div>
-                    <div className="paramsTd">{item.greenmax}</div>
-                    <div className="paramsTd">{item.greenmin}</div>
-                    <div className="paramsTd">{item.redyellow}</div>
-                    <div className="paramsTd">{item.yellow}</div>
-                    <div className="paramsTd">{item.allred}</div>
+                    <div className="paramsTd">{editIndex===index? <input type="text" onChange={e=>this.phaseno=e.target.value} defaultValue={item.phaseno}/> : <span>{item.phaseno}</span>}</div>
+                    <div className="paramsTd">{editIndex===index? <input type="text" onChange={e=>this.phasename=e.target.value} defaultValue={item.phasename}/> : <span>{item.phasename}</span>}</div>
                     <div className="paramsTd">
-                      <span className="editBtn">编辑</span>
-                      <span className="editBtn" id={item.id} onClick={this.handleDelete}>删除</span>
+                      {editIndex===index?  <Select defaultValue={<img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt="" maxHeight="28px"/>} mode="tags" onChange={this.onDirPhaseSelectIden} className="selectLength">
+                      {
+                        dirPhaseSelectIden && dirPhaseSelectIden.map(item=>{
+                          return (
+                            <Option key={item.laneno}  style={{height:"35px"}}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt="" maxHeight="28px"/></Option>
+                          )
+                        })
+                      }
+                    </Select>: <img src={`${imgPreFix}${img ? img.split(",")[0]: null}`} height="35px" alt="" />}  
+                    </div>      
+                    <div className="paramsTd">{editIndex===index?  <Select defaultValue={<img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt="" maxHeight="28px"/>} onChange={this.onDirPhaseSelectIden}>
+                      {
+                        dirPhaseSelectIden && dirPhaseSelectIden.map(item=>{
+                          return (
+                            <Option key={item.laneno} style={{height:"47px"}}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt="" maxHeight="28px"/></Option>
+                          )
+                        })
+                      }
+                    </Select>: <span>{item.phase_image}</span>}</div>
+                    <div className="paramsTd">
+                      {editIndex===index?  <Select defaultValue={this.getInterDirInfoListProperty(item.peddirlist)} mode="tags" onChange={this.onDirPhaseSelectIden} className="selectLength">
+                      {
+                        interInfoList && interInfoList.map(item=>{
+                          return (
+                            <Option key={item.cCode} value={item.codeName} style={{height:"35px"}}>{item.peddirlist}</Option>
+                          )
+                        })
+                      }
+                    </Select>: <span>{this.getInterDirInfoListProperty(item.peddirlist)}</span>} 
+                    </div>
+                    <div className="paramsTd">{editIndex===index? <input type="text" onChange={e=>this.greenmax=e.target.value} defaultValue={item.greenmax}/> : <span>{item.greenmax}</span>}</div>
+                    <div className="paramsTd">{editIndex===index? <input type="text" onChange={e=>this.greenmin=e.target.value} defaultValue={item.greenmin}/> : <span>{item.greenmin}</span>}</div>
+                    <div className="paramsTd">{editIndex===index? <input type="text" onChange={e=>this.redyellow=e.target.value} defaultValue={item.redyellow}/> : <span>{item.redyellow}</span>}</div>
+                    <div className="paramsTd">{editIndex===index? <input type="text" onChange={e=>this.yellow=e.target.value} defaultValue={item.yellow}/> : <span>{item.yellow}</span>}</div>
+                    <div className="paramsTd">{editIndex===index? <input type="text" onChange={e=>this.allred=e.target.value} defaultValue={item.allred}/> : <span>{item.allred}</span>}</div>
+                    <div className="paramsTd">
+                      { editIndex===index ? <span className="editBtn" onClick={this.bindSaveParse}>保存</span> : <span className="editBtn" onClick={this.handleEdit} indexs={index}>编辑</span>}
+                      { editIndex===index ? <span className="editBtn" onClick={this.bindRemoveParse}>取消</span> : <span className="editBtn" id={item.id} onClick={this.handleDelete}>删除</span>}
                     </div>
                 </div>
               )
@@ -194,21 +241,32 @@ class PhaseMsg extends Component {
           {
             interDirDisplay&&
                   <div className="paramsTr">
-                  <div className="paramsTd"><input type="text" onChange={e=>this.phaseno=e.target.value}/></div>
+                  <div className="paramsTd"><input type="text" onChange={e=>this.phaseno=e.target.value} defaultValue={interPhaseList.phaseno}/></div>
                   <div className="paramsTd"><input type="text" onChange={e=>this.phasename=e.target.value}/></div>
                   <div className="paramsTd">
-                    <Select defaultValue="请选择" mode="multiple" onChange={this.onDirPhaseSelectIden}>
+                    <Select mode="tags" onChange={this.onDirPhaseSelectIden} className="selectLength" placeholder="请选择">
                       {
                         dirPhaseSelectIden && dirPhaseSelectIden.map(item=>{
                           return (
-                            <Option key={item.laneno} vlaue={item.laneno}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt="" height="30px"/></Option>
+                            <Option key={item.laneno} vlaue={item.laneno} style={{height:"35px",textAlign:"center"}}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt=""/></Option>
                           )
                         })
                       }
                     </Select>
                   </div>
                   <div className="paramsTd">
-                    <Select defaultValue="东" onChange={this.onInterInfoList} mode="multiple">
+                    <Select defaultValue="请选择" onChange={this.onDirPhaseSelectIden}>
+                      {
+                        dirPhaseSelectIden && dirPhaseSelectIden.map(item=>{
+                          return (
+                            <Option key={item.laneno} vlaue={item.laneno} style={{height:"35px"}}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt="" style={{verticalAlign: "middle",maxHeight:"100%",maxWidth:"100%"}}/></Option>
+                          )
+                        })
+                      }
+                    </Select>
+                  </div>
+                  <div className="paramsTd">
+                    <Select onChange={this.onInterInfoList} mode="tags" className="selectLength" placeholder="请选择">
                       {
                         interInfoList && interInfoList.map(item=>{
                           return (
@@ -228,8 +286,8 @@ class PhaseMsg extends Component {
                   <div className="paramsTd"><input type="text" onChange={e=>this.yellow=e.target.value}/></div>
                   <div className="paramsTd"><input type="text" onChange={e=>this.allred=e.target.value}/></div>
                   <div className="paramsTd">
-                    <span className="editBtn" onClick={this.bindCancelParse}>取消</span>
                     <span className="editBtn" onClick={this.bindSaveParse}>保存</span>
+                    <span className="editBtn" onClick={this.bindCancelParse}>取消</span>
                   </div>
                 </div>
           }

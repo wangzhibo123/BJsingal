@@ -9,10 +9,7 @@
                     background-color: transparent;
                     border: 1px solid rgba(136, 175, 248, 0.4);
                     border-radius: 4px;
-                    outline: none
-                }
-                .ant-select{
-                    width: 150px;
+                    outline: none;
                 }
                 .ant-select-multiple .ant-select-selection-item {
                     position: relative;
@@ -40,13 +37,52 @@
                     -ms-user-select: none;
                     user-select: none;
                     .demo-option-label-item{
-                        color: #032473 !important;
+                        color: #032473;
                     }
                     .ant-select-selection-item-content{
                         color: #032473;
                     }
                 }
+                .ant-select-selector{
+                    overflow: auto;
+                }
             }
         }
+    }
+}
+.rc-virtual-list{
+    background: linear-gradient(to bottom ,rgba(3, 30, 73,1) ,rgba(0 ,38, 117,1) ,rgba(3, 30, 73,1));
+}
+.ant-select-dropdown {
+    background-color: rgba(3, 30, 73,1);
+}
+.ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+    background-color: rgba(14 ,52 ,133,.55);
+}
+
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+    font-weight: 600;
+    background-color: rgba(0 ,69 ,154,1);
+}
+.demo-option-label-item{
+    color: #fff !important;
+}
+//下拉多选图片  
+.ant-select-item-option-content{
+    text-align: center;
+    line-height: 20px;
+    img{
+        height: 20px;
+    }
+}
+.ant-select-selection-item-content{
+    img{
+        height: 10px;
+    }
+}
+//下拉单选
+.ant-select-selection-item{
+    img{
+        height: 25px;
     }
 }

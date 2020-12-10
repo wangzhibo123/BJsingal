@@ -58,7 +58,7 @@ class ChannelTable extends Component {
   render() {
     const globalImgurl = localStorage.getItem('ImgUrl')
     const { channelList } = this.state
-    return (
+    return (  
       <>
         <div className="confTable">
           <div className="confThead">
