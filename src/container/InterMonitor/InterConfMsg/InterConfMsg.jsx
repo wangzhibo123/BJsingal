@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Upload, message, Modal } from 'antd'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { CloseOutlined } from '@ant-design/icons'
+import { CloseOutlined, FolderFilled, FolderOpenFilled } from '@ant-design/icons'
 import './InterConfMsg.scss'
 
 import BaseMessage from './BaseMessage/BaseMessage'
@@ -47,6 +47,8 @@ class InterConfMsg extends Component {
       editDeviceMsg: false,
       interDeviceList: null,
       currentDeviceList: null,
+      baseMapPicNo: null,
+      currentBasePic: null,
     }
     this.globalImgurl = localStorage.getItem('ImgUrl')
     this.baseConfList = [
@@ -64,6 +66,9 @@ class InterConfMsg extends Component {
       { confName: '配时方案', id: 'timeplan', compos: TimePlan },
       { confName: '日计划', id: 'dayplan', compos: DayPlan },
       { confName: '调度方案', id: 'dispathplan', compos: DispathPlan },
+    ]
+    this.baseMapPics = [
+      { names: '一车道', pname: 'one' }, { names: '二车道', pname: 'two' }, { names: '三车道', pname: 'three' }, { names: '四车道', pname: 'four' }, { names: '五车道', pname: 'five' }
     ]
     this.uploadPic = '/control-application-front/file/upload'
     this.updatePic = '/control-application-front/basic/info/unit/background'
@@ -90,7 +95,10 @@ class InterConfMsg extends Component {
   handleUpdateInterPic = (imgPath) => {
     const savePathParams = { id: this.props.interInfo.id, backgroungImg: imgPath }
     axiosInstance.post(this.updatePic, savePathParams).then((res) => {
-      console.log(res)
+      const { code } = res.data
+      if (code === 200) {
+        this.setState({ interImage: imgPath })
+      }
     })
   }
   // 图元配置信息
@@ -136,7 +144,6 @@ class InterConfMsg extends Component {
       console.log(info.file)
       const { response } = info.file
       if (response.code === 200) {
-        this.setState({ interImage: response.data })
         message.info('上传成功')
         this.handleUpdateInterPic(response.data)
       } else {
@@ -243,8 +250,27 @@ class InterConfMsg extends Component {
   handleCloseEditModal = () => {
     this.setState({ editDeviceMsg: false })
   }
+  // 选择路口底图文件
+  handleCheckBaseMapPic = (e) => {
+    const channelNo = e.currentTarget.getAttribute('pname')
+    if (channelNo === this.state.baseMapPicNo) {
+      this.setState({ baseMapPicNo: null })
+    } else {
+      const { devicePiclist } = this.props.data
+      const allBasePics = devicePiclist['5']
+      const currentBasePic = allBasePics.filter(item => item.uiImageName.indexOf(channelNo) >= 0)
+      this.setState({ baseMapPicNo: channelNo, currentBasePic })
+    }
+  }
+  // 选择路口底图模板
+  handleGetBasePic = (e) => {
+    const imgUrl = e.target.getAttribute('imgurl')
+    this.handleUpdateInterPic(imgUrl)
+  }
   render() {
-    const { isUpload, currentItem, configName, currentParams, laneLists, interInfo, interImage, editDeviceMsg, currentDeviceList } = this.state
+    const { isUpload, currentItem, configName, currentParams, laneLists, interInfo,
+      interImage, editDeviceMsg, currentDeviceList, baseMapPicNo, currentBasePic,
+    } = this.state
     return (
       <div className="interConfMsg">
         <div className="confMsgBox">
@@ -294,7 +320,26 @@ class InterConfMsg extends Component {
               {
                 currentItem === 'canalization' ?
                   <div className="interPicBox">
-                    {/* <div className="">123</div> */}
+                    <div className="baseMapPic">
+                      {
+                        this.baseMapPics.map((item) => (
+                          <div className="folderBox" key={item.names} pname={item.pname} onClick={this.handleCheckBaseMapPic}>
+                            <div className="folderIcon">{ baseMapPicNo === item.pname ? <FolderOpenFilled /> : <FolderFilled /> }</div>
+                            <div className="folderTxt">{item.names}</div>
+                          </div>
+                        ))
+                      }
+                      <div className="baseMapDetails">
+                        {
+                          currentBasePic &&
+                          currentBasePic.map((item) => {
+                            return (
+                              <img key={item.id} src={this.globalImgurl + item.uiImageName} imgurl={item.uiImageName} alt="" height="40px" onClick={this.handleGetBasePic} />
+                            )
+                          })
+                        }
+                      </div>
+                    </div>
                     {
                       isUpload ?
                         <img src={this.globalImgurl + interImage} alt="" width="1200px" height="600px" /> :

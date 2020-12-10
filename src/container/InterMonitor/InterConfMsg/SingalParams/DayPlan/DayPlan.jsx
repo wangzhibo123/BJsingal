@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import moment from 'moment'
-import { message, Select, TimePicker } from 'antd'
+import { message, Select, TimePicker, Modal } from 'antd'
 
 import axiosInstance from '../../../../utils/getInterfaceData'
 
@@ -12,20 +12,27 @@ class DayPlan extends Component {
       listNos: null,
       addPlanInner: null,
       addDayPlan: null,
+      planNoList: null,
+      addNo: null,
+      editMsg: { no: '', id: '' }
     }
     this.interId = this.props.interId
+    this.planNos = `/control-application-front/signal/config/plan/listPlan?unitId=${this.interId}`
     this.listUrl = `/control-application-front/signal/config/dailyPlan/listDailyPlan?unitId=${this.interId}`
-    this.saveParams = {
-      controlmodel: 0,
-      dailyplanno: 0,
-      id: 0,
-      planno: 0,
-      starttime: 'string',
-      unitId: 0,
-    }
+    this.deleteUrl = '/control-application-front/signal/config/dailyPlan/removeDailyPlan'
+    this.saveUrl = '/control-application-front/signal/config/dailyPlan/saveDailyPlan'
   }
   componentDidMount = () => {
     this.getDailyPlanList()
+    this.getPlanNos()
+  }
+  getPlanNos = () => {
+    axiosInstance.get(this.planNos).then((res) => {
+      const { code, data } = res.data
+      if (code === 200) {
+        this.setState({ planNoList: data })
+      }
+    })
   }
   getDailyPlanList = () => {
     axiosInstance.get(this.listUrl).then((res) => {
@@ -41,14 +48,59 @@ class DayPlan extends Component {
       }
     })
   }
+  handleDelete = (e) => {
+    const id = e.target.getAttribute('id')
+    const { confirm } = Modal
+    const selfThis = this
+    confirm({
+      title: '确定要删除吗？',
+      className: 'confirmBox',
+      onOk() {
+        selfThis.handleRemovePlan(id)
+      },
+    })
+  }
+  handleRemovePlan = (id) => {
+    axiosInstance.post(`${this.deleteUrl}?id=${id}`).then((res) => {
+      console.log(res)
+      const { code } = res.data
+      if (code === 200) {
+        this.getDailyPlanList()
+      }
+      message.info(res.data.message)
+    })
+  }
+  // 新增
   handleAddDayPlan = () => {
-    this.setState({ addDayPlan: true })
+    this.saveParams = {
+      controlmodel: 1,
+      dailyplanno: 0,
+      id: 0,
+      planno: 0,
+      starttime: '',
+      unitId: this.interId,
+    }
+    const { listNos } = this.state
+    const len = listNos.length
+    const addNo = len > 0 ? listNos[len - 1] + 1 : 1
+    this.saveParams.dailyplanno = addNo
+    this.setState({ addDayPlan: true, addNo })
   }
   handleCancelDayPlan = () => {
     this.setState({ addDayPlan: false })
   }
+  // 插入
   handleAddPlaninner = (e) => {
+    this.saveParams = {
+      controlmodel: 1,
+      dailyplanno: 0,
+      id: 0,
+      planno: 0,
+      starttime: '',
+      unitId: this.interId,
+    }
     const insertIndex = e.target.getAttribute('indexs')
+    this.saveParams.dailyplanno = insertIndex
     this.setState({ addPlanInner: parseInt(insertIndex) })
   }
   handleCancelPlanInner = () => {
@@ -56,16 +108,50 @@ class DayPlan extends Component {
   }
   handleTimeChange = (options, val, planNo) => {
     const { dayLists } = this.state
-    const childrens = dayLists.filter(items => items.dailyplanno === planNo)
-    const currentTimeList = childrens.map(item => item.starttime)
-    if (currentTimeList.indexOf(val) < 0) {
-      this.saveParams.starttime = val
+    if (planNo) {
+      const childrens = dayLists.filter(items => items.dailyplanno === planNo)
+      const currentTimeList = childrens.map(item => item.starttime)
+      if (currentTimeList.indexOf(val) < 0) {
+        this.saveParams.starttime = val
+      } else {
+        message.warning('时间已存在，请重新选择')
+      }
     } else {
-      message.info('时间已存在，请重新选择')
+      this.saveParams.starttime = val
     }
   }
+  handleParamsChange = (val, options) => {
+    this.saveParams[options.pname] = val
+  }
+  // 保存
+  handleSavePlanInner = () => {
+    axiosInstance.post(this.saveUrl, this.saveParams).then((res) => {
+      const { code } = res.data
+      if (code === 200) {
+        this.handleCancelDayPlan()
+        this.handleCancelEdit()
+        this.handleCancelPlanInner()
+        this.getDailyPlanList()
+      }
+      message.info(res.data.message)
+    })
+  }
+  // 编辑
+  handleEditPlan = (e) => {
+    const planNo = parseInt(e.target.getAttribute('planno'))
+    const id = parseInt(e.target.getAttribute('ids'))
+    this.saveParams = this.state.dayLists.find(item => item.id === id)
+    this.setState({ editMsg: { no: planNo, id } })
+  }
+  handleCancelEdit = () => {
+    this.setState({ editMsg: { no: '', id: '' } })
+  }
+  // 修改编号
+  handleSaveaddNo = (e) => {
+    this.saveParams.dailyplanno = e.target.value
+  }
   render() {
-    const { listNos, dayLists, addPlanInner, addDayPlan } = this.state
+    const { listNos, dayLists, addPlanInner, addDayPlan, planNoList, addNo, editMsg } = this.state
     const timeFormat = 'HH:mm'
     return (
       <div className="paramsTable">
@@ -93,20 +179,64 @@ class DayPlan extends Component {
                       childrens.map((child) => {
                         return (
                           <div className="paramsTr" key={child.id}>
-                            <div className="paramsTd">{child.starttime}</div>
-                            <div className="paramsTd">{child.planno}</div>
-                            <div className="paramsTd">{child.controlmodel === 1 ? '固定' : '感应'}</div>
                             <div className="paramsTd">
-                              <span className="editBtn">编辑</span>
-                              <span className="editBtn" indexs={index} onClick={this.handleAddPlaninner}>插入</span>
-                              <span className="editBtn">删除</span>
+                              {
+                                (editMsg.no === item && editMsg.id === child.id) ?
+                                <TimePicker
+                                  className="planTime"
+                                  format={timeFormat}
+                                  allowClear={false}
+                                  defaultValue={moment(child.starttime, timeFormat)}
+                                  onChange={(options, val) => { this.handleTimeChange(options, val, item) }}
+                                /> :
+                                child.starttime
+                              }
+                            </div>
+                            <div className="paramsTd">
+                              {
+                                (editMsg.no === item && editMsg.id === child.id) ?
+                                <Select defaultValue={child.planno} onChange={this.handleParamsChange}>
+                                  <Option key="0" value="0">请选择</Option>
+                                  {
+                                    planNoList &&
+                                    planNoList.map((item) => (
+                                      <Option key={item.cfgPlan.planno} value={item.cfgPlan.planno} pname="planno">{item.cfgPlan.planno}</Option>
+                                    ))
+                                  }
+                                </Select> :
+                                child.planno
+                              }
+                            </div>
+                            <div className="paramsTd">
+                              {
+                                (editMsg.no === item && editMsg.id === child.id) ?
+                                <Select defaultValue={child.controlmodel} onChange={this.handleParamsChange}>
+                                  <Option key={1} value={1} pname="controlmodel">固定</Option>
+                                  <Option key={2} value={2} pname="controlmodel">感应</Option>
+                                </Select> :
+                                child.controlmodel === 1 ? '固定' : '感应'
+                              }
+                            </div>
+                            <div className="paramsTd">
+                              {
+                                (editMsg.no === item && editMsg.id === child.id) ?
+                                <>
+                                  <span className="editBtn" onClick={this.handleSavePlanInner}>保存</span>
+                                  <span className="editBtn" planno={item} ids={child.id} onClick={this.handleCancelEdit}>取消</span>
+                                </> :
+                                <>
+                                  <span className="editBtn" planno={item} ids={child.id} onClick={this.handleEditPlan}>编辑</span>
+                                  <span className="editBtn" indexs={item} onClick={this.handleAddPlaninner}>插入</span>
+                                  <span className="editBtn" onClick={this.handleDelete} id={child.id}>删除</span>
+                                </>
+                              }
                             </div>
                           </div>
                         )
                       })
                     }
                     {
-                      addPlanInner === index &&
+                      addPlanInner === item &&
                       <div className="paramsTr">
                         <div className="paramsTd">
                           <TimePicker
@@ -117,15 +247,20 @@ class DayPlan extends Component {
                           />
                         </div>
                         <div className="paramsTd">
-                          <Select defaultValue="0">
-                            <Option key="0" vlaue="0">请选择</Option>
-                            <Option key="1" vlaue="1">1</Option>
+                          <Select defaultValue="0" onChange={this.handleParamsChange}>
+                            <Option key="0" value="0">请选择</Option>
+                            {
+                              planNoList &&
+                              planNoList.map((item) => (
+                                <Option key={item.cfgPlan.planno} value={item.cfgPlan.planno} pname="planno">{item.cfgPlan.planno}</Option>
+                              ))
+                            }
                           </Select>
                         </div>
                         <div className="paramsTd">
-                          <Select defaultValue="0">
-                            <Option key="0" vlaue="0">请选择</Option>
-                            <Option key="1" vlaue="1">1</Option>
+                          <Select defaultValue="1" onChange={this.handleParamsChange}>
+                            <Option key="1" value="1" pname="controlmodel">固定</Option>
+                            <Option key="2" value="2" pname="controlmodel">感应</Option>
                           </Select>
                         </div>
                         <div className="paramsTd">
@@ -142,29 +277,38 @@ class DayPlan extends Component {
           {
             addDayPlan &&
             <div className="paramsTrBox">
-              <div className="dayPlanNo">2</div>
+              <div className="dayPlanNo">
+                <input className="dayPlanno" type="text" defaultValue={addNo} onChange={this.handleSaveaddNo} />
+              </div>
               <div className="paramsTrItem">
                 <div className="paramsTr">
                   <div className="paramsTd">
-                    <Select defaultValue="0">
-                      <Option key="0" vlaue="0">请选择</Option>
-                      <Option key="1" vlaue="1">1</Option>
+                    <TimePicker
+                      className="planTime"
+                      format={timeFormat}
+                      allowClear={false}
+                      onChange={(options, val) => { this.handleTimeChange(options, val) }}
+                    />
+                  </div>
+                  <div className="paramsTd">
+                    <Select defaultValue="0" onChange={this.handleParamsChange}>
+                      <Option key="0" value="0">请选择</Option>
+                      {
+                        planNoList &&
+                        planNoList.map((item) => (
+                          <Option key={item.cfgPlan.planno} value={item.cfgPlan.planno} pname="planno">{item.cfgPlan.planno}</Option>
+                        ))
+                      }
                     </Select>
                   </div>
                   <div className="paramsTd">
-                    <Select defaultValue="0">
-                      <Option key="0" vlaue="0">请选择</Option>
-                      <Option key="1" vlaue="1">1</Option>
+                    <Select defaultValue="1" onChange={this.handleParamsChange}>
+                      <Option key="1" value="1" pname="controlmodel">固定</Option>
+                      <Option key="2" value="2" pname="controlmodel">感应</Option>
                     </Select>
                   </div>
                   <div className="paramsTd">
-                    <Select defaultValue="0">
-                      <Option key="0" vlaue="0">请选择</Option>
-                      <Option key="1" vlaue="1">1</Option>
-                    </Select>
-                  </div>
-                  <div className="paramsTd">
-                    <span className="editBtn">保存</span>
+                    <span className="editBtn" onClick={this.handleSavePlanInner}>保存</span>
                     <span className="editBtn" onClick={this.handleCancelDayPlan}>取消</span>
                   </div>
                 </div>
