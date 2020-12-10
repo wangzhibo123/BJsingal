@@ -199,7 +199,7 @@ class PhaseMsg extends Component {
                       {
                         dirPhaseSelectIden && dirPhaseSelectIden.map(item=>{
                           return (
-                            <Option key={item.laneno}  style={{height:"57px"}}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt="" maxHeight="28px"/></Option>
+                            <Option key={item.laneno}  style={{height:"35px"}}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt="" maxHeight="28px"/></Option>
                           )
                         })
                       }
@@ -219,7 +219,7 @@ class PhaseMsg extends Component {
                       {
                         interInfoList && interInfoList.map(item=>{
                           return (
-                            <Option key={item.cCode} value={item.codeName} style={{height:"57px"}}>{item.peddirlist}</Option>
+                            <Option key={item.cCode} value={item.codeName} style={{height:"35px"}}>{item.peddirlist}</Option>
                           )
                         })
                       }
@@ -248,7 +248,7 @@ class PhaseMsg extends Component {
                       {
                         dirPhaseSelectIden && dirPhaseSelectIden.map(item=>{
                           return (
-                            <Option key={item.laneno} vlaue={item.laneno} style={{height:"57px",textAlign:"center"}}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt=""/></Option>
+                            <Option key={item.laneno} vlaue={item.laneno} style={{height:"35px",textAlign:"center"}}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt=""/></Option>
                           )
                         })
                       }
@@ -259,7 +259,7 @@ class PhaseMsg extends Component {
                       {
                         dirPhaseSelectIden && dirPhaseSelectIden.map(item=>{
                           return (
-                            <Option key={item.laneno} vlaue={item.laneno} style={{height:"50px"}}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt="" style={{verticalAlign: "middle",maxHeight:"100%",maxWidth:"100%"}}/></Option>
+                            <Option key={item.laneno} vlaue={item.laneno} style={{height:"35px"}}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt="" style={{verticalAlign: "middle",maxHeight:"100%",maxWidth:"100%"}}/></Option>
                           )
                         })
                       }
