@@ -294,6 +294,7 @@ class InterConfMsg extends Component {
               {
                 currentItem === 'canalization' ?
                   <div className="interPicBox">
+                    {/* <div className="">123</div> */}
                     {
                       isUpload ?
                         <img src={this.globalImgurl + interImage} alt="" width="1200px" height="600px" /> :

@@ -366,11 +366,21 @@
     }
 }
 .ant-select-dropdown {
-    background-color: rgba(136, 175, 248, 0.4);
+    background-color: transparent;
+    background-image: linear-gradient(to bottom, #031c44, #002678, #031c44);
+    border: 1px solid rgba(62,112,255,.2)
 }
 .ant-select-item {
     color: #fff;
 }
+
 .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
-    background-color: rgba(136, 175, 248, 0.8);
+    background-color: transparent;
+}
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+    background-color: rgba(0, 71, 157, 0.9);
+    color: #40e7ff;
+}
+.ant-select-item:hover {
+    background-color: rgba(136,175,248,.2);
 }

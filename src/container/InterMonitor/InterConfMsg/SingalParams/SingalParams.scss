@@ -26,6 +26,14 @@
                     left: 50%;
                     transform: translate(-50%, -50%);
                 }
+                .planTime {
+                    background-color: transparent;
+                    border: none;
+                    box-shadow: none;
+                    .ant-picker-input > input {
+                        color: #fff;
+                    }
+                }
                 .addNo {
                     width: 100px;
                     text-align: center;
@@ -45,7 +53,7 @@
                 .ant-select-selector {
                     height: 28px;
                     background-color: transparent;
-                    border-color: rgba(136, 175, 248, .4);
+                    border-color: #002678;
                     border-radius: 4px;
                     box-shadow: none;
                 }

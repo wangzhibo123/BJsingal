@@ -681,14 +681,19 @@ class Homepage extends Component {
                   style={{ width: 200 }}
                   placeholder="路口查询"
                   autoClearSearchValue
-                  // onChange={this.handleInterSearch}
                   dropdownClassName="searchList"
+                  filterOption={(input, options) => {
+                    const hasVal = options.value.indexOf(input) >= 0
+                    const hasSpell = options.spell.indexOf(input.toLowerCase()) >= 0
+                    const hasId = String(options.id).indexOf(input) >= 0
+                    return (hasVal || hasSpell || hasId)
+                  }}
                   onSelect={this.handleInterSelect}
                 >
                   {
                     pointlist &&
                     pointlist.map((item) => (
-                      <Option key={item.unit_code} value={item.unit_name} lng={item.longitude} lat={item.latitude}>{item.unit_name}</Option>
+                      <Option key={item.unit_code} value={item.unit_name} lng={item.longitude} lat={item.latitude} spell={item.name_pinyin} id={item.id}>{item.unit_name}</Option>
                     ))
                   }
                 </Select>
