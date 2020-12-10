@@ -152,6 +152,8 @@ class PhaseMsg extends Component {
     const indexs = parseInt(e.target.getAttribute('indexs'))
     this.saveParams = this.state.interPhaseList[indexs]
     this.setState({ editIndex: indexs })
+    this.getInterDirSelectIden()
+    this.getInterDirInfoList()
   }
   onInterInfoList=(value)=>{
     let newValue=value.join()
@@ -193,11 +195,11 @@ class PhaseMsg extends Component {
                     <div className="paramsTd">{editIndex===index? <input type="text" onChange={e=>this.phaseno=e.target.value} defaultValue={item.phaseno}/> : <span>{item.phaseno}</span>}</div>
                     <div className="paramsTd">{editIndex===index? <input type="text" onChange={e=>this.phasename=e.target.value} defaultValue={item.phasename}/> : <span>{item.phasename}</span>}</div>
                     <div className="paramsTd">
-                      {editIndex===index?  <Select defaultValue={<img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt="" maxHeight="28px"/>} mode="multiple" onChange={this.onDirPhaseSelectIden}>
+                      {editIndex===index?  <Select defaultValue={<img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt="" maxHeight="28px"/>} mode="tags" onChange={this.onDirPhaseSelectIden} className="selectLength">
                       {
                         dirPhaseSelectIden && dirPhaseSelectIden.map(item=>{
                           return (
-                            <Option key={item.laneno}  style={{height:"50px"}}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt="" maxHeight="28px"/></Option>
+                            <Option key={item.laneno}  style={{height:"57px"}}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt="" maxHeight="28px"/></Option>
                           )
                         })
                       }
@@ -207,17 +209,17 @@ class PhaseMsg extends Component {
                       {
                         dirPhaseSelectIden && dirPhaseSelectIden.map(item=>{
                           return (
-                            <Option key={item.laneno} style={{height:"50px"}}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt="" maxHeight="28px"/></Option>
+                            <Option key={item.laneno} style={{height:"47px"}}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt="" maxHeight="28px"/></Option>
                           )
                         })
                       }
                     </Select>: <span>{item.phase_image}</span>}</div>
                     <div className="paramsTd">
-                      {editIndex===index?  <Select defaultValue={this.getInterDirInfoListProperty(item.peddirlist)} mode="multiple" onChange={this.onDirPhaseSelectIden}>
+                      {editIndex===index?  <Select defaultValue={this.getInterDirInfoListProperty(item.peddirlist)} mode="tags" onChange={this.onDirPhaseSelectIden} className="selectLength">
                       {
-                        dirPhaseSelectIden && dirPhaseSelectIden.map(item=>{
+                        interInfoList && interInfoList.map(item=>{
                           return (
-                            <Option key={item.cCode} value={item.codeName} style={{height:"50px"}}>{item.peddirlist}</Option>
+                            <Option key={item.cCode} value={item.codeName} style={{height:"57px"}}>{item.peddirlist}</Option>
                           )
                         })
                       }
@@ -242,11 +244,11 @@ class PhaseMsg extends Component {
                   <div className="paramsTd"><input type="text" onChange={e=>this.phaseno=e.target.value} defaultValue={interPhaseList.phaseno}/></div>
                   <div className="paramsTd"><input type="text" onChange={e=>this.phasename=e.target.value}/></div>
                   <div className="paramsTd">
-                    <Select defaultValue="请选择" mode="multiple" onChange={this.onDirPhaseSelectIden}>
+                    <Select mode="tags" onChange={this.onDirPhaseSelectIden} className="selectLength" placeholder="请选择">
                       {
                         dirPhaseSelectIden && dirPhaseSelectIden.map(item=>{
                           return (
-                            <Option key={item.laneno} vlaue={item.laneno} style={{height:"28px"}}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt=""/></Option>
+                            <Option key={item.laneno} vlaue={item.laneno} style={{height:"57px",textAlign:"center"}}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt=""/></Option>
                           )
                         })
                       }
@@ -264,7 +266,7 @@ class PhaseMsg extends Component {
                     </Select>
                   </div>
                   <div className="paramsTd">
-                    <Select defaultValue={interInfoList[0].codeName} onChange={this.onInterInfoList} mode="multiple">
+                    <Select onChange={this.onInterInfoList} mode="tags" className="selectLength" placeholder="请选择">
                       {
                         interInfoList && interInfoList.map(item=>{
                           return (

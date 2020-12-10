@@ -39,11 +39,33 @@ class StageMsg extends Component {
       }
     })
   }
+  //添加
+  bindDirPhase=()=>{
+    this.saveParams={
+      allred: 0,
+      attribute: 0,
+      green: 0,
+      id: 0,
+      phasenolist: '',
+      redyellow: 0,
+      signalStageId: 0,
+      stageImage: '',
+      stagename: '',
+      stageno: 0,
+      unitId: this.interId,
+      yellow: 0
+    }
+    const { interStageList } = this.state
+    const listLen = interStageList ? interStageList.length : 0
+    const defaultNo = listLen > 0 ? interStageList[listLen - 1].scheduleno + 1 : 1
+    this.saveParams.scheduleno = defaultNo
+    this.setState({ interDirDisplay: true, defaultNo })
+  }
   render() {
-    const { interStageList } =this.state;
+    const { interStageList ,interDirDisplay } =this.state;
     return (
       <div className="paramsTable">
-        <span className="addBtn">新增阶段</span>
+        <span className="addBtn" onClick={this.bindDirPhase}>新增阶段</span>
         <div className="paramsThead">
           <div className="paramsTh">阶段序号</div>
           <div className="paramsTh">阶段名称</div>
@@ -87,39 +109,29 @@ class StageMsg extends Component {
               )
             })
           }
+          {
+          interDirDisplay && 
           <div className="paramsTr">
-            <div className="paramsTd">1</div>
-            <div className="paramsTd">A</div>
+            <div className="paramsTd"><input type="text"/></div>
+            <div className="paramsTd"><input type="text"/></div>
+            <div className="paramsTd"><input type="text"/></div>
+            <div className="paramsTd"><input type="text"/></div>
             <div className="paramsTd">
-              <Select defaultValue="0">
+              <Select mode="tags" className="selectLength" placeholder="请选择">
                 <Option key="0" vlaue="0">请选择</Option>
                 <Option key="1" vlaue="1">1</Option>
-              </Select>
+              </Select> 
             </div>
             <div className="paramsTd">
-              <Select defaultValue="0"> 
-                <Option key="0" vlaue="0">请选择</Option>
-                <Option key="1" vlaue="1">1</Option>
-              </Select>  
+              {/* <img src={} alt=""/> */}
             </div>
+            <div className="paramsTd"><input type="text"/></div>
             <div className="paramsTd">
-              <Select defaultValue="0">
-                <Option key="0" vlaue="0">请选择</Option>
-                <Option key="1" vlaue="1">1</Option>
-              </Select>  
-            </div>
-            <div className="paramsTd">
-              <Select defaultValue="0">
-                <Option key="0" vlaue="0">请选择</Option>
-                <Option key="1" vlaue="1">1</Option>
-              </Select>  
-            </div>
-            <div className="paramsTd">10</div>
-            <div className="paramsTd">
-              <span className="editBtn">取消</span>
               <span className="editBtn">保存</span>
+              <span className="editBtn">取消</span>
             </div>
           </div>
+          }
         </div>
       </div>
     )
