@@ -1207,18 +1207,19 @@ input[type="number"]{ -moz-appearance: textfield; }
         color: #62bbff;
     }
     .infoWindow {
-        width: 200px;
-        height: 325px;
-        background: rgba(3, 16, 96, 0.5);
-        background-image: linear-gradient(to bottom, rgba(3, 38, 120, .5), rgba(0, 59, 129, .5), rgba(3, 38, 120, .5));
+        width: 400px;
+        height: 205px;
         font-size: 14px;
-        color: #62bbff;
-        border-radius: 4px;
-        box-shadow: inset 0 0 4px rgba(62, 112, 255, .5);
+        color: #fff;
+        background: url(../imgs/mapInfobg.png) center center no-repeat;
+        background-size: 100% 100%;
         .infotitle {
             height: 40px;
             line-height: 40px;
             padding-left: 20px;
+            font-size: 16px;
+            color: #02a4fb;
+            text-decoration: underline;
         }
         .interMessage {
             display: flex;
@@ -1227,9 +1228,9 @@ input[type="number"]{ -moz-appearance: textfield; }
             justify-content: space-between;
             .message {
                 width: 180px;
-                height: 35px;
+                height: 30px;
                 text-align: left;
-                line-height: 35px;
+                line-height: 30px;
             }
         }
         .interDetails {
@@ -1238,14 +1239,13 @@ input[type="number"]{ -moz-appearance: textfield; }
             align-items: center;
             justify-content: center;
             .monitorBtn {
-                width: 80px;
-                height: 28px;
-                text-align: center;
-                line-height: 28px;
-                background:url(../imgs/navbtn.png) no-repeat;
+                width: 75px;
+                height: 26px;
+                background: url(../imgs/mapInfobtn.png) center center no-repeat;
                 background-size: 100% 100%;
+                text-align: center;
+                line-height: 26px;
                 cursor: pointer;
-                user-select: none;
             }
         }
     }

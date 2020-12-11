@@ -119,7 +119,7 @@ export default class MainMonitorConcisePage extends Component{
                       </Select>
                     </div>
                   </div>
-                      <Video {...this.state} url={this.videoState}></Video>
+                      <Video {...this.state}></Video>
                   </div>
                 </div>
               </div>
