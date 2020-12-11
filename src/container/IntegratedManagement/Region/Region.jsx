@@ -42,7 +42,7 @@ class Region extends Component {
     ]
     this.defaultChildren = []
     this.newChildId = []
-    this.getPointAll = '/control-application-front/unitInfo/getPointAll' // 加载所有点位
+    this.getPointAll = '/control-application-front/index/getPointByFault?user_id=1' // 加载所有点位
     this.loadSubDistrictTree = '/control-application-front/subDistrictManagement/loadSubDistrictTree' // 区域树
     this.deleteSubDistrict = '/control-application-front/subDistrictManagement/deleteSubDistrict' // 删除子区信息
     this.saveOrUpdateSubDistrict = '/control-application-front/subDistrictManagement/saveOrUpdateSubDistrict' // 新增修改子区信息
@@ -68,12 +68,12 @@ class Region extends Component {
   }
   addMarkerData = () => {
     axiosInstance.post(this.getPointAll).then(res => {
-      const { code, list } = res.data
+      const { code, pointlist } = res.data
       if (code === '1') {
-        this.pointLists = list
-        this.addMarker(this.pointLists, 8)
+        this.pointLists = pointlist
+        this.addMarker(this.pointLists, 13)
         this.setState({
-          pointlist: list,
+          pointlist: pointlist,
         })
       }
     })
@@ -111,13 +111,24 @@ class Region extends Component {
       const interList = zoomVal < 13 ? points && points.filter(item => item.unit_grade <= 4) : points
       console.log(points, zoomVal, interList, 'sdfsdfds')
       interList && interList.forEach((item, index) => {
+        const innerBgcolor = item.alarm_state === 1 ? '#08c208' : item.alarm_state === 2 ? '#D7C19C' : '#FF0200'
+        const bgColor = item.alarm_state === 1 ? 'rgba(8,194,8,.3)' : item.alarm_state === 2 ? 'rgba(215,193,156,.3)' : 'rgba(255,2,0,.3)'
         const el = document.createElement('div')
         el.style.width = '20px'
         el.style.height = '20px'
         el.style.borderRadius = '50%'
-        el.style.backgroundColor = 'green'
+        el.style.backgroundColor = bgColor
+        el.style.display = 'flex'
+        el.style.justifyContent = 'center'
+        el.style.alignItems = 'center'
         el.style.cursor = 'pointer'
-        el.id = 'marker' + item.unit_code
+        el.id = 'marker' + item.id
+        const childEl = document.createElement('div')
+        childEl.style.width = '10px'
+        childEl.style.height = '10px'
+        childEl.style.borderRadius = '50%'
+        childEl.style.backgroundColor = innerBgcolor
+        el.appendChild(childEl)
         el.addEventListener('click', function (e) {
           // console.log(item, currentThis.addRoad, '123456')
           if (currentThis.addRoad) {
@@ -410,6 +421,13 @@ class Region extends Component {
     } = this.state
     return (
       <div className='RegionBox'>
+        <div className="mapLegend">
+          <div className="pointStatus">
+            <div className="statusItem"><span className="pointIcon onlineColor"></span> 在线</div>
+            <div className="statusItem"><span className="pointIcon offlineColor"></span> 离线</div>
+            <div className="statusItem"><span className="pointIcon faultColor"></span> 故障</div>
+          </div>
+        </div>
         <div className='sildeRight' style={{ right: `${rights}px` }}>
           <div className="slideRightBoxAdd">
             <div className='addMainLine'>

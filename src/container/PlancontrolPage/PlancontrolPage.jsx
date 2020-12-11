@@ -107,7 +107,7 @@ class PlancontrolPage extends Component {
     this.deleteAreaPlan = '/control-application-front/planControl/deleteAreaPlan' // 删除区域应急预案
     this.deleteVipPlan = '/control-application-front/planControl/deleteVipPlan' // 删除特勤预案
     this.getDirection = '/control-application-front/planControl/getDirection' // 获取方向
-    this.getPointAll = '/control-application-front/planControl/getPointAll' // 加载所有点位
+    this.getPointAll = '/control-application-front/index/getPointByFault?user_id=1' // 加载所有点位
     this.getTaskStatus = '/control-application-front/planControl/getTaskStatus' // 获取任务状态
     this.loadPlanAreaUnit = '/control-application-front/planControl/loadPlanAreaUnit' // 获取区域应急预案下的路口
     this.loadPlanTable = '/control-application-front/planControl/loadPlanTable' // 预案列表
@@ -345,10 +345,10 @@ class PlancontrolPage extends Component {
   }
   getAddDataList = () => {
     axiosInstance.post(this.getPointAll).then(res => {
-      const { code, list } = res.data
+      const { code, pointlist } = res.data
       if (code === '1') {
-        this.pointLists = list
-        this.addMarker(this.pointLists, 8)
+        this.pointLists = pointlist
+        this.addMarker(this.pointLists, 14)
       }
     })
   }
@@ -412,13 +412,26 @@ class PlancontrolPage extends Component {
       const interList = zoomVal < 13 ? points && points.filter(item => item.unit_grade <= 4) : points
       // console.log(interList, 'sssss')
       interList && interList.forEach((item, index) => {
+        // const hasMode = this.showMode.indexOf(item.control_state) < 0
+        // const hasSingal = this.showSingal.indexOf(item.signal_system_codes) < 0
+        const innerBgcolor = item.alarm_state === 1 ? '#08c208' : item.alarm_state === 2 ? '#D7C19C' : '#FF0200'
+        const bgColor = item.alarm_state === 1 ? 'rgba(8,194,8,.3)' : item.alarm_state === 2 ? 'rgba(215,193,156,.3)' : 'rgba(255,2,0,.3)'
         const el = document.createElement('div')
         el.style.width = '20px'
         el.style.height = '20px'
         el.style.borderRadius = '50%'
-        el.style.backgroundColor = 'green'
+        el.style.backgroundColor = bgColor
+        el.style.display = 'flex'
+        el.style.justifyContent = 'center'
+        el.style.alignItems = 'center'
         el.style.cursor = 'pointer'
         el.id = 'marker' + item.id
+        const childEl = document.createElement('div')
+        childEl.style.width = '10px'
+        childEl.style.height = '10px'
+        childEl.style.borderRadius = '50%'
+        childEl.style.backgroundColor = innerBgcolor
+        el.appendChild(childEl)
         var marker = '', channelmarker = [];
         el.addEventListener('contextmenu', function (event) {
           if (_this.markerLier) {
@@ -678,13 +691,13 @@ class PlancontrolPage extends Component {
         } else { // 应急预案
           console.log(list)
           let arrAll = []
-          list.forEach(item => {
+          list.forEach(itemer => {
             let objser = {
               "area_contingency_unit_id": "",
               "id": "",
-              "stage_id": "",
-              "stage_order": 0,
-              "stage_plan_id": "",
+              "stage_id": itemer.id,
+              "stage_order": itemer.stageno,
+              "stage_plan_id": itemer.phaseplanid,
               "stage_time": 0
             }
           })
@@ -1400,7 +1413,13 @@ class PlancontrolPage extends Component {
     } = this.state
     return (
       <div className={styles.PlancontrolPageWrapper}>
-        {/* <div className={styles.openEdit}><Switch checkedChildren="编辑模式" unCheckedChildren="正常模式" defaultChecked /></div> */}
+        <div className={styles.mapLegend}>
+          <div className={styles.pointStatus}>
+            <div className={styles.statusItem}><span className={`${styles.pointIcon} ${styles.onlineColor}`}></span> 在线</div>
+            <div className={styles.statusItem}><span className={`${styles.pointIcon} ${styles.offlineColor}`}></span> 离线</div>
+            <div className={styles.statusItem}><span className={`${styles.pointIcon} ${styles.faultColor}`}></span> 故障</div>
+          </div>
+        </div >
         {
           socketChild && socketChild.map(item => <Websocket url={`ws://192.168.1.22:20194/engine-monitor/webSocket/1000084`} onMessage={this.webSocketData.bind(this)} />)
         }

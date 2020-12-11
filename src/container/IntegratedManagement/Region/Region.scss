@@ -5,6 +5,45 @@ $bor-color: #a5fcff;
     width: 100%;
     height: 100%;
     background-color: #021027;
+    .mapLegend {
+        position: absolute;
+        bottom: 5px;
+        right: 0;
+        height: 30px;
+        display: flex;
+        z-index: 9;
+        flex-direction: column;
+        background-color: rgba(12, 74, 131, 0.6);
+        border: 1px solid #0e6abf;
+        .pointStatus,
+        .legendBox {
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .statusItem {
+                width: 80px;
+                height: 30px;
+                text-align: center;
+                line-height: 30px;
+                .pointIcon {
+                    display: inline-block;
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                }
+                .onlineColor {
+                    background-color: #01fa00;
+                }
+                .offlineColor {
+                    background-color: #d7c19c;
+                }
+                .faultColor {
+                    background-color: #ff0200;
+                }
+            }
+        }
+    }
     .sildeRight {
         position: fixed;
         top: 100px;

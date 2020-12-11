@@ -42,6 +42,7 @@ class Intersection extends Component {
       longitude: '',
       latitude: '',
       signal_sys_unit_id: '',
+      roadsignal_system_code: '',
       signal_system_code: '',
       signal_unit_id: '',
       minor_unit_number: '',
@@ -50,6 +51,9 @@ class Intersection extends Component {
       unit_name_signal_sys: '',
       main_unit_id: '',
       unit_name_old: '',
+      listCodeByCodeTypeList: [],
+      pointlisters: [],
+      childrens: {}
     }
     this.clickOperation = [
       {
@@ -79,7 +83,7 @@ class Intersection extends Component {
       // main_unit_id,
       // unit_name_old,
     }
-    this.getPointAll = '/control-application-front/unitInfo/getPointAll' // 加载所有点位
+    this.getPointAll = '/control-application-front/index/getPointByFault?user_id=1'// 加载所有点位
     this.loadTree = '/control-application-front/districtManagement/loadTree' // 路口管理树
     this.editDistrictInfo = '/control-application-front/districtManagement/editSubDistrictInfo' // 加载当前区域信息
     this.deleteUnitInfo = '/control-application-front/unitInfo/deleteUnitInfo' // 删除路口信息
@@ -88,12 +92,32 @@ class Intersection extends Component {
     this.getUnitPosition = '/control-application-front/unitInfo/getUnitPosition' // 路口位置
     this.getUnitType = '/control-application-front/unitInfo/getUnitType' // 路口类型
     this.saveOrUpdateUnitInfo = '/control-application-front/unitInfo/saveOrUpdateUnitInfo' // 新增修改路口信息
+    this.listCodeByCodeType = '/control-application-front/basic/info/listCodeByCodeType' // 查询指定字典类型的集合
     this.defaultChildren = []
     this.newChildId = []
     this.showName = 'add'
     this.mapaddOnclick = false
     this.interMarkers = []
     this.switchViews = false
+    this.childrens = {}
+    this.formRoad = {
+      unit_name: '请输入路口名称',
+      unit_code: '请输入路口编号',
+      unit_name_old: '请输入原始路口名称',
+      unit_position: '请选择路口位置',
+      unit_type_code: '请选择路口类型',
+      district_id: '请选择所属区域',
+      user_group_id: '请选择管理单位',
+      latitude: '请在地图选择经纬度',
+      longitude: '请在地图选择经纬度',
+      unit_name_signal_sys: '请属于信号系统路口名称',
+      signal_sys_unit_id: '请输入信号系统路口编号',
+      signal_unit_id: '请输入信号机对应路口编号',
+      signal_system_code: '请选择信号控制系统',
+      minor_unit_number: '请输入控制路口数',
+      be_taken: '请选择是否被带',
+      main_unit_id: '请输入主路口编号',
+    }
   }
   componentDidMount = () => {
     this.renderMap()
@@ -110,12 +134,29 @@ class Intersection extends Component {
       }
     })
   }
+  ficationRoad = () => { // 验证新增路口不能为空
+    for (const i in this.formRoad) {
+      if (!this.state[i]) {
+        return message.warning(this.formRoad[i])
+      } else {
+        if (i == 'signal_sys_unit_id' || i == 'signal_unit_id' ||
+          i == 'minor_unit_number' || i == 'main_unit_id') {
+          const reg = /^[0-9]*$/.test(this.state[i])
+          console.log(reg, this.state[i], 'sssss')
+          if (!reg) {
+            return message.warning(`${this.formRoad[i]}且只能为数字`)
+          }
+        }
+      }
+    }
+  }
   initializationState = () => { // 新增修改变量初始化
     this.setState({
       roadposition: '',
       roadunit_type_code: '',
       roaddistrict_id: '',
       roaduser_group_id: '',
+      roadsignal_system_code: '',
       roadbe_taken: '',
       unit_code: '',
       unit_type_code: '',
@@ -141,21 +182,23 @@ class Intersection extends Component {
       const { code, treeList } = res.data
       if (code === '1') {
         const currentArea = this.treeListDatas.find((item) => item.id === Number(id))
-        currentArea.childrens = treeList
-        this.setState({ treeList: this.treeListDatas, menuOpenkeys: [id] })
-
+        // currentArea.childrens = treeList
+        this.childrens[id] = treeList
+        // console.log('181sss')
+        this.setState({ menuOpenkeys: [id], childrens: this.childrens, })
       }
     })
   }
-  addMarkerData = () => {
+  addMarkerData = () => { // 获取所有点位
     axiosInstance.post(this.getPointAll).then(res => {
-      const { code, list } = res.data
+      const { code, pointlist } = res.data
+      console.log(res.data, 'dsddss')
       if (code === '1') {
-        this.pointLists = list
-        this.addMarker(this.pointLists, 8)
         this.setState({
-          pointlist: list,
+          pointlisters: pointlist
         })
+        this.pointLists = pointlist
+        this.addMarker(this.pointLists, 14)
       }
     })
   }
@@ -167,13 +210,24 @@ class Intersection extends Component {
       const interList = zoomVal < 13 ? points && points.filter(item => item.unit_grade <= 4) : points
       // console.log(interList)
       interList && interList.forEach((item, index) => {
+        const innerBgcolor = item.alarm_state === 1 ? '#08c208' : item.alarm_state === 2 ? '#D7C19C' : '#FF0200'
+        const bgColor = item.alarm_state === 1 ? 'rgba(8,194,8,.3)' : item.alarm_state === 2 ? 'rgba(215,193,156,.3)' : 'rgba(255,2,0,.3)'
         const el = document.createElement('div')
         el.style.width = '20px'
         el.style.height = '20px'
         el.style.borderRadius = '50%'
-        el.style.backgroundColor = 'green'
+        el.style.backgroundColor = bgColor
+        el.style.display = 'flex'
+        el.style.justifyContent = 'center'
+        el.style.alignItems = 'center'
         el.style.cursor = 'pointer'
-        el.id = 'marker' + item.unit_code
+        el.id = 'marker' + item.id
+        const childEl = document.createElement('div')
+        childEl.style.width = '10px'
+        childEl.style.height = '10px'
+        childEl.style.borderRadius = '50%'
+        childEl.style.backgroundColor = innerBgcolor
+        el.appendChild(childEl)
         el.addEventListener('click', function (e) {
           currentThis.addInfoWindow(item)
         });
@@ -220,28 +274,28 @@ class Intersection extends Component {
     // console.log(this.interMonitorBtn)
   }
   getInfoWindowHtml = (interMsg) => {
-    console.log(interMsg, 'qiaoss')
-    const { UnitPosition, UnitType, UnitDistrict, UnitGroup } = this.state
-    let roadposition = UnitPosition && UnitPosition.find(item => item.c_code === interMsg.unit_position)
-    if (roadposition) {
-      roadposition = roadposition.code_name
-    } else {
-      roadposition = ''
-    }
-    const roadunit_type_code = UnitType && UnitType.find(item => item.c_code === interMsg.unit_type_code).code_name
-    const roaddistrict_id = UnitDistrict && UnitDistrict.find(item => item.id === interMsg.district_id).district_name
-    const roaduser_group_id = UnitGroup && UnitGroup.find(item => item.id === interMsg.user_group_id).user_group_name
+    // console.log(interMsg, 'qiaoss')
+    // const { UnitPosition, UnitType, UnitDistrict, UnitGroup } = this.state
+    // let roadposition = UnitPosition && UnitPosition.find(item => item.c_code === interMsg.unit_position)
+    // if (roadposition) {
+    //   roadposition = roadposition.code_name
+    // } else {
+    //   roadposition = ''
+    // }
+    // const roadunit_type_code = UnitType && UnitType.find(item => item.c_code === interMsg.unit_type_code).code_name
+    // const roaddistrict_id = UnitDistrict && UnitDistrict.find(item => item.id === interMsg.district_id).district_name
+    // const roaduser_group_id = UnitGroup && UnitGroup.find(item => item.id === interMsg.user_group_id).user_group_name
     return `
       <div class="infoWindow">
         <div class="infotitle">${interMsg.unit_name}</div>
         <div class="interMessage">
-          <div class="message">路口编号：${interMsg.unit_code}</div>
-          <div class="message">所属区域：${roaddistrict_id}</div>
-          <div class="message">路口位置：${roadposition}</div>
-          <div class="message">路口类型：${roadunit_type_code}</div>
-          <div class="message">原始路口名称：${interMsg.unit_name_old}</div>
-          <div class="message">管理单位：${roaduser_group_id}</div>
-          <div class="message">主路口编号：${interMsg.main_unit_id}</div>
+          <div class="message">设备类型：信号灯</div>
+          <div class="message">所属城区：${interMsg.district_name}</div>
+          <div class="message">控制状态：${interMsg.control_state}</div>
+          <div class="message">信号系统：${interMsg.signal_system_code || ''}</div>
+          <div class="message">信号机IP：${interMsg.signal_ip || ''}</div>
+          <div class="message">设备状态：${interMsg.alarm_state}</div>
+          <div class="message">运行阶段：${interMsg.stage_code || ''}</div>
         </div>
 
       </div>
@@ -266,14 +320,14 @@ class Intersection extends Component {
     };
     // map.poiClick(true);
     map.on('zoom', () => {
-      if (this.zoomTimer) {
-        clearTimeout(this.zoomTimer)
-        this.zoomTimer = null
-      }
-      this.zoomTimer = setTimeout(() => {
-        const zoomLev = Math.round(this.map.getZoom())
-        this.addMarker(this.pointLists, zoomLev)
-      }, 700)
+      // if (this.zoomTimer) {
+      //   clearTimeout(this.zoomTimer)
+      //   this.zoomTimer = null
+      // }
+      // this.zoomTimer = setTimeout(() => {
+      //   const zoomLev = Math.round(this.map.getZoom())
+      //   this.addMarker(this.pointLists, zoomLev)
+      // }, 700)
     })
     map.on('click', (e) => {
       console.log(this.mapaddOnclick, e.lngLat.lng.toFixed(6))
@@ -347,6 +401,15 @@ class Intersection extends Component {
         })
       }
     })
+    axiosInstance.get(`${this.listCodeByCodeType}?codeType=13`).then(res => {// 信号控制系统
+      console.log(res.data, '信号控制系统')
+      const { code, data } = res.data
+      if (code === 200) {
+        this.setState({
+          listCodeByCodeTypeList: data
+        })
+      }
+    })
     axiosInstance.post(this.getUnitPosition).then(res => {// 路口位置
       console.log(res.data, '路口位置')
       const { code, list } = res.data
@@ -384,10 +447,10 @@ class Intersection extends Component {
   onClickMenuItem = (event) => { // 点击menu-item
     // console.log(event.item.props.data_item, 'vvbbb')
     this.mapaddOnclick = false
-    const { UnitPosition, UnitType, UnitDistrict, UnitGroup } = this.state
+    const { UnitPosition, UnitType, UnitDistrict, UnitGroup, listCodeByCodeTypeList } = this.state
     const { data_item } = event.item.props
     this.map.panTo([data_item.longitude, data_item.latitude])
-    $('#marker' + data_item.unit_code).trigger('click')
+    $('#marker' + data_item.id).trigger('click')
     this.roaddId = data_item.id
     // console.log(UnitPosition, data_item.unit_position, '121321324564')
     let roadposition = UnitPosition && UnitPosition.find(item => item.c_code === data_item.unit_position)
@@ -399,6 +462,8 @@ class Intersection extends Component {
     const roadunit_type_code = UnitType && UnitType.find(item => item.c_code === data_item.unit_type_code).code_name
     const roaddistrict_id = UnitDistrict && UnitDistrict.find(item => item.id === data_item.district_id).district_name
     const roaduser_group_id = UnitGroup && UnitGroup.find(item => item.id === data_item.user_group_id).user_group_name
+    console.log(listCodeByCodeTypeList, data_item, 'zhime')
+    const roadsignal_system_code = listCodeByCodeTypeList && listCodeByCodeTypeList.find(item => item.cCode === data_item.signal_system_code).codeName
     const roadbe_taken = data_item.be_take === 1 ? '是' : '否'
     this.setState({
       rights: 0,
@@ -424,6 +489,7 @@ class Intersection extends Component {
       roadunit_type_code,
       roaddistrict_id,
       roaduser_group_id,
+      roadsignal_system_code,
       roadbe_taken,
       roadtitle: '路口信息',
     })
@@ -443,7 +509,7 @@ class Intersection extends Component {
     })
     this.initializationState()
   }
-  handclickAddEdit = () => {// 添加或修改路口按钮
+  handclickAddEdit = async () => {// 添加或修改路口按钮
     // this.mapaddOnclick = false
     const {
       unit_code,
@@ -482,29 +548,31 @@ class Intersection extends Component {
       user_group_id,
       id: '',
     }
-    if (this.showName === 'edit') {
-      addroadData.id = JSON.stringify(this.roaddId)
-    }
-    // console.log(addroadData, '查看内容')
-    axiosInstance.post(this.saveOrUpdateUnitInfo, addroadData).then(res => {// 路口位置
-      // console.log(res.data, '路口添加 修改')
-      const { code, result } = res.data
-      if (code === '1') {
-        if (result === '操作失败') {
-          message.info(result)
-        } else {
-          this.setState({
-            rights: -300,
-            menuOpenkeys: [],
-          })
-          message.info(result)
-        }
-
+    const as = await this.ficationRoad()
+    if (!as) {
+      if (this.showName === 'edit') {
+        addroadData.id = JSON.stringify(this.roaddId)
       }
-      this.getDataList()
-      this.initializationState()
-    })
+      // console.log(addroadData, '查看内容')
+      axiosInstance.post(this.saveOrUpdateUnitInfo, addroadData).then(res => {// 路口位置
+        // console.log(res.data, '路口添加 修改')
+        const { code, result } = res.data
+        if (code === '1') {
+          if (result === '操作失败') {
+            message.info(result)
+          } else {
+            this.setState({
+              rights: -300,
+              menuOpenkeys: [],
+            })
+            message.info(result)
+          }
 
+        }
+        this.getDataList()
+        this.initializationState()
+      })
+    }
   }
   changeLoadRouteDirection = (e, options) => { // 添加修改input selecct
     if (options) {
@@ -567,7 +635,7 @@ class Intersection extends Component {
     console.log(value, options)
     const { key, lng, lat } = options
     this.map.panTo([lng, lat])
-    $('#marker' + key).trigger('click')
+    $('#marker' + value).trigger('click')
   }
   deleteList = () => { // 删除
 
@@ -579,11 +647,18 @@ class Intersection extends Component {
       unit_code, unit_type_code, unit_position, district_id, user_group_id, longitude, latitude,
       signal_sys_unit_id, signal_unit_id, minor_unit_number, be_taken, unit_name, deleteConfirm,
       UnitPosition, UnitType, UnitGroup, UnitDistrict, signal_system_code,
-      unit_name_signal_sys, main_unit_id, unit_name_old, pointlist,
-      roadposition, roadunit_type_code, roaddistrict_id, roaduser_group_id, roadbe_taken, roadtitle
+      unit_name_signal_sys, main_unit_id, unit_name_old, pointlisters, childrens,
+      roadposition, roadunit_type_code, roaddistrict_id, roaduser_group_id, roadbe_taken, roadtitle, listCodeByCodeTypeList, roadsignal_system_code
     } = this.state
     return (
       <div className='IntersectionBox'>
+        <div className="mapLegend">
+          <div className="pointStatus">
+            <div className="statusItem"><span className="pointIcon onlineColor"></span> 在线</div>
+            <div className="statusItem"><span className="pointIcon offlineColor"></span> 离线</div>
+            <div className="statusItem"><span className="pointIcon faultColor"></span> 故障</div>
+          </div>
+        </div>
         <div className='sildeRight' style={{ right: `${rights}px` }}>
           <div className="slideRightBoxAdd">
             <div className='addMainLine'>
@@ -603,7 +678,7 @@ class Intersection extends Component {
               isAddEdit ?
                 <div className='slideRightBoxAddBox'>
                   <p><span>路口名称：</span><input value={unit_name} intername='unit_name' onChange={this.changeLoadRouteDirection} type="text" className='inputBox' placeholder="区域名称" /></p>
-                  <p><span>路口编号：</span><input value={unit_code} intername='unit_code' onChange={this.changeLoadRouteDirection} type="text" className='inputBox' placeholder="区域编号" /></p>
+                  <p><span>路口编号：</span><input value={unit_code} intername='unit_code' type="number" onChange={this.changeLoadRouteDirection} type="text" className='inputBox' placeholder="区域编号" /></p>
                   <p><span>原始路口名称：</span><input value={unit_name_old} intername='unit_name_old' onChange={this.changeLoadRouteDirection} type="text" className='inputBox' placeholder="原始路口名称" /></p>
                   <div className='divs'><span>路口位置：</span>
                     <Select
@@ -665,12 +740,27 @@ class Intersection extends Component {
                       }
                     </Select>
                   </div>
-                  <p><span>经度：</span><input intername='longitude' onChange={this.changeLoadRouteDirection} value={longitude} type="text" className='inputBox' placeholder="经度" /></p>
-                  <p><span>纬度：</span><input intername='latitude' onChange={this.changeLoadRouteDirection} value={latitude} type="text" className='inputBox' placeholder="纬度" /></p>
+                  <p><span>经度：</span><input intername='longitude' onChange={this.changeLoadRouteDirection} value={longitude} type="text" readonly="readonly" className='inputBox' placeholder="经度" /></p>
+                  <p><span>纬度：</span><input intername='latitude' onChange={this.changeLoadRouteDirection} value={latitude} type="text" readonly="readonly" className='inputBox' placeholder="纬度" /></p>
                   <p><span>信号系统路口名称：</span><input value={unit_name_signal_sys} intername='unit_name_signal_sys' onChange={this.changeLoadRouteDirection} type="text" className='inputBox' placeholder="信号系统路口名称：" /></p>
                   <p><span>信号系统路口编号：</span><input value={signal_sys_unit_id} intername='signal_sys_unit_id' onChange={this.changeLoadRouteDirection} type="text" className='inputBox' placeholder="信号系统路口编号：" /></p>
                   <p><span>信号机对应路口编号：</span><input value={signal_unit_id} intername='signal_unit_id' onChange={this.changeLoadRouteDirection} type="text" className='inputBox' placeholder="信号机对应路口编号" /></p>
-                  <p><span>信号控制系统：</span><input value={signal_system_code} intername='signal_system_code' onChange={this.changeLoadRouteDirection} type="text" className='inputBox' placeholder="信号控制系统" /></p>
+                  <div className='divs'><span>信号控制系统：</span>
+                    <Select
+                      value={roadsignal_system_code}
+                      style={{ width: 195, height: 30 }}
+                      onChange={this.changeLoadRouteDirection}
+                    >
+                      {
+                        listCodeByCodeTypeList && listCodeByCodeTypeList.map((item) => {
+                          return (
+                            <Option addeditname='roadsignal_system_code' intername='signal_system_code' value={item.cCode} key={item.id}>{item.codeName}</Option>
+                          )
+                        })
+                      }
+                    </Select>
+                  </div>
+                  {/* <p><span>信号控制系统：</span><input value={signal_system_code} intername='signal_system_code' onChange={this.changeLoadRouteDirection} type="text" className='inputBox' placeholder="信号控制系统" /></p> */}
                   <p><span>控制路口数：</span><input value={minor_unit_number} intername='minor_unit_number' onChange={this.changeLoadRouteDirection} t type="text" className='inputBox' placeholder="控制路口数" /></p>
                   <div className='divs'><span>是否被带</span>
                     <Select
@@ -738,11 +828,12 @@ class Intersection extends Component {
             placeholder="路口查询"
             onChange={this.handleInterSearch}
             dropdownClassName="searchList"
+            optionFilterProp="children"
           >
             {
-              pointlist &&
-              pointlist.map((item) => (
-                <Option key={item.unit_code} value={item.unit_name} lng={item.longitude} lat={item.latitude}>{item.unit_name}</Option>
+              pointlisters &&
+              pointlisters.map((item) => (
+                <Option key={item.unit_code} value={item.id} lng={item.longitude} lat={item.latitude}>{item.unit_name}</Option>
               ))
             }
           </Select>
@@ -779,7 +870,7 @@ class Intersection extends Component {
           <div className='sidebarLeftBox'>
             <Menu
               onOpenChange={this.onOpenChangeSubMenu}
-              onClick={this.onClickMenuItem}
+              // onClick={this.onClickMenuItem}
               style={{ width: 251, color: '#86b7fa', height: '100%', fontSize: '16px' }}
               mode="inline"
               openKeys={menuOpenkeys}
@@ -791,8 +882,9 @@ class Intersection extends Component {
                     title={item.district_name}
                   >
                     {
-                      item.childrens &&
-                      item.childrens.map((child) => (
+                      childrens[item.id] &&
+                      childrens[item.id].map((child) => (
+                        // <li key={child.id}>{child.unit_name}</li>
                         <Menu.Item data_item={child} key={child.id}>{child.unit_name}</Menu.Item>
                       ))
                     }

@@ -55,7 +55,7 @@ class TrunkManagement extends Component {
         name: '切换视图',
       }
     ]
-    this.getPointAll = '/control-application-front/unitInfo/getPointAll' // 获取所有点位
+    this.getPointAll = '/control-application-front/index/getPointByFault?user_id=1' // 获取所有点位
     this.deleteRoute = '/control-application-front/routeManagement/deleteRoute' // 删除干线信息
     this.getRouteInfo = '/control-application-front/routeManagement/getRouteInfo' // 加载当前干线信息
     this.loadRouteTree = '/control-application-front/routeManagement/loadRouteTree' // 干线树
@@ -72,6 +72,15 @@ class TrunkManagement extends Component {
     this.chidArrs = []
     this.switchViews = false
     this.isAddEdit = false
+    this.trunkRoad = {
+      route_name: '请输入干线名称',
+      route_code: '请输入干线编号',
+      route_direction: '请选择干线方向',
+      route_miles: '请输入干线长度',
+      route_type: '请选择干线类型',
+      detail: '请输入干线描述',
+      treeListChild:'请在页面增加干线',
+    }
   }
   getDataList = () => {
     axiosInstance.post(this.loadRouteTree).then(res => {
@@ -82,16 +91,20 @@ class TrunkManagement extends Component {
       }
     })
   }
-  // getDataList = () => {
-  //   axiosInstance.post(this.loadRouteTree).then(res => {
-  //     const { code, treeList } = res.data
-  //     if (code === '1') {
-  //       this.setState({
-  //         treeList,
-  //       })
-  //     }
-  //   })
-  // }
+  ficationRoad = () => { // 验证新增路口不能为空
+    for (const i in this.trunkRoad) {
+      if (!this.state[i]) {
+        return message.warning(this.trunkRoad[i])
+      } else {
+        if (i == 'route_code' || i == 'route_miles') {
+          const reg = /^[0-9]*$/.test(this.state[i])
+          if (!reg) {
+            return message.warning(`${this.trunkRoad[i]}且只能为数字`)
+          }
+        }
+      }
+    }
+  }
   // 获取干线子集
   getLoadChildTree = (id) => {
     const _this = this
@@ -192,12 +205,12 @@ class TrunkManagement extends Component {
   // }
   getAddDataList = () => {
     axiosInstance.post(this.getPointAll).then(res => {
-      const { code, list } = res.data
+      const { code, pointlist } = res.data
       if (code === '1') {
-        this.pointLists = list
-        this.addMarker(this.pointLists, 8)
+        this.pointLists = pointlist
+        this.addMarker(this.pointLists, 14)
         this.setState({
-          pointlist: list,
+          pointlist: pointlist,
         })
       }
     })
@@ -351,13 +364,24 @@ class TrunkManagement extends Component {
       const interList = zoomVal < 13 ? points.filter(item => item.unit_grade <= 4) : points
       // console.log(interList, 'sdfsdf')
       interList && interList.forEach((item, index) => {
+        const innerBgcolor = item.alarm_state === 1 ? '#08c208' : item.alarm_state === 2 ? '#D7C19C' : '#FF0200'
+        const bgColor = item.alarm_state === 1 ? 'rgba(8,194,8,.3)' : item.alarm_state === 2 ? 'rgba(215,193,156,.3)' : 'rgba(255,2,0,.3)'
         const el = document.createElement('div')
         el.style.width = '20px'
         el.style.height = '20px'
         el.style.borderRadius = '50%'
-        el.style.backgroundColor = 'green'
+        el.style.backgroundColor = bgColor
+        el.style.display = 'flex'
+        el.style.justifyContent = 'center'
+        el.style.alignItems = 'center'
         el.style.cursor = 'pointer'
         el.id = 'marker' + item.id
+        const childEl = document.createElement('div')
+        childEl.style.width = '10px'
+        childEl.style.height = '10px'
+        childEl.style.borderRadius = '50%'
+        childEl.style.backgroundColor = innerBgcolor
+        el.appendChild(childEl)
         el.addEventListener('click', function (e) {
           // console.log(item, '点击点位557')
           if (currentThis.isAddEdit) {
@@ -754,7 +778,7 @@ class TrunkManagement extends Component {
     }
     return str
   }
-  handclickAddEdit = () => {// 添加或修改路口按钮
+  handclickAddEdit = async () => {// 添加或修改路口按钮
     this.treeListChild.forEach(item => {
       this.unitArr += item.id + ','
     })
@@ -776,33 +800,37 @@ class TrunkManagement extends Component {
       unitArr: this.unitArr,
       id: '',
     }
-    if (this.showName === 'edit') {
-      addobjs.id = JSON.stringify(this.roaddId)
-    }
-    axiosInstance.post(`${this.saveOrUpdateDistrict}?${this.FormData(addobjs)}`,).then(res => { // 干线
-      const { code, result } = res.data
-      if (code === '1') {
-        this.setState({
-          rights: -300,
-          menuOpenkeys: [],
-        })
-        message.info(result)
-        this.getDataList()
-        this.initializationState()
-        this.delectlineroute()
-        this.removeRoadCircle()
-        this.delectStartEnd()
-        this.addlineroute = false
-      } else {
-        // this.setState({
-        //   rights: -300,
-        //   menuOpenkeys: [],
-        // })
-        // message.info(result)
+    const as = await this.ficationRoad()
+    if (!as) {
+      if (this.showName === 'edit') {
+        addobjs.id = JSON.stringify(this.roaddId)
       }
-      // this.getDataList()
-      // this.initializationState()
-    })
+      axiosInstance.post(`${this.saveOrUpdateDistrict}?${this.FormData(addobjs)}`,).then(res => { // 干线
+        const { code, result } = res.data
+        if (code === '1') {
+          this.setState({
+            rights: -300,
+            menuOpenkeys: [],
+          })
+          message.info(result)
+          this.getDataList()
+          this.initializationState()
+          this.delectlineroute()
+          this.removeRoadCircle()
+          this.delectStartEnd()
+          this.addlineroute = false
+        } else {
+          // this.setState({
+          //   rights: -300,
+          //   menuOpenkeys: [],
+          // })
+          // message.info(result)
+        }
+        // this.getDataList()
+        // this.initializationState()
+      })
+    }
+
 
   }
   // 取消删除
@@ -860,6 +888,13 @@ class TrunkManagement extends Component {
     } = this.state
     return (
       <div className='TrunkManagementBox'>
+        <div className="mapLegend">
+          <div className="pointStatus">
+            <div className="statusItem"><span className="pointIcon onlineColor"></span> 在线</div>
+            <div className="statusItem"><span className="pointIcon offlineColor"></span> 离线</div>
+            <div className="statusItem"><span className="pointIcon faultColor"></span> 故障</div>
+          </div>
+        </div>
         <div className='sildeRight' style={{ right: `${rights}px` }}>
           <div className="slideRightBoxAdd">
             <div className='addMainLine'>
