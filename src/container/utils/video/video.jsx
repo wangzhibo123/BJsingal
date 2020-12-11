@@ -7,7 +7,6 @@ import axiosInstance from '../../../container/utils/getInterfaceData'
 import 'video.js/dist/video-js.css'
 import 'videojs-flash'
 import videojs from 'video.js'
-
 class VideoApp extends Component{
   constructor(props){
     super(props)
@@ -15,14 +14,18 @@ class VideoApp extends Component{
       nowPlay:"",
       width: this.props.width || "483px",
       height: this.props.height || "300px",
+      // newState: this.props.url ? this.props.url : null,
       newState: this.props.url ? null : [{ url: "rtmp://58.200.131.2:1935/livetv/cctv13", name: "南", id: 'my_S' }],
     }
   }
+  componentWillMount = () => {
+    this.getVideoMonCarList()
+  }
   //组件挂载完成之后初始化播放控件
   componentDidMount=()=>{
-    this.getVideoMonCarList()
     setTimeout(() =>{
-      if (true) {
+      console.log('进来没？', this.state.newState)
+      if (this.state.newState) {
         const { newState } = this.state;
         if (newState !== null) {
           const videoJsOptions = {
@@ -34,7 +37,7 @@ class VideoApp extends Component{
               type: 'rtmp/flv'
             }]
           }
-          this.player = videojs(newState[0].id.slice(0, 6), videoJsOptions, function onPlayerReady() { //(id或者refs获取节点，options，回调函数)
+          this.player = videojs(newState[0].id, videoJsOptions, function onPlayerReady() { //(id或者refs获取节点，options，回调函数)
             videojs.log('Your player is ready!');
             // In this context, `this` is the player that was created by Video.js.
             this.play();
@@ -45,36 +48,40 @@ class VideoApp extends Component{
           });
         }
       }
-    },300)
+    },360)
   }
   getVideoMonCarList = () =>{
     axiosInstance.post(this.props.url,{"cameraCode": "08143150969233750102#f0dfa07ea18f4a5da535fd251bdc5569","mediaURLParam": {"broadCastType": 0,"packProtocolType": 1,"protocolType": 2,"serviceType": 1,"streamType": 1,"transMode": 0}}).then(res=>{
-      if(res.code === 200){
+      if(res.data.code === 200){
         this.setState({
-          newState:res.data
-        },() => {
-          const { newState } = this.state;
-          if(newState !== null){
-            const videoJsOptions = {
-              autoplay: true,
-              controls: true,
-              sources: [{
-                // src: 'rtmp://192.168.1.124:9999/live/31434',
-                src: newState[0].url,
-                type: 'rtmp/flv'
-              }]
-          }
-          this.player = videojs(newState[0].id.slice(0,6), videoJsOptions , function onPlayerReady() { //(id或者refs获取节点，options，回调函数)
-              videojs.log('Your player is ready!');
-              // In this context, `this` is the player that was created by Video.js.
-              this.play();
-              // How about an event listener?
-              this.on('ended', function() {
-                videojs.log('Awww...over so soon?!');
-              });
-            });
-          }
+          newState:res.data.data
         })
+        // setTimeout(() =>{
+        //   console.log('进来没？', this.state.newState)
+        //   if (this.state.newState) {
+        //     const { newState } = this.state;
+        //     if (newState !== null) {
+        //       const videoJsOptions = {
+        //         autoplay: true,
+        //         controls: true,
+        //         sources: [{
+        //           // src: 'rtmp://192.168.1.124:9999/live/31434',
+        //           src: newState[0].url,
+        //           type: 'rtmp/flv'
+        //         }]
+        //       }
+        //       this.player = videojs(newState[0].id, videoJsOptions, function onPlayerReady() { //(id或者refs获取节点，options，回调函数)
+        //         videojs.log('Your player is ready!');
+        //         // In this context, `this` is the player that was created by Video.js.
+        //         this.play();
+        //         // How about an event listener?
+        //         this.on('ended', function () {
+        //           videojs.log('Awww...over so soon?!');
+        //         });
+        //       });
+        //     }
+        //   }
+        // },1500)
       }
     })
   }
@@ -95,9 +102,9 @@ class VideoApp extends Component{
   }
   componentWillUnmount = () =>{
     const { newState} =this.state;
-    const myVideoElem = document.getElementById(newState[0].id.slice(0,6));
+    const myVideoElem = document.getElementById(newState[0].id);
     if(myVideoElem){
-        const player = videojs(newState[0].id.slice(0,6));
+        const player = videojs(newState[0].id);
         player.dispose();
     }
   }
@@ -105,14 +112,12 @@ class VideoApp extends Component{
       const { newState, width ,height} =this.state;
     return(
        <div className="VideoAppBox">
-              <div>
-                  {
-                    newState && newState.map((item,index)=>{
-                      return <video key={index} style={{width:width,height:height,borderRadius:"6px",textAlign:"center",marginLeft:'15px'}} id={item.id.slice(0,6)} className="video-js vjs-default-skin">
-                      </video>
-                    })
-                  }
-              </div>
+          {
+            newState && newState.map((item,index) => {
+              return <video key={index} style={{width:width,height:height,borderRadius:"6px",textAlign:"center",marginLeft:'15px'}} id={item.id} className="video-js vjs-default-skin">
+              </video>
+            })
+          }
         </div>
       )
     }

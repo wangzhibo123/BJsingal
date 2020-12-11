@@ -52,16 +52,16 @@ export default class MainMonitorConcisePage extends Component{
               arlVideo: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv13", name: "南", id: 'my_S'  }],
             };
             //视频接口
-            this.videoState="/control-application-front/video/get/rtmp/url/400/300"
+            this.videoUrl="/control-application-front/video/get/rtmp/url/400/300"
       }
       componentDidMount=()=>{
-          this.getVideoMonCarList()
+          // this.getVideoMonCarList()
       }
       getVideoMonCarList=()=>{
-        axiosInstance.post(this.videoState,{"cameraCode": "08143150969233750102#f0dfa07ea18f4a5da535fd251bdc5569","mediaURLParam": {"broadCastType": 0,"packProtocolType": 1,"protocolType": 2,"serviceType": 1,"streamType": 1,"transMode": 0}}).then(res=>{
-          // this.setState({
-          //   newState:res.data
-          // })
+        axiosInstance.post(this.videoUrl,{"cameraCode": "08143150969233750102#f0dfa07ea18f4a5da535fd251bdc5569","mediaURLParam": {"broadCastType": 0,"packProtocolType": 1,"protocolType": 2,"serviceType": 1,"streamType": 1,"transMode": 0}}).then(res=>{
+          this.setState({
+            newState:res.data.data
+          })
           console.log(res,"------res")
         })
       }
@@ -92,26 +92,24 @@ export default class MainMonitorConcisePage extends Component{
                   {/* 东西走向 */}
                     <div className="modeMainEWVideo">
                       <div className="modeMainEWVideoSelect">
-                        <div style={{height:"40px",margin:"0 17px",lineHeight:'40px',fontSize:"18px",color:"#567AC4"}}>中关村大街东</div>
+                        {/* <div style={{height:"40px",margin:"0 17px",lineHeight:'40px',fontSize:"18px",color:"#567AC4"}}>中关村大街东</div> */}
                         <div style={{height:"40px"}}>
-                          <Select defaultValue="通道一" size="middle">
-                            <Option value="1" key="1">通道一</Option>
-                            <Option value="2" key="2">通道二</Option>
-                            <Option value="3" key="3">通道三</Option>
-                            <Option value="4" key="4">通道四</Option>
+                          <Select defaultValue="1" size="middle">
+                            <Option value="1" key="1">小街桥路口南进口球机全景</Option>
                           </Select>
                         </div>
                       </div>
-                      <Video {...this.state} url={this.videoState}></Video>
+                      <Video {...this.state} url={this.videoUrl}></Video> 
+                      {/* { this.state.newState && <Video {...this.state} url={this.state.newState}></Video> } */}
                     </div>
                 </div>
                 <div className="modeMainSNMode">
                   {/* 南北走向 */}
                   <div className="modeMainSNVideo">
                   <div className="modeMainEWVideoSelect">
-                  <div style={{height:"40px",margin:"0 17px",lineHeight:'40px',fontSize:"18px",color:"#567AC4"}}>中关村大街东</div>
+                  {/* <div style={{height:"40px",margin:"0 17px",lineHeight:'40px',fontSize:"18px",color:"#567AC4"}}>中关村大街东</div> */}
                     <div style={{height:"40px"}}>
-                      <Select defaultValue="通道一" size="middle">
+                      <Select defaultValue="1" size="middle">
                         <Option value="1" key="1">通道一</Option>
                         <Option value="2" key="2">通道二</Option>
                         <Option value="3" key="3">通道三</Option>
@@ -119,7 +117,7 @@ export default class MainMonitorConcisePage extends Component{
                       </Select>
                     </div>
                   </div>
-                      <Video {...this.state}></Video>
+                  <Video {...this.state}></Video> 
                   </div>
                 </div>
               </div>
