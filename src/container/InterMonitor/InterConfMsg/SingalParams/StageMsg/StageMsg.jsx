@@ -9,7 +9,6 @@ class StageMsg extends Component {
     this.state = {
       interInfoList: null,  //字典数据
       interStageList: null,   //列表数据
-      interMoveList: null,  //空
       interDirDisplay:false
     }
     this.dirInfoList="/control-application-front/basic/info/listCodeByCodeType" //字典
@@ -24,8 +23,7 @@ class StageMsg extends Component {
       // console.log(res,"字典")
       const { code , data} = res.data
       if (code === 200 && data) {
-        const stateName = type === 6 ? 'interInfoList' : 'interMoveList'
-        this.setState({ [stateName]: data })
+        this.setState({ interInfoList: data })
       }
     })
   }
@@ -34,8 +32,7 @@ class StageMsg extends Component {
       // console.log(res.data,"列表数据")
       const { code, data } = res.data
       if (code === 200 && data) {
-        const stateName = type === 1000084 ? 'interStageList' : 'interMoveList'
-        this.setState({ [stateName]: data })
+        this.setState({ interStageList: data })
       }
     })
   }
@@ -50,8 +47,8 @@ class StageMsg extends Component {
       redyellow: 0,
       signalStageId: 0,
       stageImage: '',
-      stagename: '',
-      stageno: 0,
+      stagename: this.stagename,
+      stageno: this.stageno,
       unitId: this.interId,
       yellow: 0
     }
