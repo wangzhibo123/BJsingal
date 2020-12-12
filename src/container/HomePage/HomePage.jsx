@@ -313,7 +313,8 @@ class Homepage extends Component {
         name: '数据',
         type: 'map',
         mapType: 'beijing',
-        roam: true,
+        roam: false,
+        zoom: 1.16,
         label: {
           show: false,  //省份名称
         },
