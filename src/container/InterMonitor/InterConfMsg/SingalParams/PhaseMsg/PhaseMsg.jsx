@@ -100,9 +100,9 @@ class PhaseMsg extends Component {
     //返回图标路径
     let buttImgUrl=[];
     buttImgUrl.push(imgList)
-    let imgListArr=imgList.split(',')
+    let imgListArr= imgList && imgList.split(',')
     let baseImgUrl=localStorage.getItem("ImgUrl");
-    let newBaseImgUrl=imgListArr.map(item=>{return `${baseImgUrl}${item}`})
+    let newBaseImgUrl=imgListArr && imgListArr.map(item=>{return `${baseImgUrl}${item}`})
     return newBaseImgUrl
   }
   //添加
@@ -231,7 +231,7 @@ class PhaseMsg extends Component {
                           )
                         })
                       }
-                    </Select>:<div>{this.getInterDirImgListProperty(item.ui_image_name).map(item=>{return <img key={item} src={item} alt="" style={{marginRight:"15px",maxHeight:"25px"}}/>})}</div>}  
+                    </Select>:<div>{item.ui_image_name && this.getInterDirImgListProperty(item.ui_image_name).map(item=>{return <img key={item} src={item} alt="" style={{marginRight:"15px",maxHeight:"25px"}}/>})}</div>}  
                     </div>
                     <div className="paramsTd">{editIndex===index?  <Select style={{textAlign:"center"}} defaultValue={<img src={`${localStorage.getItem("ImgUrl")}${item.phase_image}`} alt="" maxHeight="25px"/>} onChange={this.onDirPhaseSelectMC} className="selectLength">
                       {

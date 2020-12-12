@@ -12,6 +12,7 @@ class DetectorPlan extends Component {
       isAdd: false,
       defaultNo: null,
       editIndex: null,
+      dayPlanNos: null,
     }
     this.levels = [1,2,3,4,5,6,7,8,9,10]
     this.weeks = [
@@ -21,11 +22,27 @@ class DetectorPlan extends Component {
     this.listUrl = `/control-application-front/signal/config/schedule/listSchedule?unitId=${this.interId}`
     this.saveUrl = '/control-application-front/signal/config/schedule/saveSchedule'
     this.deleteUrl = '/control-application-front/signal/config/schedule/removeSchedule'
+    this.dayplanNo = `/control-application-front/signal/config/dailyPlan/listDailyPlan?unitId=${this.interId}`
     this.saveParams = null
   }
   componentDidMount = () => {
     console.log(this.props)
     this.getDispatchPlanList()
+    this.getDayPlanNos()
+  }
+  getDayPlanNos = () => {
+    axiosInstance.get(this.dayplanNo).then((res) => {
+      const { code, data } = res.data
+      if (code === 200 && data) {
+        const listNos = []
+        data.forEach((item) => {
+          if (listNos.indexOf(item.dailyplanno) < 0) {
+            listNos.push(item.dailyplanno)
+          }
+        })
+        this.setState({ dayPlanNos: listNos })
+      }
+    })
   }
   getDispatchPlanList = () => {
     axiosInstance.get(this.listUrl).then((res) => {
@@ -109,7 +126,7 @@ class DetectorPlan extends Component {
     })
   }
   render() {
-    const { dispatchList, isAdd, defaultNo, editIndex } = this.state
+    const { dispatchList, isAdd, defaultNo, editIndex, dayPlanNos } = this.state
     return (
       <div className="paramsTable">
         <span className="addBtn" onClick={this.handleAddPlan}>新增方案</span>
@@ -152,7 +169,17 @@ class DetectorPlan extends Component {
                     }
                   </div>
                   <div className="paramsTd">{item.scheduletype === 3 ? item.weeks : item.days}</div>
-                  <div className="paramsTd">{item.dailyplanno}</div>
+                  <div className="paramsTd">
+                    {
+                      editIndex === index ?
+                      <Select defaultValue={item.priority} onChange={this.handleEditChange}>
+                        {
+                          dayPlanNos &&
+                          dayPlanNos.map(item => <Option key={item} vlaue={item} pname="dailyplanno">{item}</Option>)
+                        }
+                      </Select> : item.dailyplanno
+                    }
+                  </div>
                   <div className="paramsTd">
                     {
                       editIndex === index ?

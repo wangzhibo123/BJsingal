@@ -4,6 +4,201 @@
         height: 100%;
         position: relative;
         padding-top: 30px;
+        .editInfoBox {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0,0,0,.3);
+            .editPelMsg {
+                position: relative;
+                width: 520px;
+                height: 300px;
+                margin-top: -100px;
+                background-image: linear-gradient(to bottom, #031c44, #002678, #031c44);
+                border: 1px solid rgba(62,112,255,.2);
+                .activeBtn {
+                    position: absolute;
+                    right: 0;
+                    bottom: 5px;
+                    display: flex;
+                    .btn {
+                        width: 65px;
+                        height: 25px;
+                        margin-right: 10px;
+                        border: 1px solid #043e78;
+                        border-radius: 3px;
+                        text-align: center;
+                        cursor: pointer;
+                        color: #88AFF8;
+                        &:hover {
+                            color: #40E7FF;
+                        }
+                    }
+                }
+                .stageListmsg {
+                    z-index: 1;
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 120px;
+                    padding-bottom: 30px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    background-image: linear-gradient(to bottom, #031c44, #002678, #031c44);
+                    
+                    .ant-radio-group {
+                        display: flex;
+                    }
+                    .stageInfo {
+                        width: 40px;
+                        margin-right: 5px;
+                        text-align: center;
+                        .stageInput {
+                            width: 40px;
+                            height: 24px;
+                            text-align: center;
+                            background-color: transparent;
+                            border: 1px solid #043e78;
+                            border-radius: 3px;
+                            outline: none;
+                            color: #fff;
+                        }
+                        .addIcon {
+                            font-size: 16px;
+                            color: #fff;
+                            background-color: #88AFF8;
+                            border-radius: 2px;
+                            cursor: pointer;
+                        }
+                        .ant-radio-wrapper {
+                            margin-right: 0;
+                        }
+                        .ant-radio-inner {
+                            background-color: transparent;
+                        }
+                    }
+                }
+                .editItem {
+                    min-height: 40px;
+                    display: flex;
+                    align-items: center;
+                    .eitems {
+                        flex: 1;
+                        display: flex;
+                        align-items: center;
+                        flex-wrap: wrap;
+                        .itemTxt {
+                            display: inline-block;
+                            width: 100px;
+                            text-align: right;
+                        }
+                        .longTxt {
+                            width: 120px;
+                        }
+                        .pl10 {
+                            padding-left: 10px;
+                        }
+                        .editInput {
+                            width: 100px;
+                            height: 30px;
+                            background-color: transparent;
+                            border: 1px solid #043e78;
+                            border-radius: 3px;
+                            outline: none;
+                            color: #fff;
+                            .ant-input-number-handler-wrap {
+                                background-color: #043e78;
+                                border: none;
+                                .ant-input-number-handler {
+                                    .ant-input-number-handler-up-inner, .ant-input-number-handler-down-inner {
+                                        color: #fff;
+                                        font-size: 12px;
+                                        border: none;
+                                    }
+                                }
+                            }
+                            .ant-input-number-handler-down {
+                                border: none;
+                            }
+                        }
+                        .stageInfo {
+                            width: 40px;
+                            margin-right: 5px;
+                            text-align: center;
+                            .stageInput {
+                                width: 40px;
+                                height: 24px;
+                                text-align: center;
+                            }
+                            .addIcon {
+                                font-size: 16px;
+                                color: #fff;
+                                background-color: #88AFF8;
+                                border-radius: 2px;
+                                cursor: pointer;
+                            }
+                        }
+                        .longInput {
+                            width: 260px;
+                        }
+                        .ant-select-multiple {
+                            .ant-select-selector {
+                                width: 300px;
+                                .ant-select-selection-item {
+                                    margin-top: 0;
+                                    background-color: transparent;
+                                    border: none;
+                                    .ant-select-selection-item-remove {
+                                        color: #00ffff;
+                                        &:hover {
+                                            color: #00ffff;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .ant-select-selector {
+                            width: 100px;
+                            height: 30px;
+                            background-color: transparent;
+                            border-color: #043e78;
+                            color: #fff;
+                        }
+                        .ant-select-arrow {
+                            color: #fff;
+                        }
+                    }
+                }
+                .editFoot {
+                    display: flex;
+                    justify-content: flex-end;
+                    margin-top: 10px;
+                    padding-top: 10px;
+                    border-top: 1px solid #043e78;
+                    .footBtn {
+                        width: 65px;
+                        height: 30px;
+                        margin-right: 10px;
+                        text-align: center;
+                        line-height: 30px;
+                        border-radius: 4px;
+                        background-color: #043e78;
+                        cursor: pointer;
+                        &:hover {
+                            color: #00E5D3;
+                        }
+                    }
+                }
+            }
+        }
         .addBtn {
             position: absolute;
             top: 5px;
