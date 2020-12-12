@@ -59,7 +59,6 @@
 .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
     background-color: rgba(14 ,52 ,133,.55);
 }
-
 .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
     font-weight: 600;
     background-color: rgba(0 ,69 ,154,1);
@@ -70,14 +69,14 @@
 //下拉多选图片
 .ant-select-item-option-content{
     text-align: center;
-    line-height: 20px;
+    line-height: 22px;
     img{
-        height: 20px;
+        height: 22px;
     }
 }
 .ant-select-selection-item-content{
     img{
-        height: 10px;
+        height: 20px;
     }
 }
 //下拉单选

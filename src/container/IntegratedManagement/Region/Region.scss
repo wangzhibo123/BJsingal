@@ -5,6 +5,45 @@ $bor-color: #a5fcff;
     width: 100%;
     height: 100%;
     background-color: #021027;
+    .mapLegend {
+        position: absolute;
+        bottom: 5px;
+        right: 0;
+        height: 30px;
+        display: flex;
+        z-index: 9;
+        flex-direction: column;
+        background-color: rgba(12, 74, 131, 0.6);
+        border: 1px solid #0e6abf;
+        .pointStatus,
+        .legendBox {
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .statusItem {
+                width: 80px;
+                height: 30px;
+                text-align: center;
+                line-height: 30px;
+                .pointIcon {
+                    display: inline-block;
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                }
+                .onlineColor {
+                    background-color: #01fa00;
+                }
+                .offlineColor {
+                    background-color: #d7c19c;
+                }
+                .faultColor {
+                    background-color: #ff0200;
+                }
+            }
+        }
+    }
     .sildeRight {
         position: fixed;
         top: 100px;
@@ -114,20 +153,20 @@ $bor-color: #a5fcff;
                                     padding-right: 20px;
                                     display: flex;
                                     align-items: center;
-                                    >span {
+                                    > span {
                                         margin-right: 3px;
                                         color: #5f9ef2;
                                         font-size: 16px;
                                         line-height: 20px;
                                     }
-                                    >li{
+                                    > li {
                                         width: 207px;
                                         line-height: 20px;
                                         overflow: hidden;
                                         text-overflow: ellipsis;
                                         white-space: nowrap;
                                     }
-                                    b{
+                                    b {
                                         color: #5f9ef2;
                                         float: right;
                                         height: 20px;
@@ -143,19 +182,19 @@ $bor-color: #a5fcff;
                                         span {
                                             height: 16px;
                                             line-height: 16px;
-                                            color: #02C6E8;
+                                            color: #02c6e8;
                                             background-color: #0668c2;
                                             margin-left: 20px;
                                             margin-top: 10px;
                                             padding: 0px 5px;
                                             border-radius: 5px;
-                                            &:nth-child(1){
+                                            &:nth-child(1) {
                                                 width: 115px;
                                                 overflow: hidden;
                                                 text-overflow: ellipsis;
                                                 white-space: nowrap;
                                             }
-                                            &:nth-child(2){
+                                            &:nth-child(2) {
                                                 max-width: 115px;
                                                 overflow: hidden;
                                                 text-overflow: ellipsis;
@@ -244,7 +283,7 @@ $bor-color: #a5fcff;
                 height: calc(100% - 60px);
                 padding-right: 5px;
                 > p {
-                    height: 25px;
+                    height: 30px;
                     color: #5f9ef2;
                     padding-left: 15px;
                     display: flex;
@@ -324,19 +363,19 @@ $bor-color: #a5fcff;
                                         span {
                                             height: 16px;
                                             line-height: 16px;
-                                            color: #02C6E8;
+                                            color: #02c6e8;
                                             background-color: #0668c2;
                                             margin-left: 20px;
                                             margin-top: 10px;
                                             padding: 0px 5px;
                                             border-radius: 5px;
-                                            &:nth-child(1){
+                                            &:nth-child(1) {
                                                 width: 115px;
                                                 overflow: hidden;
                                                 text-overflow: ellipsis;
                                                 white-space: nowrap;
                                             }
-                                            &:nth-child(2){
+                                            &:nth-child(2) {
                                                 max-width: 115px;
                                                 overflow: hidden;
                                                 text-overflow: ellipsis;
@@ -571,6 +610,9 @@ $bor-color: #a5fcff;
                 top: 15px;
                 right: -6px;
             }
+            .ant-menu-item {
+                color: #86b7fa !important;
+            }
         }
     }
     .container {
@@ -580,7 +622,10 @@ $bor-color: #a5fcff;
         width: 100%;
         height: calc(100% - 70px);
         .markers {
-            background-color: red !important;
+            background-color: rgba(0, 255, 255, 0.3) !important;
+            > div {
+                background-color: #00ffff !important;
+            }
         }
         .contentCenter {
             width: 100%;

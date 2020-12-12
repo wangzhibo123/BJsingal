@@ -6,31 +6,45 @@ $input-bac: rgba(0, 169, 192, 0.2);
     width: 100%;
     height: 100%;
     background-color: #021027;
-    // .openEdit {
-    //     position: absolute;
-    //     width: 105px;
-    //     height: 30px;
-    //     left: 320px;
-    //     top: 100px;
-    //     z-index: 9;
-    //     :global(.ant-switch) {
-    //         width: 105px;
-    //         height: 30px;
-    //         display: flex;
-    //         align-items: center;
-    //         justify-content: center;
-    //         background-color: #0d4a4f;
-    //     }
-    //     :global(.ant-switch-handle) {
-    //         top: 6px;
-    //     }
-    //     :global(.ant-switch-handle::before) {
-    //         background-color: #04d40f;
-    //     }
-    //     :global(.ant-switch-checked) {
-    //         background-color: #18346a;
-    //     }
-    // }
+    .mapLegend {
+        position: absolute;
+        bottom: 5px;
+        right: 0;
+        height: 30px;
+        display: flex;
+        z-index: 9;
+        flex-direction: column;
+        background-color: rgba(12, 74, 131, 0.6);
+        border: 1px solid #0e6abf;
+        .pointStatus,
+        .legendBox {
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .statusItem {
+                width: 80px;
+                height: 30px;
+                text-align: center;
+                line-height: 30px;
+                .pointIcon {
+                    display: inline-block;
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                }
+                .onlineColor {
+                    background-color: #01fa00;
+                }
+                .offlineColor {
+                    background-color: #d7c19c;
+                }
+                .faultColor {
+                    background-color: #ff0200;
+                }
+            }
+        }
+    }
     .videoBox {
         width: 330px;
         height: 470px;
@@ -519,6 +533,11 @@ $input-bac: rgba(0, 169, 192, 0.2);
                                     display: flex;
                                     justify-content: space-between;
                                     margin-bottom: 5px;
+                                    > div {
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;
+                                        white-space: nowrap;
+                                    }
                                     span {
                                         color: #05e5eb;
                                     }
@@ -528,7 +547,7 @@ $input-bac: rgba(0, 169, 192, 0.2);
                                     font-size: 12px;
                                     height: 90px;
                                     border: 1px solid #064393;
-                                    padding: 5px 8px;
+                                    padding: 5px 5px;
                                     .mountingThead {
                                         height: 20px;
                                         display: flex;
@@ -536,23 +555,33 @@ $input-bac: rgba(0, 169, 192, 0.2);
                                         justify-content: space-between;
                                         margin-bottom: 2px;
                                         span {
-                                            color: #05e5eb;
-                                            background-color: #0055b8;
+                                            color: black;
+                                            background-color: #a1a1a1;
                                             padding: 1px 3px;
                                             border-radius: 8px;
                                             cursor: pointer;
                                             margin-right: 10px;
                                             &:hover {
-                                                color: white;
+                                                color: #e7eaed;
                                             }
                                         }
-
+                                        input {
+                                            width: 30px;
+                                            border: none;
+                                            outline: none;
+                                            color: #00f0ff;
+                                            background: rgba(5, 32, 87, 0.7);
+                                        }
+                                        .active {
+                                            color: #05e5eb;
+                                            background-color: #0055b8;
+                                        }
                                         div {
                                             color: #1df249;
                                         }
                                     }
                                     .mountingTh {
-                                        height: 70px;
+                                        height: 60px;
                                         display: flex;
                                         flex-wrap: wrap;
                                         flex: 1 1;
@@ -560,7 +589,7 @@ $input-bac: rgba(0, 169, 192, 0.2);
                                         > .phaseinner {
                                             width: 25px;
                                             height: 25px;
-                                            margin-right: 3px;
+                                            margin-right: 10px;
                                             cursor: pointer;
                                             img {
                                                 width: 100%;
@@ -569,7 +598,7 @@ $input-bac: rgba(0, 169, 192, 0.2);
                                         }
                                         .phaseTime {
                                             display: flex;
-                                            width: 60px;
+                                            width: 70px;
                                             height: 30px;
                                             .phaseinner {
                                                 width: 25px;
@@ -588,7 +617,14 @@ $input-bac: rgba(0, 169, 192, 0.2);
                                                 color: #00f0ff;
                                                 background: linear-gradient(0deg, #0066b4 0%, #00f0ff 100%);
                                                 background-clip: text;
-                                                -webkit-text-fill-color: transparent;
+                                                // -webkit-text-fill-color: transparent;
+                                                > input {
+                                                    width: 30px;
+                                                    border: none;
+                                                    outline: none;
+                                                    color: #00f0ff;
+                                                    background: rgba(5, 32, 87, 0.7);
+                                                }
                                                 .caculate {
                                                     width: 15px;
                                                     height: 100%;
@@ -1408,7 +1444,10 @@ $input-bac: rgba(0, 169, 192, 0.2);
             background: transparent;
         }
         :global(.markers) {
-            background-color: red !important;
+            background-color: rgba(0, 255, 255, 0.3) !important;
+            > div {
+                background-color: #00ffff !important;
+            }
         }
         :global(.infoWindow) {
             width: 330px;

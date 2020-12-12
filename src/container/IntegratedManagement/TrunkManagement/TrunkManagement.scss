@@ -5,6 +5,45 @@ $bor-color: #a5fcff;
     width: 100%;
     height: 100%;
     background-color: #021027;
+    .mapLegend {
+        position: absolute;
+        bottom: 5px;
+        right: 0;
+        height: 30px;
+        display: flex;
+        z-index: 9;
+        flex-direction: column;
+        background-color: rgba(12, 74, 131, 0.6);
+        border: 1px solid #0e6abf;
+        .pointStatus,
+        .legendBox {
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .statusItem {
+                width: 80px;
+                height: 30px;
+                text-align: center;
+                line-height: 30px;
+                .pointIcon {
+                    display: inline-block;
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                }
+                .onlineColor {
+                    background-color: #01fa00;
+                }
+                .offlineColor {
+                    background-color: #d7c19c;
+                }
+                .faultColor {
+                    background-color: #ff0200;
+                }
+            }
+        }
+    }
     .sildeRight {
         position: fixed;
         top: 100px;
@@ -409,6 +448,9 @@ $bor-color: #a5fcff;
             width: 100%;
             height: 100%;
             overflow-y: auto;
+            .ant-menu-item {
+                color: #86b7fa !important;
+            }
             // .anticon {
             //     position: absolute;
             //     top: 15px;
@@ -423,7 +465,10 @@ $bor-color: #a5fcff;
         width: 100%;
         height: calc(100% - 70px);
         .markers {
-            background-color: red !important;
+            background-color: rgba(0, 255, 255, 0.3) !important;
+            > div {
+                background-color: #00ffff !important;
+            }
         }
         .mapabcgl-popup-close-button {
             top: 5px;
@@ -450,32 +495,27 @@ $bor-color: #a5fcff;
             // }
             .mapabcgl-popup-content {
                 padding: 0;
-                min-width: 400px;
                 background-color: transparent;
                 .mapabcgl-popup-close-button {
                     right: 10px;
                     top: 8px;
                     font-size: 26px;
-                    color: #62bbff;
+                    color: #02a4fb;
                 }
                 .infoWindow {
                     width: 400px;
-                    height: 225px;
-                    background: rgba(3, 16, 96, 0.8);
-                    background-image: linear-gradient(
-                        to bottom,
-                        rgba(3, 38, 120, 0.8),
-                        rgba(0, 59, 129, 0.8),
-                        rgba(3, 38, 120, 0.8)
-                    );
+                    height: 205px;
                     font-size: 14px;
-                    color: #62bbff;
-                    border-radius: 4px;
-                    box-shadow: inset 0 0 10px rgba(62, 112, 255, 0.8);
+                    color: #fff;
+                    background: url(../../imgs/mapInfobg.png) center center no-repeat;
+                    background-size: 100% 100%;
                     .infotitle {
                         height: 40px;
                         line-height: 40px;
                         padding-left: 20px;
+                        font-size: 16px;
+                        color: #02a4fb;
+                        text-decoration: underline;
                     }
                     .interMessage {
                         display: flex;
@@ -484,9 +524,9 @@ $bor-color: #a5fcff;
                         justify-content: space-between;
                         .message {
                             width: 180px;
-                            height: 35px;
+                            height: 30px;
                             text-align: left;
-                            line-height: 35px;
+                            line-height: 30px;
                         }
                     }
                     .interDetails {
@@ -495,11 +535,12 @@ $bor-color: #a5fcff;
                         align-items: center;
                         justify-content: center;
                         .monitorBtn {
-                            width: 80px;
-                            height: 28px;
+                            width: 75px;
+                            height: 26px;
+                            background: url(../../imgs/mapInfobtn.png) center center no-repeat;
+                            background-size: 100% 100%;
                             text-align: center;
-                            line-height: 28px;
-                            background-color: rgba(98, 187, 255, 0.4);
+                            line-height: 26px;
                             cursor: pointer;
                         }
                     }

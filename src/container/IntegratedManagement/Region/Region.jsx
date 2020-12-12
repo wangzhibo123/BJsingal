@@ -42,7 +42,7 @@ class Region extends Component {
     ]
     this.defaultChildren = []
     this.newChildId = []
-    this.getPointAll = '/control-application-front/unitInfo/getPointAll' // 加载所有点位
+    this.getPointAll = '/control-application-front/index/getPointByFault?user_id=1' // 加载所有点位
     this.loadSubDistrictTree = '/control-application-front/subDistrictManagement/loadSubDistrictTree' // 区域树
     this.deleteSubDistrict = '/control-application-front/subDistrictManagement/deleteSubDistrict' // 删除子区信息
     this.saveOrUpdateSubDistrict = '/control-application-front/subDistrictManagement/saveOrUpdateSubDistrict' // 新增修改子区信息
@@ -51,11 +51,31 @@ class Region extends Component {
     this.addRoad = false // 新增区域数组
     this.unitArr = []
     this.switchViews = false
+    this.regionRoad = {
+      sub_district_name: '请输入区域名称',
+      sub_district_code: '请输入区域编号',
+      sub_district_user: '请输入区域创建者',
+      unitArr: '请在页面选择点位'
+    }
   }
   componentDidMount = () => {
     this.renderMap()
     this.getDataList()
     this.addMarkerData()
+  }
+  ficationRoad = () => { // 验证新增路口不能为空
+    for (const i in this.regionRoad) {
+      if (!this.state[i]) {
+        return message.warning(this.regionRoad[i])
+      } else {
+        if (i == 'sub_district_code' || i == 'sub_district_user') {
+          const reg = /^[0-9]*$/.test(this.state[i])
+          if (!reg) {
+            return message.warning(`${this.trunkRoad[i]}且只能为数字`)
+          }
+        }
+      }
+    }
   }
   initializationState = () => { // 新增修改变量初始化
     this.setState({
@@ -68,12 +88,12 @@ class Region extends Component {
   }
   addMarkerData = () => {
     axiosInstance.post(this.getPointAll).then(res => {
-      const { code, list } = res.data
+      const { code, pointlist } = res.data
       if (code === '1') {
-        this.pointLists = list
-        this.addMarker(this.pointLists, 8)
+        this.pointLists = pointlist
+        this.addMarker(this.pointLists, 13)
         this.setState({
-          pointlist: list,
+          pointlist: pointlist,
         })
       }
     })
@@ -111,13 +131,24 @@ class Region extends Component {
       const interList = zoomVal < 13 ? points && points.filter(item => item.unit_grade <= 4) : points
       console.log(points, zoomVal, interList, 'sdfsdfds')
       interList && interList.forEach((item, index) => {
+        const innerBgcolor = item.alarm_state === 1 ? '#08c208' : item.alarm_state === 2 ? '#D7C19C' : '#FF0200'
+        const bgColor = item.alarm_state === 1 ? 'rgba(8,194,8,.3)' : item.alarm_state === 2 ? 'rgba(215,193,156,.3)' : 'rgba(255,2,0,.3)'
         const el = document.createElement('div')
         el.style.width = '20px'
         el.style.height = '20px'
         el.style.borderRadius = '50%'
-        el.style.backgroundColor = 'green'
+        el.style.backgroundColor = bgColor
+        el.style.display = 'flex'
+        el.style.justifyContent = 'center'
+        el.style.alignItems = 'center'
         el.style.cursor = 'pointer'
         el.id = 'marker' + item.unit_code
+        const childEl = document.createElement('div')
+        childEl.style.width = '10px'
+        childEl.style.height = '10px'
+        childEl.style.borderRadius = '50%'
+        childEl.style.backgroundColor = innerBgcolor
+        el.appendChild(childEl)
         el.addEventListener('click', function (e) {
           // console.log(item, currentThis.addRoad, '123456')
           if (currentThis.addRoad) {
@@ -131,7 +162,6 @@ class Region extends Component {
         if (isNaN(item.longitude) || isNaN(item.latitude)) {
           console.log(index)
         }
-        console.log(item, item.longitude, item.latitude, 'dfdfdfdfvvvvv::::')
         const marker = new window.mapabcgl.Marker(el)
           .setLngLat([item.longitude, item.latitude])
           .addTo(this.map)
@@ -201,10 +231,13 @@ class Region extends Component {
     if (id === 1) {
       // this.getAddDataList()
       this.initializationState()
+      this.removeRoadCircle()
       this.addRoad = true
       this.setState({
         rights: 0,
+        ismodify: false,
         isAddEdit: true,
+        menuOpenkeys: []
       })
     } else if (id === 3) {
       this.switchViews = !this.switchViews
@@ -244,7 +277,6 @@ class Region extends Component {
     }
   }
   onOpeSubMenu = (e, SubMenuItem) => { // 数据回显
-
     this.isAddEdit = false
     this.roaddId = SubMenuItem.id
     this.setState({
@@ -256,6 +288,7 @@ class Region extends Component {
       sub_district_name: SubMenuItem.sub_district_name,
       sub_district_user: SubMenuItem.sub_district_user,
       roadtitle: '区域信息',
+      clickNum:0, // 新增按钮取消
     })
   }
   onClickMenuItem = (item) => {
@@ -306,7 +339,7 @@ class Region extends Component {
       })
     }
   }
-  handclickAddEdit = () => {// 添加或修改路口按钮
+  handclickAddEdit = async () => {// 添加或修改路口按钮
     let str = ''
     const {
       detail,
@@ -324,32 +357,34 @@ class Region extends Component {
       detail: detail,
       id: '',
     }
-    console.log(this.FormData(addobjs), sub_district_name, sub_district_user, sub_district_code, detail, ":::::")
-    if (this.showName === 'edit') {
-      addobjs.id = JSON.stringify(this.roaddId)
-    }
-    axiosInstance.post(`${this.saveOrUpdateSubDistrict}?${this.FormData(addobjs)}`,).then(res => { // 区域
-      const { code, result } = res.data
-      if (code === '1') {
-        this.setState({
-          rights: -300,
-          menuOpenkeys: [],
-        })
-        message.info(result)
-        this.addRoad = false
-        this.getDataList()
-        this.initializationState()
-        this.removeRoadCircle()
-      } else {
-        // this.setState({
-        //   rights: -300,
-        //   menuOpenkeys: [],
-        // })
-        // message.info(result)
+    const as = await this.ficationRoad()
+    if (!as) {
+      if (this.showName === 'edit') {
+        addobjs.id = JSON.stringify(this.roaddId)
       }
-      // this.getDataList()
-      // this.initializationState()
-    })
+      axiosInstance.post(`${this.saveOrUpdateSubDistrict}?${this.FormData(addobjs)}`,).then(res => { // 区域
+        const { code, result } = res.data
+        if (code === '1') {
+          this.setState({
+            rights: -300,
+            menuOpenkeys: [],
+          })
+          message.info(result)
+          this.addRoad = false
+          this.getDataList()
+          this.initializationState()
+          this.removeRoadCircle()
+        } else {
+          // this.setState({
+          //   rights: -300,
+          //   menuOpenkeys: [],
+          // })
+          // message.info(result)
+        }
+        // this.getDataList()
+        // this.initializationState()
+      })
+    }
   }
   delectroad = (id) => {
     const index = this.unitArr.findIndex(item => item.id === id)
@@ -410,6 +445,13 @@ class Region extends Component {
     } = this.state
     return (
       <div className='RegionBox'>
+        <div className="mapLegend">
+          <div className="pointStatus">
+            <div className="statusItem"><span className="pointIcon onlineColor"></span> 在线</div>
+            <div className="statusItem"><span className="pointIcon offlineColor"></span> 离线</div>
+            <div className="statusItem"><span className="pointIcon faultColor"></span> 故障</div>
+          </div>
+        </div>
         <div className='sildeRight' style={{ right: `${rights}px` }}>
           <div className="slideRightBoxAdd">
             <div className='addMainLine'>
@@ -550,7 +592,7 @@ class Region extends Component {
                     {
                       item.childrens &&
                       item.childrens.map((child) => (
-                        <Menu.Item key={child.id}>{child.unit_name}</Menu.Item>
+                        <Menu.Item disabled={true} key={child.id}>{child.unit_name}</Menu.Item>
                       ))
                     }
                   </SubMenu>

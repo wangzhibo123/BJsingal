@@ -76,6 +76,7 @@ class PlancontrolPage extends Component {
       getDirectionList: [], // 获取所有方向
       getTaskStatusList: [], // 获取任务状态
       scheduled_time: moment(moment().format("YYYY-MM-DD HH:mm:ss")),
+      make_timeYu: moment(moment().format("YYYY-MM-DD HH:mm:ss")),
       district_id: '', // 预案所属区域
       district_idvalue: '',
       start_unit: '',
@@ -107,7 +108,7 @@ class PlancontrolPage extends Component {
     this.deleteAreaPlan = '/control-application-front/planControl/deleteAreaPlan' // 删除区域应急预案
     this.deleteVipPlan = '/control-application-front/planControl/deleteVipPlan' // 删除特勤预案
     this.getDirection = '/control-application-front/planControl/getDirection' // 获取方向
-    this.getPointAll = '/control-application-front/planControl/getPointAll' // 加载所有点位
+    this.getPointAll = '/control-application-front/index/getPointByFault?user_id=1' // 加载所有点位
     this.getTaskStatus = '/control-application-front/planControl/getTaskStatus' // 获取任务状态
     this.loadPlanAreaUnit = '/control-application-front/planControl/loadPlanAreaUnit' // 获取区域应急预案下的路口
     this.loadPlanTable = '/control-application-front/planControl/loadPlanTable' // 预案列表
@@ -200,10 +201,27 @@ class PlancontrolPage extends Component {
   //     }
   //   })
   // }
-  getismodify = () => { // 保存应急预案添加修改
+  getismodify = () => { // 保存应急预案添加修改qiao1
+    const { planname, make_timeYu } = this.state
     this.reservePlanObjs.list = this.treeChild
-    console.log(this.reservePlanObjs, 'dfdfsss')
-
+    this.reservePlanObjs.make_time = make_timeYu._i
+    this.reservePlanObjs.plan_name = planname
+    console.log(this.treeChild, this.reservePlanObjs, 'dfdfsss')
+    axiosInstance.post(this.addOrUpdateAreaPlan, this.reservePlanObjs).then(res => {
+      console.log(res.data, 'sss')
+      const { code } = res.data
+      if (code === '1') {
+        this.getloadPlanTable(2)
+        this.treeChild = []
+        this.setState({
+          rights: -320,
+          treeChild: [],
+          indId: 0,
+          isaddlistTreeLi: false,
+          isaddlistTree: false,
+        })
+      }
+    })
   }
   handclickAddEdit = () => { // 保存操作11111
     if (this.isreserveplan) {
@@ -250,6 +268,7 @@ class PlancontrolPage extends Component {
   }
   // 取消显示 
   delectHandclickNone = () => {
+    this.addRoad = false
     this.setState({
       rightsNew: -320,
       isaddlistTreeLi: false,
@@ -279,25 +298,44 @@ class PlancontrolPage extends Component {
     }
   }
   deleteOks = () => {
-    axiosInstance.post(`${this.deleteVipPlan}/${this.handlesId}`).then(res => {
-      const { code } = res.data
-      if (code === '1') {
-        this.delectStartEnd()
-        message.error('删除成功')
-        this.roadCircle(this.childArr)
-        this.childArr = []
-        this.childArrList = []
-        this.getloadPlanTable(1)
-        this.setState({
-          rightsNew: -320,
-          childArr: [],
-          childArrList: [],
-          indId: 0,
-          deleteConfirm: false,
-          socketChild: [],
-        })
-      }
-    })
+    if (this.isreserveplan) {
+      axiosInstance.post(`${this.deleteVipPlan}/${this.handlesId}`).then(res => {
+        const { code } = res.data
+        if (code === '1') {
+          this.addRoad = false
+          this.delectStartEnd()
+          message.error('删除成功')
+          this.roadCircle(this.childArr)
+          this.childArr = []
+          this.childArrList = []
+          this.getloadPlanTable(1)
+          this.setState({
+            rightsNew: -320,
+            childArr: [],
+            childArrList: [],
+            indId: 0,
+            deleteConfirm: false,
+            socketChild: [],
+          })
+        }
+      })
+    } else {
+      axiosInstance.post(`${this.deleteAreaPlan}/${this.handlesId}`).then(res => {
+        const { code } = res.data
+        if (code === '1') {
+          message.error('删除成功')
+          this.delectRoadRegion()
+          this.getloadPlanTable(2)
+          this.treeChild = []
+          this.setState({
+            rightsNew: -320,
+            rights: -320,
+            deleteConfirm: false,
+            treeChild: [],
+          })
+        }
+      })
+    }
   }
   handclickAddEditModify = () => {
     ////////280
@@ -345,10 +383,10 @@ class PlancontrolPage extends Component {
   }
   getAddDataList = () => {
     axiosInstance.post(this.getPointAll).then(res => {
-      const { code, list } = res.data
+      const { code, pointlist } = res.data
       if (code === '1') {
-        this.pointLists = list
-        this.addMarker(this.pointLists, 8)
+        this.pointLists = pointlist
+        this.addMarker(this.pointLists, 14)
       }
     })
   }
@@ -412,13 +450,26 @@ class PlancontrolPage extends Component {
       const interList = zoomVal < 13 ? points && points.filter(item => item.unit_grade <= 4) : points
       // console.log(interList, 'sssss')
       interList && interList.forEach((item, index) => {
+        // const hasMode = this.showMode.indexOf(item.control_state) < 0
+        // const hasSingal = this.showSingal.indexOf(item.signal_system_codes) < 0
+        const innerBgcolor = item.alarm_state === 1 ? '#08c208' : item.alarm_state === 2 ? '#D7C19C' : '#FF0200'
+        const bgColor = item.alarm_state === 1 ? 'rgba(8,194,8,.3)' : item.alarm_state === 2 ? 'rgba(215,193,156,.3)' : 'rgba(255,2,0,.3)'
         const el = document.createElement('div')
         el.style.width = '20px'
         el.style.height = '20px'
         el.style.borderRadius = '50%'
-        el.style.backgroundColor = 'green'
+        el.style.backgroundColor = bgColor
+        el.style.display = 'flex'
+        el.style.justifyContent = 'center'
+        el.style.alignItems = 'center'
         el.style.cursor = 'pointer'
         el.id = 'marker' + item.id
+        const childEl = document.createElement('div')
+        childEl.style.width = '10px'
+        childEl.style.height = '10px'
+        childEl.style.borderRadius = '50%'
+        childEl.style.backgroundColor = innerBgcolor
+        el.appendChild(childEl)
         var marker = '', channelmarker = [];
         el.addEventListener('contextmenu', function (event) {
           if (_this.markerLier) {
@@ -624,18 +675,20 @@ class PlancontrolPage extends Component {
                 currentThis.getphase(item) // 选择需求阶段
               } else { // 应急预案添加 qiao1
                 $('#marker' + item.id).addClass('markers')
+                // console.log(item, 'ssvvv')
                 let objser = {
                   "area_contingency_id": "",
                   "contingenct_type": 1, // 2 阶段锁定
-                  "contingency_type_value": "",
+                  "contingency_type_value": "配时方案定义",
                   "cyclelen": 0, // 周期
                   "id": "",
                   "listArr": [],
                   "unit_id": "",
+                  "nameRoad": item.unit_name,
                 }
                 objser.unit_id = item.id
                 currentThis.treeChild.push(objser)
-                currentThis.treeChildItem.push(item)
+                // currentThis.treeChildItem.push(item)
                 currentThis.getphase(item) // 添加所有相位
                 currentThis.setState({
                   treeChild: currentThis.treeChild,
@@ -678,20 +731,24 @@ class PlancontrolPage extends Component {
         } else { // 应急预案
           console.log(list)
           let arrAll = []
-          list.forEach(item => {
+          list.forEach(itemer => {
             let objser = {
               "area_contingency_unit_id": "",
               "id": "",
-              "stage_id": "",
-              "stage_order": 0,
-              "stage_plan_id": "",
-              "stage_time": 0
+              "stage_id": itemer.id,
+              "stage_order": itemer.stageno,
+              "stage_plan_id": itemer.phaseplanid,
+              "stage_time": 0,
+              "stage_image": itemer.stage_image
             }
+            arrAll.push(objser)
           })
-
           const ind = this.treeChild.findIndex(items => items.unit_id === item.id)
-          console.log(this.treeChild, ind, item, 'ddddddddddds')
-          this.treeChild[ind].listArr = list
+          // console.log(this.treeChild, ind, item, 'ddddddddddds')
+          this.treeChild[ind].listArr = arrAll
+          this.setState({
+            treeChild: this.treeChild
+          })
         }
       }
     })
@@ -1145,6 +1202,20 @@ class PlancontrolPage extends Component {
     this.addWin(arrs)
 
   }
+  addRoadRegion = () => { // 区域点位添加颜色
+    if (this.treeChild.length) {
+      this.treeChild.forEach(item => {
+        $('#marker' + item.unit_id).addClass('markers')
+      })
+    }
+  }
+  delectRoadRegion = () => { // 区域点位删除颜色
+    if (this.treeChild.length) {
+      this.treeChild.forEach(item => {
+        $('#marker' + item.unit_id).removeClass('markers')
+      })
+    }
+  }
   handleShowInterConf = (item) => { // 点击回显编辑 1111111
     const _this = this
     this.handlesId = item.id
@@ -1224,7 +1295,6 @@ class PlancontrolPage extends Component {
             .setOffset([0, -20])
             .addTo(_this.map);
           return marker;
-
         };
 
         this.drawLine(arrList, list)
@@ -1246,29 +1316,61 @@ class PlancontrolPage extends Component {
         })
       })
     } else {
-      this.setState({
-        rightsNew: -320,
-        rights: 0,
-        ismodify: true,
-        isAddEdit: false,
-        roadtitleNew: '查看应急',
+      // console.log(item, 'sss')
+      axiosInstance.post(`${this.loadPlanAreaUnit}?id=${item.id}`).then(res => {
+        const { code, list } = res.data
+        if (code === '1') {
+          this.delectRoadRegion()
+          this.reservePlanObjs = { // qiao1
+            "area_id": "",
+            "detail": "",
+            "id": item.id,
+            "list": [],
+            "make_time": "",
+            "make_user": 1,
+            "plan_name": "",
+            "task_state": 1
+          }
+          this.addRoad = true
+          this.isreserveplan = false
+          list.forEach(item => {
+            if (item.stage_id.length) {
+              const stage_idArr = item.stage_id.split(',')
+              const stage_imageArr = item.stage_image.split(',')
+              const stage_timeArr = item.stage_time.split(',')
+              const stage_plan_idArr = item.stage_plan_id.split(',')
+              const stage_orderArr = item.stage_order.split(',')
+              let listArr = []
+              for (let index = 0; index < stage_idArr.length; index++) {
+                let objs = {}
+                objs.id = ''
+                objs.area_contingency_id = ''
+                objs.stage_id = stage_idArr[index]
+                objs.stage_image = stage_imageArr[index]
+                objs.stage_time = stage_timeArr[index]
+                objs.stage_plan_id = stage_plan_idArr[index]
+                objs.stage_order = stage_orderArr[index]
+                listArr.push(objs)
+              }
+              item.listArr = listArr
+            }
+          })
+          this.treeChild = list
+          this.addRoadRegion()
+          this.setState({
+            rightsNew: -320,
+            rights: 0,
+            ismodify: true,
+            isAddEdit: false,
+            indId: item.id,
+            roadtitleNew: '查看应急',
+            treeChild: list,
+            planname: item.plan_name,
+            make_timeYu: moment(item.make_time),
+          })
+        }
       })
     }
-    // if (!this.isreserveplan) {
-    //   this.setState({
-    //     rightsNew: -320,
-    //     rights: 0,
-    //     isAddEdit: false,
-    //     ismodify: true,
-    //   })
-    // } else {
-    //   this.setState({
-    //     rights: -320,
-    //     rightsNew: 0,
-    //     isAddEdit: false,
-    //     ismodify: true,
-    //   })
-    // }
   }
   handleStartTimeChangestart = (date, dateString) => {
     // console.log(dateString, 'vvssss')
@@ -1280,6 +1382,11 @@ class PlancontrolPage extends Component {
     console.log(dateString, 'vvssss')
     this.setState({
       scheduled_time: moment(dateString),
+    })
+  }
+  handleStartTimescheduledYu = (date, dateString) => {
+    this.setState({
+      make_timeYu: moment(dateString),
     })
   }
   handleStartTimescheduledMake = (date, dateString) => {
@@ -1297,7 +1404,14 @@ class PlancontrolPage extends Component {
     this.childArr[ind].interval_time = num
   }
   deleteList = () => {
-
+    this.addRoad = false
+    this.delectRoadRegion()
+    this.childArr = []
+    this.setState({
+      rightsNew: -320,
+      rights: -320,
+      childArr: []
+    })
   }
 
   addlistTree = () => {  // 显示新增列表
@@ -1311,13 +1425,16 @@ class PlancontrolPage extends Component {
     if (this.endmarker) {
       this.endmarker.remove();
     }
+    this.delectRoadRegion()
     this.handleShow = false
+    this.addRoad = false
     this.setState({
       planname: '',
       isaddlistTree: true,
       indId: 0,
       isaddlistTreeLi: false,
       rightsNew: -320,
+      rights: -320,
       socketChild: [],
     })
   }
@@ -1361,9 +1478,10 @@ class PlancontrolPage extends Component {
         "list": [],
         "make_time": "",
         "make_user": 1,
-        "plan_name": "",
+        "plan_name": this.state.planname,
         "task_state": 1
       }
+      this.treeChild = []
       this.addRoad = true
       this.isreserveplan = false
       this.setState({
@@ -1373,7 +1491,10 @@ class PlancontrolPage extends Component {
         isAddEdit: false,
         ismodifyNew: true,
         isAddEditNew: false,
+        isaddlistTree: false,
+        isaddlistTreeLi: true,
         roadtitle: '新增应急',
+        treeChild: [],
       })
     }
   }
@@ -1381,6 +1502,36 @@ class PlancontrolPage extends Component {
     this.setState({
       planname: e.target.value,
     })
+  }
+  changecyclelen = (faNum, event) => {
+    this.treeChild[faNum].cyclelen = event.target.value
+  }
+  lockings = (faNum, number, name) => { // 选择
+    this.treeChild[faNum].contingenct_type = number
+    this.treeChild[faNum].contingency_type_value = name
+    this.setState({
+      treeChild: this.treeChild,
+    })
+  }
+  changeNum = (event, faNum, sonNum) => {// 修改执行阶段
+    this.treeChild[faNum].listArr[sonNum].stage_time = Number(event.target.value)
+    this.setState({
+      treeChild: this.treeChild,
+    })
+  }
+  changeNumadd = (faNum, sonNum) => { // 执行阶段增加
+    this.treeChild[faNum].listArr[sonNum].stage_time++
+    this.setState({
+      treeChild: this.treeChild,
+    })
+  }
+  changeNumsubtract = (faNum, sonNum) => {// 执行阶段减少
+    if (this.treeChild[faNum].listArr[sonNum].stage_time > 0) {
+      this.treeChild[faNum].listArr[sonNum].stage_time--
+      this.setState({
+        treeChild: this.treeChild,
+      })
+    }
   }
   render() {
     const { Option } = Select
@@ -1396,11 +1547,17 @@ class PlancontrolPage extends Component {
       scheduled_time, district_id, district_idvalue, start_unit, end_unit, interval_time, lock_time, direction_enter, unit_order, vip_road_id, direction_exit,
       childArr, getDirectionList, getTaskStatusList, task_statevalue, getUnitDistrictList, planname, IsvideoBox, plan_name,
       treeChild, deleteConfirm,
-      isaddlistTree, isaddlistTreeLi, socketChild,
+      isaddlistTree, isaddlistTreeLi, socketChild, make_timeYu,
     } = this.state
     return (
       <div className={styles.PlancontrolPageWrapper}>
-        {/* <div className={styles.openEdit}><Switch checkedChildren="编辑模式" unCheckedChildren="正常模式" defaultChecked /></div> */}
+        <div className={styles.mapLegend}>
+          <div className={styles.pointStatus}>
+            <div className={styles.statusItem}><span className={`${styles.pointIcon} ${styles.onlineColor}`}></span> 在线</div>
+            <div className={styles.statusItem}><span className={`${styles.pointIcon} ${styles.offlineColor}`}></span> 离线</div>
+            <div className={styles.statusItem}><span className={`${styles.pointIcon} ${styles.faultColor}`}></span> 故障</div>
+          </div>
+        </div >
         {
           socketChild && socketChild.map(item => <Websocket url={`ws://192.168.1.22:20194/engine-monitor/webSocket/1000084`} onMessage={this.webSocketData.bind(this)} />)
         }
@@ -1434,7 +1591,12 @@ class PlancontrolPage extends Component {
               {
                 ismodify ?
                   <div className={styles.operationLine}>
-                    <span onClick={() => this.deleteList()} >取消</span><span onClick={() => this.getismodify('edit')}>保存</span>
+                    {
+                      this.IsleShow ?
+                        <span onClick={() => this.deleteList()} >取消</span> :
+                        <span onClick={this.delectHandclickAddEditModify}>删除</span>
+                    }
+                    <span onClick={this.getismodify}>保存</span>
                   </div>
                   :
                   <div className={styles.operationLine}>
@@ -1527,8 +1689,12 @@ class PlancontrolPage extends Component {
                 <div className={styles.slideRightBoxEditBox}>
                   <div className={styles.dateOperation}>
                     <div className={styles.datatime}>
-                      <div>日期：2020-10-10</div>
-                      <div>时间：14:30:00</div>
+                      <div>名称：<input onChange={this.changeLoadRouteDirection} value={planname} intername='planname' type="text" className={styles.inputBox} placeholder="特勤名称" /></div>
+                      <div>日期：
+                      <Space direction="vertical">
+                          <DatePicker style={{ width: 225, height: 30, border: '1px solid #1c59ce', color: '#5f9ef2', background: '#18346a' }} showTime value={make_timeYu} onChange={this.handleStartTimescheduledYu} />
+                        </Space>
+                      </div>
                     </div>
                     <div className={styles.boxoperation}>
                       <div className={styles.boxoperationItem}><div className={styles.boxoperationItemTop}><ClockCircleFilled /></div><div className={styles.boxoperationItemBom}>预约执行</div></div>
@@ -1539,72 +1705,42 @@ class PlancontrolPage extends Component {
                   <div className={styles.lineBox}>
                     <div className={styles.lineBoxer}>
                       {/* {
-                      treeListChild && treeListChild.map((item, index) => */}
-                      <div className={styles.lineBoxer_item}>
-                        {/* <span ></span> */}
-                        <div className={styles.streetBox}>
-                          <div className={styles.streetTitleBox}>
-                            <div>西安长街-金融街</div>
-                            <div><span>模式：</span>中心控制</div>
-                          </div>
-                          <div className={styles.intersectionBox}>
-                            <div className={styles.mountingThead}>
-                              <li><span>阶段锁定</span><span>临时方案</span></li>
-                              <div>周期：50秒</div>
+                          treeChild[ind].listArr = list */}
+                      {
+                        treeChild && treeChild.map((item, index) => <div key={item.nameRoad} className={styles.lineBoxer_item}>
+                          <div className={styles.streetBox}>
+                            <div className={styles.streetTitleBox}>
+                              <div>{item.nameRoad}</div>
+                              <div><span>模式：中心控制</span></div>
                             </div>
-                            <div className={styles.mountingTh}>
-                              <div className={styles.phaseTime}>
-                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
-                                <div className={`${styles.phaseinner} ${styles.times}`}>
-                                  <span>40</span>
-                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                            <div className={styles.intersectionBox}>
+                              <div className={styles.mountingThead}>
+                                <li><span onClick={() => { this.lockings(index, 2, '锁定控制方式') }} className={item.contingenct_type === 2 ? styles.active : ''}>阶段锁定</span><span onClick={() => { this.lockings(index, 1, '配时方案定义') }} className={item.contingenct_type === 1 ? styles.active : ''}>临时方案</span></li>
+                                <div>周期：<input onChange={(e) => this.changecyclelen(index, e)} defaultValue={item.cyclelen} type="text" />秒</div>
+                              </div>
+                              <div className={styles.mountingTh}>
+                                {
+                                  item.listArr && item.listArr.map((itemInd, ind) => <div key={itemInd.stage_image + ind} className={styles.phaseTime}>
+                                    <div className={styles.phaseinner}><img src={`${this.ImgUrl}${itemInd.stage_image}`} alt="" /></div>
+                                    <div className={`${styles.phaseinner} ${styles.times}`}>
+                                      <input onChange={(e) => this.changeNum(e, index, ind)} value={itemInd.stage_time} type="text" />
+                                      {/* <span>{itemInd.stage_time}</span> */}
+                                      <div className={styles.caculate}><CaretUpOutlined onClick={() => this.changeNumadd(index, ind)} className={styles.add} /><CaretDownOutlined onClick={() => this.changeNumsubtract(index, ind)} className={styles.subtract} /></div>
+                                    </div>
+                                  </div>)
+                                }
+                                <div className={styles.phaseinner}>
+                                  <img src={allRed} alt="" />
                                 </div>
-                              </div>
-                              <div className={styles.phaseTime}>
-                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
-                                <div className={`${styles.phaseinner} ${styles.times}`}>
-                                  <span>40</span>
-                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
+                                <div className={styles.phaseinner}>
+                                  <img src={llY} alt="" />
                                 </div>
-                              </div>
-                              <div className={styles.phaseTime}>
-                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
-                                <div className={`${styles.phaseinner} ${styles.times}`}>
-                                  <span>40</span>
-                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
-                                </div>
-                              </div>
-                              <div className={styles.phaseTime}>
-                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
-                                <div className={`${styles.phaseinner} ${styles.times}`}>
-                                  <span>40</span>
-                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
-                                </div>
-                              </div>
-                              <div className={styles.phaseTime}>
-                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
-                                <div className={`${styles.phaseinner} ${styles.times}`}>
-                                  <span>40</span>
-                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
-                                </div>
-                              </div>
-                              <div className={styles.phaseTime}>
-                                <div className={styles.phaseinner}><img src={phase3} alt="" /></div>
-                                <div className={`${styles.phaseinner} ${styles.times}`}>
-                                  <span>40</span>
-                                  <div className={styles.caculate}><CaretUpOutlined className={styles.add} /><CaretDownOutlined className={styles.subtract} /></div>
-                                </div>
-                              </div>
-                              <div className={styles.phaseinner}>
-                                <img src={allRed} alt="" />
-                              </div>
-                              <div className={styles.phaseinner}>
-                                <img src={llY} alt="" />
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </div>
+                        </div>)
+                      }
+
                     </div >
                   </div >
                 </div >
