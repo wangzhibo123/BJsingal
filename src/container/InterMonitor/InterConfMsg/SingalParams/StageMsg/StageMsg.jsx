@@ -65,8 +65,7 @@ class StageMsg extends Component {
       // console.log(res,"字典")
       const { code , data} = res.data
       if (code === 200 && data) {
-        const stateName = type === 6 ? 'interInfoList' : 'interMoveList'
-        this.setState({ [stateName]: data })
+        this.setState({ interInfoList: data })
       }
     })
   }
@@ -130,8 +129,8 @@ class StageMsg extends Component {
       redyellow: 0,
       signalStageId: 0,
       stageImage: '',
-      stagename: '',
-      stageno: 0,
+      stagename: this.stagename,
+      stageno: this.stageno,
       unitId: this.interId,
       yellow: 0
     }
