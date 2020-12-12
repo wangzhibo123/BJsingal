@@ -185,7 +185,7 @@ class Intersection extends Component {
         // currentArea.childrens = treeList
         this.childrens[id] = treeList
         // console.log('181sss')
-        this.setState({ menuOpenkeys: [id], childrens: this.childrens, })
+        this.setState({ menuOpenkeys: [id], childrens: this.childrens })
       }
     })
   }
@@ -361,6 +361,7 @@ class Intersection extends Component {
         roadtitle: '新增路口',
         isAddEdit: true,
         ismodify: false,
+        menuOpenkeys: [],
       })
     } else if (id === 3) {
       this.switchViews = !this.switchViews
@@ -434,7 +435,7 @@ class Intersection extends Component {
   }
   onOpenChangeSubMenu = (eventKey) => { // SubMenu-ite触发
     if (eventKey.length === 0) {
-      this.setState({ menuOpenkeys: [] })
+      this.setState({ menuOpenkeys: [], clickNum: 0, })
     } else {
       const keys = eventKey.pop()
       const { menuOpenkeys } = this.state
@@ -870,7 +871,7 @@ class Intersection extends Component {
           <div className='sidebarLeftBox'>
             <Menu
               onOpenChange={this.onOpenChangeSubMenu}
-              // onClick={this.onClickMenuItem}
+              onClick={this.onClickMenuItem}
               style={{ width: 251, color: '#86b7fa', height: '100%', fontSize: '16px' }}
               mode="inline"
               openKeys={menuOpenkeys}

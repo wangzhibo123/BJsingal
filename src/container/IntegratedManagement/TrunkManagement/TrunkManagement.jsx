@@ -79,7 +79,7 @@ class TrunkManagement extends Component {
       route_miles: '请输入干线长度',
       route_type: '请选择干线类型',
       detail: '请输入干线描述',
-      treeListChild:'请在页面增加干线',
+      treeListChild: '请在页面增加干线',
     }
   }
   getDataList = () => {
@@ -405,30 +405,32 @@ class TrunkManagement extends Component {
           // currentThis.addInfoWindow(item)
         });
         el.addEventListener('contextmenu', function (event) {
-          if (_this.markerLier) {
-            _this.markerLier.remove();
+          if (this.isAddEdit) {
+            if (_this.markerLier) {
+              _this.markerLier.remove();
+            }
+            // console.log(item, event,'sddsd')
+            // var lnglat = item.lngLat;
+            var style = 'background:#fff;color:#000;';
+            var html = document.createElement('div');
+            var contextmenu = `<div class="context_menu" style="padding:5px 10px;${style}"><li id="start" style="cursor:point;">起点</li><li style="cursor:point;" id="end">终点</li></div>`;
+            html.innerHTML = contextmenu;
+            _this.markerLier = new window.mapabcgl.Marker(html)
+              .setLngLat([item.longitude, item.latitude])
+              .setOffset([30, 0])
+              .addTo(_this.map);
+            var start = document.getElementById('start');
+            var end = document.getElementById('end');
+            // var clear = document.getElementById('clearmap');
+            start.addEventListener('click', function (e) {
+              _this.getstartpoint(item);
+              // _this.arrStart = item
+            })
+            end.addEventListener('click', function (e) {
+              _this.getendpoint(item)
+              // _this.arrEnd = item
+            })
           }
-          // console.log(item, event,'sddsd')
-          // var lnglat = item.lngLat;
-          var style = 'background:#fff;color:#000;';
-          var html = document.createElement('div');
-          var contextmenu = `<div class="context_menu" style="padding:5px 10px;${style}"><li id="start" style="cursor:point;">起点</li><li style="cursor:point;" id="end">终点</li></div>`;
-          html.innerHTML = contextmenu;
-          _this.markerLier = new window.mapabcgl.Marker(html)
-            .setLngLat([item.longitude, item.latitude])
-            .setOffset([30, 0])
-            .addTo(_this.map);
-          var start = document.getElementById('start');
-          var end = document.getElementById('end');
-          // var clear = document.getElementById('clearmap');
-          start.addEventListener('click', function (e) {
-            _this.getstartpoint(item);
-            // _this.arrStart = item
-          })
-          end.addEventListener('click', function (e) {
-            _this.getendpoint(item)
-            // _this.arrEnd = item
-          })
         })
 
         this.getstartpoint = (item) => {
@@ -564,6 +566,9 @@ class TrunkManagement extends Component {
       if (this.popup) {
         this.popup.remove()
       }
+      if (this.markerLier) {
+        this.markerLier.remove();
+      }
     })
     this.map = map
   }
@@ -599,7 +604,8 @@ class TrunkManagement extends Component {
         isAddEdit: true,
         ismodify: false,
         roadtitle: '新增干线',
-        treeListChild: []
+        treeListChild: [],
+        menuOpenkeys: []
       })
       this.showName = 'add'
       this.unitArr = ''
@@ -690,6 +696,7 @@ class TrunkManagement extends Component {
       route_typevalue: route_type,
       detail: SubMenuItem.detail,
       isAddEdit: false,
+      clickNum: 0,
     })
   }
   onClickMenuItem = (event) => {
@@ -1071,7 +1078,7 @@ class TrunkManagement extends Component {
                     {
                       item.childrens &&
                       item.childrens.map((child) => (
-                        <Menu.Item key={child.id}>{child.unit_name}</Menu.Item>
+                        <Menu.Item disabled={true} key={child.id}>{child.unit_name}</Menu.Item>
                       ))
                     }
                   </SubMenu>

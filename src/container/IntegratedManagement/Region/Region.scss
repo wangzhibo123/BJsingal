@@ -153,20 +153,20 @@ $bor-color: #a5fcff;
                                     padding-right: 20px;
                                     display: flex;
                                     align-items: center;
-                                    >span {
+                                    > span {
                                         margin-right: 3px;
                                         color: #5f9ef2;
                                         font-size: 16px;
                                         line-height: 20px;
                                     }
-                                    >li{
+                                    > li {
                                         width: 207px;
                                         line-height: 20px;
                                         overflow: hidden;
                                         text-overflow: ellipsis;
                                         white-space: nowrap;
                                     }
-                                    b{
+                                    b {
                                         color: #5f9ef2;
                                         float: right;
                                         height: 20px;
@@ -182,19 +182,19 @@ $bor-color: #a5fcff;
                                         span {
                                             height: 16px;
                                             line-height: 16px;
-                                            color: #02C6E8;
+                                            color: #02c6e8;
                                             background-color: #0668c2;
                                             margin-left: 20px;
                                             margin-top: 10px;
                                             padding: 0px 5px;
                                             border-radius: 5px;
-                                            &:nth-child(1){
+                                            &:nth-child(1) {
                                                 width: 115px;
                                                 overflow: hidden;
                                                 text-overflow: ellipsis;
                                                 white-space: nowrap;
                                             }
-                                            &:nth-child(2){
+                                            &:nth-child(2) {
                                                 max-width: 115px;
                                                 overflow: hidden;
                                                 text-overflow: ellipsis;
@@ -283,7 +283,7 @@ $bor-color: #a5fcff;
                 height: calc(100% - 60px);
                 padding-right: 5px;
                 > p {
-                    height: 25px;
+                    height: 30px;
                     color: #5f9ef2;
                     padding-left: 15px;
                     display: flex;
@@ -363,19 +363,19 @@ $bor-color: #a5fcff;
                                         span {
                                             height: 16px;
                                             line-height: 16px;
-                                            color: #02C6E8;
+                                            color: #02c6e8;
                                             background-color: #0668c2;
                                             margin-left: 20px;
                                             margin-top: 10px;
                                             padding: 0px 5px;
                                             border-radius: 5px;
-                                            &:nth-child(1){
+                                            &:nth-child(1) {
                                                 width: 115px;
                                                 overflow: hidden;
                                                 text-overflow: ellipsis;
                                                 white-space: nowrap;
                                             }
-                                            &:nth-child(2){
+                                            &:nth-child(2) {
                                                 max-width: 115px;
                                                 overflow: hidden;
                                                 text-overflow: ellipsis;
@@ -610,6 +610,9 @@ $bor-color: #a5fcff;
                 top: 15px;
                 right: -6px;
             }
+            .ant-menu-item {
+                color: #86b7fa !important;
+            }
         }
     }
     .container {
@@ -619,7 +622,10 @@ $bor-color: #a5fcff;
         width: 100%;
         height: calc(100% - 70px);
         .markers {
-            background-color: red !important;
+            background-color: rgba(0, 255, 255, 0.3) !important;
+            > div {
+                background-color: #00ffff !important;
+            }
         }
         .contentCenter {
             width: 100%;
