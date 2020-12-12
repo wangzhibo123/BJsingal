@@ -26,12 +26,20 @@
                     left: 50%;
                     transform: translate(-50%, -50%);
                 }
+                .planTime {
+                    background-color: transparent;
+                    border: none;
+                    box-shadow: none;
+                    .ant-picker-input > input {
+                        color: #fff;
+                    }
+                }
                 .addNo {
                     width: 100px;
                     text-align: center;
                 }
                 .selectLength{
-                    width: 150px;
+                    width: 120px;
                     input{
                         display: none;
                     }
@@ -96,6 +104,15 @@
                     align-items: center;
                     border-left: 1px solid rgba(136, 175, 248, .3);
                     border-bottom: 1px solid rgba(136, 175, 248, .3);
+                    .dayPlanno {
+                        height: 28px;
+                        width: 60%;
+                        text-align: center;
+                        background-color: transparent;
+                        border: 1px solid rgba(136, 175, 248, 0.4);
+                        border-radius: 4px;
+                        outline: none;
+                    }
                 }
                 .paramsTrItem {
                     flex: 1;

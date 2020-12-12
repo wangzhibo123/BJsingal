@@ -500,6 +500,7 @@
                             display: flex;
                             flex-wrap: wrap;
                             justify-content: space-between;
+                            visibility: hidden;
                             .info {
                                 width: 225px;
                                 height: 75px;
@@ -539,7 +540,7 @@
                         }
                         .centerMap {
                             position: absolute;
-                            bottom: 0;
+                            bottom: 50px;
                             width: 100%;
                             height: calc(100% - 100px);
                             // background: url(../imgs/mapbg.png) center center no-repeat;
