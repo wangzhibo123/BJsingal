@@ -47,6 +47,32 @@ class VideoApp extends Component{
             });
           });
         }
+      } else {
+        this.setState({
+          newState: [{ url: "rtmp://58.200.131.2:1935/livetv/cctv2", name: "南", id: 'my_SS' }]
+        }, () => {
+          const { newState } = this.state;
+          if (newState !== null) {
+            const videoJsOptions = {
+              autoplay: true,
+              controls: true,
+              sources: [{
+                // src: 'rtmp://192.168.1.124:9999/live/31434',
+                src: newState[0].url,
+                type: 'rtmp/flv'
+              }]
+            }
+            this.player = videojs(newState[0].id, videoJsOptions, function onPlayerReady() { //(id或者refs获取节点，options，回调函数)
+              videojs.log('Your player is ready!');
+              // In this context, `this` is the player that was created by Video.js.
+              this.play();
+              // How about an event listener?
+              this.on('ended', function () {
+                videojs.log('Awww...over so soon?!');
+              });
+            });
+          }
+        })
       }
     },360)
   }
