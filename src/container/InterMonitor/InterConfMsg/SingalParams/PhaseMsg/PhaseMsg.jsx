@@ -40,7 +40,7 @@ class PhaseMsg extends Component {
   }
   getInterDirInfoList=(type)=>{
     axiosInstance.get(`${this.dirInfoList}?codeType=${type}`).then((res) => {
-      // console.log(res,"字典")
+      console.log(res,"字典")
       const { code , data} = res.data
       if (code === 200 && data) {
         this.setState({ interInfoList: data })
@@ -198,22 +198,26 @@ class PhaseMsg extends Component {
   }
   //关联车道
   onDirPhaseAssLan=(value)=>{
-    console.log(value.join(),"车道value")
-    this.peddirlist=value.join()
+    console.log(value,"车道value")
+    // this.peddirlist=value.join()
   }
   //相位图标
   onDirPhaseIcon=(value)=>{
     console.log(value,"相位value")
   }
+  //添加相位图标
   onDirPhaseSelectMC=(value)=>{
+    console.log(value,"tupianvalue")
     this.phase_image=value
   }
+  //取消
   bindRemoveParse=()=>{
     this.setState({ editIndex: null })
   }
   render() {
     const { interPhaseList ,interDirDisplay, interInfoList ,dirPhaseSelectIden ,editIndex} =this.state;
     const { devicePiclist} =this.props.data;
+    console.log(devicePiclist,"devicePiclist")
     return (
       <div className="paramsTable">
         <span className="addBtn" onClick={this.bindDirPhase}>新增相位</span>
@@ -251,7 +255,7 @@ class PhaseMsg extends Component {
                       }
                     </Select>:
                     // 回显车道
-                    <div>{item.ui_image_name&&this.getInterDirImgListProperty(item.ui_image_name).map((item,index)=>{return <img key={index} src={item} alt="" style={{marginRight:"15px",maxHeight:"25px"}}/>})}</div>}  
+                    <div>{item.ui_image_name&&this.getInterDirImgListProperty(item.ui_image_name).map((item,index)=>{return <img key={index} src={item} alt="" style={{marginRight:"15px",maxHeight:"30px"}}/>})}</div>}  
                     </div>
                       {/* 相位图标 */}
                     <div className="paramsTd">
@@ -260,7 +264,7 @@ class PhaseMsg extends Component {
                       {
                         devicePiclist && devicePiclist[6].map(item=>{
                           return (
-                            <Option key={item.id} value={item.id} style={{height:"47px"}}><img src={`${localStorage.getItem("ImgUrl")}${item.uiImageName}`} alt="" maxHeight="35px"/></Option>
+                            <Option key={item.id} value={item.uiImageName} style={{height:"47px"}}><img src={`${localStorage.getItem("ImgUrl")}${item.uiImageName}`} alt="" maxHeight="35px"/></Option>
                           )
                         })
                       }
@@ -269,18 +273,18 @@ class PhaseMsg extends Component {
                     <img src={item.phase_image && `${localStorage.getItem("ImgUrl")}${item.phase_image}`} style={{maxHeight:"35px"}}/>}</div>
                       {/* 放行人行道 */}
                     <div className="paramsTd">
-                      { editIndex === index?  
+                      { editIndex === index? 
                       <Select defaultValue={item.peddirlist&&this.getInterDirInfoListProperty(item.peddirlist).map((item,index)=>{ return <span key={index}>{item}</span>})} mode="tags" onChange={this.onDirPhaseSelectIden} className="selectLength">
                       {
                         interInfoList && interInfoList.map((item,index)=>{
                           return (
-                            <Option key={index} value={item.codeName} style={{height:"47px"}}>{item.peddirlist}</Option>
+                            <Option key={item.codeName} value={item.codeName} style={{height:"47px",marginRight:"10px"}}>{item.codeName}</Option>
                           )
                         })
                       }
                     </Select>: 
                     // 回显放行人行道
-                    <span>{item.peddirlist&&this.getInterDirInfoListProperty(item.peddirlist).map((item,index)=>{return <span style={{marginRight:"5px"}} key={index}>{item}</span>})}</span>} 
+                    <span>{item.peddirlist&&this.getInterDirInfoListProperty(item.peddirlist)}</span>} 
                     </div>
                     <div className="paramsTd">{editIndex===index? <input type="text" onChange={e=>this.greenmax=e.target.value} defaultValue={item.greenmax}/> : <span>{item.greenmax}</span>}</div>
                     <div className="paramsTd">{editIndex===index? <input type="text" onChange={e=>this.greenmin=e.target.value} defaultValue={item.greenmin}/> : <span>{item.greenmin}</span>}</div>
