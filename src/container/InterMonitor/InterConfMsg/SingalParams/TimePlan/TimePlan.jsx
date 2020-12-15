@@ -155,6 +155,10 @@ class TimePlan extends Component {
   // 删除阶段
   handleMinusStage = () => {
     const { cfgPlanStageChain } = this.saveParams
+    if (cfgPlanStageChain.length === 1) {
+      message.info('至少保留一个阶段')
+      return
+    }
     cfgPlanStageChain.pop()
     const totalTime = (cfgPlanStageChain.map(item => item.stageTime)).reduce((a, b) => parseInt(a) + parseInt(b))
     this.saveParams.cfgPlan.cyclelen = totalTime

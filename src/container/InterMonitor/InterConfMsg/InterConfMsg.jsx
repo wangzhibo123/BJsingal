@@ -254,7 +254,7 @@ class InterConfMsg extends Component {
   handleCheckBaseMapPic = (e) => {
     const channelNo = e.currentTarget.getAttribute('pname')
     if (channelNo === this.state.baseMapPicNo) {
-      this.setState({ baseMapPicNo: null })
+      this.setState({ baseMapPicNo: null, currentBasePic: null })
     } else {
       const { devicePiclist } = this.props.data
       const allBasePics = devicePiclist['5']

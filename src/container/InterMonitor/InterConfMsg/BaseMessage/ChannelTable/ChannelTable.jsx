@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Select, Modal, message } from 'antd'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
-import './ChannelTable.scss'
 
 import axiosInstance from '../../../../utils/getInterfaceData'
 
@@ -52,6 +51,10 @@ class ChannelTable extends Component {
   handleEditInfo = (e) => {
     const indexs = e.currentTarget.getAttribute('indexs')
     const currentInfo = this.channelInfos[indexs]
+    const uiUnitConfig = { pLeft: 0, pTop: 0, rotationAngle: 0, uiHight: 40, uiImageName: '', uiWidth: 40, isView: 0, unitId: this.interId }
+    if (!currentInfo.uiUnitConfig.uiId) {
+      currentInfo.uiUnitConfig = uiUnitConfig
+    }
     this.props.showEditModal()
     this.props.getEditDeviceInfo(currentInfo)
   }

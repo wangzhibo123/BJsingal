@@ -209,12 +209,55 @@
         .paramsThead, .paramsTr {
             height: 40px;
             display: flex;
+            .events {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+              }
+              .events .ant-badge-status {
+                overflow: hidden;
+                white-space: nowrap;
+                width: 100%;
+                text-overflow: ellipsis;
+                font-size: 12px;
+              }
+              .notes-month {
+                text-align: center;
+                font-size: 28px;
+              }
+              .notes-month section {
+                font-size: 28px;
+              }
             .paramsTd, .paramsTh {
                 position: relative;
                 flex: 1;
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                .calandarBox {
+                    z-index: 1;
+                    position: absolute;
+                    top: 40px;
+                    left: 0;
+                    width: 500px;
+                    background-image: linear-gradient(to bottom, #031c44, #002678, #031c44);
+                    .ant-picker-calendar {
+                        background-color: transparent;
+                    }
+                    .ant-picker-calendar .ant-picker-panel {
+                        background-color: transparent;
+                    }
+                    .ant-picker-cell {
+                        color: #666;
+                    }
+                    .ant-picker-cell-in-view {
+                        color: #fff;
+                    }
+                    .ant-picker-content th {
+                        color: #fff;
+                    }
+                    
+                }
                 .innerSelect {
                     position: absolute;
                     top: 50%;

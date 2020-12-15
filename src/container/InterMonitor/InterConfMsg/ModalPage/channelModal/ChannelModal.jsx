@@ -58,11 +58,13 @@ class ChannelModal extends Component {
   }
   handleNumStep = (val, opt, pname) => {
     this.editInfo.uiUnitConfig[pname] = val
-    console.log(this.editInfo)
   }
   handleSelectChange = (val, options) => {
+    console.log(options)
     if (options.pname === 'uiId') {
       this.editInfo.uiUnitConfig.uiId = val
+      this.editInfo.uiUnitConfig.uiImageName = options.uiimg
+      console.log(this.editInfo)
     } else {
       this.editInfo.cfgLaneInfo[options.pname] = val
     }
@@ -130,7 +132,7 @@ class ChannelModal extends Component {
               {
                 channelIcon &&
                 channelIcon.map((item) => (
-                  <Option key={item.id} value={item.id} pname="uiId"><img src={this.globalImgurl + item.uiImageName} alt="" style={{ maxHeight: '28px' }} /></Option>
+                  <Option key={item.id} value={item.id} pname="uiId" uiimg={item.uiImageName}><img src={this.globalImgurl + item.uiImageName} alt="" style={{ maxHeight: '28px' }} /></Option>
                 ))
               }
             </Select>

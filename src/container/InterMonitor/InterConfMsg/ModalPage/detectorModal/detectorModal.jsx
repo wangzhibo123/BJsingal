@@ -18,12 +18,10 @@ class DetectorModal extends Component {
     const { editDeviceInfo, primitiveInfo, devicePiclist } = this.props.data
     this.editInfo = editDeviceInfo
     if (!this.editInfo.cfgDetectorInfo.detid) {
-      if (!this.editInfo.cfgDetectorInfo.detid) {
-        this.currentDeviceList = primitiveInfo.Detector
-        const lengths = this.currentDeviceList.length
-        const editNo = lengths === 0 ? 1 : this.currentDeviceList[lengths - 1].cfgDetectorInfo.detid + 1
-        this.editInfo.cfgDetectorInfo.detid = editNo
-      }
+      this.currentDeviceList = primitiveInfo.Detector
+      const lengths = this.currentDeviceList.length
+      const editNo = lengths === 0 ? 1 : this.currentDeviceList[lengths - 1].cfgDetectorInfo.detid + 1
+      this.editInfo.cfgDetectorInfo.detid = editNo
     }
     this.setState({ editInfo: this.editInfo, detectorList: devicePiclist['3'] })
   }
@@ -45,7 +43,7 @@ class DetectorModal extends Component {
     console.log(this.editInfo)
   }
   handleSelectChange = (val, options) => {
-    this.editInfo.uiUnitConfig.id = options.key
+    this.editInfo.uiUnitConfig.uiId = options.key
     this.editInfo.uiUnitConfig.uiImageName = options.imgurl
   }
   handleEditinfoChange = (e) => {

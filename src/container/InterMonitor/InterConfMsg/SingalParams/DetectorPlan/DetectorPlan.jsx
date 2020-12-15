@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Select, Modal, message } from 'antd'
+import { Select, Modal, message, Calendar, Badge } from 'antd'
 
+import { showCal } from './textDate.js'
 import axiosInstance from '../../../../utils/getInterfaceData'
 
 const { Option } = Select
@@ -13,6 +14,7 @@ class DetectorPlan extends Component {
       defaultNo: null,
       editIndex: null,
       dayPlanNos: null,
+      showCalandar: false,
     }
     this.levels = [1,2,3,4,5,6,7,8,9,10]
     this.weeks = [
@@ -125,8 +127,75 @@ class DetectorPlan extends Component {
       message.info(res.data.message)
     })
   }
+
+
+  getListData = (value) => {
+    let listData;
+    switch (value.date()) {
+      case 8:
+        listData = [
+          { type: 'warning', content: 'This is warning event.' },
+          { type: 'success', content: 'This is usual event.' },
+        ];
+        break;
+      case 10:
+        listData = [
+          { type: 'warning', content: 'This is warning event.' },
+          { type: 'success', content: 'This is usual event.' },
+          { type: 'error', content: 'This is error event.' },
+        ];
+        break;
+      case 15:
+        listData = [
+          { type: 'warning', content: 'This is warning event' },
+          { type: 'success', content: 'This is very long usual event。。....' },
+          { type: 'error', content: 'This is error event 1.' },
+          { type: 'error', content: 'This is error event 2.' },
+          { type: 'error', content: 'This is error event 3.' },
+          { type: 'error', content: 'This is error event 4.' },
+        ];
+        break;
+      default:
+    }
+    return listData || [];
+  }
+  
+  dateCellRender = (value) => {
+    const listData = this.getListData(value);
+    return (
+      <ul className="events">
+        {listData.map(item => (
+          <li key={item.content}>
+            <Badge status={item.type} text={item.content} />
+          </li>
+        ))}
+      </ul>
+    );
+  }
+  
+  getMonthData = (value) => {
+    if (value.month() === 8) {
+      return 1394;
+    }
+  }
+  
+  monthCellRender = (value) => {
+    const num = this.getMonthData(value);
+    return num ? (
+      <div className="notes-month">
+        <section>{num}</section>
+        <span>Backlog number</span>
+      </div>
+    ) : null;
+  }
+  dateFullCellRender = (val) => {
+    console.log(val._d)
+    const D = showCal(new Date(val._d))
+    return <span>{D}</span>
+  }
+
   render() {
-    const { dispatchList, isAdd, defaultNo, editIndex, dayPlanNos } = this.state
+    const { dispatchList, isAdd, defaultNo, editIndex, dayPlanNos, showCalandar } = this.state
     return (
       <div className="paramsTable">
         <span className="addBtn" onClick={this.handleAddPlan}>新增方案</span>
@@ -168,7 +237,15 @@ class DetectorPlan extends Component {
                       </Select> : <span>{item.priority}</span>
                     }
                   </div>
-                  <div className="paramsTd">{item.scheduletype === 3 ? item.weeks : item.days}</div>
+                  <div className="paramsTd" style={{ position: 'relative' }}>
+                    {item.scheduletype === 3 ? item.weeks : item.days}
+                    {
+                      (index === 0 && showCalandar) &&
+                      <div className="calandarBox">
+                        <Calendar fullscreen={false} dateCellRender={this.dateFullCellRender} />
+                      </div>
+                    }
+                  </div>
                   <div className="paramsTd">
                     {
                       editIndex === index ?
@@ -234,7 +311,6 @@ class DetectorPlan extends Component {
               </div>
             </div>
           }
-          
         </div>
       </div>
     )
