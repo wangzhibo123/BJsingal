@@ -125,16 +125,16 @@ class TrunkManagement extends Component {
           arrList.push(arrchild)
           $('#marker' + item.id).addClass('markers')
         })
-
-        if (this.startmarker) {
-          this.startmarker.remove();
+        if (treeList.length > 0) {
+          if (this.startmarker) {
+            this.startmarker.remove();
+          }
+          this.startmarker = addMarkerStart(startPng, [treeList[0].longitude, treeList[0].latitude], 0);
+          if (this.endmarker) {
+            this.endmarker.remove();
+          }
+          this.endmarker = addMarkerStart(endPng, [treeList[treeList.length - 1].longitude, treeList[treeList.length - 1].latitude], 0);
         }
-        this.startmarker = addMarkerStart(startPng, [treeList[0].longitude, treeList[0].latitude], 0);
-        if (this.endmarker) {
-          this.endmarker.remove();
-        }
-
-        this.endmarker = addMarkerStart(endPng, [treeList[treeList.length - 1].longitude, treeList[treeList.length - 1].latitude], 0);
 
         function addMarkerStart(img, point, position) {
           var marker = '', html = ''
@@ -298,9 +298,11 @@ class TrunkManagement extends Component {
 
   // 计算起始与终点之间的中心点 > 用于重置地图中心点
   returnCenterLnglat = (startPoint, endPoint) => {
-    const lng = startPoint[0] + (Math.abs(startPoint[0] - endPoint[0]) / 2)
-    const lat = startPoint[1] + (Math.abs(startPoint[1] - endPoint[1]) / 2)
-    return [lng, lat]
+    if (startPoint && endPoint) {
+      const lng = startPoint[0] + (Math.abs(startPoint[0] - endPoint[0]) / 2)
+      const lat = startPoint[1] + (Math.abs(startPoint[1] - endPoint[1]) / 2)
+      return [lng, lat]
+    }
   }
   drawLine = (arr, list) => { // 页面连线f 1111111111111
     if (this.map) {
@@ -405,7 +407,7 @@ class TrunkManagement extends Component {
           // currentThis.addInfoWindow(item)
         });
         el.addEventListener('contextmenu', function (event) {
-          if (this.isAddEdit) {
+          if (_this.isAddEdit) {
             if (_this.markerLier) {
               _this.markerLier.remove();
             }
@@ -453,10 +455,10 @@ class TrunkManagement extends Component {
             if (_this.markerLier) {
               _this.markerLier.remove();
             }
-            if (currentThis.endmarker) {
-              currentThis.endmarker.remove();
+            if (currentThis.startmarker) {
+              currentThis.startmarker.remove();
             }
-            currentThis.endmarker = addMarkerStart(endPng, [item.longitude, item.latitude], 0);
+            currentThis.startmarker = addMarkerStart(startPng, [item.longitude, item.latitude], 0);
           }
 
           // plan()
@@ -482,10 +484,10 @@ class TrunkManagement extends Component {
             if (_this.markerLier) {
               _this.markerLier.remove();
             }
-            if (currentThis.startmarker) {
-              currentThis.startmarker.remove();
+            if (currentThis.endmarker) {
+              currentThis.endmarker.remove();
             }
-            currentThis.startmarker = addMarkerStart(startPng, [item.longitude, item.latitude], 0);
+            currentThis.endmarker = addMarkerStart(endPng, [item.longitude, item.latitude], 0);
           }
         }
         function addMarkerStart(img, point, position) {
@@ -635,9 +637,11 @@ class TrunkManagement extends Component {
     this.delectStartEnd() // 清除开始结束图标
     this.addlineroute = false
     this.isAddEdit = false
+    this.treeListChild = []
     this.setState({
       rights: -300,
-      menuOpenkeys: []
+      menuOpenkeys: [],
+      treeListChild: [],
     })
   }
   changeLoadRouteDirection = (e, s) => { // 选择干线方向
@@ -818,14 +822,17 @@ class TrunkManagement extends Component {
           this.setState({
             rights: -300,
             menuOpenkeys: [],
+            treeListChild: [],
           })
           message.info(result)
           this.getDataList()
           this.initializationState()
-          this.delectlineroute()
-          this.removeRoadCircle()
-          this.delectStartEnd()
+          this.removeRoadCircle() // 取消点位
+          this.delectlineroute() // 取消线
+          this.delectStartEnd() // 清除开始结束图标
+          this.treeListChild = []
           this.addlineroute = false
+          this.isAddEdit = false
         } else {
           // this.setState({
           //   rights: -300,

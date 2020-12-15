@@ -386,6 +386,7 @@ class Intersection extends Component {
   addRoadList = () => { // 添加路口调用函数
     axiosInstance.post(this.getUnitDistrict).then(res => {// 所属区域
       console.log(res.data, '所属区域')
+      // <Option addeditname='roaddistrict_id' intername='district_id' value={item.id} key={item.id}>{item.district_name}</Option>
       const { code, list } = res.data
       if (code === '1') {
         this.setState({
@@ -395,8 +396,9 @@ class Intersection extends Component {
     })
     axiosInstance.post(this.getUnitGroup).then(res => {// 管理单位
       console.log(res.data, '管理单位')
+      // <Option addeditname='roaduser_group_id' intername='user_group_id' value={item.id} key={item.id}>{item.user_group_name}</Option>
       const { code, list } = res.data
-      if (code === '1') {
+      if (code === '1') {  
         this.setState({
           UnitGroup: list
         })
@@ -413,6 +415,7 @@ class Intersection extends Component {
     })
     axiosInstance.post(this.getUnitPosition).then(res => {// 路口位置
       console.log(res.data, '路口位置')
+      // addeditname='roadposition' intername='unit_position' value={item.c_code} key={item.id}>{item.code_name}
       const { code, list } = res.data
       if (code === '1') {
         this.setState({
@@ -422,6 +425,7 @@ class Intersection extends Component {
     })
     axiosInstance.post(this.getUnitType).then(res => { // 路口类型
       console.log(res.data, '路口类型')
+      // <Option addeditname='roadunit_type_code' intername='unit_type_code' value={item.c_code} key={item.id}>{item.code_name}</Option>
       const { code, list } = res.data
       if (code === '1') {
         this.setState({
