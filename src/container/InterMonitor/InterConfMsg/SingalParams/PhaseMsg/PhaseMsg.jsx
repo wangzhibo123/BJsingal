@@ -150,8 +150,19 @@ class PhaseMsg extends Component {
     const indexs = parseInt(e.target.getAttribute('indexs'))
     this.saveParams = this.state.interPhaseList[indexs]
     console.log(this.saveParams,"this.saveParams")
-    this.transmitPara=this.saveParams
-    this.id=this.saveParams.id
+    const { id,greenmax,greenmin,lanenolist,peddirlist,phasename,phaseno,phase_image,allred,redyellow,yellow,} =this.saveParams
+    console.log(id,greenmax,greenmin,lanenolist,"1111 ")
+    this.id=id;
+    this.greenmax=greenmax
+    this.greenmin=greenmin
+    this.lanenolist=lanenolist
+    this.peddirlist=peddirlist
+    this.phasename=phasename
+    this.phaseno=phaseno
+    this.phase_image=phase_image
+    this.allred=allred
+    this.redyellow=redyellow
+    this.yellow=yellow
     this.getInterDirSelectIden()
     this.getInterDirInfoList()
     this.setState({ editIndex: indexs })
