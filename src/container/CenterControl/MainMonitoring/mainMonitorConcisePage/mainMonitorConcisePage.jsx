@@ -59,8 +59,9 @@ export default class MainMonitorConcisePage extends Component{
       }
       getVideoMonCarList=()=>{
         axiosInstance.post(this.videoUrl,{"cameraCode": "08143150969233750102#f0dfa07ea18f4a5da535fd251bdc5569","mediaURLParam": {"broadCastType": 0,"packProtocolType": 1,"protocolType": 2,"serviceType": 1,"streamType": 1,"transMode": 0}}).then(res=>{
+          const { data, code}=res.data
           this.setState({
-            newState:res.data.data
+            newState:data
           })
           console.log(res,"------res")
         })

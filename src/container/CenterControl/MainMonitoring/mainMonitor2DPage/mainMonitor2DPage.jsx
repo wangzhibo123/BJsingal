@@ -365,7 +365,6 @@ export default class MainMonitor2DPage extends Component{
         el.style.left = '0'
         el.style.top = '0'
         new window.mapabcgl.Marker(el)
-        el.setAttribute("title", '中心点')
         el.addEventListener('click', () => {
           this.ClickMessge(item.lnglat)
         })

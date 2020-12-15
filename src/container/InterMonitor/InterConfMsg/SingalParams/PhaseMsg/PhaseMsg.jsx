@@ -96,25 +96,8 @@ class PhaseMsg extends Component {
     })
     return buttNull
   }
-  
   //添加
   bindDirPhase=()=>{
-    this.saveParams= {
-      allred: 0,
-      canalizationId: "",
-      feature: 0,
-      greenmax: 0,
-      greenmin: 0,
-      id: 0,
-      lanenolist: "",
-      peddirlist: "",
-      phaseImage: "",
-      phasename: "",
-      phaseno: 0,
-      redyellow: 0,
-      unitId: this.interId,
-      yellow: 0
-    }
     const { interPhaseList } =this.state;
     const listLen = interPhaseList ? interPhaseList.length : 0
     const defaultNo = listLen > 0 ? interPhaseList[listLen - 1].phaseno + 1 : 1
@@ -129,37 +112,7 @@ class PhaseMsg extends Component {
   bindCancelParse=()=>{
     this.setState({interDirDisplay:false})
   }
-  //保存
-  bindSaveParse=()=>{
-    let transmitPara = {
-      allred: this.allred,
-      canalizationId: 4,
-      feature: 12,
-      greenmax: this.greenmax,
-      greenmin: this.greenmin,
-      id: this.id,
-      lanenolist: this.lanenolist,
-      peddirlist: this.peddirlist, //相位放行人行道方向
-      phasename: this.phasename,
-      phaseno: this.phaseno,
-      redyellow: this.redyellow,
-      unitId: this.interId,
-      yellow: this.yellow,
-      phaseImage: this.phase_image,
-    }
-    if(this.phaseno!==null){
-      axiosInstance.post(this.dirPhaseSave,transmitPara).then(res=>{
-        // console.log(res,"保存")
-        if(res.data.code === 200 && res.data){
-          this.getInterDirPhaseList()
-          this.setState({interDirDisplay:false,editIndex:null})
-        }
-        message.info(res.data.message)
-      })
-    }else {
-      message.info("失败")
-    }
-  }
+  
   //删除
   bindDeleteParse=(id)=>{
     axiosInstance.post(`${this.dirPhaseDelete}?id=${id}`).then(res=>{
@@ -182,7 +135,6 @@ class PhaseMsg extends Component {
   }
   //处理图标数据
   getInterDirImgListProperty=(imgList)=>{ 
-    // console.log(imgList,"处理图标数据")
     //返回图标路径
     if(imgList){
       let buttImgUrl=[];
@@ -197,35 +149,60 @@ class PhaseMsg extends Component {
   handleEdit=(e)=>{
     const indexs = parseInt(e.target.getAttribute('indexs'))
     this.saveParams = this.state.interPhaseList[indexs]
+    console.log(this.saveParams,"this.saveParams")
+    this.transmitPara=this.saveParams
     this.id=this.saveParams.id
     this.getInterDirSelectIden()
     this.getInterDirInfoList()
     this.setState({ editIndex: indexs })
   }
+  //保存
+  bindSaveParse=()=>{
+    this.transmitPara = {
+      allred: this.allred,
+      canalizationId: 4,
+      feature: 12,
+      greenmax: this.greenmax,
+      greenmin: this.greenmin,
+      id: this.id,
+      lanenolist: this.lanenolist,
+      peddirlist: this.peddirlist, //相位放行人行道方向
+      phasename: this.phasename,
+      phaseno: this.phaseno,
+      redyellow: this.redyellow,
+      unitId: this.interId,
+      yellow: this.yellow,
+      phaseImage: this.phase_image,
+    }
+    console.log(this.transmitPara,"transmitPara")
+    if(this.phaseno!==null){
+      axiosInstance.post(this.dirPhaseSave,this.transmitPara).then(res=>{
+        if(res.data.code === 200 && res.data){
+          this.getInterDirPhaseList()
+          this.setState({interDirDisplay:false,editIndex:null})
+        }
+        message.info(res.data.message)
+      })
+    }else {
+      message.info("失败")
+    }
+  }
   //添加人行道3
   onInterInfoList=(value)=>{
-    console.log(value,"人行道3")
     let newValue=value.join()
     this.peddirlist=newValue
   }
   //添加车道1
   onDirPhaseSelectIden=(value)=>{
-    if(value){
-      let newValue=value.join()
-      console.log(newValue,"新增关联车道")
-      this.lanenolist=newValue
-      return value
-    }
+    let newValue=value.join(",")
+    this.lanenolist=newValue
   }
   //编辑关联车道
   onDirPhaseAssLan=(value)=>{
-    console.log(value,"编辑关联车道")
     this.lanenolist=value.join(",")
-
   }
   //编辑相位图标
   onDirPhaseIcon=(value)=>{
-    console.log(value,'编辑相位图表')
     this.phase_image=value
   }
   //添加相位图标
@@ -237,7 +214,6 @@ class PhaseMsg extends Component {
   }
   //编辑人行道
   onEditWalkWay=(value)=>{
-    console.log(value,"编辑人行道value")
     this.peddirlist=value.join(",")
   }
   //取消
@@ -274,26 +250,26 @@ class PhaseMsg extends Component {
                     <div className="paramsTd">
                       {/* 关联车道 */}
                       { editIndex===index ?
-                      <Select defaultValue={item.lanenolist&&this.getInterDirImgListProperty(item.lanenolist).map(item=>{return (<img src={item} alt=""/>)})} mode="tags" onChange={this.onDirPhaseAssLan} className="selectLength">
+                      <Select defaultValue={this.getInterDirImgListProperty(item.lanenolist)&&this.getInterDirImgListProperty(item.lanenolist).map(item=>{return (<img src={item} alt=""/>)})} mode="tags" onChange={this.onDirPhaseAssLan} className="selectLength">
                       {
                         dirPhaseSelectIden && dirPhaseSelectIden.map((item,index)=>{
                           return (
-                            <Option key={item.id} value={item.ui_image_name} style={{height:"35px"}}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt="" maxHeight="35px"/></Option>
+                            <Option key={item.id} value={item.ui_image_name} style={{height:"35px"}}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt="" style={{maxHeight:"35px"}}/></Option>
                           )
                         })
                       }
                     </Select>:
                     // 回显车道
-                    <div>{item.lanenolist&&this.getInterDirImgListProperty(item.lanenolist).map(item=>{return <img src={item} key={item}/>})}</div>}  
+                    <div>{this.getInterDirImgListProperty(item.lanenolist)&&this.getInterDirImgListProperty(item.lanenolist).map(item=>{return <img src={item} key={item} style={{maxHeight:"35px",marginRight:"10px"}}/>})}</div>}  
                     </div>
                       {/* 相位图标 */}
                     <div className="paramsTd">
                       { editIndex===index?
-                      <Select style={{textAlign:"center"}} defaultValue={<img src={`${localStorage.getItem("ImgUrl")}${item.phase_image}`} alt="" maxHeight="35px"/>} onChange={this.onDirPhaseIcon} className="selectLength">
+                      <Select style={{textAlign:"center"}} defaultValue={<img src={`${localStorage.getItem("ImgUrl")}${item.phase_image}`} alt="" style={{maxHeight:"35px"}}/>} onChange={this.onDirPhaseIcon} className="selectLength">
                       {
                         devicePiclist && devicePiclist[6].map(item=>{
                           return (
-                            <Option key={item.id} value={item.uiImageName} style={{height:"47px"}}><img src={`${localStorage.getItem("ImgUrl")}${item.uiImageName}`} alt="" maxHeight="30px"/></Option>
+                            <Option key={item.id} value={item.uiImageName} style={{height:"47px"}}><img src={`${localStorage.getItem("ImgUrl")}${item.uiImageName}`} alt="" style={{maxHeight:"35px"}}/></Option>
                           )
                         })
                       }
@@ -303,10 +279,9 @@ class PhaseMsg extends Component {
                       {/* 放行人行道 */}
                     <div className="paramsTd">
                       { editIndex === index? 
-                      <Select defaultValue={item.peddirlist&&this.getInterDirInfoListProperty(item.peddirlist).map((item,index)=>{ return <span key={index}>{item.codeName}</span>})} mode="tags" onChange={this.onEditWalkWay} className="selectLength">
+                      <Select defaultValue={this.getInterDirInfoListProperty(item.peddirlist)&&this.getInterDirInfoListProperty(item.peddirlist).map((item,index)=>{ return <span key={index}>{item.codeName}</span>})} mode="tags" onChange={this.onEditWalkWay} className="selectLength">
                       {
                         interInfoList && interInfoList.map((item,index)=>{
-                          console.log(item,"新增关联车道2")
                           return (
                             <Option key={item.codeName} value={item.cCode} style={{height:"47px",marginRight:"10px"}}>{item.codeName}</Option>
                           )
@@ -314,7 +289,7 @@ class PhaseMsg extends Component {
                       }
                     </Select>:
                     // 回显放行人行道
-                    <span>{item.peddirlist&&this.getInterDirInfoListProperty(item.peddirlist).map(item=>{return (<span style={{height:"47px",marginRight:"10px"}} key={item.id}>{item.codeName}</span>)})}</span>}
+                    <span>{this.getInterDirInfoListProperty(item.peddirlist)&&this.getInterDirInfoListProperty(item.peddirlist).map(item=>{return (<span style={{height:"47px",marginRight:"10px"}} key={item.id}>{item.codeName}</span>)})}</span>}
                     </div>
                     <div className="paramsTd">{editIndex===index? <input type="text" onChange={e=>this.greenmax=e.target.value} defaultValue={item.greenmax}/> : <span>{item.greenmax}</span>}</div>
                     <div className="paramsTd">{editIndex===index? <input type="text" onChange={e=>this.greenmin=e.target.value} defaultValue={item.greenmin}/> : <span>{item.greenmin}</span>}</div>
@@ -338,9 +313,10 @@ class PhaseMsg extends Component {
                     <Select mode="tags" onChange={this.onDirPhaseSelectIden} className="selectLength" placeholder="请选择">
                       {
                         dirPhaseSelectIden && dirPhaseSelectIden.map(item=>{
-                          // console.log(item,"关联车道item")
                           return (
-                            <Option key={item.laneno} vlaue={item.laneno} style={{height:"47px",textAlign:"center"}}><img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt=""/></Option>
+                            <Option key={item.id} value={item.ui_image_name} style={{maxHeight:"47px",textAlign:"center"}}>
+                              <img src={`${localStorage.getItem("ImgUrl")}${item.ui_image_name}`} alt=""/>
+                            </Option>
                           )
                         })
                       }
@@ -351,7 +327,7 @@ class PhaseMsg extends Component {
                       {
                         devicePiclist && devicePiclist[6].map((item,index)=>{
                           return (
-                            <Option key={item.id} vlaue={item.id} style={{height:"47px"}}><img src={`${localStorage.getItem("ImgUrl")}${item.uiImageName}`} alt="" style={{verticalAlign: "middle",maxHeight:"100%",maxWidth:"100%"}}/></Option>
+                            <Option key={item.id} vlaue={item.id} style={{height:"47px"}}><img src={`${localStorage.getItem("ImgUrl")}${item.uiImageName}`} alt="" style={{verticalAlign: "middle",maxHeight:"62%",maxWidth:"100%"}}/></Option>
                           )
                         })
                       }
