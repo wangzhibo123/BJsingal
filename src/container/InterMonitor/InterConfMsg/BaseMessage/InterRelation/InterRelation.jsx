@@ -38,6 +38,7 @@ class InterRelation extends Component {
     this.relationInfos = primitiveInfo.UnitConnector
     this.setState({ relationList: primitiveInfo.UnitConnector })
   }
+  // 删除
   handleDelete = (id, configId) => {
     const { confirm } = Modal
     const selfThis = this
@@ -49,9 +50,14 @@ class InterRelation extends Component {
       },
     })
   }
+  // 编辑
   handleEditInfo = (e) => {
     const indexs = e.currentTarget.getAttribute('indexs')
     const currentInfo = this.relationInfos[indexs]
+    const uiUnitConfig = { pLeft: 0, pTop: 0, rotationAngle: 0, uiHight: 40, uiImageName: '', uiWidth: 40, isView: 0, unitId: this.interId }
+    if (!currentInfo.uiUnitConfig.uiId) {
+      currentInfo.uiUnitConfig = uiUnitConfig
+    }
     this.props.showEditModal()
     this.props.getEditDeviceInfo(currentInfo)
   }

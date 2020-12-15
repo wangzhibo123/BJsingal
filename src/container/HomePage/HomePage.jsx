@@ -10,6 +10,10 @@ import mapConfiger from '../utils/minemapConf'
 import axiosInstance from '../utils/getInterfaceData'
 import { seriesMapData } from './chartsMap/seriesMapdata'
 
+import onLineIcon from '../imgs/online.png'
+import offLineIcon from '../imgs/offline.png'
+import faultIcon from '../imgs/fault.png'
+
 const { Option } = Select
 class Homepage extends Component {
   constructor(props) {
@@ -107,6 +111,7 @@ class Homepage extends Component {
       const { code, errline, offline, online, pointlist } = res.data
       if (code === '1') {
         this.pointLists = pointlist
+        this.pointLatlng = pointlist.map((item) => ({ x: item.longitude, y: item.latitude }))
         this.setState({
           errline,
           offline: ('000' + offline).slice(-4).split(''),
@@ -226,7 +231,7 @@ class Homepage extends Component {
           <div class="message">设备状态：${interMsg.alarm_state}</div>
           <div class="message">运行阶段：${interMsg.stage_code || ''}</div>
         </div>
-        <div class="interDetails"><div class="monitorBtn"><a style="color:#fff" href="#/interMonitor/${interMsg.id}">路口检测</a></div></div>
+        <div class="interDetails"><div class="monitorBtn"><a style="color:#fff" href="#/interMonitor/${interMsg.id}">路口监控</a></div></div>
       </div>
     `
   }
@@ -262,10 +267,13 @@ class Homepage extends Component {
           el.addEventListener('click',function(e){
             currentThis.addInfoWindow(item)
           });
-          const marker = new window.mapabcgl.Marker(el)
-            .setLngLat([item.longitude, item.latitude])
-          .addTo(this.map)
-          this.interMarkers.push(marker)
+          if (item.longitude && item.latitude) {
+            const marker = new window.mapabcgl.Marker(el)
+              .setLngLat([item.longitude, item.latitude])
+              .addTo(this.map)
+            this.interMarkers.push(marker)
+          }
+          
         }
       })
     }
@@ -372,7 +380,7 @@ class Homepage extends Component {
     const { key, lng, lat } = options
     this.map.setCenter([lng, lat])
     this.map.setZoom(15)
-    $('#marker' + key).trigger('click',)
+    $('#marker' + key).trigger('click')
   }
   // 地图图例切换
   handleToggleLegend = (e) => {
@@ -684,10 +692,12 @@ class Homepage extends Component {
                   autoClearSearchValue
                   dropdownClassName="searchList"
                   filterOption={(input, options) => {
-                    const hasVal = options.value.indexOf(input) >= 0
-                    const hasSpell = options.spell.indexOf(input.toLowerCase()) >= 0
-                    const hasId = String(options.id).indexOf(input) >= 0
-                    return (hasVal || hasSpell || hasId)
+                    if (input) {
+                      const hasVal = options.value.indexOf(input) >= 0
+                      const hasSpell = options.spell ? options.spell.indexOf(input.toLowerCase()) >= 0 : false
+                      const hasId = String(options.id).indexOf(input) >= 0
+                      return (hasVal || hasSpell || hasId)
+                    }
                   }}
                   onSelect={this.handleInterSelect}
                 >

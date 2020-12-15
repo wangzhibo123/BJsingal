@@ -11,14 +11,16 @@ class LampModal extends Component {
       editInfo: null,
       interDirList: null,
       lampTypeList: null,
+      lampIconList: null,
     }
+    this.globalImgurl = localStorage.getItem('ImgUrl')
     this.dirMoveList = '/control-application-front/basic/info/listCodeByCodeType' // 方向是6， 灯组类型21
     this.saveUrl = '/control-application-front/basic/info/lampGroup/saveLampGroup'
   }
   componentDidMount = () => {
     this.getInterDirMoveList(6)
     this.getInterDirMoveList(21)
-    const { editDeviceInfo, primitiveInfo } = this.props.data
+    const { editDeviceInfo, primitiveInfo, devicePiclist } = this.props.data
     this.editInfo = editDeviceInfo
     if (!this.editInfo.cfgLampgroup.lampgroupno) {
       this.currentDeviceList = primitiveInfo.LampGroup
@@ -26,7 +28,7 @@ class LampModal extends Component {
       const editNo = lengths === 0 ? 1 : this.currentDeviceList[lengths - 1].cfgLampgroup.lampgroupno + 1
       this.editInfo.cfgLampgroup.lampgroupno = editNo
     }
-    this.setState({ editInfo: this.editInfo })
+    this.setState({ editInfo: this.editInfo, lampIconList: devicePiclist['10'] })
   }
   getInterDirMoveList = (type) => {
     axiosInstance.get(`${this.dirMoveList}?codeType=${type}`).then((res) => {
@@ -58,6 +60,7 @@ class LampModal extends Component {
   handleSelectChange = (val, options) => {
     if (options.pname === 'uiId') {
       this.editInfo.uiUnitConfig.uiId = val
+      this.editInfo.uiUnitConfig.uiImageName = options.imgurl
     } else {
       this.editInfo.cfgLampgroup[options.pname] = val
     }
@@ -70,7 +73,7 @@ class LampModal extends Component {
     this.props.closeEditModal()
   }
   render() {
-    const { editInfo, interDirList, lampTypeList } = this.state
+    const { editInfo, interDirList, lampTypeList, lampIconList } = this.state
     return (
       <div className="editPelMsg">
         <div className="editItem">
@@ -120,6 +123,17 @@ class LampModal extends Component {
                 lampTypeList &&
                 lampTypeList.map((item) => (
                   <Option key={item.id} value={item.cCode} pname="type">{item.codeName}</Option>
+                ))
+              }
+            </Select>
+          </div>
+          <div className="eitems">
+            <span className="itemTxt">信号灯：</span>
+            <Select key={editInfo && editInfo.uiUnitConfig.uiId} defaultValue={editInfo && editInfo.uiUnitConfig.uiId} onChange={this.handleSelectChange}>
+              {
+                lampIconList &&
+                lampIconList.map((item) => (
+                  <Option key={item.id} value={item.id} pname="uiId" imgurl={item.uiImageName}><img src={this.globalImgurl + item.uiImageName} alt="" style={{ maxHeight: '100%' }} /></Option>
                 ))
               }
             </Select>

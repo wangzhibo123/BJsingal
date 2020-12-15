@@ -91,7 +91,7 @@ class InterTimeList extends Component {
                 {
                   timePlanDetails &&
                   timePlanDetails.map((item, index) => {
-                    const stageList = item.stage_image.split(',')
+                    const stageList = item.stage_image ? item.stage_image.split(',') : []
                     return (
                       <div className="detailsTr" key={item.planno + index}>
                         <span className="innterBorder" />

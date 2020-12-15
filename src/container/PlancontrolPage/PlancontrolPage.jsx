@@ -208,14 +208,16 @@ class PlancontrolPage extends Component {
     this.reservePlanObjs.plan_name = planname
     console.log(this.treeChild, this.reservePlanObjs, 'dfdfsss')
     axiosInstance.post(this.addOrUpdateAreaPlan, this.reservePlanObjs).then(res => {
-      console.log(res.data, 'sss')
+      // console.log(res.data, 'sss')
       const { code } = res.data
       if (code === '1') {
         this.getloadPlanTable(2)
+        this.delectRoadRegion()
         this.treeChild = []
         this.setState({
           rights: -320,
           treeChild: [],
+          treeListChild: [],
           indId: 0,
           isaddlistTreeLi: false,
           isaddlistTree: false,
@@ -266,13 +268,17 @@ class PlancontrolPage extends Component {
       // console.log(this.treeChild, plan_name, make_time._i, area_id, '添加内容')
     }
   }
-  // 取消显示 
+  // 取消显示 特勤取消
   delectHandclickNone = () => {
     this.addRoad = false
+    this.childArr = []
+    this.childArrList = []
     this.setState({
       rightsNew: -320,
       isaddlistTreeLi: false,
       isaddlistTree: false,
+      childArr: [],
+      childArrList: [],
       socketChild: [],
     })
   }
@@ -372,15 +378,16 @@ class PlancontrolPage extends Component {
       }
     })
   }
-  noneAddRoad = () => { // 取消编辑
-    this.childArr = []
-    this.childArrList = []
-    this.setState({
-      rightsNew: -320,
-      rights: -320,
-      childArr: []
-    })
-  }
+  // noneAddRoad = () => { // 取消编辑
+  //   this.childArr = []
+  //   this.childArrList = []
+  //   this.setState({
+  //     rightsNew: -320,
+  //     rights: -320,
+  //     childArr: [],
+  //     childArrList: [],
+  //   })
+  // }
   getAddDataList = () => {
     axiosInstance.post(this.getPointAll).then(res => {
       const { code, pointlist } = res.data
@@ -447,7 +454,7 @@ class PlancontrolPage extends Component {
     if (this.map) {
       const currentThis = this
       this.markers = []
-      const interList = zoomVal < 13 ? points && points.filter(item => item.unit_grade <= 4) : points
+      const interList = points
       // console.log(interList, 'sssss')
       interList && interList.forEach((item, index) => {
         // const hasMode = this.showMode.indexOf(item.control_state) < 0
@@ -1007,13 +1014,18 @@ class PlancontrolPage extends Component {
     if (name === 'reserveplan') {
       this.isreserveplan = true
       this.getloadPlanTable(1)
+      this.childArr = []
+      this.childArrList = []
       this.setState({
         clickNum: name,
+        childArr: [],
+        childArrList: [],
         rights: -320,
         rightsNew: -320,
         isaddlistTreeLi: false,
         isaddlistTree: false,
         socketChild: [],
+
       })
     }
     if (name === 'add') {
@@ -1023,6 +1035,7 @@ class PlancontrolPage extends Component {
         this.roadCircle(this.childArr)
         this.delectStartEnd()
       }
+      this.treeChild = []
       this.setState({
         clickNum: name,
         rights: -320,
@@ -1031,6 +1044,7 @@ class PlancontrolPage extends Component {
         isaddlistTreeLi: false,
         isaddlistTree: false,
         socketChild: [],
+        treeChild: [],
       })
     }
     // if (name === 'reserveplan') {
@@ -1403,14 +1417,14 @@ class PlancontrolPage extends Component {
     // console.log(num, ind, '修改间隔时间')
     this.childArr[ind].interval_time = num
   }
-  deleteList = () => {
+  deleteList = () => { // 应急取消
     this.addRoad = false
     this.delectRoadRegion()
-    this.childArr = []
+    this.treeChild = []
     this.setState({
       rightsNew: -320,
       rights: -320,
-      childArr: []
+      treeChild: [],
     })
   }
 
@@ -1588,21 +1602,14 @@ class PlancontrolPage extends Component {
           <div className={styles.slideRightBoxAdd}>
             <div className={styles.addMainLine}>
               <div className={styles.newLine}>{roadtitle}</div>
-              {
-                ismodify ?
-                  <div className={styles.operationLine}>
-                    {
-                      this.IsleShow ?
-                        <span onClick={() => this.deleteList()} >取消</span> :
-                        <span onClick={this.delectHandclickAddEditModify}>删除</span>
-                    }
-                    <span onClick={this.getismodify}>保存</span>
-                  </div>
-                  :
-                  <div className={styles.operationLine}>
-                    <span onClick={this.handclickAddEdit}>保存</span><span onClick={this.noneAddRoad}>取消</span>
-                  </div>
-              }
+              <div className={styles.operationLine}>
+                {
+                  this.IsleShow ?
+                    <span onClick={() => this.deleteList()} >取消</span> :
+                    <span onClick={this.delectHandclickAddEditModify}>删除</span>
+                }
+                <span onClick={this.getismodify}>保存</span>
+              </div>
             </div>
             {
               isAddEdit ?
